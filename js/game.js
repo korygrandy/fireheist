@@ -13,8 +13,8 @@ import {
     ACCELERATOR_DURATION_MS, DECELERATOR_BASE_SPEED_DEBUFF, DECELERATOR_DURATION_MS, OBSTACLE_BASE_VELOCITY_PX_MS,
     EVENT_PROXIMITY_VISUAL_STEPS, EVENT_POPUP_HEIGHT, DIFFICULTY_SETTINGS, NUM_CLOUDS, CLOUD_SPEED_FACTOR
 } from './constants.js';
-import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound } from './audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores } from './ui.js';
+import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound } from './audio.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps } from './ui.js';
 import { drawChart, generateSummaryTable } from './utils.js';
 
 // Game State Variables
@@ -87,6 +87,15 @@ let onScreenCustomEvent = null;
 let isVictory = false;
 let isGameOverSequence = false;
 let gameOverSequenceStartTime = 0;
+
+// NEW: Screen flash, turbo boost, and stick figure burst animation states
+let screenFlash = { opacity: 0, duration: 0, startTime: 0 };
+let turboBoost = { active: false, frame: 0, lastFrameTime: 0 };
+let stickFigureBurst = { active: false, duration: 200, startTime: 0, progress: 0, maxOffset: 150 };
+
+// NEW: Grass animation state
+const GRASS_ANIMATION_INTERVAL_MS = 200; // Update grass blades every 200ms
+let grassAnimationState = { blades: [], lastUpdateTime: 0 };
 
 const clouds = [];
 let activeCashBags = [];
@@ -426,22 +435,53 @@ function drawCashBagEmoji(x, y, opacity = 1) {
     ctx.restore();
 }
 
+function generateGrassBlades(angleRad) {
+    grassAnimationState.blades = [];
+    const bladeHeight = 8;
+    const bladeDensity = 5; // Lower number means more dense
+    for (let x = 0; x < canvas.width; x += bladeDensity) {
+        const groundYatX = GROUND_Y - x * Math.tan(angleRad);
+        const randomSway = (Math.random() - 0.5) * 5;
+        const heightFactor = (0.75 + Math.random() * 0.5);
+        grassAnimationState.blades.push({ x: x + randomSway, y: groundYatX, heightFactor: heightFactor });
+    }
+    grassAnimationState.lastUpdateTime = performance.now();
+}
+
 function drawSlantedGround(angleRad) {
     const slopeHeight = Math.tan(angleRad) * canvas.width;
     const endY = GROUND_Y - slopeHeight;
-    ctx.fillStyle = '#1c7d3c';
+
+    // Main ground color
+    ctx.fillStyle = '#1c7d3c'; // Dark green
     ctx.beginPath();
     ctx.moveTo(0, GROUND_Y);
-    ctx.lineTo(canvas.width, GROUND_Y);
     ctx.lineTo(canvas.width, endY);
-    ctx.lineTo(0, GROUND_Y);
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = '#229944';
-    ctx.lineWidth = 1;
+
+    // Lighter green for texture lines (grass blades)
+    ctx.strokeStyle = '#229944'; // Lighter green
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
+
+    // Draw the main slope line
     ctx.moveTo(0, GROUND_Y);
     ctx.lineTo(canvas.width, endY);
+
+    // Update grass blades if interval passed or if not yet generated
+    if (performance.now() - grassAnimationState.lastUpdateTime > GRASS_ANIMATION_INTERVAL_MS || grassAnimationState.blades.length === 0) {
+        generateGrassBlades(angleRad);
+    }
+
+    // Draw grass blade texture
+    const bladeHeight = 8;
+    grassAnimationState.blades.forEach(blade => {
+        ctx.moveTo(blade.x, blade.y);
+        ctx.lineTo(blade.x, blade.y - bladeHeight * blade.heightFactor);
+    });
     ctx.stroke();
 }
 
@@ -506,8 +546,13 @@ function drawStickFigure(x, y, jumpState, angleRad) {
 
     const legOpacity = 1;
 
-    const R = Math.round(255 * fadeProgress);
-    const legColor = `rgb(${R}, 0, 0)`;
+    let legColor = 'black';
+    if (isColliding) {
+        const R = Math.round(255 * fadeProgress);
+        legColor = `rgb(${R}, 0, 0)`;
+    } else if (isAccelerating) {
+        legColor = '#00FF00'; // Green for acceleration
+    }
 
     let legMovementX1, legMovementY1, legMovementX2, legMovementY2;
     let armMovementX1, armMovementY1, armMovementX2, armMovementY2;
@@ -615,8 +660,17 @@ export function draw() {
             }
         }
 
-        const currentX = STICK_FIGURE_FIXED_X;
-        let currentY = stickFigureGroundY;
+        let stickFigureOffsetX = 0;
+        let stickFigureOffsetY = 0;
+        if (stickFigureBurst.active) {
+            // Use a sine curve for a smooth burst and return
+            const burstDistance = stickFigureBurst.maxOffset * Math.sin(stickFigureBurst.progress * Math.PI);
+            const burstAngleRad = 15 * (Math.PI / 180); // 15 degrees in radians
+            stickFigureOffsetX = burstDistance * Math.cos(burstAngleRad);
+            stickFigureOffsetY = -burstDistance * Math.sin(burstAngleRad); // Negative for upward movement
+        }
+        const currentX = STICK_FIGURE_FIXED_X + stickFigureOffsetX;
+        let currentY = stickFigureGroundY + stickFigureOffsetY;
 
         if (jumpState.isJumping) {
             let maxJumpHeight = 0;
@@ -649,6 +703,14 @@ export function draw() {
             const fadeProgress = collisionDuration / COLLISION_DURATION_MS;
             ctx.save();
             ctx.fillStyle = `rgba(255, 0, 0, ${fadeProgress * 0.4})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }
+
+        // Draw screen flash
+        if (screenFlash.opacity > 0) {
+            ctx.save();
+            ctx.fillStyle = `rgba(255, 165, 0, ${screenFlash.opacity})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.restore();
         }
@@ -715,14 +777,15 @@ function spawnProximityEvent(eventData) {
     console.log(`-> spawnProximityEvent: New ${eventData.type} event spawned by proximity.`);
 }
 
-function checkCollision(runnerY) {
+function checkCollision(runnerY, angleRad) {
     if (!currentObstacle || currentObstacle.hasBeenHit || isColliding) return false;
 
     const obstacleX = currentObstacle.x;
     const runnerX = STICK_FIGURE_FIXED_X;
 
+    const groundAtObstacleY = GROUND_Y - obstacleX * Math.tan(angleRad);
     const runnerBottomY = runnerY + STICK_FIGURE_TOTAL_HEIGHT;
-    const obstacleTopY = GROUND_Y + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+    const obstacleTopY = groundAtObstacleY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     const horizontalDistance = Math.abs(obstacleX - runnerX);
     if (horizontalDistance > COLLISION_RANGE_X) return false;
@@ -740,7 +803,7 @@ function checkCollision(runnerY) {
     return false;
 }
 
-function checkAcceleratorCollision(runnerY) {
+function checkAcceleratorCollision(runnerY, angleRad) {
     if (!currentAccelerator || currentAccelerator.hasBeenCollected || isAccelerating) return false;
 
     const accelX = currentAccelerator.x;
@@ -750,8 +813,9 @@ function checkAcceleratorCollision(runnerY) {
     const horizontalDistance = Math.abs(accelX - runnerX);
     if (horizontalDistance > COLLECTION_RANGE_X) return false;
 
+    const groundAtAccelY = GROUND_Y - accelX * Math.tan(angleRad);
     const runnerBottomY = runnerY + STICK_FIGURE_TOTAL_HEIGHT;
-    const accelTopY = GROUND_Y + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+    const accelTopY = groundAtAccelY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     if (horizontalDistance < COLLECTION_RANGE_X) {
         if (runnerBottomY >= accelTopY) {
@@ -762,7 +826,7 @@ function checkAcceleratorCollision(runnerY) {
     return false;
 }
 
-function checkProximityEventCollection(runnerY) {
+function checkProximityEventCollection(runnerY, angleRad) {
     if (!onScreenCustomEvent || onScreenCustomEvent.hasBeenCollected) return false;
 
     const eventX = onScreenCustomEvent.x;
@@ -772,8 +836,9 @@ function checkProximityEventCollection(runnerY) {
     const horizontalDistance = Math.abs(eventX - runnerX);
     if (horizontalDistance > COLLECTION_RANGE_X) return false;
 
+    const groundAtEventY = GROUND_Y - eventX * Math.tan(angleRad);
     const runnerBottomY = runnerY + STICK_FIGURE_TOTAL_HEIGHT;
-    const eventTopY = GROUND_Y + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+    const eventTopY = groundAtEventY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     if (horizontalDistance < COLLECTION_RANGE_X) {
         if (runnerBottomY >= eventTopY) {
@@ -806,6 +871,7 @@ function applySpeedEffect(type) {
         accelerationDuration = ACCELERATOR_DURATION_MS;
         gameSpeedMultiplier = intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
         playChaChing();
+        screenFlash = { opacity: 0.7, duration: 200, startTime: performance.now() };
         console.info("-> APPLY SPEED: Accelerator (2x) applied!");
     } else if (type === 'DECELERATOR') {
         isDecelerating = true;
@@ -938,27 +1004,29 @@ export function animate(timestamp) {
 
     if (frameCount % 60 === 0) {
         if (!currentObstacle && !currentAccelerator && !onScreenCustomEvent) {
-            const totalChance = obstacleFrequencyPercent + acceleratorFrequencyPercent;
             const randomRoll = Math.random() * 100;
+            let effectiveAcceleratorFrequency = enableRandomPowerUps ? acceleratorFrequencyPercent : 0;
 
             if (randomRoll < obstacleFrequencyPercent) {
                 spawnObstacle();
-            } else if (randomRoll < totalChance) {
+            } else if (randomRoll < obstacleFrequencyPercent + effectiveAcceleratorFrequency) {
                 spawnAccelerator();
             }
         }
     }
 
+    const angleRad = currentHurdle.angleRad;
     const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * gameSpeedMultiplier;
 
     if (currentObstacle) {
         currentObstacle.x -= objectMovementDelta;
-        if (checkCollision(runnerY)) {
+        if (checkCollision(runnerY, angleRad)) {
             if (!isColliding) {
                 hitsCounter++;
                 isColliding = true;
                 collisionDuration = COLLISION_DURATION_MS;
                 playCollisionSound();
+                playQuackSound();
                 console.warn(`-> COLLISION: Hit obstacle! Total hits: ${hitsCounter}. Speed penalty applied.`);
             }
             currentObstacle.hasBeenHit = true;
@@ -976,9 +1044,11 @@ export function animate(timestamp) {
     if (currentAccelerator) {
         currentAccelerator.x -= objectMovementDelta;
 
-        if (checkAcceleratorCollision(runnerY)) {
+        if (checkAcceleratorCollision(runnerY, angleRad)) {
             if (!isAccelerating && !isDecelerating) {
+                stickFigureBurst = { ...stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
                 applySpeedEffect('ACCELERATOR');
+                playPowerUpSound();
             }
         }
         if (currentAccelerator.x < -OBSTACLE_WIDTH) {
@@ -989,8 +1059,11 @@ export function animate(timestamp) {
     if (onScreenCustomEvent) {
         onScreenCustomEvent.x -= objectMovementDelta;
 
-        if (checkProximityEventCollection(runnerY)) {
+        if (checkProximityEventCollection(runnerY, angleRad)) {
             if (!isAccelerating && !isDecelerating) {
+                if (onScreenCustomEvent.type === 'ACCELERATOR') {
+                    stickFigureBurst = { ...stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
+                }
                 applySpeedEffect(onScreenCustomEvent.type);
             }
             const originalEvent = activeCustomEvents.find(e => e.daysSinceStart === onScreenCustomEvent.daysSinceStart);
@@ -1004,6 +1077,42 @@ export function animate(timestamp) {
         }
     }
 
+    // Update screen flash
+    if (screenFlash.opacity > 0) {
+        const elapsed = timestamp - screenFlash.startTime;
+        if (elapsed > screenFlash.duration) {
+            screenFlash.opacity = 0;
+        } else {
+            screenFlash.opacity = (1 - elapsed / screenFlash.duration) * 0.7;
+        }
+    }
+
+    // Update stick figure burst animation
+    if (stickFigureBurst.active) {
+        const elapsed = timestamp - stickFigureBurst.startTime;
+        if (elapsed >= stickFigureBurst.duration) {
+            stickFigureBurst.active = false;
+            stickFigureBurst.progress = 0;
+        } else {
+            stickFigureBurst.progress = elapsed / stickFigureBurst.duration;
+        }
+    }
+
+    // Update turbo boost animation
+    const turboBoostEl = document.getElementById('turbo-boost-animation');
+    if (isAccelerating) {
+        const frames = ['> ', '>>', ' >', '  '];
+        const frameDuration = 100; // ms per frame
+        if (timestamp - turboBoost.lastFrameTime > frameDuration) {
+            turboBoost.frame = (turboBoost.frame + 1) % frames.length;
+            turboBoost.lastFrameTime = timestamp;
+        }
+        turboBoostEl.textContent = frames[turboBoost.frame];
+        turboBoostEl.style.opacity = '1';
+    } else {
+        turboBoostEl.style.opacity = '0';
+    }
+
     if (isColliding) {
         collisionDuration -= deltaTime;
         if (collisionDuration <= 0) {
@@ -1014,31 +1123,32 @@ export function animate(timestamp) {
         } else {
             gameSpeedMultiplier = intendedSpeedMultiplier * 0.1;
         }
-    }
-
-    if (!isColliding) {
-        if (isDecelerating) {
-            decelerationDuration -= deltaTime;
-            gameSpeedMultiplier = intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF;
-            if (decelerationDuration <= 0) {
-                isDecelerating = false;
-                decelerationDuration = 0;
-                activeCustomEvents.forEach(e => { if (e.type === 'DECELERATOR') e.isActive = false; });
+    } else {
+        // If not in a burst (or burst just ended), check for regular acceleration/deceleration
+        if (!stickFigureBurst.active) {
+            if (isDecelerating) {
+                decelerationDuration -= deltaTime;
+                gameSpeedMultiplier = intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF;
+                if (decelerationDuration <= 0) {
+                    isDecelerating = false;
+                    decelerationDuration = 0;
+                    activeCustomEvents.forEach(e => { if (e.type === 'DECELERATOR') e.isActive = false; });
+                    gameSpeedMultiplier = intendedSpeedMultiplier;
+                    console.info("-> DECELERATOR: Debuff ended. Speed restored.");
+                }
+            } else if (isAccelerating) {
+                accelerationDuration -= deltaTime;
+                gameSpeedMultiplier = intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
+                if (accelerationDuration <= 0) {
+                    isAccelerating = false;
+                    accelerationDuration = 0;
+                    activeCustomEvents.forEach(e => { if (e.type === 'ACCELERATOR') e.isActive = false; });
+                    gameSpeedMultiplier = intendedSpeedMultiplier;
+                    console.info("-> ACCELERATOR: Boost ended. Speed restored.");
+                }
+            } else {
                 gameSpeedMultiplier = intendedSpeedMultiplier;
-                console.info("-> DECELERATOR: Debuff ended. Speed restored.");
             }
-        } else if (isAccelerating) {
-            accelerationDuration -= deltaTime;
-            gameSpeedMultiplier = intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
-            if (accelerationDuration <= 0) {
-                isAccelerating = false;
-                accelerationDuration = 0;
-                activeCustomEvents.forEach(e => { if (e.type === 'ACCELERATOR') e.isActive = false; });
-                gameSpeedMultiplier = intendedSpeedMultiplier;
-                console.info("-> ACCELERATOR: Boost ended. Speed restored.");
-            }
-        } else if (gameSpeedMultiplier !== intendedSpeedMultiplier) {
-            gameSpeedMultiplier = intendedSpeedMultiplier;
         }
     }
 
@@ -1162,6 +1272,7 @@ export function resetGameState() {
     Tone.Transport.cancel();
 
     initializeClouds();
+    generateGrassBlades(0); // Initialize grass blades on reset
 
     hideResultsScreen();
     updateControlPanelState(false, false);
@@ -1236,6 +1347,7 @@ export function startGame() {
     console.log(`-> START GAME: ${activeCustomEvents.length} custom events enabled.`);
 
     initializeClouds();
+    generateGrassBlades(0); // Initialize grass blades on game start
 
     gameRunning = true;
 

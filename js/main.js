@@ -2,8 +2,8 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData } from './ui.js';
+import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps } from './dom-elements.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData } from './ui.js';
 import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame } from './game.js';
 import { toggleSound, loadMuteSetting } from './audio.js';
 
@@ -51,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
         skillLevelSelector.addEventListener('change', handleSkillLevelChange);
     }
 
+    if (enablePowerUps) {
+        enablePowerUps.addEventListener('change', handlePowerUpToggle);
+    }
+
     if (disableSaveSettings) {
         disableSaveSettings.addEventListener('change', () => {
             if (disableSaveSettings.checked) {
@@ -75,9 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     if (stopButton) { stopButton.addEventListener('click', () => stopGame(true)); }
-    if (loadButton) { loadButton.addEventListener('click', () => {
-        initializeUIData(); // Reloads data and calls resetGameState and draw
-    }); }
+    if (loadButton) { loadButton.addEventListener('click', loadCustomData); }
     if (soundToggleButton) { soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton)); }
 
     // --- JUMP & PAUSE CONTROLS ---

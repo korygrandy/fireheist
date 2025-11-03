@@ -14,6 +14,7 @@ export let obstacleEmoji = '🐌'; // Default value
 export let obstacleFrequencyPercent = 20;
 export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
+export let enableRandomPowerUps = true;
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 const HIGH_SCORE_KEY = 'fireHeistHighScores';
@@ -28,6 +29,7 @@ function saveSettings() {
         obstacleFrequencyPercent,
         currentSkillLevel,
         intendedSpeedMultiplier,
+        enableRandomPowerUps,
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
     };
@@ -44,11 +46,13 @@ function loadSettings() {
         obstacleFrequencyPercent = settings.obstacleFrequencyPercent || 20;
         currentSkillLevel = settings.currentSkillLevel || 'Rookie';
         intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
+        enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
 
         emojiInput.value = stickFigureEmoji;
         obstacleEmojiInput.value = obstacleEmoji;
         document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
         frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
+        document.getElementById('enablePowerUps').checked = enableRandomPowerUps;
 
         // Set skill level radio button
         const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${currentSkillLevel}"]`);
@@ -126,6 +130,11 @@ export function handleFrequencyChange(event) {
     obstacleFrequencyPercent = parseInt(event.target.value, 10);
     frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
     console.log(`-> handleFrequencyChange: Obstacle frequency updated to ${obstacleFrequencyPercent}%`);
+    saveSettings();
+}
+
+export function handlePowerUpToggle(event) {
+    enableRandomPowerUps = event.target.checked;
     saveSettings();
 }
 
@@ -242,6 +251,9 @@ export async function initializeUIData() {
     if (!settingsLoaded) {
         try {
             const response = await fetch('milestones.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
             dataInput.value = data.milestones.join('\n');
             eventDataInput.value = data.events.join('\n');
@@ -251,7 +263,23 @@ export async function initializeUIData() {
             eventDataInput.value = defaultEventDataString.trim();
         }
     }
-    loadCustomData();
+
+    // Directly parse and prepare the initial data
+    financialMilestones = parseData(dataInput.value);
+    if (financialMilestones && Object.keys(financialMilestones).length >= 2) {
+        raceSegments = prepareRaceData(financialMilestones);
+        const firstMilestoneDate = Object.keys(financialMilestones)[0];
+        customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
+        dataMessage.textContent = `Default data loaded. ${raceSegments.length} milestones and ${Object.values(customEvents).flat().length} events ready.`;
+        dataMessage.style.color = 'green';
+    } else {
+        dataMessage.textContent = "Error: Default data is invalid. Please check 'milestones.json' or provide valid custom data.";
+        dataMessage.style.color = 'red';
+        financialMilestones = {};
+        raceSegments = [];
+        customEvents = {};
+    }
+
     displayHighScores(); // Display high scores on startup
 }
 
