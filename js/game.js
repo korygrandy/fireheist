@@ -13,7 +13,7 @@ import {
     ACCELERATOR_DURATION_MS, DECELERATOR_BASE_SPEED_DEBUFF, DECELERATOR_DURATION_MS, OBSTACLE_BASE_VELOCITY_PX_MS,
     EVENT_PROXIMITY_VISUAL_STEPS, EVENT_POPUP_HEIGHT, DIFFICULTY_SETTINGS, NUM_CLOUDS, CLOUD_SPEED_FACTOR
 } from './constants.js';
-import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound } from './audio.js';
+import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound } from './audio.js';
 import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps } from './ui.js';
 import { drawChart, generateSummaryTable } from './utils.js';
 
@@ -92,6 +92,10 @@ let gameOverSequenceStartTime = 0;
 let screenFlash = { opacity: 0, duration: 0, startTime: 0 };
 let turboBoost = { active: false, frame: 0, lastFrameTime: 0 };
 let stickFigureBurst = { active: false, duration: 200, startTime: 0, progress: 0, maxOffset: 150 };
+
+// NEW: Grass animation state
+const GRASS_ANIMATION_INTERVAL_MS = 200; // Update grass blades every 200ms
+let grassAnimationState = { blades: [], lastUpdateTime: 0 };
 
 const clouds = [];
 let activeCashBags = [];
@@ -431,22 +435,53 @@ function drawCashBagEmoji(x, y, opacity = 1) {
     ctx.restore();
 }
 
+function generateGrassBlades(angleRad) {
+    grassAnimationState.blades = [];
+    const bladeHeight = 8;
+    const bladeDensity = 5; // Lower number means more dense
+    for (let x = 0; x < canvas.width; x += bladeDensity) {
+        const groundYatX = GROUND_Y - x * Math.tan(angleRad);
+        const randomSway = (Math.random() - 0.5) * 5;
+        const heightFactor = (0.75 + Math.random() * 0.5);
+        grassAnimationState.blades.push({ x: x + randomSway, y: groundYatX, heightFactor: heightFactor });
+    }
+    grassAnimationState.lastUpdateTime = performance.now();
+}
+
 function drawSlantedGround(angleRad) {
     const slopeHeight = Math.tan(angleRad) * canvas.width;
     const endY = GROUND_Y - slopeHeight;
-    ctx.fillStyle = '#1c7d3c';
+
+    // Main ground color
+    ctx.fillStyle = '#1c7d3c'; // Dark green
     ctx.beginPath();
     ctx.moveTo(0, GROUND_Y);
-    ctx.lineTo(canvas.width, GROUND_Y);
     ctx.lineTo(canvas.width, endY);
-    ctx.lineTo(0, GROUND_Y);
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = '#229944';
-    ctx.lineWidth = 1;
+
+    // Lighter green for texture lines (grass blades)
+    ctx.strokeStyle = '#229944'; // Lighter green
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
+
+    // Draw the main slope line
     ctx.moveTo(0, GROUND_Y);
     ctx.lineTo(canvas.width, endY);
+
+    // Update grass blades if interval passed or if not yet generated
+    if (performance.now() - grassAnimationState.lastUpdateTime > GRASS_ANIMATION_INTERVAL_MS || grassAnimationState.blades.length === 0) {
+        generateGrassBlades(angleRad);
+    }
+
+    // Draw grass blade texture
+    const bladeHeight = 8;
+    grassAnimationState.blades.forEach(blade => {
+        ctx.moveTo(blade.x, blade.y);
+        ctx.lineTo(blade.x, blade.y - bladeHeight * blade.heightFactor);
+    });
     ctx.stroke();
 }
 
@@ -983,6 +1018,7 @@ export function animate(timestamp) {
                 isColliding = true;
                 collisionDuration = COLLISION_DURATION_MS;
                 playCollisionSound();
+                playQuackSound();
                 console.warn(`-> COLLISION: Hit obstacle! Total hits: ${hitsCounter}. Speed penalty applied.`);
             }
             currentObstacle.hasBeenHit = true;
@@ -1227,6 +1263,7 @@ export function resetGameState() {
     Tone.Transport.cancel();
 
     initializeClouds();
+    generateGrassBlades(0); // Initialize grass blades on reset
 
     hideResultsScreen();
     updateControlPanelState(false, false);
@@ -1301,6 +1338,7 @@ export function startGame() {
     console.log(`-> START GAME: ${activeCustomEvents.length} custom events enabled.`);
 
     initializeClouds();
+    generateGrassBlades(0); // Initialize grass blades on game start
 
     gameRunning = true;
 

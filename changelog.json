@@ -1,5 +1,40 @@
 [
     {
+        "version": "1.3.7",
+        "date": "2025-11-02",
+        "changes": [
+            "Enhancement: Added a 'quack' sound effect for obstacle collisions to improve audio feedback."
+        ]
+    },
+    {
+        "version": "1.3.6",
+        "date": "2025-11-02",
+        "changes": [
+            "Bugfix: Fixed a visual bug where a blue strip was visible below the grass line."
+        ]
+    },
+    {
+        "version": "1.3.5",
+        "date": "2025-11-02",
+        "changes": [
+            "Bugfix: Fixed a visual bug where a blue strip was visible below the grass line."
+        ]
+    },
+    {
+        "version": "1.3.4",
+        "date": "2025-11-02",
+        "changes": [
+            "Enhancement: Adjusted the grass texture animation speed to reduce flickering and improve visual comfort."
+        ]
+    },
+    {
+        "version": "1.3.3",
+        "date": "2025-11-02",
+        "changes": [
+            "Enhancement: Enhanced the grass texture to give it a more 3D appearance."
+        ]
+    },
+    {
         "version": "1.3.2",
         "date": "2025-11-02",
         "changes": [

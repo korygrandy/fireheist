@@ -24,11 +24,13 @@ export function loadMuteSetting() {
         chaChingSynth.mute = true;
         collisionSynth.mute = true;
         debuffSynth.mute = true;
+        quackSound.mute = true;
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
         collisionSynth.mute = false;
         debuffSynth.mute = false;
+        quackSound.mute = false;
         if (backgroundMusic) { backgroundMusic.volume.value = -18; }
         if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
     }
@@ -54,6 +56,14 @@ export const debuffSynth = new Tone.MembraneSynth({
 }).toDestination();
 debuffSynth.volume.value = -10;
 debuffSynth.mute = isMuted;
+
+export const quackSound = new Tone.Player({
+    url: './fx/quack.mp3',
+    volume: -10,
+    onload: () => console.log("-> AUDIO: Quack sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading quack sound:", e)
+}).toDestination();
+quackSound.mute = isMuted;
 
 export function initializeMusicPlayer(stickFigureEmoji) {
     if (backgroundMusic) {
@@ -86,6 +96,13 @@ export function playDebuffSound() {
     debuffSynth.triggerAttackRelease("C2", "8n", Tone.now());
 }
 
+export function playQuackSound() {
+    if (isMuted) { return; }
+    if (quackSound.state === 'stopped') {
+        quackSound.start();
+    }
+}
+
 export function toggleSound(soundToggleButton) {
     if (Tone.context.state !== 'running') { Tone.start(); }
     isMuted = !isMuted;
@@ -100,11 +117,13 @@ export function toggleSound(soundToggleButton) {
         chaChingSynth.mute = true;
         collisionSynth.mute = true;
         debuffSynth.mute = true;
+        quackSound.mute = true;
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
         collisionSynth.mute = false;
         debuffSynth.mute = false;
+        quackSound.mute = false;
         if (backgroundMusic) { backgroundMusic.volume.value = -18; }
         // Only start background music if game is running and it's not already started
         // This logic will be handled in game.js when starting the game
