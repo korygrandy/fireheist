@@ -3,8 +3,9 @@
 // =================================================================
 
 import { suggestedEmojiList, defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS } from './constants.js';
-import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer } from './dom-elements.js';
+import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer, themeSelector } from './dom-elements.js';
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
+import { themes, setTheme } from './theme.js';
 
 export let financialMilestones = {};
 export let raceSegments = [];
@@ -15,6 +16,7 @@ export let obstacleFrequencyPercent = 20;
 export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
 export let enableRandomPowerUps = true;
+export let selectedTheme = 'grass';
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 const HIGH_SCORE_KEY = 'fireHeistHighScores';
@@ -30,6 +32,7 @@ function saveSettings() {
         currentSkillLevel,
         intendedSpeedMultiplier,
         enableRandomPowerUps,
+        selectedTheme,
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
     };
@@ -47,12 +50,15 @@ function loadSettings() {
         currentSkillLevel = settings.currentSkillLevel || 'Rookie';
         intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
         enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
+        selectedTheme = settings.selectedTheme || 'grass';
 
         emojiInput.value = stickFigureEmoji;
         obstacleEmojiInput.value = obstacleEmoji;
         document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
         frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
         document.getElementById('enablePowerUps').checked = enableRandomPowerUps;
+        themeSelector.value = selectedTheme;
+        setTheme(selectedTheme);
 
         // Set skill level radio button
         const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${currentSkillLevel}"]`);
@@ -73,6 +79,22 @@ function loadSettings() {
         console.log("-> loadSettings: No settings found or saving is disabled. Using defaults.");
         return false; // Indicate that settings were not loaded
     }
+}
+
+export function populateThemeSelector() {
+    for (const key in themes) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = themes[key].name;
+        themeSelector.appendChild(option);
+    }
+}
+
+export function handleThemeChange(event) {
+    const themeName = event.target.value;
+    selectedTheme = themeName;
+    setTheme(themeName);
+    saveSettings();
 }
 
 export function displayHighScores() {
@@ -281,6 +303,7 @@ export async function initializeUIData() {
     }
 
     displayHighScores(); // Display high scores on startup
+    populateThemeSelector();
 }
 
 export function showResultsScreen(financialMilestones, raceSegments) {
