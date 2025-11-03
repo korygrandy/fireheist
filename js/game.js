@@ -13,7 +13,7 @@ import {
     ACCELERATOR_DURATION_MS, DECELERATOR_BASE_SPEED_DEBUFF, DECELERATOR_DURATION_MS, OBSTACLE_BASE_VELOCITY_PX_MS,
     EVENT_PROXIMITY_VISUAL_STEPS, EVENT_POPUP_HEIGHT, DIFFICULTY_SETTINGS, NUM_CLOUDS, CLOUD_SPEED_FACTOR
 } from './constants.js';
-import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound } from './audio.js';
+import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound } from './audio.js';
 import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps } from './ui.js';
 import { drawChart, generateSummaryTable } from './utils.js';
 
@@ -660,13 +660,17 @@ export function draw() {
             }
         }
 
-        let stickFigureOffset = 0;
+        let stickFigureOffsetX = 0;
+        let stickFigureOffsetY = 0;
         if (stickFigureBurst.active) {
             // Use a sine curve for a smooth burst and return
-            stickFigureOffset = stickFigureBurst.maxOffset * Math.sin(stickFigureBurst.progress * Math.PI);
+            const burstDistance = stickFigureBurst.maxOffset * Math.sin(stickFigureBurst.progress * Math.PI);
+            const burstAngleRad = 15 * (Math.PI / 180); // 15 degrees in radians
+            stickFigureOffsetX = burstDistance * Math.cos(burstAngleRad);
+            stickFigureOffsetY = -burstDistance * Math.sin(burstAngleRad); // Negative for upward movement
         }
-        const currentX = STICK_FIGURE_FIXED_X + stickFigureOffset;
-        let currentY = stickFigureGroundY;
+        const currentX = STICK_FIGURE_FIXED_X + stickFigureOffsetX;
+        let currentY = stickFigureGroundY + stickFigureOffsetY;
 
         if (jumpState.isJumping) {
             let maxJumpHeight = 0;
@@ -773,14 +777,15 @@ function spawnProximityEvent(eventData) {
     console.log(`-> spawnProximityEvent: New ${eventData.type} event spawned by proximity.`);
 }
 
-function checkCollision(runnerY) {
+function checkCollision(runnerY, angleRad) {
     if (!currentObstacle || currentObstacle.hasBeenHit || isColliding) return false;
 
     const obstacleX = currentObstacle.x;
     const runnerX = STICK_FIGURE_FIXED_X;
 
+    const groundAtObstacleY = GROUND_Y - obstacleX * Math.tan(angleRad);
     const runnerBottomY = runnerY + STICK_FIGURE_TOTAL_HEIGHT;
-    const obstacleTopY = GROUND_Y + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+    const obstacleTopY = groundAtObstacleY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     const horizontalDistance = Math.abs(obstacleX - runnerX);
     if (horizontalDistance > COLLISION_RANGE_X) return false;
@@ -798,7 +803,7 @@ function checkCollision(runnerY) {
     return false;
 }
 
-function checkAcceleratorCollision(runnerY) {
+function checkAcceleratorCollision(runnerY, angleRad) {
     if (!currentAccelerator || currentAccelerator.hasBeenCollected || isAccelerating) return false;
 
     const accelX = currentAccelerator.x;
@@ -808,8 +813,9 @@ function checkAcceleratorCollision(runnerY) {
     const horizontalDistance = Math.abs(accelX - runnerX);
     if (horizontalDistance > COLLECTION_RANGE_X) return false;
 
+    const groundAtAccelY = GROUND_Y - accelX * Math.tan(angleRad);
     const runnerBottomY = runnerY + STICK_FIGURE_TOTAL_HEIGHT;
-    const accelTopY = GROUND_Y + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+    const accelTopY = groundAtAccelY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     if (horizontalDistance < COLLECTION_RANGE_X) {
         if (runnerBottomY >= accelTopY) {
@@ -820,7 +826,7 @@ function checkAcceleratorCollision(runnerY) {
     return false;
 }
 
-function checkProximityEventCollection(runnerY) {
+function checkProximityEventCollection(runnerY, angleRad) {
     if (!onScreenCustomEvent || onScreenCustomEvent.hasBeenCollected) return false;
 
     const eventX = onScreenCustomEvent.x;
@@ -830,8 +836,9 @@ function checkProximityEventCollection(runnerY) {
     const horizontalDistance = Math.abs(eventX - runnerX);
     if (horizontalDistance > COLLECTION_RANGE_X) return false;
 
+    const groundAtEventY = GROUND_Y - eventX * Math.tan(angleRad);
     const runnerBottomY = runnerY + STICK_FIGURE_TOTAL_HEIGHT;
-    const eventTopY = GROUND_Y + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+    const eventTopY = groundAtEventY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     if (horizontalDistance < COLLECTION_RANGE_X) {
         if (runnerBottomY >= eventTopY) {
@@ -1008,11 +1015,12 @@ export function animate(timestamp) {
         }
     }
 
+    const angleRad = currentHurdle.angleRad;
     const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * gameSpeedMultiplier;
 
     if (currentObstacle) {
         currentObstacle.x -= objectMovementDelta;
-        if (checkCollision(runnerY)) {
+        if (checkCollision(runnerY, angleRad)) {
             if (!isColliding) {
                 hitsCounter++;
                 isColliding = true;
@@ -1036,10 +1044,11 @@ export function animate(timestamp) {
     if (currentAccelerator) {
         currentAccelerator.x -= objectMovementDelta;
 
-        if (checkAcceleratorCollision(runnerY)) {
+        if (checkAcceleratorCollision(runnerY, angleRad)) {
             if (!isAccelerating && !isDecelerating) {
                 stickFigureBurst = { ...stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
                 applySpeedEffect('ACCELERATOR');
+                playPowerUpSound();
             }
         }
         if (currentAccelerator.x < -OBSTACLE_WIDTH) {
@@ -1050,7 +1059,7 @@ export function animate(timestamp) {
     if (onScreenCustomEvent) {
         onScreenCustomEvent.x -= objectMovementDelta;
 
-        if (checkProximityEventCollection(runnerY)) {
+        if (checkProximityEventCollection(runnerY, angleRad)) {
             if (!isAccelerating && !isDecelerating) {
                 if (onScreenCustomEvent.type === 'ACCELERATOR') {
                     stickFigureBurst = { ...stickFigureBurst, active: true, startTime: timestamp, progress: 0 };

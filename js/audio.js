@@ -25,12 +25,14 @@ export function loadMuteSetting() {
         collisionSynth.mute = true;
         debuffSynth.mute = true;
         quackSound.mute = true;
+        powerUpSound.mute = true;
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
         collisionSynth.mute = false;
         debuffSynth.mute = false;
         quackSound.mute = false;
+        powerUpSound.mute = false;
         if (backgroundMusic) { backgroundMusic.volume.value = -18; }
         if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
     }
@@ -64,6 +66,14 @@ export const quackSound = new Tone.Player({
     onerror: (e) => console.error("-> AUDIO: Error loading quack sound:", e)
 }).toDestination();
 quackSound.mute = isMuted;
+
+export const powerUpSound = new Tone.Player({
+    url: './fx/power-up.mp3',
+    volume: -10,
+    onload: () => console.log("-> AUDIO: Power-up sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading power-up sound:", e)
+}).toDestination();
+powerUpSound.mute = isMuted;
 
 export function initializeMusicPlayer(stickFigureEmoji) {
     if (backgroundMusic) {
@@ -103,6 +113,13 @@ export function playQuackSound() {
     }
 }
 
+export function playPowerUpSound() {
+    if (isMuted) { return; }
+    if (powerUpSound.state === 'stopped') {
+        powerUpSound.start();
+    }
+}
+
 export function toggleSound(soundToggleButton) {
     if (Tone.context.state !== 'running') { Tone.start(); }
     isMuted = !isMuted;
@@ -118,15 +135,20 @@ export function toggleSound(soundToggleButton) {
         collisionSynth.mute = true;
         debuffSynth.mute = true;
         quackSound.mute = true;
+        powerUpSound.mute = true;
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
         collisionSynth.mute = false;
         debuffSynth.mute = false;
         quackSound.mute = false;
-        if (backgroundMusic) { backgroundMusic.volume.value = -18; }
-        // Only start background music if game is running and it's not already started
-        // This logic will be handled in game.js when starting the game
+        powerUpSound.mute = false;
+        if (backgroundMusic) {
+            backgroundMusic.volume.value = -18;
+            if (backgroundMusic.state === 'stopped') {
+                backgroundMusic.start();
+            }
+        }
         soundToggleButton.textContent = "🔇 Mute";
     }
     console.log(`-> toggleSound: Mute toggled. isMuted: ${isMuted}`);
