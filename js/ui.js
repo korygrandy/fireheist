@@ -14,6 +14,7 @@ export let obstacleEmoji = '🐌'; // Default value
 export let obstacleFrequencyPercent = 20;
 export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
+export let enableRandomPowerUps = true;
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 const HIGH_SCORE_KEY = 'fireHeistHighScores';
@@ -28,6 +29,7 @@ function saveSettings() {
         obstacleFrequencyPercent,
         currentSkillLevel,
         intendedSpeedMultiplier,
+        enableRandomPowerUps,
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
     };
@@ -44,11 +46,13 @@ function loadSettings() {
         obstacleFrequencyPercent = settings.obstacleFrequencyPercent || 20;
         currentSkillLevel = settings.currentSkillLevel || 'Rookie';
         intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
+        enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
 
         emojiInput.value = stickFigureEmoji;
         obstacleEmojiInput.value = obstacleEmoji;
         document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
         frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
+        document.getElementById('enablePowerUps').checked = enableRandomPowerUps;
 
         // Set skill level radio button
         const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${currentSkillLevel}"]`);
@@ -126,6 +130,11 @@ export function handleFrequencyChange(event) {
     obstacleFrequencyPercent = parseInt(event.target.value, 10);
     frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
     console.log(`-> handleFrequencyChange: Obstacle frequency updated to ${obstacleFrequencyPercent}%`);
+    saveSettings();
+}
+
+export function handlePowerUpToggle(event) {
+    enableRandomPowerUps = event.target.checked;
     saveSettings();
 }
 

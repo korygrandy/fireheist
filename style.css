@@ -41,3 +41,20 @@ body {
 .tab-button-inactive {
     @apply border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300;
 }
+
+#turbo-boost-animation {
+    position: absolute;
+    left: 160px; /* Position near the stick figure */
+    top: 280px;
+    font-family: monospace;
+    font-size: 24px;
+    font-weight: bold;
+    color: yellow; /* Yellow text */
+    background-color: transparent; /* Transparent background */
+    text-shadow: 0 0 5px orange, 2px 2px 3px rgba(128, 128, 128, 0.7); /* Orange glow with grey shadow */
+    padding: 2px 8px;
+    border-radius: 4px;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.1s ease-in-out;
+    white-space: pre;
+}
