@@ -37,7 +37,8 @@ function updateHighScore() {
     const currentScore = {
         days: Math.round(daysElapsedTotal),
         hits: hitsCounter,
-        emoji: stickFigureEmoji
+        emoji: stickFigureEmoji,
+        speed: intendedSpeedMultiplier
     };
 
     const existingScore = highScores[currentSkillLevel];
@@ -854,9 +855,7 @@ export function animate(timestamp) {
             gameOverSequenceStartTime = timestamp;
             console.log(`-> GAME OVER: Starting sequence. Victory: ${isVictory}`);
             gameRunning = false;
-            if (isVictory) {
-                updateHighScore();
-            }
+            updateHighScore();
         }
 
         draw();

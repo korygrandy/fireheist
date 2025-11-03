@@ -1,5 +1,19 @@
 [
     {
+        "version": "1.2.4",
+        "date": "2025-11-02",
+        "changes": [
+            "Enhancement: The high score system now saves and displays the game speed, providing a more complete record of player performance."
+        ]
+    },
+    {
+        "version": "1.2.3",
+        "date": "2025-11-02",
+        "changes": [
+            "Bugfix: Corrected the high score saving logic to ensure that all completed runs are eligible for high score consideration, not just flawless victories."
+        ]
+    },
+    {
         "version": "1.2.2",
         "date": "2025-11-02",
         "changes": [

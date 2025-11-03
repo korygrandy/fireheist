@@ -7,8 +7,6 @@
     <list default="true" id="a4c9cc82-7067-441a-b691-42a993adc7cd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/changelog.json" beforeDir="false" afterPath="$PROJECT_DIR$/changelog.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/dom-elements.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/dom-elements.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/version.py" afterDir="false" />
@@ -89,7 +87,7 @@
       <updated>1761838362465</updated>
       <workItem from="1761838363607" duration="32422000" />
       <workItem from="1761925764191" duration="78245000" />
-      <workItem from="1762119072322" duration="15398000" />
+      <workItem from="1762119072322" duration="16387000" />
     </task>
     <servers />
   </component>

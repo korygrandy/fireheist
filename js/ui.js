@@ -95,7 +95,8 @@ export function displayHighScores() {
                 </div>
                 <div class="text-sm text-gray-600 mt-1">
                     <span>Days: <strong>${score.days.toLocaleString()}</strong></span> | 
-                    <span>Hits: <strong>${score.hits}</strong></span>
+                    <span>Hits: <strong>${score.hits}</strong></span> |
+                    <span>Speed: <strong>${score.speed.toFixed(1)}x</strong></span>
                 </div>
             `;
         } else {
