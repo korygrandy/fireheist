@@ -251,6 +251,9 @@ export async function initializeUIData() {
     if (!settingsLoaded) {
         try {
             const response = await fetch('milestones.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
             dataInput.value = data.milestones.join('\n');
             eventDataInput.value = data.events.join('\n');
@@ -260,7 +263,23 @@ export async function initializeUIData() {
             eventDataInput.value = defaultEventDataString.trim();
         }
     }
-    loadCustomData();
+
+    // Directly parse and prepare the initial data
+    financialMilestones = parseData(dataInput.value);
+    if (financialMilestones && Object.keys(financialMilestones).length >= 2) {
+        raceSegments = prepareRaceData(financialMilestones);
+        const firstMilestoneDate = Object.keys(financialMilestones)[0];
+        customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
+        dataMessage.textContent = `Default data loaded. ${raceSegments.length} milestones and ${Object.values(customEvents).flat().length} events ready.`;
+        dataMessage.style.color = 'green';
+    } else {
+        dataMessage.textContent = "Error: Default data is invalid. Please check 'milestones.json' or provide valid custom data.";
+        dataMessage.style.color = 'red';
+        financialMilestones = {};
+        raceSegments = [];
+        customEvents = {};
+    }
+
     displayHighScores(); // Display high scores on startup
 }
 

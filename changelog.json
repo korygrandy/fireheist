@@ -1,5 +1,12 @@
 [
     {
+        "version": "1.4.2",
+        "date": "2025-11-02",
+        "changes": [
+            "Bugfix: Fixed a regression where the 'Load Custom Data' button was not loading user-provided data."
+        ]
+    },
+    {
         "version": "1.4.1",
         "date": "2025-11-02",
         "changes": [

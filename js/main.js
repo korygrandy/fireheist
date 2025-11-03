@@ -3,7 +3,7 @@
 // =================================================================
 
 import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle } from './ui.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData } from './ui.js';
 import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame } from './game.js';
 import { toggleSound, loadMuteSetting } from './audio.js';
 
@@ -79,9 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     if (stopButton) { stopButton.addEventListener('click', () => stopGame(true)); }
-    if (loadButton) { loadButton.addEventListener('click', () => {
-        initializeUIData(); // Reloads data and calls resetGameState and draw
-    }); }
+    if (loadButton) { loadButton.addEventListener('click', loadCustomData); }
     if (soundToggleButton) { soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton)); }
 
     // --- JUMP & PAUSE CONTROLS ---
