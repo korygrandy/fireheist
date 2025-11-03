@@ -5,7 +5,7 @@
 import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings } from './dom-elements.js';
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData } from './ui.js';
 import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame } from './game.js';
-import { toggleSound } from './audio.js';
+import { toggleSound, loadMuteSetting } from './audio.js';
 
 async function loadVersion() {
     try {
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("-> DOMContentLoaded: Initializing game components.");
 
     loadVersion();
+    loadMuteSetting(); // Load mute setting on startup
 
     // 1. Set up event listeners
 
@@ -54,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         disableSaveSettings.addEventListener('change', () => {
             if (disableSaveSettings.checked) {
                 localStorage.removeItem('fireHeistSettings');
-                console.log("-> Settings cleared from localStorage.");
+                localStorage.removeItem('fireHeistMuteSetting');
+                console.log("-> All settings cleared from localStorage.");
             }
         });
     }

@@ -42,7 +42,7 @@ function loadSettings() {
         obstacleEmoji = settings.obstacleEmoji || '🐌';
         obstacleFrequencyPercent = settings.obstacleFrequencyPercent || 20;
         currentSkillLevel = settings.currentSkillLevel || 'Rookie';
-        intendedSpeedMultiplier = settings.intendedSpeedMultiplier || 1.0;
+        intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
 
         emojiInput.value = stickFigureEmoji;
         obstacleEmojiInput.value = obstacleEmoji;
@@ -54,7 +54,8 @@ function loadSettings() {
         if (skillRadio) skillRadio.checked = true;
 
         // Set speed radio button
-        const speedRadio = document.querySelector(`input[name="gameSpeed"][value="${intendedSpeedMultiplier}"]`);
+        const speedString = intendedSpeedMultiplier.toFixed(1);
+        const speedRadio = document.querySelector(`input[name="gameSpeed"][value="${speedString}"]`);
         if (speedRadio) speedRadio.checked = true;
 
         // Load saved data into text areas, falling back to default if not present
@@ -249,9 +250,9 @@ export function updateControlPanelState(gameRunning, isPaused) {
     } else {
         startButton.disabled = false; // It's now the pause/resume button
         if (isPaused) {
-            startButton.textContent = "Unpause";
+            startButton.textContent = "Unpause (P)";
         } else {
-            startButton.textContent = "Pause";
+            startButton.textContent = "Pause (P)";
         }
     }
 

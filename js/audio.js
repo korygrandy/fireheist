@@ -3,9 +3,37 @@
 // =================================================================
 
 import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from './constants.js';
+import { soundToggleButton, disableSaveSettings } from "./dom-elements.js";
 
 export let isMuted = false;
 export let backgroundMusic = null;
+
+const MUTE_STORAGE_KEY = 'fireHeistMuteSetting';
+
+export function loadMuteSetting() {
+    if (disableSaveSettings.checked) {
+        isMuted = false; // Default to unmuted when settings are disabled
+    } else {
+        const savedMuteSetting = localStorage.getItem(MUTE_STORAGE_KEY);
+        isMuted = savedMuteSetting === 'true'; // Default to unmuted if no setting is found
+    }
+
+    // Apply the loaded setting
+    if (isMuted) {
+        if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
+        chaChingSynth.mute = true;
+        collisionSynth.mute = true;
+        debuffSynth.mute = true;
+        if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
+    } else {
+        chaChingSynth.mute = false;
+        collisionSynth.mute = false;
+        debuffSynth.mute = false;
+        if (backgroundMusic) { backgroundMusic.volume.value = -18; }
+        if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
+    }
+    console.log(`-> loadMuteSetting: Mute setting loaded. isMuted: ${isMuted}`);
+}
 
 export const chaChingSynth = new Tone.MetalSynth({
     frequency: 200, envelope: { attack: 0.001, decay: 0.2, release: 0.1 },
@@ -62,6 +90,11 @@ export function toggleSound(soundToggleButton) {
     if (Tone.context.state !== 'running') { Tone.start(); }
     isMuted = !isMuted;
 
+    // Save the new setting to localStorage only if saving is enabled
+    if (!disableSaveSettings.checked) {
+        localStorage.setItem(MUTE_STORAGE_KEY, isMuted);
+    }
+
     if (isMuted) {
         if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
         chaChingSynth.mute = true;
@@ -77,4 +110,5 @@ export function toggleSound(soundToggleButton) {
         // This logic will be handled in game.js when starting the game
         soundToggleButton.textContent = "🔇 Mute";
     }
+    console.log(`-> toggleSound: Mute toggled. isMuted: ${isMuted}`);
 }
