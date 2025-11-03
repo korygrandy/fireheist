@@ -48,11 +48,12 @@ export const themes = {
         }
     },
     'roadway': {
-        name: 'City Roadway',
-        sky: '#696969',
+        name: 'Urban City',
+        sky: '#A9B7C6',
         ground: '#36454F',
         grassBlades: null,
         roadLines: '#FFFF00', // Yellow Stripes
+        curb: '#000000', // Black curb
         hurdle: {
             fill: '#808080',
             stroke: '#FFFF00'
