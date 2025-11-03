@@ -3,7 +3,7 @@
 // =================================================================
 
 import { suggestedEmojiList, defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS } from './constants.js';
-import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings } from './dom-elements.js';
+import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer } from './dom-elements.js';
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
 
 export let financialMilestones = {};
@@ -16,6 +16,7 @@ export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
+const HIGH_SCORE_KEY = 'fireHeistHighScores';
 
 function saveSettings() {
     if (disableSaveSettings.checked) {
@@ -68,6 +69,44 @@ function loadSettings() {
         console.log("-> loadSettings: No settings found or saving is disabled. Using defaults.");
         return false; // Indicate that settings were not loaded
     }
+}
+
+export function displayHighScores() {
+    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
+    highScoresContainer.innerHTML = ''; // Clear existing scores
+
+    ['Rookie', 'Novice', 'Pro'].forEach(level => {
+        const score = highScores[level];
+        const scoreCard = document.createElement('div');
+        scoreCard.className = 'p-3 bg-gray-100 rounded-lg';
+
+        let content;
+        if (score) {
+            const isFlawless = score.hits === 0;
+            content = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="font-bold text-lg text-gray-700">${level}</span>
+                        ${isFlawless ? '<span class="text-yellow-500 ml-2">🏆 Flawless!</span>' : ''}
+                    </div>
+                    <div class="text-right">
+                        <span class="text-2xl">${score.emoji}</span>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                    <span>Days: <strong>${score.days.toLocaleString()}</strong></span> | 
+                    <span>Hits: <strong>${score.hits}</strong></span>
+                </div>
+            `;
+        } else {
+            content = `
+                <div class="font-bold text-lg text-gray-500">${level}</div>
+                <div class="text-sm text-gray-400 mt-1">No record yet.</div>
+            `;
+        }
+        scoreCard.innerHTML = content;
+        highScoresContainer.appendChild(scoreCard);
+    });
 }
 
 export function updateEmoji(event) {
@@ -212,9 +251,14 @@ export async function initializeUIData() {
         }
     }
     loadCustomData();
+    displayHighScores(); // Display high scores on startup
 }
 
 export function showResultsScreen(financialMilestones, raceSegments) {
+    if (!financialMilestones || Object.keys(financialMilestones).length === 0 || !raceSegments || raceSegments.length === 0) {
+        console.error("-> showResultsScreen: Called with invalid or empty data. Aborting render.");
+        return;
+    }
     chartContainer.style.display = 'block';
     tableContainer.style.display = 'block';
     drawChart(financialMilestones, document.getElementById('milestoneChart').getContext('2d'));

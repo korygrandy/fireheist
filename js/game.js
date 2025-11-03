@@ -14,7 +14,7 @@ import {
     EVENT_PROXIMITY_VISUAL_STEPS, EVENT_POPUP_HEIGHT, DIFFICULTY_SETTINGS, NUM_CLOUDS, CLOUD_SPEED_FACTOR
 } from './constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound } from './audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState } from './ui.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores } from './ui.js';
 import { drawChart, generateSummaryTable } from './utils.js';
 
 // Game State Variables
@@ -29,6 +29,26 @@ let frameCount = 0;
 let accumulatedCash = 0;
 let daysCounter = null;
 let gameSpeedMultiplier = 1.0; // The CURRENT speed (affected by effects)
+
+const HIGH_SCORE_KEY = 'fireHeistHighScores';
+
+function updateHighScore() {
+    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
+    const currentScore = {
+        days: Math.round(daysElapsedTotal),
+        hits: hitsCounter,
+        emoji: stickFigureEmoji
+    };
+
+    const existingScore = highScores[currentSkillLevel];
+
+    if (!existingScore || currentScore.hits < existingScore.hits || (currentScore.hits === existingScore.hits && currentScore.days < existingScore.days)) {
+        highScores[currentSkillLevel] = currentScore;
+        localStorage.setItem(HIGH_SCORE_KEY, JSON.stringify(highScores));
+        console.log(`-> updateHighScore: New high score for ${currentSkillLevel} saved!`);
+        displayHighScores(); // Update the UI immediately
+    }
+}
 
 // Modifiable Jump/Collision Constants (from DIFFICULTY_SETTINGS)
 let COLLISION_RANGE_X = DIFFICULTY_SETTINGS.Rookie.COLLISION_RANGE_X;
@@ -834,13 +854,15 @@ export function animate(timestamp) {
             gameOverSequenceStartTime = timestamp;
             console.log(`-> GAME OVER: Starting sequence. Victory: ${isVictory}`);
             gameRunning = false;
+            if (isVictory) {
+                updateHighScore();
+            }
         }
 
         draw();
         drawVictoryOverlay(timestamp - gameOverSequenceStartTime);
 
         if (timestamp - gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
-            showResultsScreen(financialMilestones, raceSegments);
             stopGame(false);
             isGameOverSequence = false;
             return;
@@ -1243,6 +1265,7 @@ export function stopGame(shouldReset = true) {
         resetGameState();
         draw();
     } else {
+        showResultsScreen(financialMilestones, raceSegments);
         updateControlPanelState(false, false);
         document.getElementById('startButton').textContent = "Restart Heist!";
         console.log("-> STOP GAME: Game ended, displaying results.");

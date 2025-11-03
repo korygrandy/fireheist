@@ -178,7 +178,9 @@ export function drawChart(financialMilestones, chartCtx) {
     const allValues = Object.values(financialMilestones);
     const maxValue = Math.max(...allValues, 0);
     const maxY = Math.ceil((maxValue + CHART_Y_STEP_SIZE) / CHART_Y_STEP_SIZE) * CHART_Y_STEP_SIZE;
-    if (window.milestoneChart) { window.milestoneChart.destroy(); }
+    if (window.milestoneChart instanceof Chart) {
+        window.milestoneChart.destroy();
+    }
     window.milestoneChart = new Chart(chartCtx, {
         type: 'line',
         data: {

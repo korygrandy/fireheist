@@ -1,5 +1,26 @@
 [
     {
+        "version": "1.2.2",
+        "date": "2025-11-02",
+        "changes": [
+            "Bugfix: Resolved a critical bug where the end-of-game results chart would crash on the first run by adding a defensive check to the chart drawing function."
+        ]
+    },
+    {
+        "version": "1.2.1",
+        "date": "2025-11-02",
+        "changes": [
+            "Bugfix: Fixed a regression where the end-of-game results chart would fail to render by ensuring the chart drawing function is called at the correct time and with valid data."
+        ]
+    },
+    {
+        "version": "1.2.0",
+        "date": "2025-11-02",
+        "changes": [
+            "Feature: Implemented the 'Flawless Heist' Chronicle high score system, adding a 'Hall of Fame' tab to display best runs for each difficulty."
+        ]
+    },
+    {
         "version": "1.1.9",
         "date": "2025-11-02",
         "changes": [
@@ -68,78 +89,6 @@
         "date": "2025-11-02",
         "changes": [
             "Enhancement: Moved the version display from the footer to the main title."
-        ]
-    },
-    {
-        "version": "1.0.9",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Implemented dynamic loading of the version number from `version.py` into the footer."
-        ]
-    },
-    {
-        "version": "1.0.8",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Corrected the display location of the version number, ensuring it appears only in the footer and not on the game canvas."
-        ]
-    },
-    {
-        "version": "1.0.7",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Implemented music pause functionality when the game is paused.",
-            "Feature: Added a dynamic version footer to the application.",
-            "Bugfix: Resolved an issue where the 'Unpause' button label was not updating correctly."
-        ]
-    },
-    {
-        "version": "1.0.6",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Changed the 'Resume' button text to 'Unpause' when the game is paused."
-        ]
-    },
-    {
-        "version": "1.0.5",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Implemented pause and resume functionality. The game can be paused by pressing the 'P' key or by clicking the 'Pause' button, which replaces the 'Start' button during gameplay."
-        ]
-    },
-    {
-        "version": "1.0.4",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Exported the `startManualJump` function from `game.js` to resolve a module import error in `main.js`."
-        ]
-    },
-    {
-        "version": "1.0.3",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Exported the `gameRunning` variable from `game.js` to resolve a module import error in `main.js`."
-        ]
-    },
-    {
-        "version": "1.0.2",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Removed duplicate `startManualJump` function in `game.js` causing a fatal error."
-        ]
-    },
-    {
-        "version": "1.0.1",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Corrected a syntax error in `ui.js` that prevented the application from loading."
-        ]
-    },
-    {
-        "version": "1.0.0",
-        "date": "2025-11-02",
-        "changes": [
-            "Refactor: Separated CSS and JavaScript into modular files from the monolithic `index.html`."
         ]
     }
 ]
