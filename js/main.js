@@ -2,8 +2,8 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData } from './ui.js';
+import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector } from './dom-elements.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange } from './ui.js';
 import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame } from './game.js';
 import { toggleSound, loadMuteSetting } from './audio.js';
 
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         speedSelector.addEventListener('change', handleSpeedChange);
         frequencyRange.addEventListener('input', handleFrequencyChange);
         skillLevelSelector.addEventListener('change', handleSkillLevelChange);
+        themeSelector.addEventListener('change', handleThemeChange);
     }
 
     if (enablePowerUps) {

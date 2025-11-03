@@ -16,6 +16,7 @@ import {
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound } from './audio.js';
 import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps } from './ui.js';
 import { drawChart, generateSummaryTable } from './utils.js';
+import { currentTheme } from './theme.js';
 
 // Game State Variables
 let activeCustomEvents = []; // Stores events to be triggered in game (by days elapsed)
@@ -98,9 +99,7 @@ const GRASS_ANIMATION_INTERVAL_MS = 200; // Update grass blades every 200ms
 let grassAnimationState = { blades: [], lastUpdateTime: 0 };
 
 const clouds = [];
-let activeCashBags = [];
-
-// =================================================================
+let activeCashBags = [];// =================================================================
 // DRAWING FUNCTIONS
 // =================================================================
 
@@ -452,8 +451,8 @@ function drawSlantedGround(angleRad) {
     const slopeHeight = Math.tan(angleRad) * canvas.width;
     const endY = GROUND_Y - slopeHeight;
 
-    // Main ground color
-    ctx.fillStyle = '#1c7d3c'; // Dark green
+    // Main ground color from theme
+    ctx.fillStyle = currentTheme.ground;
     ctx.beginPath();
     ctx.moveTo(0, GROUND_Y);
     ctx.lineTo(canvas.width, endY);
@@ -463,26 +462,47 @@ function drawSlantedGround(angleRad) {
     ctx.fill();
 
     // Lighter green for texture lines (grass blades)
-    ctx.strokeStyle = '#229944'; // Lighter green
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
+    if (currentTheme.grassBlades) {
+        ctx.strokeStyle = currentTheme.grassBlades;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
 
-    // Draw the main slope line
-    ctx.moveTo(0, GROUND_Y);
-    ctx.lineTo(canvas.width, endY);
+        // Draw the main slope line
+        ctx.moveTo(0, GROUND_Y);
+        ctx.lineTo(canvas.width, endY);
 
-    // Update grass blades if interval passed or if not yet generated
-    if (performance.now() - grassAnimationState.lastUpdateTime > GRASS_ANIMATION_INTERVAL_MS || grassAnimationState.blades.length === 0) {
-        generateGrassBlades(angleRad);
+        // Update grass blades if interval passed or if not yet generated
+        if (performance.now() - grassAnimationState.lastUpdateTime > GRASS_ANIMATION_INTERVAL_MS || grassAnimationState.blades.length === 0) {
+            generateGrassBlades(angleRad);
+        }
+
+        // Draw grass blade texture
+        const bladeHeight = 8;
+        grassAnimationState.blades.forEach(blade => {
+            ctx.moveTo(blade.x, blade.y);
+            ctx.lineTo(blade.x, blade.y - bladeHeight * blade.heightFactor);
+        });
+        ctx.stroke();
     }
 
-    // Draw grass blade texture
-    const bladeHeight = 8;
-    grassAnimationState.blades.forEach(blade => {
-        ctx.moveTo(blade.x, blade.y);
-        ctx.lineTo(blade.x, blade.y - bladeHeight * blade.heightFactor);
-    });
-    ctx.stroke();
+    if (currentTheme.roadLines) {
+        ctx.strokeStyle = currentTheme.roadLines;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const lineLength = 40;
+        const gapLength = 60;
+        const patternLength = lineLength + gapLength;
+        const numLines = canvas.width / patternLength;
+        for (let i = 0; i < numLines * 2; i++) {
+            const startX = (i * patternLength - backgroundOffset * 0.1) % (canvas.width + patternLength) - patternLength;
+            const startY = GROUND_Y - 20 - startX * Math.tan(angleRad);
+            const endX = startX + lineLength;
+            const endY = GROUND_Y - 20 - endX * Math.tan(angleRad);
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+        }
+        ctx.stroke();
+    }
 }
 
 function drawHurdle(hurdleData) {
@@ -495,12 +515,12 @@ function drawHurdle(hurdleData) {
         ctx.translate(hurdleDrawX + 15, groundAtHurdleY);
         ctx.rotate(-currentAngleRad);
 
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = currentTheme.hurdle.fill;
         ctx.fillRect(-17, -hurdleData.hurdleHeight, 4, hurdleData.hurdleHeight);
         ctx.fillRect(13, -hurdleData.hurdleHeight, 4, hurdleData.hurdleHeight);
         ctx.fillRect(-17, -hurdleData.hurdleHeight, 34, 5);
 
-        ctx.strokeStyle = '#cccccc';
+        ctx.strokeStyle = currentTheme.hurdle.stroke;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(-17, -hurdleData.hurdleHeight + 10); ctx.lineTo(17, -hurdleData.hurdleHeight + 10);
@@ -621,7 +641,7 @@ function drawObstacle(obstacle, angleRad) {
 export let isInitialLoad = true; // Global flag for initial state
 
 export function draw() {
-    ctx.fillStyle = '#87CEEB';
+    ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawClouds();
@@ -663,8 +683,23 @@ export function draw() {
         let stickFigureOffsetX = 0;
         let stickFigureOffsetY = 0;
         if (stickFigureBurst.active) {
-            // Use a sine curve for a smooth burst and return
-            const burstDistance = stickFigureBurst.maxOffset * Math.sin(stickFigureBurst.progress * Math.PI);
+            const p = stickFigureBurst.progress;
+            let burstDistance = 0;
+
+            if (p < 0.3) {
+                // Phase 1: First stutter
+                const phaseProgress = p / 0.3;
+                burstDistance = stickFigureBurst.maxOffset * 0.4 * Math.sin(phaseProgress * Math.PI);
+            } else if (p < 0.6) {
+                // Phase 2: Second stutter
+                const phaseProgress = (p - 0.3) / 0.3;
+                burstDistance = stickFigureBurst.maxOffset * 0.7 * Math.sin(phaseProgress * Math.PI);
+            } else {
+                // Phase 3: Final boost
+                const phaseProgress = (p - 0.6) / 0.4;
+                burstDistance = stickFigureBurst.maxOffset * 1.0 * Math.sin(phaseProgress * Math.PI);
+            }
+
             const burstAngleRad = 15 * (Math.PI / 180); // 15 degrees in radians
             stickFigureOffsetX = burstDistance * Math.cos(burstAngleRad);
             stickFigureOffsetY = -burstDistance * Math.sin(burstAngleRad); // Negative for upward movement

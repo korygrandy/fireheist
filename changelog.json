@@ -1,5 +1,23 @@
 [
     {
+        "version": "1.4.4",
+        "date": "2025-11-03",
+        "changes": [
+            "Feature: Implemented four new visual themes: Brown Mountains, White Snowpeaks, Orange and Black Volcano, and City Roadway.",
+            "Enhancement: Refined the City Roadway theme's yellow stripes for better visual scale and placement.",
+            "Enhancement: Updated the Volcano theme with white hurdles and a royal blue sky for improved aesthetics.",
+            "Enhancement: Reworked the accelerator power-up animation to a more dynamic three-step stutter boost."
+        ]
+    },
+    {
+        "version": "1.4.3",
+        "date": "2025-11-02",
+        "changes": [
+            "Enhancement: Added a yellow lava-like effect to the volcano theme's grass blades.",
+            "Enhancement: Updated milestone hurdle colors to white for Green Grass and Black and Orange Volcano themes for better contrast."
+        ]
+    },
+    {
         "version": "1.4.2",
         "date": "2025-11-02",
         "changes": [
@@ -53,185 +71,6 @@
         "date": "2025-11-02",
         "changes": [
             "Bugfix: Fixed a visual bug where a blue strip was visible below the grass line."
-        ]
-    },
-    {
-        "version": "1.3.4",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Adjusted the grass texture animation speed to reduce flickering and improve visual comfort."
-        ]
-    },
-    {
-        "version": "1.3.3",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Enhanced the grass texture to give it a more 3D appearance."
-        ]
-    },
-    {
-        "version": "1.3.2",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Standardized collision animations across all accelerator types for a consistent visual experience."
-        ]
-    },
-    {
-        "version": "1.3.1",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Added a configuration option to enable/disable random power-ups.",
-            "Bugfix: Fixed a regression where random power-ups were not spawning.",
-            "Enhancement: Changed the runner's leg color to green during acceleration for better visual feedback."
-        ]
-    },
-    {
-        "version": "1.3.0",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Fixed a visual regression where the screen flash would persist after a power-up collision.",
-            "Enhancement: Increased the burst animation speed and added orange leg coloring during acceleration for better visual feedback."
-        ]
-    },
-    {
-        "version": "1.2.9",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Replaced the ineffective speed burst with a visual 'lurch' animation for more distinct power-up feedback."
-        ]
-    },
-    {
-        "version": "1.2.8",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Increased the speed burst multiplier to 5.0x for a more extreme power-up collision effect."
-        ]
-    },
-    {
-        "version": "1.2.7",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Implemented a short speed burst on power-up collision for more dynamic feedback."
-        ]
-    },
-    {
-        "version": "1.2.6",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Tweaked turbo boost animation styling to use a transparent background, yellow text, and an orange glow with a grey text shadow."
-        ]
-    },
-    {
-        "version": "1.2.5",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Added a screen flash effect and an ASCII turbo boost animation to enhance gameplay immersion."
-        ]
-    },
-    {
-        "version": "1.2.4",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: The high score system now saves and displays the game speed, providing a more complete record of player performance."
-        ]
-    },
-    {
-        "version": "1.2.3",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Corrected the high score saving logic to ensure that all completed runs are eligible for high score consideration, not just flawless victories."
-        ]
-    },
-    {
-        "version": "1.2.2",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Resolved a critical bug where the end-of-game results chart would crash on the first run by adding a defensive check to the chart drawing function."
-        ]
-    },
-    {
-        "version": "1.2.1",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Fixed a regression where the end-of-game results chart would fail to render by ensuring the chart drawing function is called at the correct time and with valid data."
-        ]
-    },
-    {
-        "version": "1.2.0",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Implemented the 'Flawless Heist' Chronicle high score system, adding a 'Hall of Fame' tab to display best runs for each difficulty."
-        ]
-    },
-    {
-        "version": "1.1.9",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Further improved active tab styling for better visual distinction and user experience."
-        ]
-    },
-    {
-        "version": "1.1.8",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Implemented localStorage persistence for the mute setting."
-        ]
-    },
-    {
-        "version": "1.1.7",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Improved the tabbed interface with pipe separators and a more distinct active state for better visual clarity."
-        ]
-    },
-    {
-        "version": "1.1.6",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Updated the default dataset in `milestones.json` to a comprehensive 7-year FIRE journey with 20 custom events for robust testing and demonstration."
-        ]
-    },
-    {
-        "version": "1.1.5",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Added a 'Disable Saved Settings' checkbox to give users control over `localStorage` persistence."
-        ]
-    },
-    {
-        "version": "1.1.4",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Implemented `localStorage` to persist user settings (emoji, obstacle, frequency, skill, speed) and custom milestone/event data."
-        ]
-    },
-    {
-        "version": "1.1.3",
-        "date": "2025-11-02",
-        "changes": [
-            "Feature: Created `milestones.json` to store default milestone and event data.",
-            "Enhancement: The application now loads default data from `milestones.json` on startup."
-        ]
-    },
-    {
-        "version": "1.1.2",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Resolved an issue where a custom event's entrance animation would loop if the event was missed by the player."
-        ]
-    },
-    {
-        "version": "1.1.1",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Corrected the music pause functionality to use `Tone.Transport` for pausing and resuming audio."
-        ]
-    },
-    {
-        "version": "1.1.0",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Moved the version display from the footer to the main title."
         ]
     }
 ]
