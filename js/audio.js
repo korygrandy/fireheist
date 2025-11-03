@@ -26,6 +26,8 @@ export function loadMuteSetting() {
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
+        winnerSound.mute = true;
+        loserSound.mute = true;
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -33,6 +35,8 @@ export function loadMuteSetting() {
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;
+        winnerSound.mute = false;
+        loserSound.mute = false;
         if (backgroundMusic) { backgroundMusic.volume.value = -18; }
         if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
     }
@@ -84,7 +88,7 @@ export const winnerSound = new Tone.Player({
 winnerSound.mute = isMuted;
 
 export const loserSound = new Tone.Player({
-    url: './fx/quack.mp3', // Placeholder
+    url: './fx/loser.mp3',
     volume: -10,
     onload: () => console.log("-> AUDIO: Loser sound loaded."),
     onerror: (e) => console.error("-> AUDIO: Error loading loser sound:", e)
@@ -173,6 +177,8 @@ export function toggleSound(soundToggleButton) {
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
+        winnerSound.mute = true;
+        loserSound.mute = true;
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -180,6 +186,8 @@ export function toggleSound(soundToggleButton) {
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;
+        winnerSound.mute = false;
+        loserSound.mute = false;
         if (backgroundMusic) {
             backgroundMusic.volume.value = -18;
             if (backgroundMusic.state === 'stopped') {
