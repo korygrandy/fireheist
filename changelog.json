@@ -1,5 +1,12 @@
 [
     {
+        "version": "1.1.5",
+        "date": "2025-11-02",
+        "changes": [
+            "Feature: Added a 'Disable Saved Settings' checkbox to give users control over `localStorage` persistence."
+        ]
+    },
+    {
         "version": "1.1.4",
         "date": "2025-11-02",
         "changes": [

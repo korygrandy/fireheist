@@ -2,7 +2,7 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector } from './dom-elements.js';
+import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings } from './dom-elements.js';
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData } from './ui.js';
 import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame } from './game.js';
 import { toggleSound } from './audio.js';
@@ -48,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
         speedSelector.addEventListener('change', handleSpeedChange);
         frequencyRange.addEventListener('input', handleFrequencyChange);
         skillLevelSelector.addEventListener('change', handleSkillLevelChange);
+    }
+
+    if (disableSaveSettings) {
+        disableSaveSettings.addEventListener('change', () => {
+            if (disableSaveSettings.checked) {
+                localStorage.removeItem('fireHeistSettings');
+                console.log("-> Settings cleared from localStorage.");
+            }
+        });
     }
 
     // 2. Load initial UI data

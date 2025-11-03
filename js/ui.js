@@ -3,7 +3,7 @@
 // =================================================================
 
 import { suggestedEmojiList, defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS } from './constants.js';
-import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector } from './dom-elements.js';
+import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings } from './dom-elements.js';
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
 
 export let financialMilestones = {};
@@ -18,6 +18,9 @@ export let intendedSpeedMultiplier = 1.0;
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 
 function saveSettings() {
+    if (disableSaveSettings.checked) {
+        return; // Don't save if the checkbox is checked
+    }
     const settings = {
         stickFigureEmoji,
         obstacleEmoji,
@@ -33,7 +36,7 @@ function saveSettings() {
 
 function loadSettings() {
     const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (savedSettings) {
+    if (savedSettings && !disableSaveSettings.checked) {
         const settings = JSON.parse(savedSettings);
         stickFigureEmoji = settings.stickFigureEmoji || '🦹‍♂️';
         obstacleEmoji = settings.obstacleEmoji || '🐌';
@@ -59,8 +62,10 @@ function loadSettings() {
         eventDataInput.value = settings.eventData || defaultEventDataString.trim();
 
         console.log("-> loadSettings: Settings loaded from localStorage.");
+        return true; // Indicate that settings were loaded
     } else {
-        console.log("-> loadSettings: No settings found in localStorage. Using defaults.");
+        console.log("-> loadSettings: No settings found or saving is disabled. Using defaults.");
+        return false; // Indicate that settings were not loaded
     }
 }
 
@@ -192,18 +197,15 @@ export function loadCustomData() {
     saveSettings(); // Save the newly loaded custom data
 }
 export async function initializeUIData() {
-    loadSettings(); // Load settings first
-    try {
-        const response = await fetch('milestones.json');
-        const data = await response.json();
-        // Only update if localStorage didn't provide data for these fields
-        if (!localStorage.getItem(LOCAL_STORAGE_KEY)) {
+    const settingsLoaded = loadSettings();
+    if (!settingsLoaded) {
+        try {
+            const response = await fetch('milestones.json');
+            const data = await response.json();
             dataInput.value = data.milestones.join('\n');
             eventDataInput.value = data.events.join('\n');
-        }
-    } catch (error) {
-        console.error('Error loading default milestone data:', error);
-        if (!localStorage.getItem(LOCAL_STORAGE_KEY)) {
+        } catch (error) {
+            console.error('Error loading default milestone data:', error);
             dataInput.value = defaultDataString.trim();
             eventDataInput.value = defaultEventDataString.trim();
         }

@@ -23,3 +23,4 @@ export const soundToggleButton = document.getElementById('soundToggleButton');
 export const frequencyRange = document.getElementById('obstacleFrequency');
 export const frequencyValueSpan = document.getElementById('frequencyValue');
 export const skillLevelSelector = document.getElementById('skillLevelSelector');
+export const disableSaveSettings = document.getElementById('disableSaveSettings');
