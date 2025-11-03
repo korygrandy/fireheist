@@ -1,5 +1,35 @@
 [
     {
+        "version": "1.4.7",
+        "date": "2025-11-03",
+        "changes": [
+            "Feature: Implemented backflip and frontflip animations with keyboard ('Z', 'F') and mobile gesture controls (Swipe Up for Frontflip, Swipe Right for Backflip).",
+            "Feature: Added a Houdini-style animation with keyboard ('I') and mobile gesture controls (3-Finger Tap).",
+            "Feature: Integrated jumping motion into all special move animations for obstacle clearance.",
+            "Feature: Added win/loss sound effects (fx/winner.mp3 and fx/quack.mp3 as placeholder for loser sound).",
+            "Bugfix: Resolved animation defect where rotational animations only affected limbs, not the entire body.",
+            "Improvement: Remapped mobile gestures to accommodate new animations (Power Stomp to Swipe Down, Dive to 2-Finger Tap).",
+            "Improvement: Updated in-game info panel to reflect new keyboard and mobile controls.",
+            "Improvement: Adjusted 'City Roadway' theme: Lighter sky color for a distinct horizon, added a black curb line above road lines, and adjusted yellow road lines for better visual spacing.",
+            "Improvement: Repositioned 'Power-up >>' animation to display at the bottom inside the gameCanvas."
+        ]
+    },
+    {
+        "version": "1.4.6",
+        "date": "2025-11-03",
+        "changes": [
+            "Feature: Added a clickable info icon to the Heist Control Panel that displays key and mobile gesture assignments for gameplay, with separate sections for keyboard and mobile controls."
+        ]
+    },
+    {
+        "version": "1.4.5",
+        "date": "2025-11-03",
+        "changes": [
+            "Feature: Added hurdler animations for all characters, triggered by the 'j' key or a two-finger tap.",
+            "Feature: Added a Special Move for each character, triggered by the 'k' key or a three-finger tap."
+        ]
+    },
+    {
         "version": "1.4.4",
         "date": "2025-11-03",
         "changes": [
@@ -50,27 +80,6 @@
         "date": "2025-11-02",
         "changes": [
             "Enhancement: Added a 'power-up' sound effect for accelerator collisions to improve audio feedback."
-        ]
-    },
-    {
-        "version": "1.3.7",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Added a 'quack' sound effect for obstacle collisions to improve audio feedback."
-        ]
-    },
-    {
-        "version": "1.3.6",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Fixed a visual bug where a blue strip was visible below the grass line."
-        ]
-    },
-    {
-        "version": "1.3.5",
-        "date": "2025-11-02",
-        "changes": [
-            "Bugfix: Fixed a visual bug where a blue strip was visible below the grass line."
         ]
     }
 ]

@@ -26,6 +26,8 @@ export function loadMuteSetting() {
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
+        winnerSound.mute = true;
+        loserSound.mute = true;
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -33,6 +35,8 @@ export function loadMuteSetting() {
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;
+        winnerSound.mute = false;
+        loserSound.mute = false;
         if (backgroundMusic) { backgroundMusic.volume.value = -18; }
         if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
     }
@@ -74,6 +78,43 @@ export const powerUpSound = new Tone.Player({
     onerror: (e) => console.error("-> AUDIO: Error loading power-up sound:", e)
 }).toDestination();
 powerUpSound.mute = isMuted;
+
+export const winnerSound = new Tone.Player({
+    url: './fx/winner.mp3',
+    volume: -5,
+    onload: () => console.log("-> AUDIO: Winner sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading winner sound:", e)
+}).toDestination();
+winnerSound.mute = isMuted;
+
+export const loserSound = new Tone.Player({
+    url: './fx/loser.mp3',
+    volume: -10,
+    onload: () => console.log("-> AUDIO: Loser sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading loser sound:", e)
+}).toDestination();
+loserSound.mute = isMuted;
+
+export function preloadEndgameSounds() {
+    winnerSound.buffer;
+    loserSound.buffer;
+}
+
+export function playWinnerSound() {
+    if (isMuted) { return; }
+    if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
+    if (winnerSound.state === 'stopped') {
+        winnerSound.start();
+    }
+}
+
+export function playLoserSound() {
+    if (isMuted) { return; }
+    if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
+    if (loserSound.state === 'stopped') {
+        loserSound.start();
+    }
+}
 
 export function initializeMusicPlayer(stickFigureEmoji) {
     if (backgroundMusic) {
@@ -136,6 +177,8 @@ export function toggleSound(soundToggleButton) {
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
+        winnerSound.mute = true;
+        loserSound.mute = true;
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -143,6 +186,8 @@ export function toggleSound(soundToggleButton) {
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;
+        winnerSound.mute = false;
+        loserSound.mute = false;
         if (backgroundMusic) {
             backgroundMusic.volume.value = -18;
             if (backgroundMusic.state === 'stopped') {

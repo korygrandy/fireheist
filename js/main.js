@@ -4,7 +4,7 @@
 
 import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector } from './dom-elements.js';
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange } from './ui.js';
-import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame } from './game.js';
+import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame, startHurdle, startSpecialMove, startPowerStomp, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game.js';
 import { toggleSound, loadMuteSetting } from './audio.js';
 
 async function loadVersion() {
@@ -41,6 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     // --- END TAB SWITCHING ---
+
+    const infoIcon = document.getElementById('info-icon');
+    const infoPanel = document.getElementById('info-panel');
+
+    if (infoIcon && infoPanel) {
+        infoIcon.addEventListener('click', () => {
+            infoPanel.classList.toggle('hidden');
+        });
+    }
 
     if (emojiInput && speedSelector && obstacleEmojiInput && frequencyRange && skillLevelSelector) {
         setupSuggestedEmojis();
@@ -94,12 +103,153 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             togglePauseGame();
         }
+        if (e.code === 'KeyJ' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startHurdle();
+        }
+        if (e.code === 'KeyK' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startSpecialMove();
+        }
+        if (e.code === 'KeyX' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startPowerStomp();
+        }
+        if (e.code === 'KeyD' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startDive();
+        }
+        if (e.code === 'KeyC' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startCorkscrewSpin();
+        }
+        if (e.code === 'KeyS' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startScissorKick();
+        }
+        if (e.code === 'KeyV' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startPhaseDash();
+        }
+        if (e.code === 'KeyH' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startHover();
+        }
+        if (e.code === 'KeyG' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startGroundPound();
+        }
+        if (e.code === 'KeyB' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startCartoonScramble();
+        }
+        if (e.code === 'KeyM' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startMoonwalk();
+        }
+        if (e.code === 'KeyN' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startShockwave();
+        }
+        if (e.code === 'KeyZ' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startBackflip();
+        }
+        if (e.code === 'KeyF' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startFrontflip();
+        }
+        if (e.code === 'KeyI' && gameRunning && !isPaused) {
+            e.preventDefault();
+            startHoudini();
+        }
     });
 
-    document.getElementById('gameCanvas').addEventListener('touchstart', (e) => {
+    const gameCanvas = document.getElementById('gameCanvas');
+    let touchStartTime = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let lastTap = 0;
+    let longPressTimer;
+
+    gameCanvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        if (gameRunning && !isPaused) {
-            startManualJump();
+        if (!gameRunning || isPaused) return;
+
+        touchStartTime = new Date().getTime();
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+
+        // Multi-finger taps
+        if (e.touches.length === 5) {
+            startShockwave();
+            return;
+        }
+        if (e.touches.length === 4) {
+            startCartoonScramble();
+            return;
+        }
+        if (e.touches.length === 3) {
+            startHoudini();
+            return;
+        }
+        if (e.touches.length === 2) {
+            startDive();
+            return;
+        }
+
+        // Long press timer
+        longPressTimer = setTimeout(() => {
+            startHover();
+        }, 500); // 500ms for long press
+
+    }, { passive: false });
+
+    gameCanvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        clearTimeout(longPressTimer); // Cancel long press if finger moves
+    }, { passive: false });
+
+    gameCanvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        clearTimeout(longPressTimer); // Cancel long press on touch end
+        if (!gameRunning || isPaused) return;
+
+        const touchEndTime = new Date().getTime();
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchDuration = touchEndTime - touchStartTime;
+
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        // It's a swipe if moved more than 30px and for less than 500ms
+        if (touchDuration < 500 && (Math.abs(deltaX) > 30 || Math.abs(deltaY) > 30)) {
+            if (Math.abs(deltaX) > Math.abs(deltaY)) { // Horizontal swipe
+                if (deltaX > 0) {
+                    startBackflip(); // Swipe Right
+                } else {
+                    startMoonwalk(); // Swipe Left
+                }
+            } else { // Vertical swipe
+                if (deltaY > 0) {
+                    startPowerStomp(); // Swipe Down
+                } else {
+                    startFrontflip(); // Swipe Up
+                }
+            }
+        } else { // It's a tap
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                // Double tap
+                startPhaseDash();
+                lastTap = 0; // Reset lastTap to prevent triple taps
+            } else {
+                // Single tap
+                startManualJump();
+            }
+            lastTap = currentTime;
         }
     }, { passive: false });
 

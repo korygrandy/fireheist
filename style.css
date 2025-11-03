@@ -44,8 +44,9 @@ body {
 
 #turbo-boost-animation {
     position: absolute;
-    left: 160px; /* Position near the stick figure */
-    top: 280px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     font-family: monospace;
     font-size: 24px;
     font-weight: bold;

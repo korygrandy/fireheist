@@ -13,7 +13,7 @@ import {
     ACCELERATOR_DURATION_MS, DECELERATOR_BASE_SPEED_DEBUFF, DECELERATOR_DURATION_MS, OBSTACLE_BASE_VELOCITY_PX_MS,
     EVENT_PROXIMITY_VISUAL_STEPS, EVENT_POPUP_HEIGHT, DIFFICULTY_SETTINGS, NUM_CLOUDS, CLOUD_SPEED_FACTOR
 } from './constants.js';
-import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound } from './audio.js';
+import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds } from './audio.js';
 import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps } from './ui.js';
 import { drawChart, generateSummaryTable } from './utils.js';
 import { currentTheme } from './theme.js';
@@ -59,7 +59,24 @@ let manualJumpHeight = DIFFICULTY_SETTINGS.Rookie.manualJumpHeight;
 let acceleratorFrequencyPercent = DIFFICULTY_SETTINGS.Rookie.ACCELERATOR_FREQUENCY_PERCENT;
 
 // Jump State
-let jumpState = { isJumping: false, progress: 0 };
+let jumpState = {
+    isJumping: false, progress: 0,
+    isHurdle: false, hurdleDuration: 0,
+    isSpecialMove: false, specialMoveDuration: 0,
+    isPowerStomp: false, powerStompDuration: 0,
+    isDive: false, diveDuration: 0,
+    isCorkscrewSpin: false, corkscrewSpinDuration: 0,
+    isScissorKick: false, scissorKickDuration: 0,
+    isPhaseDash: false, phaseDashDuration: 0,
+    isHover: false, hoverDuration: 0,
+    isGroundPound: false, groundPoundDuration: 0,
+    isCartoonScramble: false, cartoonScrambleDuration: 0,
+    isMoonwalking: false, moonwalkDuration: 0,
+    isShockwave: false, shockwaveDuration: 0,
+    isBackflip: false, backflipDuration: 0,
+    isFrontflip: false, frontflipDuration: 0,
+    isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
+};
 let manualJumpOverride = { isActive: false, startTime: 0, duration: manualJumpDurationMs };
 
 // New Counters
@@ -207,7 +224,7 @@ function drawVictoryOverlay(elapsedTime) {
     const FAILURE_COLOR = '#FF0044';
 
     if (hitsCounter === 0) {
-        mainText = 'Congratulations!';
+        mainText = '🎉 Congratulations!';
         subText = 'You reached financial independence!';
         mainColor = SUCCESS_COLOR;
     } else {
@@ -495,12 +512,22 @@ function drawSlantedGround(angleRad) {
         const numLines = canvas.width / patternLength;
         for (let i = 0; i < numLines * 2; i++) {
             const startX = (i * patternLength - backgroundOffset * 0.1) % (canvas.width + patternLength) - patternLength;
-            const startY = GROUND_Y - 20 - startX * Math.tan(angleRad);
+            const startY = GROUND_Y - 14 - startX * Math.tan(angleRad);
             const endX = startX + lineLength;
-            const endY = GROUND_Y - 20 - endX * Math.tan(angleRad);
+            const endY = GROUND_Y - 14 - endX * Math.tan(angleRad);
             ctx.moveTo(startX, startY);
             ctx.lineTo(endX, endY);
         }
+        ctx.stroke();
+    }
+
+    if (currentTheme.curb) {
+        ctx.strokeStyle = currentTheme.curb;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const curbY = GROUND_Y - 25;
+        ctx.moveTo(0, curbY);
+        ctx.lineTo(canvas.width, curbY - Math.tan(angleRad) * canvas.width);
         ctx.stroke();
     }
 }
@@ -550,17 +577,6 @@ function drawStickFigure(x, y, jumpState, angleRad) {
     let headY = -STICK_FIGURE_TOTAL_HEIGHT;
     let bodyY = 0;
 
-    ctx.font = '28px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(stickFigureEmoji, 0, headY);
-
-    ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.moveTo(0, headY + 5);
-    ctx.lineTo(0, bodyY - 10);
-    ctx.stroke();
-
     const isFading = collisionDuration > 0;
     const fadeProgress = isFading ? collisionDuration / COLLISION_DURATION_MS : 0;
 
@@ -576,31 +592,176 @@ function drawStickFigure(x, y, jumpState, angleRad) {
 
     let legMovementX1, legMovementY1, legMovementX2, legMovementY2;
     let armMovementX1, armMovementY1, armMovementX2, armMovementY2;
+    let animationRotation = 0;
 
-    if (jumpState.isJumping) {
-        const t = jumpState.progress;
-        const legSpread = 5 + 10 * Math.sin(t * Math.PI);
-        const armOffset = 10 * (1 - Math.sin(t * Math.PI));
+    // Default running animation
+    const runSpeed = 0.25;
+    const tRun = frameCount * runSpeed;
+    const legSpreadRun = 10;
+    const armSpreadRun = 10;
+    legMovementX1 = Math.sin(tRun + Math.PI / 4) * legSpreadRun;
+    legMovementY1 = bodyY + 5;
+    legMovementX2 = Math.sin(tRun + Math.PI + Math.PI / 4) * legSpreadRun;
+    legMovementY2 = bodyY + 5;
+    armMovementX1 = Math.sin(tRun + Math.PI / 2 + Math.PI / 4) * armSpreadRun;
+    armMovementY1 = headY + 15;
+    armMovementX2 = Math.sin(tRun - Math.PI / 2 + Math.PI / 4) * armSpreadRun;
+    armMovementY2 = headY + 15;
 
-        legMovementX1 = -legSpread; legMovementY1 = bodyY + 5;
-        legMovementX2 = legSpread; legMovementY2 = bodyY + 5;
-        armMovementX1 = armOffset; armMovementY1 = headY + 15;
-        armMovementX2 = -armOffset; armMovementY2 = headY + 15;
-    } else {
-        const runSpeed = 0.25;
-        const t = frameCount * runSpeed;
-        const legSpread = 10;
-        const armSpread = 10;
-        const legOffset1 = Math.sin(t + Math.PI / 4) * legSpread;
-        const legOffset2 = Math.sin(t + Math.PI + Math.PI / 4) * legSpread;
-        const armOffset1 = Math.sin(t + Math.PI / 2 + Math.PI / 4) * armSpread;
-        const armOffset2 = Math.sin(t - Math.PI / 2 + Math.PI / 4) * armSpread;
-
-        legMovementX1 = legOffset1; legMovementY1 = bodyY + 5;
-        legMovementX2 = legOffset2; legMovementY2 = bodyY + 5;
-        armMovementX1 = armOffset1; armMovementY1 = headY + 15;
-        armMovementX2 = armOffset2; armMovementY2 = headY + 15;
+    // Override with special move animations if active
+    if (jumpState.isHurdle) { // "Yikes!" Jump
+        const t = jumpState.hurdleDuration / 300;
+        const angle = Math.sin(t * Math.PI) * Math.PI / 4;
+        animationRotation = angle / 4;
+        legMovementX1 = 20 * Math.sin(angle); legMovementY1 = bodyY + 5;
+        legMovementX2 = -20 * Math.sin(angle); legMovementY2 = bodyY + 5;
+        armMovementX1 = 20 * Math.cos(angle); armMovementY1 = headY + 15;
+        armMovementX2 = -20 * Math.cos(angle); armMovementY2 = headY + 15;
+    } else if (jumpState.isSpecialMove) { // Original "K" move
+        animationRotation = frameCount * 0.5;
+        legMovementX1 = 10; legMovementY1 = bodyY + 5;
+        legMovementX2 = -10; legMovementY2 = bodyY + 5;
+        armMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isPowerStomp) {
+        const t = jumpState.powerStompDuration / 300;
+        const stompY = 20 * Math.sin(t * Math.PI);
+        ctx.translate(0, stompY);
+        legMovementX1 = 5; legMovementY1 = bodyY + 5;
+        legMovementX2 = -5; legMovementY2 = bodyY + 5;
+        armMovementX1 = 15; armMovementY1 = headY + 10;
+        armMovementX2 = -15; armMovementY2 = headY + 10;
+    } else if (jumpState.isDive) {
+        animationRotation = Math.PI / 2;
+        legMovementX1 = 0; legMovementY1 = bodyY - 10;
+        legMovementX2 = 0; legMovementY2 = bodyY + 10;
+        armMovementX1 = 15; armMovementY1 = headY + 15;
+        armMovementX2 = 10; armMovementY2 = headY + 15;
+    } else if (jumpState.isCorkscrewSpin) {
+        animationRotation = frameCount * 0.8;
+        legMovementX1 = 15; legMovementY1 = bodyY;
+        legMovementX2 = -15; legMovementY2 = bodyY;
+        armMovementX1 = 0; armMovementY1 = headY + 15;
+        armMovementX2 = 0; armMovementY2 = headY + 15;
+    } else if (jumpState.isScissorKick) {
+        const t = frameCount * 0.4;
+        legMovementX1 = 15 * Math.sin(t); legMovementY1 = bodyY + 5;
+        legMovementX2 = -15 * Math.sin(t); legMovementY2 = bodyY + 5;
+        armMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isPhaseDash) { // Enhanced Phase Dash
+        ctx.globalAlpha = 0.4 + 0.3 * Math.sin(frameCount * 0.8);
+        const dashOffset = (1 - (jumpState.phaseDashDuration / 600)) * 50; // Dash forward
+        ctx.translate(dashOffset, 0);
+        legMovementX1 = 15; legMovementY1 = bodyY + 5;
+        legMovementX2 = -5; legMovementY2 = bodyY + 5;
+        armMovementX1 = 15; armMovementY1 = headY + 15;
+        armMovementX2 = -5; armMovementY2 = headY + 15;
+    } else if (jumpState.isHover) { // Smoother Hover
+        const hoverHeight = -25 - 5 * Math.sin(frameCount * 0.1); // Gentle bobbing motion
+        ctx.translate(0, hoverHeight);
+        const t = frameCount * 0.2;
+        legMovementX1 = 5 * Math.sin(t); legMovementY1 = bodyY + 5;
+        legMovementX2 = -5 * Math.sin(t); legMovementY2 = bodyY + 5;
+        armMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isGroundPound) { // Ground Pound with landing effect
+        const t = jumpState.groundPoundDuration / 400;
+        let poundY = 0;
+        if (t > 0.5) { // Coming down
+            poundY = 40 * Math.sin((t - 0.5) * 2 * Math.PI);
+        } else { // Going up
+            poundY = -40 * Math.sin(t * 2 * Math.PI);
+        }
+        ctx.translate(0, poundY);
+        if (t < 0.1) {
+            ctx.beginPath();
+            ctx.arc(0, bodyY + 10, 30, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+            ctx.fill();
+        }
+        legMovementX1 = 0; legMovementY1 = bodyY + 15;
+        legMovementX2 = 0; legMovementY2 = bodyY + 15;
+        armMovementX1 = 5; armMovementY1 = headY + 5;
+        armMovementX2 = -5; armMovementY2 = headY + 5;
+    } else if (jumpState.isCartoonScramble) {
+        const t = frameCount * 1.5;
+        const legAngle = t;
+        const legLength = 15;
+        legMovementX1 = legLength * Math.cos(legAngle);
+        legMovementY1 = bodyY + legLength * Math.sin(legAngle);
+        legMovementX2 = legLength * Math.cos(legAngle + Math.PI);
+        legMovementY2 = bodyY + legLength * Math.sin(legAngle + Math.PI);
+        armMovementX1 = 15; armMovementY1 = headY + 5;
+        armMovementX2 = -15; armMovementY2 = headY + 5;
+    } else if (jumpState.isMoonwalking) {
+        animationRotation = -Math.PI / 16;
+        const t = frameCount * 0.2;
+        const slide = 10 * Math.sin(t);
+        legMovementX1 = slide; legMovementY1 = bodyY + 5;
+        legMovementX2 = -slide; legMovementY2 = bodyY + 5;
+        armMovementX1 = 5; armMovementY1 = headY + 15;
+        armMovementX2 = -5; armMovementY2 = headY + 15;
+    } else if (jumpState.isShockwave) {
+        const t = jumpState.shockwaveDuration / 500;
+        const radius = 50 * (1 - t);
+        const opacity = t;
+        const gradient = ctx.createRadialGradient(0, bodyY + 10, radius / 2, 0, bodyY + 10, radius);
+        gradient.addColorStop(0, `rgba(173, 216, 230, ${opacity})`);
+        gradient.addColorStop(1, `rgba(128, 128, 128, 0)`);
+        ctx.beginPath();
+        ctx.arc(0, bodyY + 10, radius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        legMovementX1 = 5; legMovementY1 = bodyY + 5;
+        legMovementX2 = -5; legMovementY2 = bodyY + 5;
+        armMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isBackflip) {
+        const t = (500 - jumpState.backflipDuration) / 500;
+        animationRotation = -t * Math.PI * 2;
+        legMovementX1 = 10; legMovementY1 = bodyY + 5;
+        legMovementX2 = -10; legMovementY2 = bodyY + 5;
+        armMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isFrontflip) {
+        const t = (500 - jumpState.frontflipDuration) / 500;
+        animationRotation = t * Math.PI * 2;
+        legMovementX1 = 10; legMovementY1 = bodyY + 5;
+        legMovementX2 = -10; legMovementY2 = bodyY + 5;
+        armMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isHoudini) {
+        const duration = 800;
+        const t = (duration - jumpState.houdiniDuration) / duration;
+        if (jumpState.houdiniPhase === 'disappearing') {
+            ctx.globalAlpha = 1 - (t * 2);
+            ctx.font = '48px Arial';
+            ctx.fillText('💨', 0, headY);
+        } else {
+            ctx.globalAlpha = (t - 0.5) * 2;
+            ctx.font = '48px Arial';
+            ctx.fillText('💨', 0, headY);
+        }
+        legMovementX1 = 10; legMovementY1 = bodyY + 5;
+        legMovementX2 = -10; legMovementY2 = bodyY + 5;
+        armMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
     }
+
+    ctx.save();
+    ctx.rotate(animationRotation);
+
+    ctx.font = '28px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(stickFigureEmoji, 0, headY);
+
+    ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.moveTo(0, headY + 5);
+    ctx.lineTo(0, bodyY - 10);
+    ctx.stroke();
 
     ctx.save();
     ctx.globalAlpha = legOpacity;
@@ -616,6 +777,8 @@ function drawStickFigure(x, y, jumpState, angleRad) {
     ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX1, armMovementY1);
     ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX2, armMovementY2);
     ctx.stroke();
+
+    ctx.restore();
 
     ctx.restore();
 }
@@ -768,14 +931,152 @@ let deltaTime = 0;
 
 export function startManualJump() {
     if (!gameRunning || jumpState.isJumping || isPaused) return;
+    initiateJump(manualJumpDurationMs);
+    console.log("-> startManualJump: Manual jump initiated.");
+}
 
-    manualJumpOverride.duration = manualJumpDurationMs;
+const JUMP_DURATIONS = {
+    hurdle: 500,
+    specialMove: 500,
+    powerStomp: 500,
+    dive: 500,
+    corkscrewSpin: 500,
+    scissorKick: 500,
+    phaseDash: 600,
+    hover: 1000,
+    groundPound: 600,
+    cartoonScramble: 500,
+    moonwalk: 700,
+    shockwave: 400
+};
 
+function initiateJump(duration) {
+    manualJumpOverride.duration = duration;
     jumpState.isJumping = true;
     jumpState.progress = 0;
     manualJumpOverride.isActive = true;
     manualJumpOverride.startTime = Date.now();
-    console.log("-> startManualJump: Manual jump initiated.");
+}
+
+export function startHurdle() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isHurdle = true;
+    jumpState.hurdleDuration = JUMP_DURATIONS.hurdle;
+    initiateJump(JUMP_DURATIONS.hurdle);
+    console.log("-> startHurdle: Hurdle initiated.");
+}
+
+export function startSpecialMove() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isSpecialMove = true;
+    jumpState.specialMoveDuration = JUMP_DURATIONS.specialMove;
+    initiateJump(JUMP_DURATIONS.specialMove);
+    console.log("-> startSpecialMove: Special Move initiated.");
+}
+
+export function startPowerStomp() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isPowerStomp = true;
+    jumpState.powerStompDuration = JUMP_DURATIONS.powerStomp;
+    initiateJump(JUMP_DURATIONS.powerStomp);
+    console.log("-> startPowerStomp: Power Stomp initiated.");
+}
+
+export function startDive() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isDive = true;
+    jumpState.diveDuration = JUMP_DURATIONS.dive;
+    initiateJump(JUMP_DURATIONS.dive);
+    console.log("-> startDive: Dive initiated.");
+}
+
+export function startCorkscrewSpin() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isCorkscrewSpin = true;
+    jumpState.corkscrewSpinDuration = JUMP_DURATIONS.corkscrewSpin;
+    initiateJump(JUMP_DURATIONS.corkscrewSpin);
+    console.log("-> startCorkscrewSpin: Corkscrew Spin initiated.");
+}
+
+export function startScissorKick() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isScissorKick = true;
+    jumpState.scissorKickDuration = JUMP_DURATIONS.scissorKick;
+    initiateJump(JUMP_DURATIONS.scissorKick);
+    console.log("-> startScissorKick: Scissor Kick initiated.");
+}
+
+export function startPhaseDash() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isPhaseDash = true;
+    jumpState.phaseDashDuration = JUMP_DURATIONS.phaseDash;
+    initiateJump(JUMP_DURATIONS.phaseDash);
+    console.log("-> startPhaseDash: Phase Dash initiated.");
+}
+
+export function startHover() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isHover = true;
+    jumpState.hoverDuration = JUMP_DURATIONS.hover;
+    initiateJump(JUMP_DURATIONS.hover);
+    console.log("-> startHover: Hover initiated.");
+}
+
+export function startGroundPound() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isGroundPound = true;
+    jumpState.groundPoundDuration = JUMP_DURATIONS.groundPound;
+    initiateJump(JUMP_DURATIONS.groundPound);
+    console.log("-> startGroundPound: Ground Pound initiated.");
+}
+
+export function startCartoonScramble() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isCartoonScramble = true;
+    jumpState.cartoonScrambleDuration = JUMP_DURATIONS.cartoonScramble;
+    initiateJump(JUMP_DURATIONS.cartoonScramble);
+    console.log("-> startCartoonScramble: Cartoon Scramble initiated.");
+}
+
+export function startMoonwalk() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isMoonwalking = true;
+    jumpState.moonwalkDuration = JUMP_DURATIONS.moonwalk;
+    initiateJump(JUMP_DURATIONS.moonwalk);
+    console.log("-> startMoonwalk: Moonwalk initiated.");
+}
+
+export function startShockwave() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isShockwave = true;
+    jumpState.shockwaveDuration = JUMP_DURATIONS.shockwave;
+    initiateJump(JUMP_DURATIONS.shockwave);
+    console.log("-> startShockwave: Shockwave initiated.");
+}
+
+export function startBackflip() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isBackflip = true;
+    jumpState.backflipDuration = 500;
+    initiateJump(500);
+    console.log("-> startBackflip: Backflip initiated.");
+}
+
+export function startFrontflip() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isFrontflip = true;
+    jumpState.frontflipDuration = 500;
+    initiateJump(500);
+    console.log("-> startFrontflip: Frontflip initiated.");
+}
+
+export function startHoudini() {
+    if (!gameRunning || jumpState.isJumping || isPaused) return;
+    jumpState.isHoudini = true;
+    jumpState.houdiniDuration = 800;
+    jumpState.houdiniPhase = 'disappearing';
+    initiateJump(800);
+    console.log("-> startHoudini: Houdini initiated.");
 }
 
 function spawnObstacle() {
@@ -952,6 +1253,11 @@ export function animate(timestamp) {
     if (currentSegmentIndex >= raceSegments.length) {
         if (!isGameOverSequence) {
             isVictory = (hitsCounter === 0);
+            if (isVictory) {
+                playWinnerSound();
+            } else {
+                playLoserSound();
+            }
             isGameOverSequence = true;
             gameOverSequenceStartTime = timestamp;
             console.log(`-> GAME OVER: Starting sequence. Victory: ${isVictory}`);
@@ -1251,8 +1557,107 @@ export function animate(timestamp) {
         currentAccelerator = null;
         onScreenCustomEvent = null;
 
+        if (currentSegmentIndex === raceSegments.length - 1) {
+            preloadEndgameSounds();
+        }
+
         if (currentSegmentIndex < raceSegments.length) {
             console.log(`-> NEW SEGMENT START: Index ${currentSegmentIndex}. Visual Duration: ${raceSegments[currentSegmentIndex].visualDurationMs.toFixed(0)}ms`);
+        }
+    }
+
+    if (jumpState.isHurdle) {
+        jumpState.hurdleDuration -= deltaTime;
+        if (jumpState.hurdleDuration <= 0) {
+            jumpState.isHurdle = false;
+        }
+    }
+
+    if (jumpState.isSpecialMove) {
+        jumpState.specialMoveDuration -= deltaTime;
+        if (jumpState.specialMoveDuration <= 0) {
+            jumpState.isSpecialMove = false;
+        }
+    }
+    if (jumpState.isPowerStomp) {
+        jumpState.powerStompDuration -= deltaTime;
+        if (jumpState.powerStompDuration <= 0) {
+            jumpState.isPowerStomp = false;
+        }
+    }
+    if (jumpState.isDive) {
+        jumpState.diveDuration -= deltaTime;
+        if (jumpState.diveDuration <= 0) {
+            jumpState.isDive = false;
+        }
+    }
+    if (jumpState.isCorkscrewSpin) {
+        jumpState.corkscrewSpinDuration -= deltaTime;
+        if (jumpState.corkscrewSpinDuration <= 0) {
+            jumpState.isCorkscrewSpin = false;
+        }
+    }
+    if (jumpState.isScissorKick) {
+        jumpState.scissorKickDuration -= deltaTime;
+        if (jumpState.scissorKickDuration <= 0) {
+            jumpState.isScissorKick = false;
+        }
+    }
+    if (jumpState.isPhaseDash) {
+        jumpState.phaseDashDuration -= deltaTime;
+        if (jumpState.phaseDashDuration <= 0) {
+            jumpState.isPhaseDash = false;
+        }
+    }
+    if (jumpState.isHover) {
+        jumpState.hoverDuration -= deltaTime;
+        if (jumpState.hoverDuration <= 0) {
+            jumpState.isHover = false;
+        }
+    }
+    if (jumpState.isGroundPound) {
+        jumpState.groundPoundDuration -= deltaTime;
+        if (jumpState.groundPoundDuration <= 0) {
+            jumpState.isGroundPound = false;
+        }
+    }
+    if (jumpState.isCartoonScramble) {
+        jumpState.cartoonScrambleDuration -= deltaTime;
+        if (jumpState.cartoonScrambleDuration <= 0) {
+            jumpState.isCartoonScramble = false;
+        }
+    }
+    if (jumpState.isMoonwalking) {
+        jumpState.moonwalkDuration -= deltaTime;
+        if (jumpState.moonwalkDuration <= 0) {
+            jumpState.isMoonwalking = false;
+        }
+    }
+    if (jumpState.isShockwave) {
+        jumpState.shockwaveDuration -= deltaTime;
+        if (jumpState.shockwaveDuration <= 0) {
+            jumpState.isShockwave = false;
+        }
+    }
+    if (jumpState.isBackflip) {
+        jumpState.backflipDuration -= deltaTime;
+        if (jumpState.backflipDuration <= 0) {
+            jumpState.isBackflip = false;
+        }
+    }
+    if (jumpState.isFrontflip) {
+        jumpState.frontflipDuration -= deltaTime;
+        if (jumpState.frontflipDuration <= 0) {
+            jumpState.isFrontflip = false;
+        }
+    }
+    if (jumpState.isHoudini) {
+        jumpState.houdiniDuration -= deltaTime;
+        if (jumpState.houdiniDuration <= 400) {
+            jumpState.houdiniPhase = 'reappearing';
+        }
+        if (jumpState.houdiniDuration <= 0) {
+            jumpState.isHoudini = false;
         }
     }
 
@@ -1275,7 +1680,24 @@ export function resetGameState() {
     accumulatedCash = raceSegments.length > 0 ? raceSegments[0].milestoneValue : 0;
     activeCashBags = [];
     manualJumpOverride = { isActive: false, startTime: 0, duration: manualJumpDurationMs };
-    jumpState = { isJumping: false, progress: 0 };
+    jumpState = {
+        isJumping: false, progress: 0,
+        isHurdle: false, hurdleDuration: 0,
+        isSpecialMove: false, specialMoveDuration: 0,
+        isPowerStomp: false, powerStompDuration: 0,
+        isDive: false, diveDuration: 0,
+        isCorkscrewSpin: false, corkscrewSpinDuration: 0,
+        isScissorKick: false, scissorKickDuration: 0,
+        isPhaseDash: false, phaseDashDuration: 0,
+        isHover: false, hoverDuration: 0,
+        isGroundPound: false, groundPoundDuration: 0,
+        isCartoonScramble: false, cartoonScrambleDuration: 0,
+        isMoonwalking: false, moonwalkDuration: 0,
+        isShockwave: false, shockwaveDuration: 0,
+        isBackflip: false, backflipDuration: 0,
+        isFrontflip: false, frontflipDuration: 0,
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
+    };
     currentObstacle = null;
     isColliding = false;
     collisionDuration = 0;
@@ -1353,7 +1775,24 @@ export function startGame() {
     frameCount = 0;
     accumulatedCash = raceSegments[0].milestoneValue;
     activeCashBags = [];
-    jumpState = { isJumping: false, progress: 0 };
+    jumpState = {
+        isJumping: false, progress: 0,
+        isHurdle: false, hurdleDuration: 0,
+        isSpecialMove: false, specialMoveDuration: 0,
+        isPowerStomp: false, powerStompDuration: 0,
+        isDive: false, diveDuration: 0,
+        isCorkscrewSpin: false, corkscrewSpinDuration: 0,
+        isScissorKick: false, scissorKickDuration: 0,
+        isPhaseDash: false, phaseDashDuration: 0,
+        isHover: false, hoverDuration: 0,
+        isGroundPound: false, groundPoundDuration: 0,
+        isCartoonScramble: false, cartoonScrambleDuration: 0,
+        isMoonwalking: false, moonwalkDuration: 0,
+        isShockwave: false, shockwaveDuration: 0,
+        isBackflip: false, backflipDuration: 0,
+        isFrontflip: false, frontflipDuration: 0,
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
+    };
     manualJumpOverride = { isActive: false, startTime: 0, duration: manualJumpDurationMs };
     isColliding = false;
     collisionDuration = 0;
