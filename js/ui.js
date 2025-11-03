@@ -15,20 +15,72 @@ export let obstacleFrequencyPercent = 20;
 export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
 
+const LOCAL_STORAGE_KEY = 'fireHeistSettings';
+
+function saveSettings() {
+    const settings = {
+        stickFigureEmoji,
+        obstacleEmoji,
+        obstacleFrequencyPercent,
+        currentSkillLevel,
+        intendedSpeedMultiplier,
+        milestoneData: dataInput.value,
+        eventData: eventDataInput.value
+    };
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settings));
+    console.log("-> saveSettings: Settings saved to localStorage.");
+}
+
+function loadSettings() {
+    const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        stickFigureEmoji = settings.stickFigureEmoji || '🦹‍♂️';
+        obstacleEmoji = settings.obstacleEmoji || '🐌';
+        obstacleFrequencyPercent = settings.obstacleFrequencyPercent || 20;
+        currentSkillLevel = settings.currentSkillLevel || 'Rookie';
+        intendedSpeedMultiplier = settings.intendedSpeedMultiplier || 1.0;
+
+        emojiInput.value = stickFigureEmoji;
+        obstacleEmojiInput.value = obstacleEmoji;
+        document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
+        frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
+
+        // Set skill level radio button
+        const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${currentSkillLevel}"]`);
+        if (skillRadio) skillRadio.checked = true;
+
+        // Set speed radio button
+        const speedRadio = document.querySelector(`input[name="gameSpeed"][value="${intendedSpeedMultiplier}"]`);
+        if (speedRadio) speedRadio.checked = true;
+
+        // Load saved data into text areas, falling back to default if not present
+        dataInput.value = settings.milestoneData || defaultDataString.trim();
+        eventDataInput.value = settings.eventData || defaultEventDataString.trim();
+
+        console.log("-> loadSettings: Settings loaded from localStorage.");
+    } else {
+        console.log("-> loadSettings: No settings found in localStorage. Using defaults.");
+    }
+}
+
 export function updateEmoji(event) {
     let input = event.target.value.trim();
     stickFigureEmoji = input.length > 0 ? input.slice(0, 2) : '🦹‍♂️';
+    saveSettings();
 }
 
 export function updateObstacleEmoji(event) {
     let input = event.target.value.trim();
     obstacleEmoji = input.length > 0 ? input.slice(0, 2) : '🐌';
+    saveSettings();
 }
 
 export function handleFrequencyChange(event) {
     obstacleFrequencyPercent = parseInt(event.target.value, 10);
     frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
     console.log(`-> handleFrequencyChange: Obstacle frequency updated to ${obstacleFrequencyPercent}%`);
+    saveSettings();
 }
 
 export function applySkillLevelSettings(level) {
@@ -40,6 +92,7 @@ export function applySkillLevelSettings(level) {
     } else {
         console.error(`Unknown skill level: ${level}.`);
     }
+    saveSettings();
 }
 
 export function handleSkillLevelChange(event) {
@@ -51,6 +104,7 @@ export function handleSkillLevelChange(event) {
 export function selectSuggestedEmoji(emoji) {
     emojiInput.value = emoji;
     stickFigureEmoji = emoji;
+    saveSettings();
 }
 
 export function setupSuggestedEmojis() {
@@ -68,6 +122,7 @@ export function setupSuggestedEmojis() {
 export function handleSpeedChange(event) {
     if (event.target.name === 'gameSpeed' && event.target.checked) {
         intendedSpeedMultiplier = parseFloat(event.target.value);
+        saveSettings();
     }
 }
 
@@ -134,17 +189,24 @@ export function loadCustomData() {
     dataMessage.textContent = `Data successfully loaded! ${raceSegments.length} milestones and ${Object.values(customEvents).flat().length} custom events ready.`;
     dataMessage.style.color = 'green';
     console.log("-> loadCustomData: Data loaded and game reset for new segments.");
+    saveSettings(); // Save the newly loaded custom data
 }
 export async function initializeUIData() {
+    loadSettings(); // Load settings first
     try {
         const response = await fetch('milestones.json');
         const data = await response.json();
-        dataInput.value = data.milestones.join('\n');
-        eventDataInput.value = data.events.join('\n');
+        // Only update if localStorage didn't provide data for these fields
+        if (!localStorage.getItem(LOCAL_STORAGE_KEY)) {
+            dataInput.value = data.milestones.join('\n');
+            eventDataInput.value = data.events.join('\n');
+        }
     } catch (error) {
         console.error('Error loading default milestone data:', error);
-        dataInput.value = defaultDataString.trim();
-        eventDataInput.value = defaultEventDataString.trim();
+        if (!localStorage.getItem(LOCAL_STORAGE_KEY)) {
+            dataInput.value = defaultDataString.trim();
+            eventDataInput.value = defaultEventDataString.trim();
+        }
     }
     loadCustomData();
 }
