@@ -1,0 +1,25 @@
+// =================================================================
+// DOM ELEMENTS
+// =================================================================
+
+export const canvas = document.getElementById('gameCanvas');
+export const ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 400;
+export const startButton = document.getElementById('startButton');
+export const stopButton = document.getElementById('stopButton');
+export const loadButton = document.getElementById('loadButton');
+export const dataInput = document.getElementById('dataInput');
+export const eventDataInput = document.getElementById('eventDataInput');
+export const chartContainer = document.getElementById('chartContainer');
+export const tableContainer = document.getElementById('tableContainer');
+export const tableBody = document.getElementById('milestoneTableBody');
+export const dataMessage = document.getElementById('dataMessage');
+export const emojiInput = document.getElementById('emojiInput');
+export const suggestedEmojisContainer = document.getElementById('suggestedEmojis');
+export const obstacleEmojiInput = document.getElementById('obstacleEmojiInput');
+export const speedSelector = document.getElementById('speedSelector');
+export const soundToggleButton = document.getElementById('soundToggleButton');
+export const frequencyRange = document.getElementById('obstacleFrequency');
+export const frequencyValueSpan = document.getElementById('frequencyValue');
+export const skillLevelSelector = document.getElementById('skillLevelSelector');

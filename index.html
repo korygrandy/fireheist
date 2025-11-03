@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 The FIRE Heist Game</title>
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
+
+    <div id="appContainer" class="w-full max-w-6xl space-y-8">
+        <header class="text-center">
+            <h1 class="text-4xl font-extrabold text-gray-800">The 🔥FIRE🔥 Heist Game <span id="version-display" class="text-lg align-middle"></span></h1>
+            <p class="text-gray-500 mt-1">Visualize your Financial Independence journey!</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:col-span-2 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 p-6 bg-white rounded-xl shadow-lg h-full">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Heist Control Panel</h2>
+
+                <div class="flex border-b border-gray-200 mb-4">
+                    <button class="tab-button tab-button-active" data-tab="player">👤 Player</button>
+                    <button class="tab-button tab-button-inactive" data-tab="gameplay">🎮 Gameplay</button>
+                    <button class="tab-button tab-button-inactive" data-tab="data">🛠️ Data</button>
+                </div>
+
+                <p class="text-sm text-gray-500 mb-4">
+                    Press **SPACEBAR** or **TAP anywhere on the screen** to jump over obstacles! Milestones are auto-hurdled.
+                </p>
+
+                <div id="playerTab" class="tab-content space-y-4">
+                    <div>
+                        <label for="emojiInput" class="block text-sm font-medium text-gray-700">Select your Runner, or paste your own Emoji</label>
+                        <input type="text" id="emojiInput" value="🦹‍♂️" maxlength="2"
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
+                        <div id="suggestedEmojis" class="mt-2 flex space-x-2 justify-center">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Skill Level</label>
+                        <div id="skillLevelSelector" class="flex justify-between space-x-2">
+                            <label class="flex items-center space-x-1 p-2 bg-green-100 rounded-lg cursor-pointer flex-1 justify-center">
+                                <input type="radio" name="gameSkillLevel" value="Rookie" checked>
+                                <span class="text-sm text-green-700 font-semibold">Rookie</span>
+                            </label>
+                            <label class="flex items-center space-x-1 p-2 bg-yellow-100 rounded-lg cursor-pointer flex-1 justify-center">
+                                <input type="radio" name="gameSkillLevel" value="Novice">
+                                <span class="text-sm text-yellow-700 font-semibold">Novice</span>
+                            </label>
+                            <label class="flex items-center space-x-1 p-2 bg-red-100 rounded-lg cursor-pointer flex-1 justify-center">
+                                <input type="radio" name="gameSkillLevel" value="Pro">
+                                <span class="text-sm text-red-700 font-semibold">Pro</span>
+                            </label>
+                        </div>
+                    </div>
+                    </div>
+
+                <div id="gameplayTab" class="tab-content space-y-4 hidden">
+
+                    <div>
+                        <label for="obstacleEmojiInput" class="block text-sm font-medium text-gray-700">Obstacle Emoji (Default: 🐌)</label>
+                        <input type="text" id="obstacleEmojiInput" value="🐌" maxlength="2"
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="obstacleFrequency" class="block text-sm font-medium text-gray-700">Obstacle Frequency: <span id="frequencyValue">20%</span></label>
+                        <input type="range" id="obstacleFrequency" min="0" max="100" value="20"
+                               class="mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Game Speed</label>
+                        <div id="speedSelector" class="flex justify-between space-x-2">
+                            <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
+                                <input type="radio" name="gameSpeed" value="0.5" data-speed="Slow (0.5x)">
+                                <span class="text-sm">Slow (0.5x)</span>
+                            </label>
+                            <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer" >
+                                <input type="radio" name="gameSpeed" value="1.0" data-speed="Normal (1.0x)" checked>
+                                <span class="text-sm">Normal (1.0x)</span>
+                            </label>
+                            <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
+                                <input type="radio" name="gameSpeed" value="2.0" data-speed="Fast (2.0x)">
+                                <span class="text-sm">Fast (2.0x)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dataTab" class="tab-content space-y-4 hidden">
+                    <div class="mt-6">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Milestone Data (MM/DD/YYYY: Value)</h3>
+                        <textarea id="dataInput" rows="10" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                        <button id="loadButton" class="control-btn secondary-btn mt-2 w-full">Load Custom Data</button>
+                        <p id="dataMessage" class="mt-2 text-sm h-5"></p>
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Custom Event Data (MM/DD/YYYY: Emoji : TYPE)</h3>
+                        <textarea id="eventDataInput" rows="5" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">TYPE must be: **ACCELERATOR** or **DECELERATOR**</p>
+                    </div>
+                </div>
+            </div>
+            <div id="game-results-area" class="lg:col-span-2 space-y-6">
+                <div class="bg-white p-2 rounded-xl shadow-lg">
+                    <canvas id="gameCanvas" width="800" height="400"></canvas>
+                </div>
+
+                <div id="actionButtons" class="bg-white p-4 rounded-xl shadow-lg">
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center w-full">
+                        <button id="startButton" class="control-btn primary-btn flex-1">Start the Heist!</button>
+                        <button id="stopButton" class="control-btn bg-red-500 text-white hover:bg-red-600 flex-1" disabled>Reset Game</button>
+                        <button id="soundToggleButton" class="control-btn bg-gray-400 text-white hover:bg-gray-500 flex-1">🔇 Mute</button>
+                    </div>
+                </div>
+
+                <div id="chartContainer" class="bg-white p-6 rounded-xl shadow-lg" style="display:none;">
+                    <canvas id="milestoneChart" class="w-full h-96"></canvas>
+                </div>
+
+                <div id="tableContainer" class="bg-white p-6 rounded-xl shadow-lg" style="display:none;">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Heist Summary</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days to Reach</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Milestone Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="milestoneTableBody" class="bg-white divide-y divide-gray-200">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

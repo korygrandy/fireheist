@@ -1,0 +1,30 @@
+[
+    {
+        "id": "DF-004",
+        "description": "The `startManualJump` function was not exported from `js/game.js`, causing a module import error in `js/main.js` and preventing the jump functionality.",
+        "status": "Resolved",
+        "resolution": "Added the `export` keyword to the `startManualJump` function declaration in `js/game.js`.",
+        "version": "1.0.4"
+    },
+    {
+        "id": "DF-003",
+        "description": "The `gameRunning` state variable was not exported from `js/game.js`, causing a module import error in `js/main.js` and preventing user input from being correctly handled.",
+        "status": "Resolved",
+        "resolution": "Added the `export` keyword to the `gameRunning` variable declaration in `js/game.js`.",
+        "version": "1.0.3"
+    },
+    {
+        "id": "DF-002",
+        "description": "A duplicate function declaration for `startManualJump` in `js/game.js` caused a fatal JavaScript error, preventing the game from running.",
+        "status": "Resolved",
+        "resolution": "Removed the redundant function declaration.",
+        "version": "1.0.2"
+    },
+    {
+        "id": "DF-001",
+        "description": "A syntax error (`missing '}'`) in `js/ui.js` caused a JavaScript parsing failure, preventing the game from loading, rendering, or responding to user input.",
+        "status": "Resolved",
+        "resolution": "Added the missing closing brace to the `loadCustomData` function in `js/ui.js`.",
+        "version": "1.0.1"
+    }
+]
