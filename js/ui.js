@@ -269,6 +269,7 @@ export function loadCustomData() {
     saveSettings(); // Save the newly loaded custom data
 }
 export async function initializeUIData() {
+    populateThemeSelector();
     const settingsLoaded = loadSettings();
     if (!settingsLoaded) {
         try {
@@ -303,7 +304,6 @@ export async function initializeUIData() {
     }
 
     displayHighScores(); // Display high scores on startup
-    populateThemeSelector();
 }
 
 export function showResultsScreen(financialMilestones, raceSegments) {
