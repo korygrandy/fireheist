@@ -4,7 +4,10 @@
 
 import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector } from './dom-elements.js';
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange } from './ui.js';
-import { startGame, stopGame, startManualJump, draw, gameRunning, isPaused, togglePauseGame, startHurdle, startSpecialMove, startPowerStomp, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game.js';
+import { draw, setInitialLoad } from './game-modules/drawing.js';
+import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
+import { startManualJump, startHurdle, startSpecialMove, startPowerStomp, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game-modules/actions.js';
+import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting } from './audio.js';
 
 async function loadVersion() {
@@ -81,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Set up main buttons and controls
     if (startButton) {
         startButton.addEventListener('click', () => {
-            if (gameRunning) {
+            if (state.gameRunning) {
                 togglePauseGame();
             } else {
                 startGame();
@@ -95,71 +98,71 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- JUMP & PAUSE CONTROLS ---
 
     document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && gameRunning && !isPaused) {
+        if (e.code === 'Space' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startManualJump();
         }
-        if (e.code === 'KeyP' && gameRunning) {
+        if (e.code === 'KeyP' && state.gameRunning) {
             e.preventDefault();
             togglePauseGame();
         }
-        if (e.code === 'KeyJ' && gameRunning && !isPaused) {
+        if (e.code === 'KeyJ' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startHurdle();
         }
-        if (e.code === 'KeyK' && gameRunning && !isPaused) {
+        if (e.code === 'KeyK' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startSpecialMove();
         }
-        if (e.code === 'KeyX' && gameRunning && !isPaused) {
+        if (e.code === 'KeyX' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startPowerStomp();
         }
-        if (e.code === 'KeyD' && gameRunning && !isPaused) {
+        if (e.code === 'KeyD' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startDive();
         }
-        if (e.code === 'KeyC' && gameRunning && !isPaused) {
+        if (e.code === 'KeyC' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startCorkscrewSpin();
         }
-        if (e.code === 'KeyS' && gameRunning && !isPaused) {
+        if (e.code === 'KeyS' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startScissorKick();
         }
-        if (e.code === 'KeyV' && gameRunning && !isPaused) {
+        if (e.code === 'KeyV' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startPhaseDash();
         }
-        if (e.code === 'KeyH' && gameRunning && !isPaused) {
+        if (e.code === 'KeyH' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startHover();
         }
-        if (e.code === 'KeyG' && gameRunning && !isPaused) {
+        if (e.code === 'KeyG' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startGroundPound();
         }
-        if (e.code === 'KeyB' && gameRunning && !isPaused) {
+        if (e.code === 'KeyB' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startCartoonScramble();
         }
-        if (e.code === 'KeyM' && gameRunning && !isPaused) {
+        if (e.code === 'KeyM' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startMoonwalk();
         }
-        if (e.code === 'KeyN' && gameRunning && !isPaused) {
+        if (e.code === 'KeyN' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startShockwave();
         }
-        if (e.code === 'KeyZ' && gameRunning && !isPaused) {
+        if (e.code === 'KeyZ' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startBackflip();
         }
-        if (e.code === 'KeyF' && gameRunning && !isPaused) {
+        if (e.code === 'KeyF' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startFrontflip();
         }
-        if (e.code === 'KeyI' && gameRunning && !isPaused) {
+        if (e.code === 'KeyI' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startHoudini();
         }
@@ -174,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     gameCanvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        if (!gameRunning || isPaused) return;
+        if (!state.gameRunning || state.isPaused) return;
 
         touchStartTime = new Date().getTime();
         touchStartX = e.touches[0].clientX;
@@ -213,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     gameCanvas.addEventListener('touchend', (e) => {
         e.preventDefault();
         clearTimeout(longPressTimer); // Cancel long press on touch end
-        if (!gameRunning || isPaused) return;
+        if (!state.gameRunning || state.isPaused) return;
 
         const touchEndTime = new Date().getTime();
         const touchEndX = e.changedTouches[0].clientX;
