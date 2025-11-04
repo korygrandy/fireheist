@@ -3,7 +3,7 @@
 // =================================================================
 
 import { suggestedEmojiList, defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS } from './constants.js';
-import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer, themeSelector } from './dom-elements.js';
+import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer, themeSelector, disableAutoHurdle } from './dom-elements.js';
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
 import { themes, setTheme } from './theme.js';
 
@@ -17,6 +17,7 @@ export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
 export let enableRandomPowerUps = true;
 export let selectedTheme = 'grass';
+export let isAutoHurdleDisabled = false;
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 const HIGH_SCORE_KEY = 'fireHeistHighScores';
@@ -33,6 +34,7 @@ function saveSettings() {
         intendedSpeedMultiplier,
         enableRandomPowerUps,
         selectedTheme,
+        isAutoHurdleDisabled,
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
     };
@@ -51,6 +53,7 @@ function loadSettings() {
         intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
         enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
         selectedTheme = settings.selectedTheme || 'grass';
+        isAutoHurdleDisabled = typeof settings.isAutoHurdleDisabled === 'boolean' ? settings.isAutoHurdleDisabled : false;
 
         emojiInput.value = stickFigureEmoji;
         obstacleEmojiInput.value = obstacleEmoji;
@@ -58,6 +61,7 @@ function loadSettings() {
         frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
         document.getElementById('enablePowerUps').checked = enableRandomPowerUps;
         themeSelector.value = selectedTheme;
+        disableAutoHurdle.checked = isAutoHurdleDisabled;
         setTheme(selectedTheme);
 
         // Set skill level radio button
@@ -157,6 +161,11 @@ export function handleFrequencyChange(event) {
 
 export function handlePowerUpToggle(event) {
     enableRandomPowerUps = event.target.checked;
+    saveSettings();
+}
+
+export function handleDisableAutoHurdleToggle(event) {
+    isAutoHurdleDisabled = event.target.checked;
     saveSettings();
 }
 
@@ -304,6 +313,7 @@ export async function initializeUIData() {
 
     displayHighScores(); // Display high scores on startup
     populateThemeSelector();
+    disableAutoHurdle.addEventListener('change', handleDisableAutoHurdleToggle);
 }
 
 export function showResultsScreen(financialMilestones, raceSegments) {

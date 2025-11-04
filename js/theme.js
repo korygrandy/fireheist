@@ -58,6 +58,18 @@ export const themes = {
             fill: '#808080',
             stroke: '#FFFF00'
         }
+    },
+    'outerspace': {
+        name: 'Outer Space',
+        sky: '#808080',
+        ground: '#2C003E',
+        grassBlades: null,
+        roadLines: '#FFFFFF',
+        curb: null,
+        hurdle: {
+            fill: '#A020F0',
+            stroke: '#FFFFFF'
+        }
     }
 };
 
