@@ -1,0 +1,64 @@
+import { DIFFICULTY_SETTINGS } from '../constants.js';
+
+export const HIGH_SCORE_KEY = 'fireHeistHighScores';
+export const GRASS_ANIMATION_INTERVAL_MS = 200; // Update grass blades every 200ms
+
+const state = {
+    activeCustomEvents: [],
+    gameRunning: false,
+    isPaused: false,
+    currentSegmentIndex: 0,
+    segmentProgress: 0,
+    lastTime: 0,
+    backgroundOffset: 0,
+    frameCount: 0,
+    accumulatedCash: 0,
+    daysCounter: null,
+    gameSpeedMultiplier: 1.0,
+    COLLISION_RANGE_X: DIFFICULTY_SETTINGS.Rookie.COLLISION_RANGE_X,
+    manualJumpDurationMs: DIFFICULTY_SETTINGS.Rookie.manualJumpDurationMs,
+    manualJumpHeight: DIFFICULTY_SETTINGS.Rookie.manualJumpHeight,
+    acceleratorFrequencyPercent: DIFFICULTY_SETTINGS.Rookie.ACCELERATOR_FREQUENCY_PERCENT,
+    jumpState: {
+        isJumping: false, progress: 0,
+        isHurdle: false, hurdleDuration: 0,
+        isSpecialMove: false, specialMoveDuration: 0,
+        isPowerStomp: false, powerStompDuration: 0,
+        isDive: false, diveDuration: 0,
+        isCorkscrewSpin: false, corkscrewSpinDuration: 0,
+        isScissorKick: false, scissorKickDuration: 0,
+        isPhaseDash: false, phaseDashDuration: 0,
+        isHover: false, hoverDuration: 0,
+        isGroundPound: false, groundPoundDuration: 0,
+        isCartoonScramble: false, cartoonScrambleDuration: 0,
+        isMoonwalking: false, moonwalkDuration: 0,
+        isShockwave: false, shockwaveDuration: 0,
+        isBackflip: false, backflipDuration: 0,
+        isFrontflip: false, frontflipDuration: 0,
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
+    },
+    manualJumpOverride: { isActive: false, startTime: 0, duration: DIFFICULTY_SETTINGS.Rookie.manualJumpDurationMs },
+    hitsCounter: 0,
+    daysElapsedTotal: 0,
+    daysAccumulatedAtSegmentStart: 0,
+    currentObstacle: null,
+    isColliding: false,
+    collisionDuration: 0,
+    currentAccelerator: null,
+    isAccelerating: false,
+    accelerationDuration: 0,
+    isDecelerating: false,
+    decelerationDuration: 0,
+    onScreenCustomEvent: null,
+    isVictory: false,
+    isGameOverSequence: false,
+    gameOverSequenceStartTime: 0,
+    screenFlash: { opacity: 0, duration: 0, startTime: 0 },
+    turboBoost: { active: false, frame: 0, lastFrameTime: 0 },
+    stickFigureBurst: { active: false, duration: 200, startTime: 0, progress: 0, maxOffset: 150 },
+    grassAnimationState: { blades: [], lastUpdateTime: 0 },
+    clouds: [],
+    activeCashBags: []
+};
+
+export default state;
