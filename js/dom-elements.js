@@ -26,3 +26,5 @@ export const skillLevelSelector = document.getElementById('skillLevelSelector');
 export const disableSaveSettings = document.getElementById('disableSaveSettings');
 export const highScoresContainer = document.getElementById('highScoresContainer');
 export const enablePowerUps = document.getElementById('enablePowerUps');
+export const themeSelector = document.getElementById('themeSelector');
+export const personaSelector = document.getElementById('personaSelector');

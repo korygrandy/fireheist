@@ -2,34 +2,40 @@
 // UI FUNCTIONS
 // =================================================================
 
-import { suggestedEmojiList, defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS } from './constants.js';
-import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer } from './dom-elements.js';
+import { defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS, EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from './constants.js';
+import { emojiInput, obstacleEmojiInput, frequencyValueSpan, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer, themeSelector, personaSelector } from './dom-elements.js';
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
+import { themes, setTheme } from './theme.js';
+import { setBackgroundMusicUrl } from './audio.js';
+import state from './game-modules/state.js';
+import { personas } from './personas.js';
 
 export let financialMilestones = {};
 export let raceSegments = [];
 export let customEvents = {};
-export let stickFigureEmoji = '🦹‍♂️'; // Default value
-export let obstacleEmoji = '🐌'; // Default value
+export let stickFigureEmoji = '🦹‍♂️';
+export let obstacleEmoji = '🐌';
 export let obstacleFrequencyPercent = 20;
 export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
 export let enableRandomPowerUps = true;
+export let selectedTheme = 'grass';
+export let selectedPersona = 'custom';
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 const HIGH_SCORE_KEY = 'fireHeistHighScores';
 
 function saveSettings() {
-    if (disableSaveSettings.checked) {
-        return; // Don't save if the checkbox is checked
-    }
+    if (disableSaveSettings.checked) return;
     const settings = {
+        selectedPersona,
         stickFigureEmoji,
         obstacleEmoji,
         obstacleFrequencyPercent,
         currentSkillLevel,
         intendedSpeedMultiplier,
         enableRandomPowerUps,
+        selectedTheme,
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
     };
@@ -37,132 +43,181 @@ function saveSettings() {
     console.log("-> saveSettings: Settings saved to localStorage.");
 }
 
-function loadSettings() {
+async function loadSettings() {
     const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (savedSettings && !disableSaveSettings.checked) {
         const settings = JSON.parse(savedSettings);
-        stickFigureEmoji = settings.stickFigureEmoji || '🦹‍♂️';
+        selectedPersona = settings.selectedPersona || 'custom';
         obstacleEmoji = settings.obstacleEmoji || '🐌';
         obstacleFrequencyPercent = settings.obstacleFrequencyPercent || 20;
-        currentSkillLevel = settings.currentSkillLevel || 'Rookie';
         intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
         enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
+        selectedTheme = settings.selectedTheme || 'grass';
 
-        emojiInput.value = stickFigureEmoji;
+        personaSelector.value = selectedPersona;
+        await handlePersonaChange({ target: { value: selectedPersona } }, false); // Pass false to avoid re-saving
+
         obstacleEmojiInput.value = obstacleEmoji;
         document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
         frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
         document.getElementById('enablePowerUps').checked = enableRandomPowerUps;
+        themeSelector.value = selectedTheme;
+        setTheme(selectedTheme);
 
-        // Set skill level radio button
-        const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${currentSkillLevel}"]`);
-        if (skillRadio) skillRadio.checked = true;
-
-        // Set speed radio button
         const speedString = intendedSpeedMultiplier.toFixed(1);
         const speedRadio = document.querySelector(`input[name="gameSpeed"][value="${speedString}"]`);
         if (speedRadio) speedRadio.checked = true;
 
-        // Load saved data into text areas, falling back to default if not present
-        dataInput.value = settings.milestoneData || defaultDataString.trim();
-        eventDataInput.value = settings.eventData || defaultEventDataString.trim();
+        if (selectedPersona === 'custom') {
+            stickFigureEmoji = settings.stickFigureEmoji || '🦹‍♂️';
+            currentSkillLevel = settings.currentSkillLevel || 'Rookie';
+            emojiInput.value = stickFigureEmoji;
+            const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${currentSkillLevel}"]`);
+            if (skillRadio) skillRadio.checked = true;
+            dataInput.value = settings.milestoneData || defaultDataString.trim();
+            eventDataInput.value = settings.eventData || defaultEventDataString.trim();
+        }
 
         console.log("-> loadSettings: Settings loaded from localStorage.");
-        return true; // Indicate that settings were loaded
-    } else {
-        console.log("-> loadSettings: No settings found or saving is disabled. Using defaults.");
-        return false; // Indicate that settings were not loaded
+        return true;
+    }
+    return false;
+}
+
+export function populateThemeSelector() {
+    for (const key in themes) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = themes[key].name;
+        themeSelector.appendChild(option);
     }
 }
 
-export function displayHighScores() {
-    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
-    highScoresContainer.innerHTML = ''; // Clear existing scores
+export function populatePersonaSelector() {
+    const customOption = document.createElement('option');
+    customOption.value = 'custom';
+    customOption.textContent = 'Custom Character';
+    personaSelector.appendChild(customOption);
 
-    ['Rookie', 'Novice', 'Pro'].forEach(level => {
-        const score = highScores[level];
-        const scoreCard = document.createElement('div');
-        scoreCard.className = 'p-3 bg-gray-100 rounded-lg';
+    for (const key in personas) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = `${personas[key].emoji} ${personas[key].name}`;
+        personaSelector.appendChild(option);
+    }
+}
 
-        let content;
-        if (score) {
-            const isFlawless = score.hits === 0;
-            content = `
-                <div class="flex justify-between items-center">
-                    <div>
-                        <span class="font-bold text-lg text-gray-700">${level}</span>
-                        ${isFlawless ? '<span class="text-yellow-500 ml-2">🏆 Flawless!</span>' : ''}
-                    </div>
-                    <div class="text-right">
-                        <span class="text-2xl">${score.emoji}</span>
-                    </div>
-                </div>
-                <div class="text-sm text-gray-600 mt-1">
-                    <span>Days: <strong>${score.days.toLocaleString()}</strong></span> | 
-                    <span>Hits: <strong>${score.hits}</strong></span> |
-                    <span>Speed: <strong>${score.speed.toFixed(1)}x</strong></span>
-                </div>
-            `;
-        } else {
-            content = `
-                <div class="font-bold text-lg text-gray-500">${level}</div>
-                <div class="text-sm text-gray-400 mt-1">No record yet.</div>
-            `;
+export async function handlePersonaChange(event, doSave = true) {
+    selectedPersona = event.target.value;
+    
+    // Validate that the persona exists, otherwise default to custom
+    if (selectedPersona !== 'custom' && !personas[selectedPersona]) {
+        console.warn(`-> handlePersonaChange: Persona "${selectedPersona}" not found. Defaulting to custom.`);
+        selectedPersona = 'custom';
+        personaSelector.value = 'custom';
+    }
+
+    const customControls = document.getElementById('custom-persona-controls');
+    const themeSelectorContainer = document.getElementById('theme-selector-container');
+    const characteristicsDisplay = document.getElementById('persona-characteristics-display');
+
+    if (selectedPersona === 'custom') {
+        customControls.style.display = 'block';
+        themeSelectorContainer.style.display = 'block';
+        characteristicsDisplay.style.display = 'none';
+        
+        const savedSettings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+        if (savedSettings) {
+            const currentEmoji = savedSettings.stickFigureEmoji || '🦹‍♂️';
+            emojiInput.value = currentEmoji;
+            setBackgroundMusicUrl(EMOJI_MUSIC_MAP[currentEmoji] || DEFAULT_MUSIC_URL);
+            
+            obstacleFrequencyPercent = savedSettings.obstacleFrequencyPercent || 20;
+            document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
+            frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
+            
+            const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${savedSettings.currentSkillLevel || 'Rookie'}"]`);
+            if (skillRadio) skillRadio.checked = true;
+            
+            dataInput.value = savedSettings.milestoneData || defaultDataString.trim();
+            eventDataInput.value = savedSettings.eventData || defaultEventDataString.trim();
         }
-        scoreCard.innerHTML = content;
-        highScoresContainer.appendChild(scoreCard);
-    });
-}
-
-export function updateEmoji(event) {
-    let input = event.target.value.trim();
-    stickFigureEmoji = input.length > 0 ? input.slice(0, 2) : '🦹‍♂️';
-    saveSettings();
-}
-
-export function updateObstacleEmoji(event) {
-    let input = event.target.value.trim();
-    obstacleEmoji = input.length > 0 ? input.slice(0, 2) : '🐌';
-    saveSettings();
-}
-
-export function handleFrequencyChange(event) {
-    obstacleFrequencyPercent = parseInt(event.target.value, 10);
-    frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
-    console.log(`-> handleFrequencyChange: Obstacle frequency updated to ${obstacleFrequencyPercent}%`);
-    saveSettings();
-}
-
-export function handlePowerUpToggle(event) {
-    enableRandomPowerUps = event.target.checked;
-    saveSettings();
-}
-
-export function applySkillLevelSettings(level) {
-    console.log(`-> applySkillLevelSettings: Setting skill level to ${level}.`);
-    const settings = DIFFICULTY_SETTINGS[level];
-    if (settings) {
-        currentSkillLevel = level; // Renamed
-        console.log(`-> applySkillLevelSettings: Jump Height: ${settings.manualJumpHeight}, Duration: ${settings.manualJumpDurationMs}ms, Collision Range: ${settings.COLLISION_RANGE_X}, Accelerator Freq: ${settings.ACCELERATOR_FREQUENCY_PERCENT}%`);
     } else {
-        console.error(`Unknown skill level: ${level}.`);
+        customControls.style.display = 'none';
+        themeSelectorContainer.style.display = 'none';
+        characteristicsDisplay.style.display = 'block';
+
+        const persona = personas[selectedPersona];
+        stickFigureEmoji = persona.emoji;
+        currentSkillLevel = persona.skillLevel;
+        obstacleFrequencyPercent = persona.obstacleFrequencyPercent;
+        document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
+        frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
+
+        // Populate characteristics display
+        characteristicsDisplay.innerHTML = `
+            <p class="text-sm text-gray-600"><strong class="font-semibold text-gray-800">Trait:</strong> ${persona.financialTrait}</p>
+            <p class="text-sm text-gray-600"><strong class="font-semibold text-gray-800">Discipline:</strong> ${persona.financialDisciplineLevel}</p>
+            <p class="text-sm text-gray-600"><strong class="font-semibold text-gray-800">Skill Level:</strong> ${persona.skillLevel}</p>
+            <p class="text-sm text-gray-600"><strong class="font-semibold text-gray-800">Obstacle Freq:</strong> ${persona.obstacleFrequencyPercent}%</p>
+        `;
+
+        // Set theme and music
+        selectedTheme = persona.theme;
+        themeSelector.value = selectedTheme;
+        setTheme(selectedTheme);
+        setBackgroundMusicUrl(persona.music);
+
+        try {
+            const milestoneResponse = await fetch(`data/personas/${selectedPersona}/milestones.json`);
+            const eventResponse = await fetch(`data/personas/${selectedPersona}/events.json`);
+            if (!milestoneResponse.ok || !eventResponse.ok) throw new Error(`Failed to fetch persona data for ${selectedPersona}`);
+            const milestoneData = await milestoneResponse.json();
+            const eventData = await eventResponse.json();
+            dataInput.value = milestoneData.milestones.join('\n');
+            eventDataInput.value = eventData.events.join('\n');
+        } catch (error) {
+            console.error('Error loading persona data:', error);
+            dataMessage.textContent = `Error loading data for ${persona.name}.`;
+            dataMessage.style.color = 'red';
+            dataInput.value = defaultDataString.trim();
+            eventDataInput.value = defaultEventDataString.trim();
+        }
     }
+    loadCustomData(doSave);
+}
+
+export function handleThemeChange(event) {
+    selectedTheme = event.target.value;
+    setTheme(selectedTheme);
     saveSettings();
 }
 
-export function handleSkillLevelChange(event) {
-    if (event.target.name === 'gameSkillLevel' && event.target.checked) {
-        applySkillLevelSettings(event.target.value);
+export function handleCustomPersonaChange(event) {
+    if (event.target.id === 'emojiInput') {
+        stickFigureEmoji = event.target.value.trim().length > 0 ? event.target.value.trim().slice(0, 2) : '🦹‍♂️';
+        setBackgroundMusicUrl(EMOJI_MUSIC_MAP[stickFigureEmoji] || DEFAULT_MUSIC_URL);
+    } else if (event.target.name === 'gameSkillLevel' && event.target.checked) {
+        currentSkillLevel = event.target.value;
+        const settings = DIFFICULTY_SETTINGS[currentSkillLevel];
+        state.manualJumpHeight = settings.manualJumpHeight;
+        state.manualJumpDurationMs = settings.manualJumpDurationMs;
+        state.COLLISION_RANGE_X = settings.COLLISION_RANGE_X;
+        state.acceleratorFrequencyPercent = settings.ACCELERATOR_FREQUENCY_PERCENT;
     }
+    saveSettings();
 }
 
 export function selectSuggestedEmoji(emoji) {
     emojiInput.value = emoji;
     stickFigureEmoji = emoji;
+    setBackgroundMusicUrl(EMOJI_MUSIC_MAP[emoji] || DEFAULT_MUSIC_URL);
     saveSettings();
 }
 
 export function setupSuggestedEmojis() {
+    const suggestedEmojiList = ['🧟', '🥷', '🦁', '💃', '🐶', '🚀', '👽', '👨‍🚀'];
+    const suggestedEmojisContainer = document.getElementById('suggestedEmojis');
     suggestedEmojiList.forEach(emoji => {
         const span = document.createElement('span');
         span.textContent = emoji;
@@ -174,6 +229,41 @@ export function setupSuggestedEmojis() {
     });
 }
 
+export function displayHighScores() {
+    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
+    highScoresContainer.innerHTML = '';
+    ['Rookie', 'Novice', 'Pro'].forEach(level => {
+        const score = highScores[level];
+        const scoreCard = document.createElement('div');
+        scoreCard.className = 'p-3 bg-gray-100 rounded-lg';
+        let content;
+        if (score) {
+            const isFlawless = score.hits === 0;
+            content = `<div class="flex justify-between items-center"><div><span class="font-bold text-lg text-gray-700">${level}</span>${isFlawless ? '<span class="text-yellow-500 ml-2">🏆 Flawless!</span>' : ''}</div><div class="text-right"><span class="text-2xl">${score.emoji}</span></div></div><div class="text-sm text-gray-600 mt-1"><span>Days: <strong>${score.days.toLocaleString()}</strong></span> | <span>Hits: <strong>${score.hits}</strong></span> | <span>Speed: <strong>${score.speed.toFixed(1)}x</strong></span></div>`;
+        } else {
+            content = `<div class="font-bold text-lg text-gray-500">${level}</div><div class="text-sm text-gray-400 mt-1">No record yet.</div>`;
+        }
+        scoreCard.innerHTML = content;
+        highScoresContainer.appendChild(scoreCard);
+    });
+}
+
+export function updateObstacleEmoji(event) {
+    obstacleEmoji = event.target.value.trim().length > 0 ? event.target.value.trim().slice(0, 2) : '🐌';
+    saveSettings();
+}
+
+export function handleFrequencyChange(event) {
+    obstacleFrequencyPercent = parseInt(event.target.value, 10);
+    frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
+    saveSettings();
+}
+
+export function handlePowerUpToggle(event) {
+    enableRandomPowerUps = event.target.checked;
+    saveSettings();
+}
+
 export function handleSpeedChange(event) {
     if (event.target.name === 'gameSpeed' && event.target.checked) {
         intendedSpeedMultiplier = parseFloat(event.target.value);
@@ -182,78 +272,49 @@ export function handleSpeedChange(event) {
 }
 
 export function switchTab(tabId) {
-    const tabs = document.querySelectorAll('.tab-content');
-    const buttons = document.querySelectorAll('.tab-button');
-
-    tabs.forEach(tab => {
-        tab.classList.add('hidden');
-    });
-
-    buttons.forEach(button => {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+    document.querySelectorAll('.tab-button').forEach(button => {
         button.classList.remove('tab-button-active');
         button.classList.add('tab-button-inactive');
     });
-
-    const activeTab = document.getElementById(tabId + 'Tab');
-    const activeButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
-
-    if (activeTab) {
-        activeTab.classList.remove('hidden');
-    }
-    if (activeButton) {
-        activeButton.classList.add('tab-button-active');
-        activeButton.classList.remove('tab-button-inactive');
-    }
+    document.getElementById(tabId + 'Tab').classList.remove('hidden');
+    document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('tab-button-active');
 }
 
-export function loadCustomData() {
+export function loadCustomData(doSave = true) {
     console.log("-> loadCustomData: Attempting to load custom data.");
-
-    // 1. Load Milestone Data
     const customMilestoneData = parseData(dataInput.value);
     if (!customMilestoneData || Object.keys(customMilestoneData).length < 2) {
-        const errorMsg = "Error: Please check Milestone Data format. Need at least two valid 'MM/DD/YYYY: VALUE' pairs. Data load failed.";
-        dataMessage.textContent = errorMsg;
+        dataMessage.textContent = "Error: Please check Milestone Data format. Need at least two valid 'MM/DD/YYYY: VALUE' pairs.";
         dataMessage.style.color = 'red';
-        console.error("-> loadCustomData: Milestone Data loading failed.", errorMsg);
-        // Clear out events to prevent mismatch
         customEvents = {};
         return;
     }
-
     financialMilestones = customMilestoneData;
     raceSegments = prepareRaceData(financialMilestones);
     const firstMilestoneDate = Object.keys(financialMilestones)[0];
-
-    // 2. Load Custom Event Data (Only if milestones loaded successfully)
     const customEventData = parseEventData(eventDataInput.value, firstMilestoneDate);
-
     if (customEventData === null) {
-        const errorMsg = "Error: Please check Custom Event Data format/dates. Events load failed.";
-        dataMessage.textContent = errorMsg;
-        dataMessage.style.color = 'red';
-        console.error("-> loadCustomData: Custom Event Data loading failed.", errorMsg);
-        // Continue with just milestone data, but warn user.
+        dataMessage.textContent = "Warning: Custom Event Data format/dates are invalid. Events were not loaded.";
+        dataMessage.style.color = 'orange';
         customEvents = {};
-        return;
+    } else {
+        customEvents = customEventData;
+        dataMessage.textContent = `Data successfully loaded! ${raceSegments.length} milestones and ${Object.values(customEvents).flat().length} custom events ready.`;
+        dataMessage.style.color = 'green';
     }
-
-    customEvents = customEventData;
-    console.log(`-> loadCustomData: ${Object.values(customEvents).flat().length} Custom Events loaded.`);
-
-    dataMessage.textContent = `Data successfully loaded! ${raceSegments.length} milestones and ${Object.values(customEvents).flat().length} custom events ready.`;
-    dataMessage.style.color = 'green';
-    console.log("-> loadCustomData: Data loaded and game reset for new segments.");
-    saveSettings(); // Save the newly loaded custom data
+    if (doSave) saveSettings();
 }
+
 export async function initializeUIData() {
-    const settingsLoaded = loadSettings();
+    populateThemeSelector();
+    populatePersonaSelector();
+    setupSuggestedEmojis();
+    const settingsLoaded = await loadSettings();
     if (!settingsLoaded) {
         try {
             const response = await fetch('milestones.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             dataInput.value = data.milestones.join('\n');
             eventDataInput.value = data.events.join('\n');
@@ -262,32 +323,13 @@ export async function initializeUIData() {
             dataInput.value = defaultDataString.trim();
             eventDataInput.value = defaultEventDataString.trim();
         }
+        loadCustomData();
     }
-
-    // Directly parse and prepare the initial data
-    financialMilestones = parseData(dataInput.value);
-    if (financialMilestones && Object.keys(financialMilestones).length >= 2) {
-        raceSegments = prepareRaceData(financialMilestones);
-        const firstMilestoneDate = Object.keys(financialMilestones)[0];
-        customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
-        dataMessage.textContent = `Default data loaded. ${raceSegments.length} milestones and ${Object.values(customEvents).flat().length} events ready.`;
-        dataMessage.style.color = 'green';
-    } else {
-        dataMessage.textContent = "Error: Default data is invalid. Please check 'milestones.json' or provide valid custom data.";
-        dataMessage.style.color = 'red';
-        financialMilestones = {};
-        raceSegments = [];
-        customEvents = {};
-    }
-
-    displayHighScores(); // Display high scores on startup
+    displayHighScores();
 }
 
 export function showResultsScreen(financialMilestones, raceSegments) {
-    if (!financialMilestones || Object.keys(financialMilestones).length === 0 || !raceSegments || raceSegments.length === 0) {
-        console.error("-> showResultsScreen: Called with invalid or empty data. Aborting render.");
-        return;
-    }
+    if (!financialMilestones || Object.keys(financialMilestones).length === 0 || !raceSegments || raceSegments.length === 0) return;
     chartContainer.style.display = 'block';
     tableContainer.style.display = 'block';
     drawChart(financialMilestones, document.getElementById('milestoneChart').getContext('2d'));
@@ -303,33 +345,20 @@ export function updateControlPanelState(gameRunning, isPaused) {
     const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
     const loadButton = document.getElementById('loadButton');
-
-    // Main game state controls button disabling
     const disableControls = gameRunning && !isPaused;
     loadButton.disabled = disableControls;
-    emojiInput.disabled = disableControls;
     obstacleEmojiInput.disabled = disableControls;
     document.getElementById('obstacleFrequency').disabled = disableControls;
     document.getElementById('speedSelector').querySelectorAll('input').forEach(input => input.disabled = disableControls);
-    skillLevelSelector.querySelectorAll('input').forEach(input => input.disabled = disableControls);
-
-    // Stop button is enabled only when the game is actively running or paused
+    personaSelector.disabled = disableControls;
+    document.getElementById('custom-persona-controls').querySelectorAll('input, select').forEach(el => el.disabled = disableControls);
     stopButton.disabled = !gameRunning;
-
-    // Start button state logic
     if (!gameRunning) {
         startButton.disabled = false;
         startButton.textContent = "Start the Heist!";
     } else {
-        startButton.disabled = false; // It's now the pause/resume button
-        if (isPaused) {
-            startButton.textContent = "Unpause (P)";
-        } else {
-            startButton.textContent = "Pause (P)";
-        }
+        startButton.disabled = false;
+        startButton.textContent = isPaused ? "Unpause (P)" : "Pause (P)";
     }
-
-    if (!gameRunning) {
-        dataMessage.textContent = "";
-    }
+    if (!gameRunning) dataMessage.textContent = "";
 }

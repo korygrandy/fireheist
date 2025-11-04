@@ -50,6 +50,28 @@ export const ACCELERATOR_DURATION_MS = 2500; // Boost lasts 2.5 seconds
 export const DECELERATOR_BASE_SPEED_DEBUFF = 0.5; // 0.5x speed
 export const DECELERATOR_DURATION_MS = 3000; // Debuff lasts 3 seconds
 
+// Special Move Constants
+export const SLOW_MOTION_FACTOR = 0.3; // 30% of normal speed
+
+export const JUMP_DURATIONS = {
+    hurdle: 500,
+    specialMove: 500,
+    powerStomp: 500,
+    dive: 500,
+    corkscrewSpin: 500,
+    spinningTop: 500,
+    scissorKick: 500,
+    phaseDash: 600,
+    hover: 1000,
+    groundPound: 600,
+    cartoonScramble: 500,
+    moonwalk: 700,
+    shockwave: 400,
+    backflip: 500,
+    frontflip: 500,
+    houdini: 800
+};
+
 // Constant, faster velocity for obstacles and accelerators
 export const OBSTACLE_BASE_VELOCITY_PX_MS = 0.5;
 
@@ -88,11 +110,12 @@ export const DEFAULT_MUSIC_URL = "fx/funk.mp3";
 export const EMOJI_MUSIC_MAP = {
     '🧟': 'fx/zombie.mp3',
     '🥷': 'fx/ninja.mp3',
-    '🦁': 'fx/lion.mpp3',
+    '🦁': 'fx/lion.mp3',
     '💃': 'fx/ballerina.mp3',
     '🐶': 'fx/dog.mp3',
     '🚀': 'fx/rocket.mp3',
     '👽': 'fx/alien.mp3',
+    '👨‍🚀': 'fx/astronaut.mp3',
 };
 
 export const suggestedEmojiList = ['🧟', '🥷', '🦁', '💃', '🐶', '🚀','👽'];

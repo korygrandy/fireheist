@@ -1,0 +1,14 @@
+/node_modules
+/test-artifacts/
+/html-report/
+/playwright-report/
+/screenshots/
+/e2e.tests/tests/visual.spec.ts-snapshots
+.env
+.DS_Store
+/dist
+/build
+/auth
+.idea/
+bootstrap-playwright.js
+/e2e.tests/

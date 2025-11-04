@@ -26,6 +26,9 @@ export function loadMuteSetting() {
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
+        winnerSound.mute = true;
+        loserSound.mute = true;
+        gameStartSound.mute = true;
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -33,6 +36,9 @@ export function loadMuteSetting() {
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;
+        winnerSound.mute = false;
+        loserSound.mute = false;
+        gameStartSound.mute = false;
         if (backgroundMusic) { backgroundMusic.volume.value = -18; }
         if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
     }
@@ -75,18 +81,66 @@ export const powerUpSound = new Tone.Player({
 }).toDestination();
 powerUpSound.mute = isMuted;
 
-export function initializeMusicPlayer(stickFigureEmoji) {
-    if (backgroundMusic) {
-        if (backgroundMusic.state === 'started') { backgroundMusic.stop(); }
+export const winnerSound = new Tone.Player({
+    url: './fx/winner.mp3',
+    volume: -5,
+    onload: () => console.log("-> AUDIO: Winner sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading winner sound:", e)
+}).toDestination();
+
+export const loserSound = new Tone.Player({
+    url: './fx/loser.mp3',
+    volume: -5,
+    onload: () => console.log("-> AUDIO: Loser sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading loser sound:", e)
+}).toDestination();
+
+export const gameStartSound = new Tone.Player({
+    url: './fx/game-start.mp3',
+    volume: -10,
+    onload: () => console.log("-> AUDIO: Game start sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading game start sound:", e)
+}).toDestination();
+
+export function preloadEndgameSounds() {
+    winnerSound.buffer;
+    loserSound.buffer;
+}
+
+export function playWinnerSound() {
+    if (isMuted) return;
+    if (winnerSound.state === 'stopped') winnerSound.start();
+}
+
+export function playLoserSound() {
+    if (isMuted) return;
+    if (loserSound.state === 'stopped') loserSound.start();
+}
+
+export function playGameStartSound() {
+    if (isMuted) return;
+    if (gameStartSound.state === 'stopped') gameStartSound.start();
+}
+
+let backgroundMusicUrl = DEFAULT_MUSIC_URL;
+
+export function setBackgroundMusicUrl(url) {
+    backgroundMusicUrl = url || DEFAULT_MUSIC_URL;
+    console.log(`-> setBackgroundMusicUrl: Music URL set to ${backgroundMusicUrl}`);
+}
+
+export function initializeMusicPlayer() {
+    if (backgroundMusic && backgroundMusic.state !== "stopped") {
+        backgroundMusic.stop();
         backgroundMusic.dispose();
     }
-    const cleanEmoji = stickFigureEmoji.replace(/\uFE0F/g, '');
-    const musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
-
     backgroundMusic = new Tone.Player({
-        url: musicUrl,
+        url: backgroundMusicUrl,
         loop: true,
-        volume: isMuted ? -Infinity : -18
+        volume: -10,
+        autostart: false,
+        onload: () => console.log(`-> AUDIO: Background music loaded from ${backgroundMusicUrl}`),
+        onerror: (e) => console.error("-> AUDIO: Error loading background music:", e)
     }).toDestination();
 }
 
@@ -136,6 +190,9 @@ export function toggleSound(soundToggleButton) {
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
+        winnerSound.mute = true;
+        loserSound.mute = true;
+        gameStartSound.mute = true;
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -143,6 +200,9 @@ export function toggleSound(soundToggleButton) {
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;
+        winnerSound.mute = false;
+        loserSound.mute = false;
+        gameStartSound.mute = false;
         if (backgroundMusic) {
             backgroundMusic.volume.value = -18;
             if (backgroundMusic.state === 'stopped') {
