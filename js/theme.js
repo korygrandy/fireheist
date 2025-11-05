@@ -4,7 +4,7 @@
 
 export const themes = {
     'grass': {
-        name: 'Grassy Knolls (Default)',
+        name: '⛅ Grassy Knolls',
         sky: '#87CEEB',
         ground: '#1c7d3c',
         grassBlades: '#229944',
@@ -15,7 +15,7 @@ export const themes = {
         }
     },
     'mountains': {
-        name: 'Mt. Brown',
+        name: '⛰️ Mt. Brown',
         sky: '#D2B48C',
         ground: '#8B4513',
         grassBlades: '#A0522D',
@@ -26,7 +26,7 @@ export const themes = {
         }
     },
     'snow': {
-        name: 'White Snowpeaks',
+        name: '🗻 White Snowpeaks',
         sky: '#ADD8E6',
         ground: '#FFFFFF',
         grassBlades: '#D3D3D3',
@@ -37,7 +37,7 @@ export const themes = {
         }
     },
     'volcano': {
-        name: 'Island Volcano',
+        name: '🌋 Island Volcano',
         sky: 'royalblue',
         ground: '#FF4500',
         grassBlades: '#FFFF00',
@@ -48,7 +48,7 @@ export const themes = {
         }
     },
     'roadway': {
-        name: 'Urban City',
+        name: '🌋 Urban City',
         sky: '#A9B7C6',
         ground: '#36454F',
         grassBlades: null,
@@ -60,7 +60,7 @@ export const themes = {
         }
     },
     'outerspace': {
-        name: 'Outer Space',
+        name: '🌑 Outer Space',
         sky: '#808080',
         ground: '#2C003E',
         grassBlades: null,

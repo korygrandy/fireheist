@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.4.17",
+        "date": "2025-11-04",
+        "changes": [
+            "Feature: Implemented 'Disable auto-hurdle' functionality, allowing users to disable automatic hurdling.",
+            "Improvement: Enhanced pause functionality by updating the main button text to 'Pause' or 'Unpause' based on game state."
+        ]
+    },
+    {
         "version": "1.4.16",
         "date": "2025-11-04",
         "changes": [
@@ -56,28 +64,6 @@
         "date": "2025-11-04",
         "changes": [
             "Bugfix: Resolved a syntax error in `state.js` caused by git conflict markers."
-        ]
-    },
-    {
-        "version": "1.4.8",
-        "date": "2025-11-04",
-        "changes": [
-            "Bugfix: Resolved a syntax error in `drawing.js` caused by git conflict markers."
-        ]
-    },
-    {
-        "version": "1.4.7",
-        "date": "2025-11-03",
-        "changes": [
-            "Feature: Implemented backflip and frontflip animations with keyboard ('Z', 'F') and mobile gesture controls (Swipe Up for Frontflip, Swipe Right for Backflip).",
-            "Feature: Added a Houdini-style animation with keyboard ('I') and mobile gesture controls (3-Finger Tap).",
-            "Feature: Integrated jumping motion into all special move animations for obstacle clearance.",
-            "Feature: Added win/loss sound effects (fx/winner.mp3 and fx/quack.mp_3 as placeholder for loser sound).",
-            "Bugfix: Resolved animation defect where rotational animations only affected limbs, not the entire body.",
-            "Improvement: Remapped mobile gestures to accommodate new animations (Power Stomp to Swipe Down, Dive to 2-Finger Tap).",
-            "Improvement: Updated in-game info panel to reflect new keyboard and mobile controls.",
-            "Improvement: Adjusted 'City Roadway' theme: Lighter sky color for a distinct horizon, added a black curb line above road lines, and adjusted yellow road lines for better visual spacing.",
-            "Improvement: Repositioned 'Power-up >>' animation to display at the bottom inside the gameCanvas."
         ]
     }
 ]
