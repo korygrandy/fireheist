@@ -125,7 +125,8 @@ export function prepareRaceData(milestones) {
         durationDelta: 0, // No previous segment to compare
         milestoneValue: milestones[dates[0]],
         angleRad: 0,
-        visualDurationMs: 0 // No duration for starting point
+        visualDurationMs: 0, // No duration for starting point
+        isMilestone: false // Not a hurdle, just a starting point
     });
 
      // 2. Build segments with stable visual durations
@@ -164,7 +165,10 @@ export function prepareRaceData(milestones) {
             durationDelta: durationDelta, // Segment-to-segment comparison
             milestoneValue: currentValue,
             angleRad: angleRad,
-            visualDurationMs: visualDurationMs // Stored for use in animate()
+            visualDurationMs: visualDurationMs, // Stored for use in animate()
+            isMilestone: true, // This is an actual hurdle/milestone
+            animationState: 'idle',
+            animationProgress: 0
         });
 
         previousSegmentDurationDays = currentDurationDays; // Update for the next segment's comparison

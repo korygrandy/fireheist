@@ -2,8 +2,8 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange } from './ui.js';
+import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector } from './dom-elements.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startPowerStomp, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game-modules/actions.js';
@@ -62,6 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         frequencyRange.addEventListener('input', handleFrequencyChange);
         skillLevelSelector.addEventListener('change', handleSkillLevelChange);
         themeSelector.addEventListener('change', handleThemeChange);
+        personaSelector.addEventListener('change', (event) => {
+            handlePersonaChange(event);
+            if (state.gameRunning) {
+                stopGame(true);
+            }
+        });
     }
 
     if (enablePowerUps) {

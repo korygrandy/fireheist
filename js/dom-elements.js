@@ -28,3 +28,6 @@ export const enablePowerUps = document.getElementById('enablePowerUps');
 export const disableAutoHurdle = document.getElementById('disableAutoHurdle');
 export const themeSelector = document.getElementById('themeSelector');
 export const highScoresContainer = document.getElementById('highScoresContainer');
+export const personaSelector = document.getElementById('personaSelector');
+export const customPersonaControls = document.getElementById('custom-persona-controls');
+export const personaDetailsContainer = document.getElementById('personaDetailsContainer');

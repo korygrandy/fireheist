@@ -1,69 +1,79 @@
 [
     {
-        "version": "1.4.17",
-        "date": "2025-11-04",
+        "version": "1.4.32",
+        "date": "2025-11-05",
         "changes": [
-            "Feature: Implemented 'Disable auto-hurdle' functionality, allowing users to disable automatic hurdling.",
-            "Improvement: Enhanced pause functionality by updating the main button text to 'Pause' or 'Unpause' based on game state."
+            "Feature: Enhanced hurdle animations for a more dynamic visual experience.",
+            "Improvement: Hurdles now smoothly scale and fade in as they approach, starting from a smaller, semi-transparent state.",
+            "Improvement: After being cleared, hurdles now gradually shrink and fade into the distance, creating a natural horizon effect.",
+            "Bugfix: Corrected abrupt animation transitions, ensuring hurdles don't \"pop\" in or out of view."
         ]
     },
     {
-        "version": "1.4.16",
-        "date": "2025-11-04",
+        "version": "1.4.31",
+        "date": "2025-11-05",
         "changes": [
-            "Bugfix: Fixed an issue where the 'Disable auto-hurdle' setting was not being loaded from localStorage."
+            "Bugfix: Fixed a persistent issue where the selected persona was not correctly displayed on page load. The initialization sequence was corrected to ensure UI elements are populated before saved settings are applied."
         ]
     },
     {
-        "version": "1.4.15",
-        "date": "2025-11-04",
+        "version": "1.4.30",
+        "date": "2025-11-05",
         "changes": [
-            "Bugfix: Fixed an issue where the 'Disable auto-hurdle' setting was not being saved to localStorage."
+            "Bugfix: Fixed an issue where the `personaSelector`'s selected item was not being saved to localStorage, even though the persona details were correctly displayed. The `personaSelector` now correctly reflects the last saved persona on load."
         ]
     },
     {
-        "version": "1.4.14",
-        "date": "2025-11-04",
+        "version": "1.4.29",
+        "date": "2025-11-05",
         "changes": [
-            "Feature: Added a 'Disable auto-hurdle' checkbox to the Gameplay tab and connected it to localStorage.",
-            "Bugfix: Corrected an import error by adding `highScoresContainer` to the exports in `dom-elements.js`."
+            "Bugfix: Fixed a regression where persona-specific background music was not playing. The game now correctly prioritizes persona music over custom emoji music when a persona is selected."
         ]
     },
     {
-        "version": "1.4.13",
-        "date": "2025-11-04",
+        "version": "1.4.28",
+        "date": "2025-11-05",
         "changes": [
-            "Bugfix: Resolved an import error for `initializeUI` by creating a new `initializeUI` function in `js/ui.js` that encapsulates the UI initialization logic and is properly exported."
+            "Bugfix: Fixed a regression where background music was not playing for any persona or custom emoji. The music player now correctly handles both persona-specific and emoji-based music URLs.",
+            "Bugfix: Corrected a typo in the music file path for the 'lion' emoji."
         ]
     },
     {
-        "version": "1.4.12",
-        "date": "2025-11-04",
+        "version": "1.4.27",
+        "date": "2025-11-05",
         "changes": [
-            "Bugfix: Resolved a 404 error for `version.js` by removing the incorrect import from `js/main.js` and hardcoding the version number."
+            "Bugfix: Fixed an issue where the background music for some personas was not loading correctly. The music player now correctly loads the music specified in the persona's `music` property."
         ]
     },
     {
-        "version": "1.4.11",
-        "date": "2025-11-04",
+        "version": "1.4.26",
+        "date": "2025-11-05",
         "changes": [
-            "Feature: Integrated `actions.js` and `drawing.js` into the animation logic.",
-            "Improvement: Centralized keyboard and touch event handling in `js/main.js`.",
-            "Bugfix: Removed duplicated function definitions in `js/game-modules/main.js`."
+            "Feature: Added a persona details display. When a predefined persona is selected, their emoji, financial trait, discipline level, and skill level are displayed to the user."
         ]
     },
     {
-        "version": "1.4.10",
+        "version": "1.4.25",
         "date": "2025-11-04",
         "changes": [
-            "Bugfix: Resolved a syntax error in `actions.js` caused by git conflict markers."
+            "Feature: Implemented persona selection. Users can now choose a predefined persona to automatically configure emoji, skill level, obstacle frequency, and theme. A 'Custom Persona' option retains manual configuration.",
+            "Bugfix: Resolved an issue where the selected persona was not being saved to localStorage.",
+            "Bugfix: Fixed a bug where custom persona controls were not being displayed correctly when 'Custom Persona' was selected.",
+            "Improvement: Updated the 'Outer Space' theme to remove road lines and add a purple grass-like texture."
         ]
     },
     {
-        "version": "1.4.9",
+        "version": "1.4.24",
         "date": "2025-11-04",
         "changes": [
-            "Bugfix: Resolved a syntax error in `state.js` caused by git conflict markers."
+            "Feature: Implemented persona selection. Users can now choose a predefined persona to automatically configure emoji, skill level, obstacle frequency, and theme. A 'Custom Persona' option retains manual configuration."
+        ]
+    },
+    {
+        "version": "1.4.23",
+        "date": "2025-11-04",
+        "changes": [
+            "Feature: Added detailed persona data to `personas.js` including emoji, financial traits, skill level, obstacle frequency, theme, and music."
         ]
     }
 ]

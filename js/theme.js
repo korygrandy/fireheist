@@ -4,7 +4,7 @@
 
 export const themes = {
     'grass': {
-        name: '⛅ Grassy Knolls',
+        name: '🌻 Grassy Knolls',
         sky: '#87CEEB',
         ground: '#1c7d3c',
         grassBlades: '#229944',
@@ -25,6 +25,18 @@ export const themes = {
             stroke: '#D2B48C'
         }
     },
+        'roadway': {
+        name: '🌃 City Night',
+        sky: '#A9B7C6',
+        ground: '#36454F',
+        grassBlades: null,
+        roadLines: '#FFFF00', // Yellow Stripes
+        curb: '#000000', // Black curb
+        hurdle: {
+            fill: '#808080',
+            stroke: '#FFFF00'
+        }
+    },
     'snow': {
         name: '🗻 White Snowpeaks',
         sky: '#ADD8E6',
@@ -36,6 +48,18 @@ export const themes = {
             stroke: '#FFFFFF'
         }
     },
+    'desert': {
+        name: '🏜️ Desert Dunes',
+        sky: '#F0E68C',
+        ground: '#C2B280',
+        grassBlades: '#8B8000',
+        roadLines: null,
+        hurdle: {
+            fill: '#556B2F',
+            stroke: '#F0E68C'
+        }
+    },
+
     'volcano': {
         name: '🌋 Island Volcano',
         sky: 'royalblue',
@@ -47,24 +71,12 @@ export const themes = {
             stroke: 'white'
         }
     },
-    'roadway': {
-        name: '🌋 Urban City',
-        sky: '#A9B7C6',
-        ground: '#36454F',
-        grassBlades: null,
-        roadLines: '#FFFF00', // Yellow Stripes
-        curb: '#000000', // Black curb
-        hurdle: {
-            fill: '#808080',
-            stroke: '#FFFF00'
-        }
-    },
-    'outerspace': {
+        'outerspace': {
         name: '🌑 Outer Space',
         sky: '#808080',
         ground: '#2C003E',
-        grassBlades: null,
-        roadLines: '#FFFFFF',
+        grassBlades: '#9E7BB5',
+        roadLines: null,
         curb: null,
         hurdle: {
             fill: '#A020F0',

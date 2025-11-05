@@ -88,7 +88,7 @@ export const DEFAULT_MUSIC_URL = "fx/funk.mp3";
 export const EMOJI_MUSIC_MAP = {
     '🧟': 'fx/zombie.mp3',
     '🥷': 'fx/ninja.mp3',
-    '🦁': 'fx/lion.mpp3',
+    '🦁': 'fx/lion.mp3',
     '💃': 'fx/ballerina.mp3',
     '🐶': 'fx/dog.mp3',
     '🚀': 'fx/rocket.mp3',
