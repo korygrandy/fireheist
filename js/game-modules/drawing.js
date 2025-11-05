@@ -426,8 +426,6 @@ export function drawSlantedGround(angleRad) {
 }
 
 export function drawHurdle(hurdleData) {
-    if (!hurdleData || !hurdleData.isMilestone) return; // Only draw if it's a milestone
-
     const hurdleDrawX = canvas.width - 100 - state.backgroundOffset;
     const currentAngleRad = raceSegments[state.currentSegmentIndex] ? raceSegments[state.currentSegmentIndex].angleRad : 0;
     const groundAtHurdleY = GROUND_Y - hurdleDrawX * Math.tan(currentAngleRad);
@@ -436,25 +434,6 @@ export function drawHurdle(hurdleData) {
         ctx.save();
         ctx.translate(hurdleDrawX + 15, groundAtHurdleY);
         ctx.rotate(-currentAngleRad);
-
-        let scale = 1;
-        let opacity = 1;
-
-        if (hurdleData.animationState === 'idle') {
-            scale = 0.7;
-            opacity = 0.33;
-        } else if (hurdleData.animationState === 'approaching') {
-            // Scale up as it approaches
-            scale = 0.7 + (hurdleData.animationProgress * 0.3); // Scales from 0.7 to 1.0
-            opacity = 0.33 + (hurdleData.animationProgress * 0.67); // Fades from 33% to 100%
-        } else if (hurdleData.animationState === 'cleared') {
-            // Fade out and shrink after being cleared, but not completely
-            scale = 1 - (hurdleData.animationProgress * 0.5); // Shrinks to 50%
-            opacity = 1 - (hurdleData.animationProgress * 0.67); // Fades to 33%
-        }
-
-        ctx.globalAlpha = opacity;
-        ctx.scale(scale, scale);
 
         ctx.fillStyle = currentTheme.hurdle.fill;
         ctx.fillRect(-17, -hurdleData.hurdleHeight, 4, hurdleData.hurdleHeight);
@@ -732,30 +711,9 @@ export function draw() {
 
         stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
 
-                    if (!state.isGameOverSequence) {
-                        // Update hurdle animation state
-                        if (currentSegment.isMilestone) {
-                            const hurdleDrawX = canvas.width - 100 - state.backgroundOffset;
-                            const distanceToHurdle = hurdleDrawX - STICK_FIGURE_FIXED_X;
-                            const animationThreshold = 300; // Distance at which animation starts
-                            const previousState = currentSegment.animationState;
+        if (!state.isGameOverSequence) {
+            drawHurdle(currentSegment);
 
-                            if (distanceToHurdle < animationThreshold && distanceToHurdle > 0) {
-                                currentSegment.animationState = 'approaching';
-                                currentSegment.animationProgress = 1 - (distanceToHurdle / animationThreshold);
-                            } else if (distanceToHurdle <= 0) {
-                                // On the frame we pass the hurdle, reset the progress to start the 'cleared' animation
-                                if (previousState !== 'cleared') {
-                                    currentSegment.animationProgress = 0;
-                                }
-                                currentSegment.animationState = 'cleared';
-                                currentSegment.animationProgress = Math.min(1, currentSegment.animationProgress + 0.015); // Fade out more gradually
-                            } else {
-                                currentSegment.animationState = 'idle';
-                                currentSegment.animationProgress = 0;
-                            }
-                        }
-                        drawHurdle(currentSegment);
             if (state.currentObstacle) {
                 drawObstacle(state.currentObstacle, groundAngleRad);
             }
