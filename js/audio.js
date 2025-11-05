@@ -95,9 +95,28 @@ export const loserSound = new Tone.Player({
 }).toDestination();
 loserSound.mute = isMuted;
 
+export const gameStartSound = new Tone.Player({
+    url: './fx/game-start.mp3',
+    volume: -10,
+    onload: () => console.log("-> AUDIO: Game start sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading game start sound:", e)
+}).toDestination();
+gameStartSound.mute = isMuted;
+
 export function preloadEndgameSounds() {
     winnerSound.buffer;
     loserSound.buffer;
+}
+
+export function preloadGameStartSound() {
+    gameStartSound.buffer;
+}
+
+export function playGameStartSound() {
+    if (isMuted) { return; }
+    if (gameStartSound.state === 'stopped') {
+        gameStartSound.start();
+    }
 }
 
 export function playWinnerSound() {

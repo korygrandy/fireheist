@@ -8,7 +8,7 @@ import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startPowerStomp, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game-modules/actions.js';
 import state from './game-modules/state.js';
-import { toggleSound, loadMuteSetting } from './audio.js';
+import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound } from './audio.js';
 
 async function loadVersion() {
     try {
@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Load initial UI data
     initializeUIData();
+    preloadGameStartSound();
 
     // 3. Set up main buttons and controls
     if (startButton) {
@@ -87,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.gameRunning) {
                 togglePauseGame();
             } else {
+                playGameStartSound();
                 startGame();
             }
         });
