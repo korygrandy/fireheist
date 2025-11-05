@@ -1,5 +1,18 @@
 [
     {
+        "version": "1.4.33",
+        "date": "2025-11-05",
+        "changes": [
+            "Feature: Reassigned 'Backflip' to 'B' key and 'Cartoon Scramble' to 'Z' key.",
+            "Enhancement: 'Phase Dash' now leaves a dynamic motion trail.",
+            "Enhancement: 'Shockwave' now creates an expanding burst of particle rings.",
+            "Enhancement: 'Houdini' move now features realistic smoke particle effects for both disappearance and reappearance.",
+            "Enhancement: 'Ground Pound' now generates dynamic debris particles on impact, with colors adapting to the active theme's ground.",
+            "Bugfix: Resolved an issue where 'Ground Pound' particle effects failed to re-trigger on subsequent uses.",
+            "Improvement: 'Accelerator' power-up now includes a visual fade-out effect on the player's legs, indicating its remaining duration."
+        ]
+    },
+    {
         "version": "1.4.32",
         "date": "2025-11-05",
         "changes": [
@@ -67,13 +80,6 @@
         "date": "2025-11-04",
         "changes": [
             "Feature: Implemented persona selection. Users can now choose a predefined persona to automatically configure emoji, skill level, obstacle frequency, and theme. A 'Custom Persona' option retains manual configuration."
-        ]
-    },
-    {
-        "version": "1.4.23",
-        "date": "2025-11-04",
-        "changes": [
-            "Feature: Added detailed persona data to `personas.js` including emoji, financial traits, skill level, obstacle frequency, theme, and music."
         ]
     }
 ]

@@ -23,7 +23,6 @@ const state = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
         isSpecialMove: false, specialMoveDuration: 0,
-        isPowerStomp: false, powerStompDuration: 0,
         isDive: false, diveDuration: 0,
         isCorkscrewSpin: false, corkscrewSpinDuration: 0,
         isScissorKick: false, scissorKickDuration: 0,
@@ -58,7 +57,10 @@ const state = {
     stickFigureBurst: { active: false, duration: 200, startTime: 0, progress: 0, maxOffset: 150 },
     grassAnimationState: { blades: [], lastUpdateTime: 0 },
     clouds: [],
-    activeCashBags: []
+    activeCashBags: [],
+    phaseDashTrail: [],
+    houdiniParticles: [],
+    groundPoundParticles: []
 };
 
 export default state;

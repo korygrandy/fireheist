@@ -1,5 +1,5 @@
 import { canvas, ctx } from '../dom-elements.js';
-import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, FADE_DURATION, COLLISION_DURATION_MS, CASH_BAG_EMOJI, CASH_BAG_FONT_SIZE, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../constants.js';
+import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, FADE_DURATION, COLLISION_DURATION_MS, CASH_BAG_EMOJI, CASH_BAG_FONT_SIZE, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, ACCELERATOR_DURATION_MS } from '../constants.js';
 import { currentTheme } from '../theme.js';
 import state, { GRASS_ANIMATION_INTERVAL_MS } from './state.js';
 import { raceSegments, stickFigureEmoji, currentSkillLevel } from '../ui.js';
@@ -11,6 +11,15 @@ import { raceSegments, stickFigureEmoji, currentSkillLevel } from '../ui.js';
 export let isInitialLoad = true; // Global flag for initial state
 export function setInitialLoad(value) {
     isInitialLoad = value;
+}
+
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }
 
 export function drawPausedOverlay() {
@@ -426,6 +435,8 @@ export function drawSlantedGround(angleRad) {
 }
 
 export function drawHurdle(hurdleData) {
+    if (!hurdleData || !hurdleData.isMilestone) return; // Only draw if it's a milestone
+
     const hurdleDrawX = canvas.width - 100 - state.backgroundOffset;
     const currentAngleRad = raceSegments[state.currentSegmentIndex] ? raceSegments[state.currentSegmentIndex].angleRad : 0;
     const groundAtHurdleY = GROUND_Y - hurdleDrawX * Math.tan(currentAngleRad);
@@ -434,6 +445,25 @@ export function drawHurdle(hurdleData) {
         ctx.save();
         ctx.translate(hurdleDrawX + 15, groundAtHurdleY);
         ctx.rotate(-currentAngleRad);
+
+        let scale = 1;
+        let opacity = 1;
+
+        if (hurdleData.animationState === 'idle') {
+            scale = 0.7;
+            opacity = 0.33;
+        } else if (hurdleData.animationState === 'approaching') {
+            // Scale up as it approaches
+            scale = 0.7 + (hurdleData.animationProgress * 0.3); // Scales from 0.7 to 1.0
+            opacity = 0.33 + (hurdleData.animationProgress * 0.67); // Fades from 33% to 100%
+        } else if (hurdleData.animationState === 'cleared') {
+            // Fade out and shrink after being cleared, but not completely
+            scale = 1 - (hurdleData.animationProgress * 0.5); // Shrinks to 50%
+            opacity = 1 - (hurdleData.animationProgress * 0.67); // Fades to 33%
+        }
+
+        ctx.globalAlpha = opacity;
+        ctx.scale(scale, scale);
 
         ctx.fillStyle = currentTheme.hurdle.fill;
         ctx.fillRect(-17, -hurdleData.hurdleHeight, 4, hurdleData.hurdleHeight);
@@ -459,7 +489,118 @@ export function drawHurdle(hurdleData) {
     }
 }
 
+export function createGroundPoundEffect(x, y) {
+    const particleCount = 40;
+    const groundColorRgb = hexToRgb(currentTheme.ground);
+
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI; // Upward semi-circle
+        const speed = Math.random() * 5 + 2;
+        state.groundPoundParticles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1),
+            vy: -Math.sin(angle) * speed, // Negative for upward motion
+            size: Math.random() * 4 + 2,
+            life: 1,
+            gravity: 0.2,
+            color: groundColorRgb ? `rgba(${groundColorRgb.r}, ${groundColorRgb.g}, ${groundColorRgb.b}, ${Math.random() * 0.5 + 0.3})` : `rgba(139, 69, 19, ${Math.random() * 0.5 + 0.3})` // Fallback to brown
+        });
+    }
+}
+
+export function drawGroundPoundParticles() {
+    for (let i = state.groundPoundParticles.length - 1; i >= 0; i--) {
+        const p = state.groundPoundParticles[i];
+
+        p.vy += p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.03;
+
+        if (p.life <= 0) {
+            state.groundPoundParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+export function createHoudiniPoof(x, y) {
+    const particleCount = 30;
+    const poofColor = 'rgba(128, 128, 128, 0.7)'; // Grey smoke color
+
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 3 + 1;
+        state.houdiniParticles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: Math.random() * 10 + 5,
+            life: 1, // Represents full life (100%)
+            color: poofColor
+        });
+    }
+}
+
+export function drawHoudiniParticles() {
+    for (let i = state.houdiniParticles.length - 1; i >= 0; i--) {
+        const p = state.houdiniParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.04; // Fade speed
+
+        if (p.life <= 0) {
+            state.houdiniParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+export function drawPhaseDashTrail() {
+    for (let i = state.phaseDashTrail.length - 1; i >= 0; i--) {
+        const particle = state.phaseDashTrail[i];
+
+        // Update particle
+        particle.opacity -= 0.05; // Fade out speed
+
+        if (particle.opacity <= 0) {
+            state.phaseDashTrail.splice(i, 1);
+        } else {
+            // Draw particle
+            ctx.save();
+            ctx.translate(particle.x, particle.y);
+            ctx.rotate(-particle.angleRad);
+            ctx.globalAlpha = particle.opacity;
+
+            ctx.font = '28px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(stickFigureEmoji, 0, -STICK_FIGURE_TOTAL_HEIGHT); // Draw the head
+
+            ctx.restore();
+        }
+    }
+}
+
 export function drawStickFigure(x, y, jumpState, angleRad) {
+
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 2;
 
@@ -480,7 +621,9 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         const R = Math.round(255 * fadeProgress);
         legColor = `rgb(${R}, 0, 0)`;
     } else if (state.isAccelerating) {
-        legColor = '#00FF00'; // Green for acceleration
+        const accelerationFadeProgress = state.accelerationDuration > 0 ? state.accelerationDuration / ACCELERATOR_DURATION_MS : 0;
+        const G = Math.round(255 * accelerationFadeProgress);
+        legColor = `rgb(0, ${G}, 0)`; // Fades from green to black
     }
 
     let legMovementX1, legMovementY1, legMovementX2, legMovementY2;
@@ -502,28 +645,25 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     armMovementY2 = headY + 15;
 
     // Override with special move animations if active
-    if (jumpState.isHurdle) { // "Yikes!" Jump
-        const t = jumpState.hurdleDuration / 300;
-        const angle = Math.sin(t * Math.PI) * Math.PI / 4;
-        animationRotation = angle / 4;
-        legMovementX1 = 20 * Math.sin(angle); legMovementY1 = bodyY + 5;
-        legMovementX2 = -20 * Math.sin(angle); legMovementY2 = bodyY + 5;
-        armMovementX1 = 20 * Math.cos(angle); armMovementY1 = headY + 15;
-        armMovementX2 = -20 * Math.cos(angle); armMovementY2 = headY + 15;
+    if (jumpState.isHurdle) { // Aerial Split Jump
+        const t = (500 - jumpState.hurdleDuration) / 500; // t goes from 0 to 1
+        const splitProgress = Math.sin(t * Math.PI); // Goes 0 -> 1 -> 0
+
+        // Legs extend up and out
+        legMovementX1 = 25 * splitProgress; legMovementY1 = bodyY - 20 * splitProgress;
+        legMovementX2 = -25 * splitProgress; legMovementY2 = bodyY - 20 * splitProgress;
+
+        // Arms extend down
+        armMovementX1 = 10 * splitProgress; armMovementY1 = headY + 25 * splitProgress;
+        armMovementX2 = -10 * splitProgress; armMovementY2 = headY + 25 * splitProgress;
+
+        animationRotation = 0; // No rotation for this move
     } else if (jumpState.isSpecialMove) { // Original "K" move
         animationRotation = state.frameCount * 0.5;
         legMovementX1 = 10; legMovementY1 = bodyY + 5;
         legMovementX2 = -10; legMovementY2 = bodyY + 5;
         armMovementX1 = 10; armMovementY1 = headY + 15;
         armMovementX2 = -10; armMovementY2 = headY + 15;
-    } else if (jumpState.isPowerStomp) {
-        const t = jumpState.powerStompDuration / 300;
-        const stompY = 20 * Math.sin(t * Math.PI);
-        ctx.translate(0, stompY);
-        legMovementX1 = 5; legMovementY1 = bodyY + 5;
-        legMovementX2 = -5; legMovementY2 = bodyY + 5;
-        armMovementX1 = 15; armMovementY1 = headY + 10;
-        armMovementX2 = -15; armMovementY2 = headY + 10;
     } else if (jumpState.isDive) {
         animationRotation = Math.PI / 2;
         legMovementX1 = 0; legMovementY1 = bodyY - 10;
@@ -531,11 +671,65 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX1 = 15; armMovementY1 = headY + 15;
         armMovementX2 = 10; armMovementY2 = headY + 15;
     } else if (jumpState.isCorkscrewSpin) {
-        animationRotation = state.frameCount * 0.8;
-        legMovementX1 = 15; legMovementY1 = bodyY;
-        legMovementX2 = -15; legMovementY2 = bodyY;
-        armMovementX1 = 0; armMovementY1 = headY + 15;
-        armMovementX2 = 0; armMovementY2 = headY + 15;
+        const duration = 500;
+        const t = (duration - jumpState.corkscrewSpinDuration) / duration; // t goes from 0 to 1
+
+        // Head animation: Sin wave from 0 -> 1 -> 0, completing two cycles
+        const headProgress = Math.sin(t * Math.PI * 2); // Two cycles
+        const headScaleX = 1 - (Math.abs(headProgress) * 0.95); // Shrinks to 5% and back
+
+        // Body animation: Same wave, but delayed and completing two cycles
+        const delay = 0.2; // 20% delay
+        const bodyT = Math.max(0, t - delay);
+        const bodyProgress = Math.sin(bodyT * (Math.PI * 2 / (1 - delay))); // Two cycles, adjusted for delay
+        const bodyScaleX = 1 - (Math.abs(bodyProgress) * 0.95);
+
+        // --- Draw Head ---
+        ctx.save();
+        ctx.scale(headScaleX, 1);
+        ctx.font = '28px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(stickFigureEmoji, 0, headY);
+        ctx.restore();
+
+        // --- Draw Body and Limbs ---
+        ctx.save();
+        ctx.scale(bodyScaleX, 1);
+
+        // Body
+        ctx.strokeStyle = 'black';
+        ctx.beginPath();
+        ctx.moveTo(0, headY + 5);
+        ctx.lineTo(0, bodyY - 10);
+        ctx.stroke();
+
+        // Limbs (simple animation for now)
+        legMovementX1 = 15 * bodyScaleX; legMovementY1 = bodyY + 5;
+        legMovementX2 = -15 * bodyScaleX; legMovementY2 = bodyY + 5;
+        armMovementX1 = 10 * bodyScaleX; armMovementY1 = headY + 15;
+        armMovementX2 = -10 * bodyScaleX; armMovementY2 = headY + 15;
+
+        ctx.save();
+        ctx.globalAlpha = legOpacity;
+        ctx.strokeStyle = legColor;
+        ctx.beginPath();
+        ctx.moveTo(0, bodyY - 10); ctx.lineTo(legMovementX1, legMovementY1);
+        ctx.moveTo(0, bodyY - 10); ctx.lineTo(legMovementX2, legMovementY2);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.strokeStyle = 'black';
+        ctx.beginPath();
+        ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX1, armMovementY1);
+        ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX2, armMovementY2);
+        ctx.stroke();
+
+        ctx.restore(); // Restore from body scaling
+
+        // Prevent default drawing by returning after custom drawing
+        ctx.restore(); // from the main translate/rotate
+        return;
     } else if (jumpState.isScissorKick) {
         const t = state.frameCount * 0.4;
         legMovementX1 = 15 * Math.sin(t); legMovementY1 = bodyY + 5;
@@ -543,6 +737,16 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX1 = 10; armMovementY1 = headY + 15;
         armMovementX2 = -10; armMovementY2 = headY + 15;
     } else if (jumpState.isPhaseDash) { // Enhanced Phase Dash
+        // Add a trail particle every few frames
+        if (state.frameCount % 3 === 0) {
+            state.phaseDashTrail.push({
+                x: x,
+                y: y,
+                angleRad: angleRad,
+                opacity: 0.6 // Initial opacity
+            });
+        }
+
         ctx.globalAlpha = 0.4 + 0.3 * Math.sin(state.frameCount * 0.8);
         const dashOffset = (1 - (jumpState.phaseDashDuration / 600)) * 50; // Dash forward
         ctx.translate(dashOffset, 0);
@@ -567,12 +771,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
             poundY = -40 * Math.sin(t * 2 * Math.PI);
         }
         ctx.translate(0, poundY);
-        if (t < 0.1) {
-            ctx.beginPath();
-            ctx.arc(0, bodyY + 10, 30, 0, Math.PI * 2);
-            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-            ctx.fill();
-        }
+
         legMovementX1 = 0; legMovementY1 = bodyY + 15;
         legMovementX2 = 0; legMovementY2 = bodyY + 15;
         armMovementX1 = 5; armMovementY1 = headY + 5;
@@ -588,24 +787,42 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX1 = 15; armMovementY1 = headY + 5;
         armMovementX2 = -15; armMovementY2 = headY + 5;
     } else if (jumpState.isMoonwalking) {
-        animationRotation = -Math.PI / 16;
-        const t = state.frameCount * 0.2;
-        const slide = 10 * Math.sin(t);
-        legMovementX1 = slide; legMovementY1 = bodyY + 5;
-        legMovementX2 = -slide; legMovementY2 = bodyY + 5;
+        animationRotation = -Math.PI / 16; // Slight backward lean
+        const t = (700 - jumpState.moonwalkDuration) / 700; // t goes 0 -> 1
+        const cycle = t * Math.PI * 2; // Two full cycles for a complete moonwalk step
+
+        // Use a sine wave to create the glide-and-pause effect
+        const leg1Progress = Math.sin(cycle);
+        const leg2Progress = Math.sin(cycle + Math.PI);
+
+        // Move legs back and forth
+        legMovementX1 = leg1Progress * 15;
+        legMovementX2 = leg2Progress * 15;
+        legMovementY1 = bodyY + 5;
+        legMovementY2 = bodyY + 5;
+
+        // Keep arms relatively still to emphasize leg movement
         armMovementX1 = 5; armMovementY1 = headY + 15;
         armMovementX2 = -5; armMovementY2 = headY + 15;
     } else if (jumpState.isShockwave) {
-        const t = jumpState.shockwaveDuration / 500;
-        const radius = 50 * (1 - t);
-        const opacity = t;
-        const gradient = ctx.createRadialGradient(0, bodyY + 10, radius / 2, 0, bodyY + 10, radius);
-        gradient.addColorStop(0, `rgba(173, 216, 230, ${opacity})`);
-        gradient.addColorStop(1, `rgba(128, 128, 128, 0)`);
-        ctx.beginPath();
-        ctx.arc(0, bodyY + 10, radius, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
+        const t = (400 - jumpState.shockwaveDuration) / 400; // t goes 0 -> 1
+
+        // Draw multiple expanding rings for a particle effect
+        for (let i = 0; i < 3; i++) {
+            // Stagger the start of each ring
+            const ringT = Math.max(0, t - i * 0.1);
+            if (ringT > 0) {
+                const radius = 100 * ringT; // Larger radius
+                const opacity = (1 - ringT) * 0.7; // Fade out
+
+                ctx.beginPath();
+                ctx.arc(0, bodyY + 10, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(173, 216, 230, ${opacity})`;
+                ctx.lineWidth = 4;
+                ctx.stroke();
+            }
+        }
+
         legMovementX1 = 5; legMovementY1 = bodyY + 5;
         legMovementX2 = -5; legMovementY2 = bodyY + 5;
         armMovementX1 = 10; armMovementY1 = headY + 15;
@@ -627,15 +844,18 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     } else if (jumpState.isHoudini) {
         const duration = 800;
         const t = (duration - jumpState.houdiniDuration) / duration;
+
         if (jumpState.houdiniPhase === 'disappearing') {
-            ctx.globalAlpha = 1 - (t * 2);
-            ctx.font = '48px Arial';
-            ctx.fillText('💨', 0, headY);
-        } else {
+            // The character is gone, only the smoke cloud (drawn separately) is visible.
+            // We return early to prevent drawing the character.
+            ctx.restore(); // Restore the main transform to not break subsequent draws
+            return;
+        } else { // Reappearing phase
+            // Fade the character back in
             ctx.globalAlpha = (t - 0.5) * 2;
-            ctx.font = '48px Arial';
-            ctx.fillText('💨', 0, headY);
         }
+
+        // Keep the stick figure static during the effect
         legMovementX1 = 10; legMovementY1 = bodyY + 5;
         legMovementX2 = -10; legMovementY2 = bodyY + 5;
         armMovementX1 = 10; armMovementY1 = headY + 15;
@@ -698,6 +918,9 @@ export function draw() {
     ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    drawGroundPoundParticles();
+    drawHoudiniParticles();
+    drawPhaseDashTrail();
     drawClouds();
 
     let groundAngleRad = 0;
@@ -712,6 +935,28 @@ export function draw() {
         stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
 
         if (!state.isGameOverSequence) {
+            // Update hurdle animation state
+            if (currentSegment.isMilestone) {
+                const hurdleDrawX = canvas.width - 100 - state.backgroundOffset;
+                const distanceToHurdle = hurdleDrawX - STICK_FIGURE_FIXED_X;
+                const animationThreshold = 300; // Distance at which animation starts
+                const previousState = currentSegment.animationState;
+
+                if (distanceToHurdle < animationThreshold && distanceToHurdle > 0) {
+                    currentSegment.animationState = 'approaching';
+                    currentSegment.animationProgress = 1 - (distanceToHurdle / animationThreshold);
+                } else if (distanceToHurdle <= 0) {
+                    // On the frame we pass the hurdle, reset the progress to start the 'cleared' animation
+                    if (previousState !== 'cleared') {
+                        currentSegment.animationProgress = 0;
+                    }
+                    currentSegment.animationState = 'cleared';
+                    currentSegment.animationProgress = Math.min(1, currentSegment.animationProgress + 0.015); // Fade out more gradually
+                } else {
+                    currentSegment.animationState = 'idle';
+                    currentSegment.animationProgress = 0;
+                }
+            }
             drawHurdle(currentSegment);
 
             if (state.currentObstacle) {

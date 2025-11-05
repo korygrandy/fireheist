@@ -597,6 +597,12 @@ export function animate(timestamp) {
     }
     if (state.jumpState.isGroundPound) {
         state.jumpState.groundPoundDuration -= deltaTime;
+        // Check if the pound is about to hit the ground and the effect hasn't been triggered yet
+        if (state.jumpState.groundPoundDuration < 100 && !state.jumpState.groundPoundEffectTriggered) {
+            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(raceSegments[state.currentSegmentIndex].angleRad);
+            drawing.createGroundPoundEffect(STICK_FIGURE_FIXED_X, groundY);
+            state.jumpState.groundPoundEffectTriggered = true;
+        }
         if (state.jumpState.groundPoundDuration <= 0) {
             state.jumpState.isGroundPound = false;
         }
@@ -632,9 +638,16 @@ export function animate(timestamp) {
         }
     }
     if (state.jumpState.isHoudini) {
+        const previousPhase = state.jumpState.houdiniPhase;
         state.jumpState.houdiniDuration -= deltaTime;
+
         if (state.jumpState.houdiniDuration <= 400) {
             state.jumpState.houdiniPhase = 'reappearing';
+            if (previousPhase === 'disappearing') {
+                // Trigger the reappearing poof once
+                const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
+                drawing.createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
+            }
         }
         if (state.jumpState.houdiniDuration <= 0) {
             state.jumpState.isHoudini = false;
@@ -659,6 +672,9 @@ export function resetGameState() {
     state.frameCount = 0;
     state.accumulatedCash = raceSegments.length > 0 ? raceSegments[0].milestoneValue : 0;
     state.activeCashBags.length = 0;
+    state.phaseDashTrail = [];
+    state.houdiniParticles = [];
+    state.groundPoundParticles = [];
     state.manualJumpOverride = { isActive: false, startTime: 0, duration: state.manualJumpDurationMs };
     state.jumpState = {
         isJumping: false, progress: 0,
@@ -670,7 +686,7 @@ export function resetGameState() {
         isScissorKick: false, scissorKickDuration: 0,
         isPhaseDash: false, phaseDashDuration: 0,
         isHover: false, hoverDuration: 0,
-        isGroundPound: false, groundPoundDuration: 0,
+        isGroundPound: false, groundPoundDuration: 0, groundPoundEffectTriggered: false,
         isCartoonScramble: false, cartoonScrambleDuration: 0,
         isMoonwalking: false, moonwalkDuration: 0,
         isShockwave: false, shockwaveDuration: 0,
@@ -771,6 +787,9 @@ export function startGame() {
     state.frameCount = 0;
     state.accumulatedCash = raceSegments[0].milestoneValue;
     state.activeCashBags.length = 0;
+    state.phaseDashTrail = [];
+    state.houdiniParticles = [];
+    state.groundPoundParticles = [];
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
@@ -781,7 +800,7 @@ export function startGame() {
         isScissorKick: false, scissorKickDuration: 0,
         isPhaseDash: false, phaseDashDuration: 0,
         isHover: false, hoverDuration: 0,
-        isGroundPound: false, groundPoundDuration: 0,
+        isGroundPound: false, groundPoundDuration: 0, groundPoundEffectTriggered: false,
         isCartoonScramble: false, cartoonScrambleDuration: 0,
         isMoonwalking: false, moonwalkDuration: 0,
         isShockwave: false, shockwaveDuration: 0,
