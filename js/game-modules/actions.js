@@ -1,9 +1,10 @@
 import state from './state.js';
+import { createHoudiniPoof } from './drawing.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y } from '../constants.js';
 
 const JUMP_DURATIONS = {
     hurdle: 500,
     specialMove: 500,
-    powerStomp: 500,
     dive: 500,
     corkscrewSpin: 500,
     scissorKick: 500,
@@ -43,14 +44,6 @@ export function startSpecialMove() {
     state.jumpState.specialMoveDuration = JUMP_DURATIONS.specialMove;
     initiateJump(JUMP_DURATIONS.specialMove);
     console.log("-> startSpecialMove: Special Move initiated.");
-}
-
-export function startPowerStomp() {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    state.jumpState.isPowerStomp = true;
-    state.jumpState.powerStompDuration = JUMP_DURATIONS.powerStomp;
-    initiateJump(JUMP_DURATIONS.powerStomp);
-    console.log("-> startPowerStomp: Power Stomp initiated.");
 }
 
 export function startDive() {
@@ -97,6 +90,7 @@ export function startGroundPound() {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     state.jumpState.isGroundPound = true;
     state.jumpState.groundPoundDuration = JUMP_DURATIONS.groundPound;
+    state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
     initiateJump(JUMP_DURATIONS.groundPound);
     console.log("-> startGroundPound: Ground Pound initiated.");
 }
@@ -146,6 +140,11 @@ export function startHoudini() {
     state.jumpState.isHoudini = true;
     state.jumpState.houdiniDuration = 800;
     state.jumpState.houdiniPhase = 'disappearing';
+
+    // Create the initial poof at the player's location
+    const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
+    createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
+
     initiateJump(800);
     console.log("-> startHoudini: Houdini initiated.");
 }

@@ -6,7 +6,7 @@ import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, fr
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startPowerStomp, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game-modules/actions.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound } from './audio.js';
 
@@ -122,10 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             startSpecialMove();
         }
-        if (e.code === 'KeyX' && state.gameRunning && !state.isPaused) {
-            e.preventDefault();
-            startPowerStomp();
-        }
         if (e.code === 'KeyD' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startDive();
@@ -152,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (e.code === 'KeyB' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startCartoonScramble();
+            startBackflip();
         }
         if (e.code === 'KeyM' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
@@ -164,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (e.code === 'KeyZ' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startBackflip();
+            startCartoonScramble();
         }
         if (e.code === 'KeyF' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
@@ -244,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else { // Vertical swipe
                 if (deltaY > 0) {
-                    startPowerStomp(); // Swipe Down
+                    startGroundPound(); // Swipe Down
                 } else {
                     startFrontflip(); // Swipe Up
                 }
