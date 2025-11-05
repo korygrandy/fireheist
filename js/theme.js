@@ -4,7 +4,7 @@
 
 export const themes = {
     'grass': {
-        name: '⛅ Grassy Knolls',
+        name: '🌻 Grassy Knolls',
         sky: '#87CEEB',
         ground: '#1c7d3c',
         grassBlades: '#229944',
@@ -25,30 +25,8 @@ export const themes = {
             stroke: '#D2B48C'
         }
     },
-    'snow': {
-        name: '🗻 White Snowpeaks',
-        sky: '#ADD8E6',
-        ground: '#FFFFFF',
-        grassBlades: '#D3D3D3',
-        roadLines: null,
-        hurdle: {
-            fill: '#A9A9A9',
-            stroke: '#FFFFFF'
-        }
-    },
-    'volcano': {
-        name: '🌋 Island Volcano',
-        sky: 'royalblue',
-        ground: '#FF4500',
-        grassBlades: '#FFFF00',
-        roadLines: null,
-        hurdle: {
-            fill: 'white',
-            stroke: 'white'
-        }
-    },
-    'roadway': {
-        name: '🌋 City Night',
+        'roadway': {
+        name: '🌃 City Night',
         sky: '#A9B7C6',
         ground: '#36454F',
         grassBlades: null,
@@ -59,15 +37,14 @@ export const themes = {
             stroke: '#FFFF00'
         }
     },
-    'outerspace': {
-        name: '🌑 Outer Space',
-        sky: '#808080',
-        ground: '#2C003E',
-        grassBlades: '#9E7BB5',
+    'snow': {
+        name: '🗻 White Snowpeaks',
+        sky: '#ADD8E6',
+        ground: '#FFFFFF',
+        grassBlades: '#D3D3D3',
         roadLines: null,
-        curb: null,
         hurdle: {
-            fill: '#A020F0',
+            fill: '#A9A9A9',
             stroke: '#FFFFFF'
         }
     },
@@ -80,6 +57,30 @@ export const themes = {
         hurdle: {
             fill: '#556B2F',
             stroke: '#F0E68C'
+        }
+    },
+
+    'volcano': {
+        name: '🌋 Island Volcano',
+        sky: 'royalblue',
+        ground: '#FF4500',
+        grassBlades: '#FFFF00',
+        roadLines: null,
+        hurdle: {
+            fill: 'white',
+            stroke: 'white'
+        }
+    },
+        'outerspace': {
+        name: '🌑 Outer Space',
+        sky: '#808080',
+        ground: '#2C003E',
+        grassBlades: '#9E7BB5',
+        roadLines: null,
+        curb: null,
+        hurdle: {
+            fill: '#A020F0',
+            stroke: '#FFFFFF'
         }
     }
 };

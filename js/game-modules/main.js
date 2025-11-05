@@ -697,6 +697,14 @@ export function resetGameState() {
     console.log(`-> RESET GAME: Prepared ${state.activeCustomEvents.length} custom events.`);
     state.onScreenCustomEvent = null;
 
+    // Reset hurdle animation states
+    raceSegments.forEach(segment => {
+        if (segment.isMilestone) {
+            segment.animationState = 'idle';
+            segment.animationProgress = 0;
+        }
+    });
+
     state.hitsCounter = 0;
     state.daysElapsedTotal = 0;
     state.daysAccumulatedAtSegmentStart = 0;

@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.4.32",
+        "date": "2025-11-05",
+        "changes": [
+            "Feature: Enhanced hurdle animations for a more dynamic visual experience.",
+            "Improvement: Hurdles now smoothly scale and fade in as they approach, starting from a smaller, semi-transparent state.",
+            "Improvement: After being cleared, hurdles now gradually shrink and fade into the distance, creating a natural horizon effect.",
+            "Bugfix: Corrected abrupt animation transitions, ensuring hurdles don't \"pop\" in or out of view."
+        ]
+    },
+    {
         "version": "1.4.31",
         "date": "2025-11-05",
         "changes": [
