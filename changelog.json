@@ -1,40 +1,5 @@
 [
     {
-        "version": "1.4.22",
-        "date": "2025-11-04",
-        "changes": [
-            "Feature: Added a game start sound effect that plays when the 'Start Heist!' button is clicked."
-        ]
-    },
-    {
-        "version": "1.4.21",
-        "date": "2025-11-04",
-        "changes": [
-            "Bugfix: Fixed an issue where theme selector items were being duplicated."
-        ]
-    },
-    {
-        "version": "1.4.20",
-        "date": "2025-11-04",
-        "changes": [
-            "Bugfix: Fixed an issue where the theme selector was not correctly displaying the saved theme on load."
-        ]
-    },
-    {
-        "version": "1.4.19",
-        "date": "2025-11-04",
-        "changes": [
-            "Bugfix: Fixed an issue where the selected theme was not being saved to localStorage."
-        ]
-    },
-    {
-        "version": "1.4.18",
-        "date": "2025-11-04",
-        "changes": [
-            "Bugfix: Fixed a syntax error in `js/constants.js` by adding a missing comma in the `EMOJI_MUSIC_MAP` object."
-        ]
-    },
-    {
         "version": "1.4.17",
         "date": "2025-11-04",
         "changes": [
@@ -62,6 +27,43 @@
         "changes": [
             "Feature: Added a 'Disable auto-hurdle' checkbox to the Gameplay tab and connected it to localStorage.",
             "Bugfix: Corrected an import error by adding `highScoresContainer` to the exports in `dom-elements.js`."
+        ]
+    },
+    {
+        "version": "1.4.13",
+        "date": "2025-11-04",
+        "changes": [
+            "Bugfix: Resolved an import error for `initializeUI` by creating a new `initializeUI` function in `js/ui.js` that encapsulates the UI initialization logic and is properly exported."
+        ]
+    },
+    {
+        "version": "1.4.12",
+        "date": "2025-11-04",
+        "changes": [
+            "Bugfix: Resolved a 404 error for `version.js` by removing the incorrect import from `js/main.js` and hardcoding the version number."
+        ]
+    },
+    {
+        "version": "1.4.11",
+        "date": "2025-11-04",
+        "changes": [
+            "Feature: Integrated `actions.js` and `drawing.js` into the animation logic.",
+            "Improvement: Centralized keyboard and touch event handling in `js/main.js`.",
+            "Bugfix: Removed duplicated function definitions in `js/game-modules/main.js`."
+        ]
+    },
+    {
+        "version": "1.4.10",
+        "date": "2025-11-04",
+        "changes": [
+            "Bugfix: Resolved a syntax error in `actions.js` caused by git conflict markers."
+        ]
+    },
+    {
+        "version": "1.4.9",
+        "date": "2025-11-04",
+        "changes": [
+            "Bugfix: Resolved a syntax error in `state.js` caused by git conflict markers."
         ]
     }
 ]
