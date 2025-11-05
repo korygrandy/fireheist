@@ -34,12 +34,10 @@ const state = {
         isShockwave: false, shockwaveDuration: 0,
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
-        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
+        isMeteorStrike: false, meteorStrikeDuration: 0
     },
-    manualJumpOverride: { isActive: false, startTime: 0, duration: DIFFICULTY_SETTINGS.Rookie.manualJumpDurationMs },
-    hitsCounter: 0,
-    daysElapsedTotal: 0,
-    daysAccumulatedAtSegmentStart: 0,
+    meteorParticles: [],
     currentObstacle: null,
     isColliding: false,
     collisionDuration: 0,
@@ -58,9 +56,17 @@ const state = {
     grassAnimationState: { blades: [], lastUpdateTime: 0 },
     clouds: [],
     activeCashBags: [],
-    phaseDashTrail: [],
+    fireTrail: [],
     houdiniParticles: [],
-    groundPoundParticles: []
+    groundPoundParticles: [],
+    flipTrail: [],
+    moonwalkParticles: [],
+    hoverParticles: [],
+    scrambleParticles: [],
+    diveParticles: [],
+    swooshParticles: [],
+    flipTrail: [],
+    corkscrewTrail: []
 };
 
 export default state;

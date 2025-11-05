@@ -148,3 +148,11 @@ export function startHoudini() {
     initiateJump(800);
     console.log("-> startHoudini: Houdini initiated.");
 }
+
+export function startMeteorStrike() {
+    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
+    state.jumpState.isMeteorStrike = true;
+    state.jumpState.meteorStrikeDuration = 800; // A longer duration for a dramatic effect
+    initiateJump(800);
+    console.log("-> startMeteorStrike: Meteor Strike initiated.");
+}
