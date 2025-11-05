@@ -24,11 +24,14 @@ import {
     OBSTACLE_HEIGHT,
     JUMP_HEIGHT_RATIO,
     STICK_FIGURE_FIXED_X,
-    ACCELERATOR_EMOJI
+    ACCELERATOR_EMOJI,
+    EMOJI_MUSIC_MAP,
+    DEFAULT_MUSIC_URL
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds } from '../audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled } from '../ui.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona } from '../ui.js';
 import { currentTheme } from '../theme.js';
+import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
 import * as drawing from './drawing.js';
 
@@ -730,7 +733,15 @@ export function startGame() {
     applySkillLevelSettings(currentSkillLevel);
 
     state.gameSpeedMultiplier = intendedSpeedMultiplier;
-    initializeMusicPlayer(stickFigureEmoji);
+
+    let musicUrl = DEFAULT_MUSIC_URL;
+    if (selectedPersona && selectedPersona !== 'custom' && personas[selectedPersona]) {
+        musicUrl = personas[selectedPersona].music;
+    } else {
+        const cleanEmoji = stickFigureEmoji.replace(/\uFE0F/g, '');
+        musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
+    }
+    initializeMusicPlayer(musicUrl);
 
     hideResultsScreen();
 

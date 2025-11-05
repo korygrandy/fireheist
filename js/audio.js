@@ -135,13 +135,11 @@ export function playLoserSound() {
     }
 }
 
-export function initializeMusicPlayer(stickFigureEmoji) {
+export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
     if (backgroundMusic) {
         if (backgroundMusic.state === 'started') { backgroundMusic.stop(); }
         backgroundMusic.dispose();
     }
-    const cleanEmoji = stickFigureEmoji.replace(/\uFE0F/g, '');
-    const musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
 
     backgroundMusic = new Tone.Player({
         url: musicUrl,

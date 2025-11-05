@@ -2,10 +2,31 @@
 // UI FUNCTIONS
 // =================================================================
 
-import { suggestedEmojiList, defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS } from './constants.js';
-import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer, dataInput, eventDataInput, dataMessage, chartContainer, tableContainer, tableBody, skillLevelSelector, disableSaveSettings, highScoresContainer, themeSelector, disableAutoHurdle } from './dom-elements.js';
+import { suggestedEmojiList, defaultDataString, defaultEventDataString, DIFFICULTY_SETTINGS, EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from './constants.js';
+import {
+    emojiInput,
+    obstacleEmojiInput,
+    frequencyValueSpan,
+    suggestedEmojisContainer,
+    dataInput,
+    eventDataInput,
+    dataMessage,
+    chartContainer,
+    tableContainer,
+    tableBody,
+    skillLevelSelector,
+    disableSaveSettings,
+    highScoresContainer,
+    themeSelector,
+    disableAutoHurdle,
+    personaSelector,
+    customPersonaControls,
+    personaDetailsContainer
+} from './dom-elements.js';
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
 import { themes, setTheme } from './theme.js';
+import { personas } from './personas.js';
+import { initializeMusicPlayer } from './audio.js';
 
 export let financialMilestones = {};
 export let raceSegments = [];
@@ -18,6 +39,7 @@ export let intendedSpeedMultiplier = 1.0;
 export let enableRandomPowerUps = true;
 export let selectedTheme = 'grass';
 export let isAutoHurdleDisabled = false;
+export let selectedPersona = 'custom';
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 const HIGH_SCORE_KEY = 'fireHeistHighScores';
@@ -35,6 +57,7 @@ function saveSettings() {
         enableRandomPowerUps,
         selectedTheme,
         isAutoHurdleDisabled,
+        selectedPersona,
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
     };
@@ -54,6 +77,7 @@ function loadSettings() {
         enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
         selectedTheme = settings.selectedTheme || 'grass';
         isAutoHurdleDisabled = typeof settings.isAutoHurdleDisabled === 'boolean' ? settings.isAutoHurdleDisabled : false;
+        selectedPersona = settings.selectedPersona || 'custom';
 
         emojiInput.value = stickFigureEmoji;
         obstacleEmojiInput.value = obstacleEmoji;
@@ -77,6 +101,9 @@ function loadSettings() {
         dataInput.value = settings.milestoneData || defaultDataString.trim();
         eventDataInput.value = settings.eventData || defaultEventDataString.trim();
 
+        applyPersona(selectedPersona); // Apply persona settings and UI changes
+        personaSelector.value = selectedPersona; // Set selector value AFTER applying persona
+
         console.log("-> loadSettings: Settings loaded from localStorage.");
         return true; // Indicate that settings were loaded
     } else {
@@ -98,6 +125,79 @@ export function handleThemeChange(event) {
     const themeName = event.target.value;
     selectedTheme = themeName;
     setTheme(themeName);
+    saveSettings();
+}
+
+export function populatePersonaSelector() {
+    for (const key in personas) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = personas[key].name;
+        personaSelector.appendChild(option);
+    }
+}
+
+export function handlePersonaChange(event) {
+    const personaKey = event.target.value;
+    applyPersona(personaKey);
+}
+
+export function applyPersona(personaKey) {
+    selectedPersona = personaKey;
+    const persona = personas[personaKey];
+
+    if (personaKey === 'custom') {
+        customPersonaControls.style.display = 'block';
+        personaDetailsContainer.classList.add('hidden');
+        const cleanEmoji = stickFigureEmoji.replace(/\uFE0F/g, '');
+        const musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
+        initializeMusicPlayer(musicUrl);
+    } else {
+        customPersonaControls.style.display = 'none';
+        personaDetailsContainer.classList.remove('hidden');
+
+        // Populate and display persona details
+        personaDetailsContainer.innerHTML = `
+            <div class="flex items-center">
+                <span class="text-2xl mr-3">${persona.emoji}</span>
+                <div>
+                    <p class="font-bold text-gray-800">${persona.name}</p>
+                    <p class="text-gray-600">${persona.financialTrait}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-2 text-center">
+                <div class="bg-gray-100 p-1 rounded">
+                    <p class="text-xs text-gray-500">Discipline</p>
+                    <p class="font-semibold text-gray-800">${persona.financialDisciplineLevel}</p>
+                </div>
+                <div class="bg-gray-100 p-1 rounded">
+                    <p class="text-xs text-gray-500">Skill Level</p>
+                    <p class="font-semibold text-gray-800">${persona.skillLevel}</p>
+                </div>
+            </div>
+        `;
+
+        // Apply persona settings
+        stickFigureEmoji = persona.emoji;
+        emojiInput.value = persona.emoji;
+
+        currentSkillLevel = persona.skillLevel;
+        const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${currentSkillLevel}"]`);
+        if (skillRadio) skillRadio.checked = true;
+        applySkillLevelSettings(currentSkillLevel);
+
+
+        obstacleFrequencyPercent = persona.obstacleFrequencyPercent;
+        document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
+        frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
+
+        selectedTheme = persona.theme;
+        themeSelector.value = selectedTheme;
+        setTheme(selectedTheme);
+
+        // Initialize music player with persona's music
+        initializeMusicPlayer(persona.music);
+    }
     saveSettings();
 }
 
@@ -125,7 +225,7 @@ export function displayHighScores() {
                 </div>
                 <div class="text-sm text-gray-600 mt-1">
                     <span>Days: <strong>${score.days.toLocaleString()}</strong></span> | 
-                    <span>Hits: <strong>${score.hits}</strong></span> |
+                    <span>Hits: <strong>${score.hits}</strong></span> | 
                     <span>Speed: <strong>${score.speed.toFixed(1)}x</strong></span>
                 </div>
             `;
@@ -278,7 +378,13 @@ export function loadCustomData() {
     saveSettings(); // Save the newly loaded custom data
 }
 export async function initializeUIData() {
+    // First, populate the UI elements
+    populateThemeSelector();
+    populatePersonaSelector();
+
+    // Then, load the saved settings
     const settingsLoaded = loadSettings();
+
     if (!settingsLoaded) {
         try {
             const response = await fetch('milestones.json');
@@ -312,7 +418,6 @@ export async function initializeUIData() {
     }
 
     displayHighScores(); // Display high scores on startup
-    populateThemeSelector();
     disableAutoHurdle.addEventListener('change', handleDisableAutoHurdleToggle);
 }
 

@@ -48,7 +48,7 @@ export const themes = {
         }
     },
     'roadway': {
-        name: '🌋 Urban City',
+        name: '🌋 City Night',
         sky: '#A9B7C6',
         ground: '#36454F',
         grassBlades: null,
@@ -63,12 +63,23 @@ export const themes = {
         name: '🌑 Outer Space',
         sky: '#808080',
         ground: '#2C003E',
-        grassBlades: null,
-        roadLines: '#FFFFFF',
+        grassBlades: '#9E7BB5',
+        roadLines: null,
         curb: null,
         hurdle: {
             fill: '#A020F0',
             stroke: '#FFFFFF'
+        }
+    },
+    'desert': {
+        name: '🏜️ Desert Dunes',
+        sky: '#F0E68C',
+        ground: '#C2B280',
+        grassBlades: '#8B8000',
+        roadLines: null,
+        hurdle: {
+            fill: '#556B2F',
+            stroke: '#F0E68C'
         }
     }
 };
