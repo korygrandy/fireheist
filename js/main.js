@@ -2,8 +2,8 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange } from './ui.js';
+import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement } from './dom-elements.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike } from './game-modules/actions.js';
@@ -103,6 +103,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (stopButton) { stopButton.addEventListener('click', () => stopGame(true)); }
     if (loadButton) { loadButton.addEventListener('click', loadCustomData); }
     if (soundToggleButton) { soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton)); }
+    if (fullscreenToggleButton) { fullscreenToggleButton.addEventListener('click', toggleFullScreen); }
+
+    // Listen for fullscreen changes to update button text and apply immersive class
+    document.addEventListener('fullscreenchange', () => {
+        updateControlPanelState(state.gameRunning, state.isPaused);
+        const actionButtons = document.getElementById('actionButtons');
+        if (document.fullscreenElement && state.gameRunning) {
+            document.body.classList.add('game-active-fullscreen');
+            header.classList.add('hidden');
+            controlPanel.classList.add('hidden');
+            actionButtons.classList.add('hidden');
+            mainElement.classList.remove('grid', 'lg:grid-cols-3', 'gap-8');
+            document.body.style.backgroundColor = '#000';
+        } else {
+            document.body.classList.remove('game-active-fullscreen');
+            header.classList.remove('hidden');
+            controlPanel.classList.remove('hidden');
+            actionButtons.classList.remove('hidden');
+            mainElement.classList.add('grid', 'lg:grid-cols-3', 'gap-8');
+            document.body.style.backgroundColor = '';
+        }
+    });
 
     // --- JUMP & PAUSE CONTROLS ---
 

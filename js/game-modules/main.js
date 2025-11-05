@@ -1,4 +1,4 @@
-import { canvas, ctx } from '../dom-elements.js';
+import { canvas, ctx, header, controlPanel, mainElement } from '../dom-elements.js';
 import {
     VICTORY_DISPLAY_TIME,
     HURDLE_FIXED_START_DISTANCE,
@@ -29,7 +29,7 @@ import {
     DEFAULT_MUSIC_URL
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds } from '../audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona } from '../ui.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona, exitFullScreenIfActive } from '../ui.js';
 import { currentTheme } from '../theme.js';
 import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
@@ -862,6 +862,16 @@ export function startGame() {
         document.getElementById('gameCanvas').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    // If starting in fullscreen, apply the immersive class and hide controls
+    if (document.fullscreenElement) {
+        document.body.classList.add('game-active-fullscreen');
+        header.classList.add('hidden');
+        controlPanel.classList.add('hidden');
+        document.getElementById('actionButtons').classList.add('hidden');
+        mainElement.classList.remove('grid', 'lg:grid-cols-3', 'gap-8');
+        document.body.style.backgroundColor = '#000'; // Force black background
+    }
+
     requestAnimationFrame(animate);
     console.log("-> START GAME: Animation loop started.");
 }
@@ -872,6 +882,15 @@ export function stopGame(shouldReset = true) {
     console.log("-> STOP GAME: Game execution halted.");
     state.gameRunning = false;
     state.isPaused = false;
+
+    // Always restore UI visibility on game stop
+    header.classList.remove('hidden');
+    controlPanel.classList.remove('hidden');
+    document.getElementById('actionButtons').classList.remove('hidden');
+    mainElement.classList.add('grid', 'lg:grid-cols-3', 'gap-8');
+    document.body.style.backgroundColor = ''; // Reset background color
+    document.body.classList.remove('game-active-fullscreen'); // Always remove immersive class on stop
+    exitFullScreenIfActive(); // Exit fullscreen when the game stops
 
     Tone.Transport.stop();
 
