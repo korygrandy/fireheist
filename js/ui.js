@@ -130,9 +130,10 @@ export function handleThemeChange(event) {
 
 export function populatePersonaSelector() {
     for (const key in personas) {
+        const persona = personas[key];
         const option = document.createElement('option');
         option.value = key;
-        option.textContent = personas[key].name;
+        option.textContent = persona.emoji ? `${persona.emoji} ${persona.name}` : persona.name;
         personaSelector.appendChild(option);
     }
 }
