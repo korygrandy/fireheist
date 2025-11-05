@@ -1,85 +1,67 @@
 [
     {
-        "version": "1.4.7",
-        "date": "2025-11-03",
+        "version": "1.4.22",
+        "date": "2025-11-04",
         "changes": [
-            "Feature: Implemented backflip and frontflip animations with keyboard ('Z', 'F') and mobile gesture controls (Swipe Up for Frontflip, Swipe Right for Backflip).",
-            "Feature: Added a Houdini-style animation with keyboard ('I') and mobile gesture controls (3-Finger Tap).",
-            "Feature: Integrated jumping motion into all special move animations for obstacle clearance.",
-            "Feature: Added win/loss sound effects (fx/winner.mp3 and fx/quack.mp3 as placeholder for loser sound).",
-            "Bugfix: Resolved animation defect where rotational animations only affected limbs, not the entire body.",
-            "Improvement: Remapped mobile gestures to accommodate new animations (Power Stomp to Swipe Down, Dive to 2-Finger Tap).",
-            "Improvement: Updated in-game info panel to reflect new keyboard and mobile controls.",
-            "Improvement: Adjusted 'City Roadway' theme: Lighter sky color for a distinct horizon, added a black curb line above road lines, and adjusted yellow road lines for better visual spacing.",
-            "Improvement: Repositioned 'Power-up >>' animation to display at the bottom inside the gameCanvas."
+            "Feature: Added a game start sound effect that plays when the 'Start Heist!' button is clicked."
         ]
     },
     {
-        "version": "1.4.6",
-        "date": "2025-11-03",
+        "version": "1.4.21",
+        "date": "2025-11-04",
         "changes": [
-            "Feature: Added a clickable info icon to the Heist Control Panel that displays key and mobile gesture assignments for gameplay, with separate sections for keyboard and mobile controls."
+            "Bugfix: Fixed an issue where theme selector items were being duplicated."
         ]
     },
     {
-        "version": "1.4.5",
-        "date": "2025-11-03",
+        "version": "1.4.20",
+        "date": "2025-11-04",
         "changes": [
-            "Feature: Added hurdler animations for all characters, triggered by the 'j' key or a two-finger tap.",
-            "Feature: Added a Special Move for each character, triggered by the 'k' key or a three-finger tap."
+            "Bugfix: Fixed an issue where the theme selector was not correctly displaying the saved theme on load."
         ]
     },
     {
-        "version": "1.4.4",
-        "date": "2025-11-03",
+        "version": "1.4.19",
+        "date": "2025-11-04",
         "changes": [
-            "Feature: Implemented four new visual themes: Brown Mountains, White Snowpeaks, Orange and Black Volcano, and City Roadway.",
-            "Enhancement: Refined the City Roadway theme's yellow stripes for better visual scale and placement.",
-            "Enhancement: Updated the Volcano theme with white hurdles and a royal blue sky for improved aesthetics.",
-            "Enhancement: Reworked the accelerator power-up animation to a more dynamic three-step stutter boost."
+            "Bugfix: Fixed an issue where the selected theme was not being saved to localStorage."
         ]
     },
     {
-        "version": "1.4.3",
-        "date": "2025-11-02",
+        "version": "1.4.18",
+        "date": "2025-11-04",
         "changes": [
-            "Enhancement: Added a yellow lava-like effect to the volcano theme's grass blades.",
-            "Enhancement: Updated milestone hurdle colors to white for Green Grass and Black and Orange Volcano themes for better contrast."
+            "Bugfix: Fixed a syntax error in `js/constants.js` by adding a missing comma in the `EMOJI_MUSIC_MAP` object."
         ]
     },
     {
-        "version": "1.4.2",
-        "date": "2025-11-02",
+        "version": "1.4.17",
+        "date": "2025-11-04",
         "changes": [
-            "Bugfix: Fixed a regression where the 'Load Custom Data' button was not loading user-provided data."
+            "Feature: Implemented 'Disable auto-hurdle' functionality, allowing users to disable automatic hurdling.",
+            "Improvement: Enhanced pause functionality by updating the main button text to 'Pause' or 'Unpause' based on game state."
         ]
     },
     {
-        "version": "1.4.1",
-        "date": "2025-11-02",
+        "version": "1.4.16",
+        "date": "2025-11-04",
         "changes": [
-            "Bugfix: Corrected the audio muting logic to ensure background music resumes correctly when unmuted during gameplay."
+            "Bugfix: Fixed an issue where the 'Disable auto-hurdle' setting was not being loaded from localStorage."
         ]
     },
     {
-        "version": "1.4.0",
-        "date": "2025-11-02",
+        "version": "1.4.15",
+        "date": "2025-11-04",
         "changes": [
-            "Bugfix: Corrected collision detection logic for all on-screen objects on slanted ground to ensure accuracy."
+            "Bugfix: Fixed an issue where the 'Disable auto-hurdle' setting was not being saved to localStorage."
         ]
     },
     {
-        "version": "1.3.9",
-        "date": "2025-11-02",
+        "version": "1.4.14",
+        "date": "2025-11-04",
         "changes": [
-            "Enhancement: Adjusted the turbo boost animation to a 15-degree upward angle for a more dynamic 'blast-off' effect."
-        ]
-    },
-    {
-        "version": "1.3.8",
-        "date": "2025-11-02",
-        "changes": [
-            "Enhancement: Added a 'power-up' sound effect for accelerator collisions to improve audio feedback."
+            "Feature: Added a 'Disable auto-hurdle' checkbox to the Gameplay tab and connected it to localStorage.",
+            "Bugfix: Corrected an import error by adding `highScoresContainer` to the exports in `dom-elements.js`."
         ]
     }
 ]
