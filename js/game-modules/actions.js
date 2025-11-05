@@ -1,6 +1,7 @@
 import state from './state.js';
 import { createHoudiniPoof } from './drawing.js';
 import { STICK_FIGURE_FIXED_X, GROUND_Y } from '../constants.js';
+import { playAnimationSound } from '../audio.js';
 
 const JUMP_DURATIONS = {
     hurdle: 500,
@@ -27,6 +28,7 @@ function initiateJump(duration) {
 export function startManualJump() {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     initiateJump(state.manualJumpDurationMs);
+    playAnimationSound('manualJump'); // Play sound for manual jump
     console.log("-> startManualJump: Manual jump initiated.");
 }
 
@@ -35,6 +37,7 @@ export function startHurdle() {
     state.jumpState.isHurdle = true;
     state.jumpState.hurdleDuration = JUMP_DURATIONS.hurdle;
     initiateJump(JUMP_DURATIONS.hurdle);
+    playAnimationSound('hurdle'); // Play sound for hurdle
     console.log("-> startHurdle: Hurdle initiated.");
 }
 
@@ -108,6 +111,7 @@ export function startMoonwalk() {
     state.jumpState.isMoonwalking = true;
     state.jumpState.moonwalkDuration = JUMP_DURATIONS.moonwalk;
     initiateJump(JUMP_DURATIONS.moonwalk);
+    playAnimationSound('moonwalk'); // Play sound for Moonwalk
     console.log("-> startMoonwalk: Moonwalk initiated.");
 }
 
@@ -154,5 +158,6 @@ export function startMeteorStrike() {
     state.jumpState.isMeteorStrike = true;
     state.jumpState.meteorStrikeDuration = 800; // A longer duration for a dramatic effect
     initiateJump(800);
+    playAnimationSound('meteorStrike'); // Play sound for Meteor Strike
     console.log("-> startMeteorStrike: Meteor Strike initiated.");
 }

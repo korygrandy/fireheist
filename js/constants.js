@@ -97,6 +97,14 @@ export const EMOJI_MUSIC_MAP = {
 
 export const suggestedEmojiList = ['🧟', '🥷', '🦁', '💃', '🐶', '🚀','👽'];
 
+export const ANIMATION_SOUND_MAP = {
+    manualJump: 'fx/default-hurdle.mp3',
+    hurdle: 'fx/default-hurdle.mp3',
+    meteorStrike: 'fx/meteor-strike.mp3',
+    moonwalk: 'fx/moonwalk.mp3'
+    // Other animations will be added here
+};
+
 export const defaultDataString = `12/15/2000: 0
 01/01/2001: 5000
 01/01/2011: 100000

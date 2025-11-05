@@ -2,11 +2,12 @@
 // AUDIO FUNCTIONS
 // =================================================================
 
-import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from './constants.js';
+import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL, ANIMATION_SOUND_MAP } from './constants.js';
 import { soundToggleButton, disableSaveSettings } from "./dom-elements.js";
 
 export let isMuted = false;
 export let backgroundMusic = null;
+export const animationPlayers = {}; // Object to hold Tone.Player instances for animations
 
 const MUTE_STORAGE_KEY = 'fireHeistMuteSetting';
 
@@ -28,6 +29,10 @@ export function loadMuteSetting() {
         powerUpSound.mute = true;
         winnerSound.mute = true;
         loserSound.mute = true;
+        gameStartSound.mute = true;
+        for (const key in animationPlayers) {
+            animationPlayers[key].mute = true;
+        }
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -37,6 +42,10 @@ export function loadMuteSetting() {
         powerUpSound.mute = false;
         winnerSound.mute = false;
         loserSound.mute = false;
+        gameStartSound.mute = false;
+        for (const key in animationPlayers) {
+            animationPlayers[key].mute = false;
+        }
         if (backgroundMusic) { backgroundMusic.volume.value = -18; }
         if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
     }
@@ -110,6 +119,28 @@ export function preloadEndgameSounds() {
 
 export function preloadGameStartSound() {
     gameStartSound.buffer;
+}
+
+export function preloadAnimationSounds() {
+    for (const animationName in ANIMATION_SOUND_MAP) {
+        const url = ANIMATION_SOUND_MAP[animationName];
+        animationPlayers[animationName] = new Tone.Player({
+            url: `./${url}`,
+            volume: -10,
+            onload: () => console.log(`-> AUDIO: ${animationName} sound loaded.`),
+            onerror: (e) => console.error(`-> AUDIO: Error loading ${animationName} sound:`, e)
+        }).toDestination();
+        animationPlayers[animationName].mute = isMuted;
+        animationPlayers[animationName].buffer; // Preload the buffer
+    }
+}
+
+export function playAnimationSound(animationName) {
+    if (isMuted) { return; }
+    const player = animationPlayers[animationName];
+    if (player && player.state === 'stopped') {
+        player.start();
+    }
 }
 
 export function playGameStartSound() {
@@ -196,6 +227,10 @@ export function toggleSound(soundToggleButton) {
         powerUpSound.mute = true;
         winnerSound.mute = true;
         loserSound.mute = true;
+        gameStartSound.mute = true;
+        for (const key in animationPlayers) {
+            animationPlayers[key].mute = true;
+        }
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
@@ -205,6 +240,10 @@ export function toggleSound(soundToggleButton) {
         powerUpSound.mute = false;
         winnerSound.mute = false;
         loserSound.mute = false;
+        gameStartSound.mute = false;
+        for (const key in animationPlayers) {
+            animationPlayers[key].mute = false;
+        }
         if (backgroundMusic) {
             backgroundMusic.volume.value = -18;
             if (backgroundMusic.state === 'stopped') {
