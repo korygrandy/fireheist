@@ -377,6 +377,8 @@ export function loadCustomData() {
     dataMessage.style.color = 'green';
     console.log("-> loadCustomData: Data loaded and game reset for new segments.");
     saveSettings(); // Save the newly loaded custom data
+    document.body.classList.remove('game-active-fullscreen'); // Remove immersive class
+    exitFullScreenIfActive(); // Exit fullscreen when new data is loaded
 }
 export async function initializeUIData() {
     // First, populate the UI elements
@@ -438,10 +440,28 @@ export function hideResultsScreen() {
     tableContainer.style.display = 'none';
 }
 
+export function toggleFullScreen() {
+    const elem = document.documentElement; // Target the whole page
+    if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => {
+            alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+export function exitFullScreenIfActive() {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+}
+
 export function updateControlPanelState(gameRunning, isPaused) {
     const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
     const loadButton = document.getElementById('loadButton');
+    const fullscreenToggleButton = document.getElementById('fullscreenToggleButton');
 
     // Main game state controls button disabling
     const disableControls = gameRunning && !isPaused;
@@ -458,13 +478,22 @@ export function updateControlPanelState(gameRunning, isPaused) {
     // Start button state logic
     if (!gameRunning) {
         startButton.disabled = false;
-        startButton.textContent = "Start the Heist!";
+        startButton.textContent = "▶️ Start the Heist!";
     } else {
         startButton.disabled = false; // It's now the pause/resume button
         if (isPaused) {
-            startButton.textContent = "Unpause (P)";
+            startButton.textContent = "▶️ Unpause (P)";
         } else {
-            startButton.textContent = "Pause (P)";
+            startButton.textContent = "⏸️ Pause (P)";
+        }
+    }
+
+    // Fullscreen button text
+    if (fullscreenToggleButton) { // Check if the button exists
+        if (document.fullscreenElement) {
+            fullscreenToggleButton.textContent = "↙️ Exit";
+        } else {
+            fullscreenToggleButton.textContent = "↗️ Fullscreen";
         }
     }
 
@@ -472,3 +501,4 @@ export function updateControlPanelState(gameRunning, isPaused) {
         dataMessage.textContent = "";
     }
 }
+

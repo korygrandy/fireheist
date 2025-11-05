@@ -31,3 +31,7 @@ export const highScoresContainer = document.getElementById('highScoresContainer'
 export const personaSelector = document.getElementById('personaSelector');
 export const customPersonaControls = document.getElementById('custom-persona-controls');
 export const personaDetailsContainer = document.getElementById('personaDetailsContainer');
+export const fullscreenToggleButton = document.getElementById('fullscreenToggleButton');
+export const header = document.querySelector('header');
+export const controlPanel = document.querySelector('.lg\\:col-span-1');
+export const mainElement = document.querySelector('main');
