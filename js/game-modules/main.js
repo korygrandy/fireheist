@@ -27,7 +27,7 @@ import {
     ACCELERATOR_EMOJI
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds } from '../audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps } from '../ui.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled } from '../ui.js';
 import { currentTheme } from '../theme.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
 import * as drawing from './drawing.js';
@@ -193,11 +193,14 @@ function applySpeedEffect(type) {
 export function togglePauseGame() {
     if (!state.gameRunning) return;
     state.isPaused = !state.isPaused;
+    const startButton = document.getElementById('startButton');
     if (state.isPaused) {
         Tone.Transport.pause();
+        startButton.textContent = "Unpause";
         console.log("-> GAME PAUSED");
     } else {
         Tone.Transport.start();
+        startButton.textContent = "Pause";
         console.log("-> GAME RESUMED");
         state.lastTime = performance.now();
     }
@@ -264,7 +267,7 @@ export function animate(timestamp) {
             state.jumpState.progress = 0;
         }
     } else {
-        if (state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
+        if (!isAutoHurdleDisabled && state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
             state.jumpState.isJumping = true;
             state.jumpState.progress = (state.segmentProgress - AUTO_JUMP_START_PROGRESS) / AUTO_JUMP_DURATION;
         } else {
