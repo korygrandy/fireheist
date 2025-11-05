@@ -672,9 +672,17 @@ export function resetGameState() {
     state.frameCount = 0;
     state.accumulatedCash = raceSegments.length > 0 ? raceSegments[0].milestoneValue : 0;
     state.activeCashBags.length = 0;
-    state.phaseDashTrail = [];
+    state.fireTrail = [];
     state.houdiniParticles = [];
     state.groundPoundParticles = [];
+    state.flipTrail = [];
+    state.moonwalkParticles = [];
+    state.hoverParticles = [];
+    state.scrambleParticles = [];
+    state.diveParticles = [];
+    state.swooshParticles = [];
+    state.flipTrail = [];
+    state.corkscrewTrail = [];
     state.manualJumpOverride = { isActive: false, startTime: 0, duration: state.manualJumpDurationMs };
     state.jumpState = {
         isJumping: false, progress: 0,
@@ -787,9 +795,16 @@ export function startGame() {
     state.frameCount = 0;
     state.accumulatedCash = raceSegments[0].milestoneValue;
     state.activeCashBags.length = 0;
-    state.phaseDashTrail = [];
+    state.fireTrail = [];
     state.houdiniParticles = [];
     state.groundPoundParticles = [];
+    state.moonwalkParticles = [];
+    state.hoverParticles = [];
+    state.scrambleParticles = [];
+    state.diveParticles = [];
+    state.swooshParticles = [];
+    state.flipTrail = [];
+    state.corkscrewTrail = [];
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,

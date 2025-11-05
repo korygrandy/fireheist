@@ -477,7 +477,16 @@ export function drawHurdle(hurdleData) {
         ctx.moveTo(-17, -hurdleData.hurdleHeight + 20); ctx.lineTo(17, -hurdleData.hurdleHeight + 20);
         ctx.stroke();
 
-        ctx.fillStyle = 'black';
+        // Dynamic label color for Outer Space theme
+        if (currentTheme.name === '🌑 Outer Space') {
+            ctx.fillStyle = '#FFA500'; // Bright orange
+            ctx.shadowColor = '#FFA500';
+            ctx.shadowBlur = 10;
+        } else {
+            ctx.fillStyle = 'black';
+            ctx.shadowBlur = 0; // No shadow for other themes
+        }
+
         ctx.font = 'bold 14px Arial';
         ctx.textAlign = 'center';
         ctx.fillText(hurdleData.label, 0, -hurdleData.hurdleHeight - 25);
@@ -532,6 +541,264 @@ export function drawGroundPoundParticles() {
     }
 }
 
+export function createMoonwalkSparkle(x, y) {
+    state.moonwalkParticles.push({
+        x: x,
+        y: y,
+        size: Math.random() * 2 + 1,
+        life: 1, // 100% life
+        vx: (Math.random() - 0.5) * 0.5, // Slight horizontal movement
+        vy: (Math.random() - 0.5) * 0.5, // Slight vertical movement
+        color: `rgba(255, 255, 200, ${Math.random() * 0.5 + 0.5})` // Yellowish white sparkle
+    });
+}
+
+export function drawMoonwalkParticles() {
+    for (let i = state.moonwalkParticles.length - 1; i >= 0; i--) {
+        const p = state.moonwalkParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02; // Fade out slowly
+
+        if (p.life <= 0) {
+            state.moonwalkParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+export function createHoverParticle(x, y) {
+    state.hoverParticles.push({
+        x: x + (Math.random() - 0.5) * 10, // Emerge from under the player
+        y: y,
+        size: Math.random() * 3 + 2,
+        life: 1,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: Math.random() * 1 + 1, // Move downwards
+        color: `rgba(173, 216, 230, ${Math.random() * 0.5 + 0.3})` // Light blueish color
+    });
+}
+
+export function drawHoverParticles() {
+    for (let i = state.hoverParticles.length - 1; i >= 0; i--) {
+        const p = state.hoverParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.03;
+
+        if (p.life <= 0) {
+            state.hoverParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+export function createScrambleDust(x, y) {
+    state.scrambleParticles.push({
+        x: x + (Math.random() - 0.5) * 20, // Spawn around the feet
+        y: y,
+        size: Math.random() * 8 + 4,
+        life: 1,
+        vx: (Math.random() - 0.5) * 1.5, // Chaotic horizontal movement
+        vy: (Math.random() - 0.5) * 0.5, // Slight vertical movement
+        color: `rgba(160, 125, 90, ${Math.random() * 0.4 + 0.3})` // Brownish dust color
+    });
+}
+
+export function drawScrambleDust() {
+    for (let i = state.scrambleParticles.length - 1; i >= 0; i--) {
+        const p = state.scrambleParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.05; // Fade out fairly quickly
+
+        if (p.life <= 0) {
+            state.scrambleParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+export function createDiveParticle(x, y) {
+    state.diveParticles.push({
+        x: x,
+        y: y + (Math.random() - 0.5) * 20, // Vary vertical position
+        length: Math.random() * 15 + 5,
+        life: 1,
+        speed: Math.random() * 2 + 1,
+        color: `rgba(200, 220, 255, ${Math.random() * 0.3 + 0.2})` // Light blueish-white
+    });
+}
+
+export function drawDiveParticles() {
+    for (let i = state.diveParticles.length - 1; i >= 0; i--) {
+        const p = state.diveParticles[i];
+
+        p.x -= p.speed; // Move left
+        p.life -= 0.04;
+
+        if (p.life <= 0) {
+            state.diveParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x - p.length, p.y);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+}
+
+export function createSwooshParticle(x, y, vx, vy) {
+    state.swooshParticles.push({
+        x: x,
+        y: y,
+        vx: vx,
+        vy: vy,
+        length: 10,
+        life: 1,
+        color: 'rgba(255, 255, 255, 0.7)'
+    });
+}
+
+export function drawSwooshParticles() {
+    for (let i = state.swooshParticles.length - 1; i >= 0; i--) {
+        const p = state.swooshParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.08; // Fade out quickly
+
+        if (p.life <= 0) {
+            state.swooshParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x - p.vx * p.length, p.y - p.vy * p.length);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+}
+
+export function createFlipTrailParticle(x, y, rotation) {
+    state.flipTrail.push({
+        x: x,
+        y: y,
+        rotation: rotation,
+        life: 1,
+        size: STICK_FIGURE_TOTAL_HEIGHT
+    });
+}
+
+export function drawFlipTrail() {
+    for (let i = state.flipTrail.length - 1; i >= 0; i--) {
+        const p = state.flipTrail[i];
+        p.life -= 0.1; // Faster fade for a smoother trail
+
+        if (p.life <= 0) {
+            state.flipTrail.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life * 0.5; // Make it semi-transparent
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+
+            // Draw a simplified ghost of the stick figure
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, -p.size + 5);
+            ctx.lineTo(0, -p.size / 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(0, -p.size, 5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+    }
+}
+
+export function createCorkscrewParticle(x, y, headScale, bodyScale) {
+    state.corkscrewTrail.push({
+        x: x,
+        y: y,
+        headScale: headScale,
+        bodyScale: bodyScale,
+        life: 1
+    });
+}
+
+export function drawCorkscrewTrail() {
+    for (let i = state.corkscrewTrail.length - 1; i >= 0; i--) {
+        const p = state.corkscrewTrail[i];
+        p.life -= 0.15; // Fade out quickly
+
+        if (p.life <= 0) {
+            state.corkscrewTrail.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life * 0.4;
+            ctx.translate(p.x, p.y);
+
+            // Draw ghost head
+            ctx.save();
+            ctx.scale(p.headScale, 1);
+            ctx.font = '28px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(stickFigureEmoji, 0, -STICK_FIGURE_TOTAL_HEIGHT);
+            ctx.restore();
+
+            // Draw ghost body
+            ctx.save();
+            ctx.scale(p.bodyScale, 1);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, -STICK_FIGURE_TOTAL_HEIGHT + 5);
+            ctx.lineTo(0, -10);
+            ctx.stroke();
+            ctx.restore();
+
+            ctx.restore();
+        }
+    }
+}
+
 export function createHoudiniPoof(x, y) {
     const particleCount = 30;
     const poofColor = 'rgba(128, 128, 128, 0.7)'; // Grey smoke color
@@ -573,27 +840,21 @@ export function drawHoudiniParticles() {
     }
 }
 
-export function drawPhaseDashTrail() {
-    for (let i = state.phaseDashTrail.length - 1; i >= 0; i--) {
-        const particle = state.phaseDashTrail[i];
+export function drawFireTrail() {
+    for (let i = state.fireTrail.length - 1; i >= 0; i--) {
+        const p = state.fireTrail[i];
+        p.life -= 0.05;
+        p.size *= 0.95; // Shrink
 
-        // Update particle
-        particle.opacity -= 0.05; // Fade out speed
-
-        if (particle.opacity <= 0) {
-            state.phaseDashTrail.splice(i, 1);
+        if (p.life <= 0 || p.size <= 0.5) {
+            state.fireTrail.splice(i, 1);
         } else {
-            // Draw particle
             ctx.save();
-            ctx.translate(particle.x, particle.y);
-            ctx.rotate(-particle.angleRad);
-            ctx.globalAlpha = particle.opacity;
-
-            ctx.font = '28px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(stickFigureEmoji, 0, -STICK_FIGURE_TOTAL_HEIGHT); // Draw the head
-
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
             ctx.restore();
         }
     }
@@ -601,7 +862,10 @@ export function drawPhaseDashTrail() {
 
 export function drawStickFigure(x, y, jumpState, angleRad) {
 
-    ctx.strokeStyle = 'black';
+    // Determine the base color based on the theme
+    const baseColor = (currentTheme.name === '🌑 Outer Space') ? '#555555' : 'black';
+
+    ctx.strokeStyle = baseColor;
     ctx.lineWidth = 2;
 
     ctx.save();
@@ -616,7 +880,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
 
     const legOpacity = 1;
 
-    let legColor = 'black';
+    let legColor = baseColor; // Use the dynamic base color for legs
     if (state.isColliding) {
         const R = Math.round(255 * fadeProgress);
         legColor = `rgb(${R}, 0, 0)`;
@@ -657,6 +921,12 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX1 = 10 * splitProgress; armMovementY1 = headY + 25 * splitProgress;
         armMovementX2 = -10 * splitProgress; armMovementY2 = headY + 25 * splitProgress;
 
+        // Create "swoosh" particles when legs are extending
+        if (t > 0.2 && t < 0.5) {
+            createSwooshParticle(x + legMovementX1, y + legMovementY1, legMovementX1 * 0.2, legMovementY1 * 0.2);
+            createSwooshParticle(x + legMovementX2, y + legMovementY2, legMovementX2 * 0.2, legMovementY2 * 0.2);
+        }
+
         animationRotation = 0; // No rotation for this move
     } else if (jumpState.isSpecialMove) { // Original "K" move
         animationRotation = state.frameCount * 0.5;
@@ -665,6 +935,11 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX1 = 10; armMovementY1 = headY + 15;
         armMovementX2 = -10; armMovementY2 = headY + 15;
     } else if (jumpState.isDive) {
+        // Create a linear wind trail
+        if (state.frameCount % 2 === 0) {
+            createDiveParticle(x, y - STICK_FIGURE_TOTAL_HEIGHT / 2);
+        }
+
         animationRotation = Math.PI / 2;
         legMovementX1 = 0; legMovementY1 = bodyY - 10;
         legMovementX2 = 0; legMovementY2 = bodyY + 10;
@@ -684,6 +959,11 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         const bodyProgress = Math.sin(bodyT * (Math.PI * 2 / (1 - delay))); // Two cycles, adjusted for delay
         const bodyScaleX = 1 - (Math.abs(bodyProgress) * 0.95);
 
+        // Create trail particles
+        if (state.frameCount % 2 === 0) {
+            createCorkscrewParticle(x, y, headScaleX, bodyScaleX);
+        }
+
         // --- Draw Head ---
         ctx.save();
         ctx.scale(headScaleX, 1);
@@ -698,7 +978,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         ctx.scale(bodyScaleX, 1);
 
         // Body
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = baseColor;
         ctx.beginPath();
         ctx.moveTo(0, headY + 5);
         ctx.lineTo(0, bodyY - 10);
@@ -719,7 +999,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         ctx.stroke();
         ctx.restore();
 
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = baseColor;
         ctx.beginPath();
         ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX1, armMovementY1);
         ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX2, armMovementY2);
@@ -736,27 +1016,38 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         legMovementX2 = -15 * Math.sin(t); legMovementY2 = bodyY + 5;
         armMovementX1 = 10; armMovementY1 = headY + 15;
         armMovementX2 = -10; armMovementY2 = headY + 15;
-    } else if (jumpState.isPhaseDash) { // Enhanced Phase Dash
-        // Add a trail particle every few frames
-        if (state.frameCount % 3 === 0) {
-            state.phaseDashTrail.push({
-                x: x,
-                y: y,
-                angleRad: angleRad,
-                opacity: 0.6 // Initial opacity
+    } else if (jumpState.isPhaseDash) { // Enhanced to Fire Dash
+        // Create a trail of fire particles
+        for (let i = 0; i < 2; i++) {
+            const color = Math.random() > 0.3 ? 'rgba(255, 80, 0, 0.7)' : 'rgba(255, 180, 0, 0.7)'; // Orange/Yellow
+            state.fireTrail.push({
+                x: x - 10 + Math.random() * 20,
+                y: y - STICK_FIGURE_TOTAL_HEIGHT / 2 + Math.random() * 20,
+                size: Math.random() * 5 + 2,
+                life: 1,
+                color: color
             });
         }
 
-        ctx.globalAlpha = 0.4 + 0.3 * Math.sin(state.frameCount * 0.8);
+        // Add a fiery glow to the player
+        ctx.shadowColor = 'orange';
+        ctx.shadowBlur = 15;
+
         const dashOffset = (1 - (jumpState.phaseDashDuration / 600)) * 50; // Dash forward
         ctx.translate(dashOffset, 0);
         legMovementX1 = 15; legMovementY1 = bodyY + 5;
         legMovementX2 = -5; legMovementY2 = bodyY + 5;
         armMovementX1 = 15; armMovementY1 = headY + 15;
         armMovementX2 = -5; armMovementY2 = headY + 15;
-    } else if (jumpState.isHover) { // Smoother Hover
+    } else if (jumpState.isHover) { // Enhanced Hover
         const hoverHeight = -25 - 5 * Math.sin(state.frameCount * 0.1); // Gentle bobbing motion
         ctx.translate(0, hoverHeight);
+
+        // Create downward propulsion particles
+        if (state.frameCount % 3 === 0) {
+            createHoverParticle(x, y + bodyY);
+        }
+
         const t = state.frameCount * 0.2;
         legMovementX1 = 5 * Math.sin(t); legMovementY1 = bodyY + 5;
         legMovementX2 = -5 * Math.sin(t); legMovementY2 = bodyY + 5;
@@ -777,6 +1068,11 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX1 = 5; armMovementY1 = headY + 5;
         armMovementX2 = -5; armMovementY2 = headY + 5;
     } else if (jumpState.isCartoonScramble) {
+        // Create a dust cloud at the feet
+        if (state.frameCount % 2 === 0) {
+            createScrambleDust(x, y + 10); // y+10 to be at ground level
+        }
+
         const t = state.frameCount * 1.5;
         const legAngle = t;
         const legLength = 15;
@@ -787,6 +1083,12 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX1 = 15; armMovementY1 = headY + 5;
         armMovementX2 = -15; armMovementY2 = headY + 5;
     } else if (jumpState.isMoonwalking) {
+        // Create sparkle particles at the feet
+        if (state.frameCount % 2 === 0) { // Generate particles every other frame
+            createMoonwalkSparkle(x + legMovementX1, y + legMovementY1 + 5);
+            createMoonwalkSparkle(x + legMovementX2, y + legMovementY2 + 5);
+        }
+
         animationRotation = -Math.PI / 16; // Slight backward lean
         const t = (700 - jumpState.moonwalkDuration) / 700; // t goes 0 -> 1
         const cycle = t * Math.PI * 2; // Two full cycles for a complete moonwalk step
@@ -830,6 +1132,11 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     } else if (jumpState.isBackflip) {
         const t = (500 - jumpState.backflipDuration) / 500;
         animationRotation = -t * Math.PI * 2;
+
+        if (state.frameCount % 2 === 0) {
+            createFlipTrailParticle(x, y, animationRotation);
+        }
+
         legMovementX1 = 10; legMovementY1 = bodyY + 5;
         legMovementX2 = -10; legMovementY2 = bodyY + 5;
         armMovementX1 = 10; armMovementY1 = headY + 15;
@@ -837,6 +1144,11 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     } else if (jumpState.isFrontflip) {
         const t = (500 - jumpState.frontflipDuration) / 500;
         animationRotation = t * Math.PI * 2;
+
+        if (state.frameCount % 2 === 0) {
+            createFlipTrailParticle(x, y, animationRotation);
+        }
+
         legMovementX1 = 10; legMovementY1 = bodyY + 5;
         legMovementX2 = -10; legMovementY2 = bodyY + 5;
         armMovementX1 = 10; armMovementY1 = headY + 15;
@@ -856,11 +1168,38 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         }
 
         // Keep the stick figure static during the effect
-        legMovementX1 = 10; legMovementY1 = bodyY + 5;
-        legMovementX2 = -10; legMovementY2 = bodyY + 5;
-        armMovementX1 = 10; armMovementY1 = headY + 15;
+        legMovementX1 = 10; armMovementY1 = headY + 15;
         armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isMeteorStrike) {
+        const t = (800 - jumpState.meteorStrikeDuration) / 800;
+        animationRotation = t * Math.PI * 1.5; // Rotate into a downward arc
+
+        // Engulf in flames
+        ctx.shadowColor = 'red';
+        ctx.shadowBlur = 20;
+
+        // Trail of smoke and embers
+        if (state.frameCount % 2 === 0) {
+            const color = Math.random() > 0.3 ? 'rgba(255, 80, 0, 0.7)' : 'rgba(100, 100, 100, 0.5)'; // Orange/Grey
+            state.fireTrail.push({ // Re-using fireTrail for smoke/embers
+                x: x,
+                y: y - STICK_FIGURE_TOTAL_HEIGHT / 2,
+                size: Math.random() * 4 + 2,
+                life: 1,
+                color: color
+            });
+        }
+
+        // Tucked in "ball" pose
+        legMovementX1 = 5; legMovementY1 = bodyY;
+        legMovementX2 = -5; legMovementY2 = bodyY;
+        armMovementX1 = 5; armMovementY1 = headY + 20;
+        armMovementX2 = -5; armMovementY2 = headY + 20;
     }
+
+    // Reset shadow properties if they were set by a special move
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
 
     ctx.save();
     ctx.rotate(animationRotation);
@@ -920,7 +1259,14 @@ export function draw() {
 
     drawGroundPoundParticles();
     drawHoudiniParticles();
-    drawPhaseDashTrail();
+    drawMoonwalkParticles();
+    drawHoverParticles();
+    drawScrambleDust();
+    drawDiveParticles();
+    drawSwooshParticles();
+    drawFlipTrail();
+    drawCorkscrewTrail();
+    drawFireTrail();
     drawClouds();
 
     let groundAngleRad = 0;

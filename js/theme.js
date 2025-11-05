@@ -73,7 +73,7 @@ export const themes = {
     },
         'outerspace': {
         name: '🌑 Outer Space',
-        sky: '#808080',
+        sky: '#000000',
         ground: '#2C003E',
         grassBlades: '#9E7BB5',
         roadLines: null,

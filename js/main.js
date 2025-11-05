@@ -6,7 +6,7 @@ import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, fr
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike } from './game-modules/actions.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound } from './audio.js';
 
@@ -169,6 +169,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.code === 'KeyI' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startHoudini();
+        }
+        if (e.code === 'KeyT' && state.gameRunning && !state.isPaused) {
+            e.preventDefault();
+            startMeteorStrike();
         }
     });
 
