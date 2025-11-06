@@ -35,10 +35,13 @@ const state = {
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
-        isMeteorStrike: false, meteorStrikeDuration: 0
+        isMeteorStrike: false, meteorStrikeDuration: 0,
+        isFirestorm: false, firestormDuration: 0
     },
+    firestormCooldown: 30000, // 30 seconds
+    isFirestormOnCooldown: false,
+    firestormLastActivationTime: 0,
     meteorParticles: [],
-    shatterParticles: [], // New array for obstacle shatter particles
     currentObstacle: null,
     isColliding: false,
     collisionDuration: 0,
@@ -58,6 +61,7 @@ const state = {
     clouds: [],
     activeCashBags: [],
     fireTrail: [],
+    incineratingObstacles: [],
     houdiniParticles: [],
     groundPoundParticles: [],
     flipTrail: [],

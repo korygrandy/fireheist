@@ -14,7 +14,8 @@ const JUMP_DURATIONS = {
     groundPound: 600,
     cartoonScramble: 500,
     moonwalk: 700,
-    shockwave: 400
+    shockwave: 400,
+    firestorm: 10000 // 10 seconds active time
 };
 
 function initiateJump(duration) {
@@ -23,6 +24,25 @@ function initiateJump(duration) {
     state.jumpState.progress = 0;
     state.manualJumpOverride.isActive = true;
     state.manualJumpOverride.startTime = Date.now();
+}
+
+export function startFirestorm() {
+    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFirestormOnCooldown) return;
+
+    const now = Date.now();
+    if (now - state.firestormLastActivationTime < state.firestormCooldown) {
+        console.log("-> startFirestorm: Firestorm is on cooldown.");
+        return;
+    }
+
+    state.jumpState.isFirestorm = true;
+    state.jumpState.firestormDuration = JUMP_DURATIONS.firestorm;
+    state.firestormLastActivationTime = now;
+    state.isFirestormOnCooldown = true; // Cooldown starts immediately
+
+    initiateJump(JUMP_DURATIONS.firestorm);
+    playAnimationSound('fireball'); // Placeholder sound
+    console.log("-> startFirestorm: Firestorm initiated.");
 }
 
 export function startManualJump() {

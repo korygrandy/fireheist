@@ -6,7 +6,7 @@ import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, fr
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFirestorm } from './game-modules/actions.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
@@ -197,6 +197,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             startMeteorStrike();
         }
+        if (e.code === 'KeyR' && state.gameRunning && !state.isPaused) {
+            e.preventDefault();
+            startFirestorm();
+        }
     });
 
     const gameCanvas = document.getElementById('gameCanvas');
@@ -205,11 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let touchStartY = 0;
     let lastTap = 0;
     let longPressTimer;
-    let clickTimer = null; // Timer to differentiate single/double clicks
 
     gameCanvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
         if (!state.gameRunning || state.isPaused) return;
+
         touchStartTime = new Date().getTime();
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -286,25 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
             lastTap = currentTime;
         }
     }, { passive: false }); // Corrected: Added missing closing parenthesis
-
-    // Mouse controls for desktop
-    gameCanvas.addEventListener('click', (e) => {
-        if (!state.gameRunning || state.isPaused) return;
-        e.preventDefault();
-
-        clearTimeout(clickTimer); // Clear any pending single-click jump
-        clickTimer = setTimeout(() => {
-            startManualJump(); // Trigger jump after a short delay
-        }, 180); // 180ms delay to wait for a potential double-click
-    });
-
-    gameCanvas.addEventListener('dblclick', (e) => {
-        if (!state.gameRunning || state.isPaused) return;
-        e.preventDefault();
-
-        clearTimeout(clickTimer); // Cancel the pending single-click jump
-        startSpecialMove(); // Immediately trigger special move
-    });
 
     // --- END JUMP & PAUSE CONTROLS ---
 
