@@ -19,6 +19,7 @@ const state = {
     manualJumpDurationMs: DIFFICULTY_SETTINGS.Rookie.manualJumpDurationMs,
     manualJumpHeight: DIFFICULTY_SETTINGS.Rookie.manualJumpHeight,
     acceleratorFrequencyPercent: DIFFICULTY_SETTINGS.Rookie.ACCELERATOR_FREQUENCY_PERCENT,
+    energyRegenMultiplier: DIFFICULTY_SETTINGS.Rookie.energyRegenMultiplier,
     jumpState: {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
@@ -79,7 +80,13 @@ const state = {
     playerEmberParticles: [],
     ignitedObstacles: [],
     MAX_FIRESTORM_PARTICLES: 50,
-    MAX_EMBER_PARTICLES: 100
+    MAX_EMBER_PARTICLES: 100,
+    playerEnergy: 100,
+    maxPlayerEnergy: 100,
+    isFirestormDrainingEnergy: false,
+    firestormDrainEndTime: 0,
+    isFireSpinnerDrainingEnergy: false,
+    fireSpinnerDrainEndTime: 0
 };
 
 export default state;

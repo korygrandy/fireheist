@@ -252,3 +252,34 @@ export function drawCustomEventStatus(event, angleRad) {
 
     ctx.restore();
 }
+
+export function drawEnergyBar() {
+    const barWidth = 200;
+    const barHeight = 20;
+    const x = (canvas.width - barWidth) / 2;
+    const y = 10;
+    const energyPercentage = state.playerEnergy / state.maxPlayerEnergy;
+
+    ctx.save();
+
+    // Draw the background
+    ctx.fillStyle = '#333';
+    ctx.fillRect(x, y, barWidth, barHeight);
+
+    // Draw the energy fill
+    ctx.fillStyle = '#00FF88';
+    ctx.fillRect(x, y, barWidth * energyPercentage, barHeight);
+
+    // Draw the border
+    ctx.strokeStyle = '#FFF';
+    ctx.strokeRect(x, y, barWidth, barHeight);
+
+    // Draw the text
+    ctx.fillStyle = '#FFF';
+    ctx.font = 'bold 14px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`ENERGY`, x + barWidth / 2, y + barHeight / 2);
+
+    ctx.restore();
+}
