@@ -1,5 +1,17 @@
 [
     {
+        "version": "1.4.34",
+        "date": "2025-11-05",
+        "changes": [
+            "Feature: Implemented a new 'Firestorm' custom move, activated by the 'R' key.",
+            "Gameplay: When activated, Firestorm creates orbiting fireballs around the character for 10 seconds.",
+            "Collision: Obstacles colliding with the player during Firestorm are incinerated into ash, playing the 'fireball.mp3' sound effect.",
+            "Cooldown: The Firestorm ability has a 30-second cooldown after use.",
+            "Bugfix: Resolved an issue where Firestorm's cooldown was not resetting due to mismatched time sources ('Date.now()' vs 'performance.now()').",
+            "Bugfix: Fixed a 'TypeError' where 'state.currentObstacle' was null after incineration, causing the game to crash."
+        ]
+    },
+    {
         "version": "1.4.33",
         "date": "2025-11-05",
         "changes": [
@@ -73,13 +85,6 @@
             "Bugfix: Resolved an issue where the selected persona was not being saved to localStorage.",
             "Bugfix: Fixed a bug where custom persona controls were not being displayed correctly when 'Custom Persona' was selected.",
             "Improvement: Updated the 'Outer Space' theme to remove road lines and add a purple grass-like texture."
-        ]
-    },
-    {
-        "version": "1.4.24",
-        "date": "2025-11-04",
-        "changes": [
-            "Feature: Implemented persona selection. Users can now choose a predefined persona to automatically configure emoji, skill level, obstacle frequency, and theme. A 'Custom Persona' option retains manual configuration."
         ]
     }
 ]
