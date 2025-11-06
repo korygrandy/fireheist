@@ -1,5 +1,17 @@
 [
     {
+        "version": "1.4.36",
+        "date": "2025-11-05",
+        "changes": [
+            "feat: Modularize drawing logic and enhance special moves",
+            "Refactor: Split the monolithic `drawing.js` into smaller, specialized modules (`effects.js`, `overlays.js`, `player.js`, `world.js`) to improve maintainability.",
+            "Feature: Added sound effects to the \"Firestorm,\" \"Cartoon Scramble,\" \"Houdini,\" and \"Ground Pound\" special moves.",
+            "Fix: Resolved multiple state persistence bugs where cooldowns and animations would not reset when starting a new game.",
+            "Fix: Corrected a canvas aspect-ratio bug that caused stretching and incorrect padding in fullscreen mode on desktop.",
+            "Tweak: Increased the \"hangtime\" for the \"Cartoon Scramble\" jump."
+        ]
+    },
+    {
         "version": "1.4.35",
         "date": "2025-11-05",
         "changes": [
@@ -76,13 +88,6 @@
         "date": "2025-11-05",
         "changes": [
             "Bugfix: Fixed an issue where the background music for some personas was not loading correctly. The music player now correctly loads the music specified in the persona's `music` property."
-        ]
-    },
-    {
-        "version": "1.4.26",
-        "date": "2025-11-05",
-        "changes": [
-            "Feature: Added a persona details display. When a predefined persona is selected, their emoji, financial trait, discipline level, and skill level are displayed to the user."
         ]
     }
 ]

@@ -121,3 +121,11 @@ body.game-active-fullscreen:fullscreen #gameCanvas {
     box-shadow: none;
     object-fit: contain; /* Crucial for aspect ratio */
 }
+
+body.game-active-fullscreen:fullscreen #mainGrid {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
