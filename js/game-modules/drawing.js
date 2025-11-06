@@ -1253,8 +1253,8 @@ export function drawObstacle(obstacle, angleRad) {
     ctx.restore();
 }
 
-export function drawFirestorm(playerX, playerY) {
-    if (!state.jumpState.isFirestorm) return;
+export function drawFireSpinner(playerX, playerY) {
+    if (!state.jumpState.isFireSpinner) return;
 
     const numFireballs = 5;
     const orbitRadius = 50;
@@ -1282,9 +1282,9 @@ export function drawIncineration(obstacle, angleRad) {
     ctx.translate(x, groundY);
     ctx.rotate(-angleRad);
 
-    if (animationProgress < 0.7) { // Burning phase
+    if (animationProgress < 0.9) { // Burning phase extended to 90% of the animation
         const scale = 1 + animationProgress * 0.5; // Expands slightly
-        const opacity = 1 - animationProgress;
+        const opacity = 1 - (animationProgress / 0.9); // Fade out over the new duration
         ctx.globalAlpha = opacity;
         ctx.font = `${OBSTACLE_EMOJI_SIZE * scale}px Arial`;
         ctx.textAlign = 'center';
@@ -1297,17 +1297,89 @@ export function drawIncineration(obstacle, angleRad) {
             const fireY = (Math.random() - 0.5) * 20;
             ctx.fillText('🔥', fireX, fireY);
         }
-    } else { // Ash phase
-        const ashProgress = (animationProgress - 0.7) / 0.3;
+    } else { // Ash phase shortened to the last 10%
+        // Assign random offset only once when the ash phase begins
+        if (obstacle.ashOffsetX === undefined) {
+            obstacle.ashOffsetX = (Math.random() - 0.5) * 20;
+            obstacle.ashOffsetY = (Math.random() - 0.5) * 10;
+        }
+
+        const ashProgress = (animationProgress - 0.9) / 0.1;
         const opacity = 1 - ashProgress;
         const yOffset = 10 * ashProgress; // Sinks into the ground
 
         ctx.globalAlpha = opacity;
         ctx.font = '24px Arial';
         ctx.fillStyle = '#555';
-        ctx.fillText('💨', 0, yOffset); // Ash pile
+        ctx.fillText('💨', obstacle.ashOffsetX, yOffset + obstacle.ashOffsetY); // Ash pile with random offset
     }
 
+    ctx.restore();
+}
+
+export function createShatterEffect(x, y, emoji) {
+    const particleCount = 10;
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1;
+        state.shatteredObstacles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1,
+            emoji: emoji,
+            size: OBSTACLE_EMOJI_SIZE / 2,
+            gravity: 0.1
+        });
+    }
+}
+
+export function drawShatteredObstacles() {
+    for (let i = state.shatteredObstacles.length - 1; i >= 0; i--) {
+        const p = state.shatteredObstacles[i];
+        p.vy += p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02;
+
+        if (p.life <= 0) {
+            state.shatteredObstacles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.font = `${p.size}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(p.emoji, p.x, p.y);
+            ctx.restore();
+        }
+    }
+}
+
+export function drawIgnitedObstacle(obstacle, angleRad) {
+    // First, draw the original obstacle
+    drawObstacle(obstacle, angleRad);
+
+    // Then, draw a more dynamic fire effect on top of it
+    ctx.save();
+    const groundY = GROUND_Y - obstacle.x * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET;
+    ctx.translate(obstacle.x, groundY);
+    ctx.rotate(-angleRad);
+
+    const numFlames = 1 + Math.floor(Math.random() * 3); // 1 to 3 flames
+    for (let i = 0; i < numFlames; i++) {
+        const fireX = (Math.random() - 0.5) * OBSTACLE_EMOJI_SIZE;
+        const fireY = (Math.random() - 0.5) * OBSTACLE_HEIGHT;
+        const fireSize = Math.random() * 12 + 6; // Larger, more varied flames
+        const opacity = 0.6 + Math.random() * 0.4; // Varied opacity
+
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle = `rgba(255, ${100 + Math.random() * 100}, 0, ${opacity})`;
+        ctx.beginPath();
+        ctx.arc(fireX, fireY, fireSize, 0, Math.PI * 2);
+        ctx.fill();
+    }
     ctx.restore();
 }
 
@@ -1325,7 +1397,10 @@ export function draw() {
     drawFlipTrail();
     drawCorkscrewTrail();
     drawFireTrail();
+    drawShatteredObstacles();
     drawClouds();
+    drawFirestormFlashes();
+    drawPlayerEmbers();
 
     let groundAngleRad = 0;
     let stickFigureGroundY = GROUND_Y;
@@ -1425,11 +1500,16 @@ export function draw() {
         }
 
         drawStickFigure(currentX, currentY, state.jumpState, groundAngleRad);
-        drawFirestorm(currentX, currentY); // Draw fireballs around the player
+        drawFireSpinner(currentX, currentY); // Draw fireballs around the player
 
         // Draw incinerating obstacles
         state.incineratingObstacles.forEach(obstacle => {
             drawIncineration(obstacle, groundAngleRad);
+        });
+
+        // Draw ignited obstacles
+        state.ignitedObstacles.forEach(obstacle => {
+            drawIgnitedObstacle(obstacle, groundAngleRad);
         });
 
         for (let i = state.activeCashBags.length - 1; i >= 0; i--) {
@@ -1471,7 +1551,292 @@ export function draw() {
         drawPausedOverlay();
     }
 
-    if (state.currentSegmentIndex >= raceSegments.length && !state.isGameOverSequence) {
-        return;
+        if (state.currentSegmentIndex >= raceSegments.length && !state.isGameOverSequence) {
+
+            return;
+
+        }
+
     }
-}
+
+    
+
+    export function createFirestormFlashes(angleRad) {
+
+    
+
+        if (state.firestormParticles.length >= state.MAX_FIRESTORM_PARTICLES) return;
+
+    
+
+    
+
+    
+
+        const burstX = Math.random() * canvas.width;
+
+    
+
+        const burstY = GROUND_Y - burstX * Math.tan(angleRad) - Math.random() * 10;
+
+    
+
+        const particleCount = 5 + Math.floor(Math.random() * 5); // 5 to 9 particles
+
+    
+
+    
+
+    
+
+        for (let i = 0; i < particleCount; i++) {
+
+    
+
+            const angle = Math.random() * Math.PI * 2; // Random direction
+
+    
+
+            const speed = Math.random() * 2 + 1;
+
+    
+
+            const color = Math.random() > 0.3 ? 'rgba(255, 80, 0, 0.7)' : 'rgba(255, 180, 0, 0.7)'; // Orange/Yellow
+
+    
+
+    
+
+    
+
+            state.firestormParticles.push({
+
+    
+
+                x: burstX,
+
+    
+
+                y: burstY,
+
+    
+
+                vx: Math.cos(angle) * speed,
+
+    
+
+                vy: Math.sin(angle) * speed, // Particles will spread out
+
+    
+
+                life: 1,
+
+    
+
+                size: Math.random() * 6 + 3, // a bit larger than dash particles
+
+    
+
+                color: color
+
+    
+
+            });
+
+    
+
+        }
+
+    
+
+    }
+
+    
+
+    
+
+    
+
+    export function drawFirestormFlashes() {
+
+    
+
+        for (let i = state.firestormParticles.length - 1; i >= 0; i--) {
+
+    
+
+            const p = state.firestormParticles[i];
+
+    
+
+            p.x += p.vx;
+
+    
+
+            p.y += p.vy;
+
+    
+
+            p.life -= 0.05;
+
+    
+
+            p.size *= 0.95; // Shrink
+
+    
+
+    
+
+    
+
+            if (p.life <= 0 || p.size <= 0.5) {
+
+    
+
+                state.firestormParticles.splice(i, 1);
+
+    
+
+            } else {
+
+    
+
+                ctx.save();
+
+    
+
+                ctx.globalAlpha = p.life;
+
+    
+
+                ctx.fillStyle = p.color;
+
+    
+
+                ctx.beginPath();
+
+    
+
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+    
+
+                ctx.fill();
+
+    
+
+                ctx.restore();
+
+    
+
+            }
+
+    
+
+        }
+
+    
+
+    }
+
+    
+
+    export function createPlayerEmbers(playerY) {
+
+    
+
+        if (state.playerEmberParticles.length >= state.MAX_EMBER_PARTICLES) return;
+
+    
+
+    
+
+    
+
+        const numEmbers = 3 + Math.floor(Math.random() * 3); // Create 3 to 5 embers per call
+
+    
+
+        for (let i = 0; i < numEmbers; i++) {
+
+    
+
+            state.playerEmberParticles.push({
+
+    
+
+                x: STICK_FIGURE_FIXED_X + (Math.random() - 0.5) * 30, // Wider spread
+
+    
+
+                y: playerY + Math.random() * STICK_FIGURE_TOTAL_HEIGHT,
+
+    
+
+                life: 1.2, // Slightly longer lifespan
+
+    
+
+                size: Math.random() * 4 + 2, // Slightly larger embers
+
+    
+
+                vx: (Math.random() - 0.5) * 1, // More varied velocity
+
+    
+
+                vy: (Math.random() - 0.5) * 1
+
+    
+
+            });
+
+    
+
+        }
+
+    
+
+    }
+
+    
+
+    export function drawPlayerEmbers() {
+
+        for (let i = state.playerEmberParticles.length - 1; i >= 0; i--) {
+
+            const p = state.playerEmberParticles[i];
+
+            p.x += p.vx;
+
+            p.y += p.vy;
+
+            p.life -= 0.05;
+
+            if (p.life <= 0) {
+
+                state.playerEmberParticles.splice(i, 1);
+
+            } else {
+
+                ctx.save();
+
+                ctx.globalAlpha = p.life;
+
+                ctx.fillStyle = `rgba(255, ${Math.random() * 200}, 0, ${p.life})`;
+
+                ctx.beginPath();
+
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+                ctx.fill();
+
+                ctx.restore();
+
+            }
+
+        }
+
+    }
+
+    

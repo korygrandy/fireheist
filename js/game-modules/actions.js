@@ -26,23 +26,23 @@ function initiateJump(duration) {
     state.manualJumpOverride.startTime = Date.now();
 }
 
-export function startFirestorm() {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFirestormOnCooldown) return;
+export function startFireSpinner() {
+    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFireSpinnerOnCooldown) return;
 
     const now = Date.now();
-    if (now - state.firestormLastActivationTime < state.firestormCooldown) {
-        console.log("-> startFirestorm: Firestorm is on cooldown.");
+    if (now - state.fireSpinnerLastActivationTime < state.fireSpinnerCooldown) {
+        console.log("-> startFireSpinner: Fire Spinner is on cooldown.");
         return;
     }
 
-    state.jumpState.isFirestorm = true;
-    state.jumpState.firestormDuration = JUMP_DURATIONS.firestorm;
-    state.firestormLastActivationTime = now;
-    state.isFirestormOnCooldown = true; // Cooldown starts immediately
+    state.jumpState.isFireSpinner = true;
+    state.jumpState.fireSpinnerDuration = JUMP_DURATIONS.firestorm;
+    state.fireSpinnerLastActivationTime = now;
+    state.isFireSpinnerOnCooldown = true; // Cooldown starts immediately
 
     initiateJump(JUMP_DURATIONS.firestorm);
     playAnimationSound('fireball'); // Placeholder sound
-    console.log("-> startFirestorm: Firestorm initiated.");
+    console.log("-> startFireSpinner: Fire Spinner initiated.");
 }
 
 export function startManualJump() {
@@ -180,4 +180,11 @@ export function startMeteorStrike() {
     initiateJump(800);
     playAnimationSound('meteorStrike'); // Play sound for Meteor Strike
     console.log("-> startMeteorStrike: Meteor Strike initiated.");
+}
+
+export function startFirestorm() {
+    if (!state.gameRunning || state.isFirestormActive) return;
+    state.isFirestormActive = true;
+    state.firestormEndTime = Date.now() + 10000; // 10 seconds from now
+    console.log("-> startFirestorm: Firestorm V2 initiated.");
 }
