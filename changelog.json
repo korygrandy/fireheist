@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.4.35",
+        "date": "2025-11-05",
+        "changes": [
+            "Feature: Added Firestorm V2 destruction animation.",
+            "Refactor: Renamed original 'Firestorm' to 'Fire Spinner'."
+        ]
+    },
+    {
         "version": "1.4.34",
         "date": "2025-11-05",
         "changes": [
@@ -75,16 +83,6 @@
         "date": "2025-11-05",
         "changes": [
             "Feature: Added a persona details display. When a predefined persona is selected, their emoji, financial trait, discipline level, and skill level are displayed to the user."
-        ]
-    },
-    {
-        "version": "1.4.25",
-        "date": "2025-11-04",
-        "changes": [
-            "Feature: Implemented persona selection. Users can now choose a predefined persona to automatically configure emoji, skill level, obstacle frequency, and theme. A 'Custom Persona' option retains manual configuration.",
-            "Bugfix: Resolved an issue where the selected persona was not being saved to localStorage.",
-            "Bugfix: Fixed a bug where custom persona controls were not being displayed correctly when 'Custom Persona' was selected.",
-            "Improvement: Updated the 'Outer Space' theme to remove road lines and add a purple grass-like texture."
         ]
     }
 ]

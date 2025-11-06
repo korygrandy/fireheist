@@ -55,13 +55,23 @@ function updateHighScore() {
 }
 
 function spawnObstacle() {
-    state.currentObstacle = {
+    const newObstacle = {
         x: OBSTACLE_SPAWN_X,
         emoji: obstacleEmoji,
         spawnTime: Date.now(),
         hasBeenHit: false
     };
-    console.log(`-> spawnObstacle: New obstacle spawned.`);
+
+    if (state.isFirestormActive) {
+        const burnoutDuration = 500 + Math.random() * 1000; // Quicker burnout: 0.5 to 1.5 seconds
+        newObstacle.burnoutTime = Date.now() + burnoutDuration;
+        newObstacle.speedMultiplier = 1.2; // 20% faster
+        state.ignitedObstacles.push(newObstacle);
+        console.log("-> spawnObstacle: New obstacle spawned directly into Firestorm.");
+    } else {
+        state.currentObstacle = newObstacle;
+        console.log(`-> spawnObstacle: New obstacle spawned.`);
+    }
 }
 
 function spawnAccelerator() {
@@ -108,7 +118,7 @@ function checkCollision(runnerY, angleRad) {
     if (horizontalDistance < state.COLLISION_RANGE_X) {
         const collisionTolerance = 5;
         if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
-            if (state.jumpState.isFirestorm) {
+            if (state.jumpState.isFireSpinner) {
                 // Incinerate the obstacle instead of colliding
                 state.incineratingObstacles.push({
                     ...state.currentObstacle,
@@ -117,7 +127,26 @@ function checkCollision(runnerY, angleRad) {
                 });
                 state.currentObstacle = null; // Remove the obstacle from the main track
                 playAnimationSound('fireball');
-                console.log("-> FIRESTORM: Obstacle incinerated!");
+                console.log("-> FIRE SPINNER: Obstacle incinerated!");
+                return false; // No penalty
+            }
+            if (state.isFirestormActive) {
+                // Incinerate with the new Firestorm
+                state.incineratingObstacles.push({
+                    ...state.currentObstacle,
+                    animationProgress: 0,
+                    startTime: performance.now()
+                });
+                state.currentObstacle = null;
+                playAnimationSound('incinerate');
+                console.log("-> FIRESTORM V2: Obstacle incinerated!");
+                return false; // No penalty
+            }
+            if (state.jumpState.isGroundPound && state.jumpState.progress > 0.5) { // Shatter on the way down
+                drawing.createShatterEffect(state.currentObstacle.x, obstacleTopY, state.currentObstacle.emoji);
+                state.currentObstacle = null;
+                playAnimationSound('shatter');
+                console.log("-> GROUND POUND: Obstacle shattered!");
                 return false; // No penalty
             }
             return true;
@@ -333,6 +362,59 @@ export function animate(timestamp) {
         runnerY += jumpOffset;
     }
 
+    const angleRad = currentHurdle.angleRad;
+
+    // Update positions of all moving objects first
+    const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * state.gameSpeedMultiplier;
+    if (state.currentObstacle) state.currentObstacle.x -= objectMovementDelta;
+    if (state.currentAccelerator) state.currentAccelerator.x -= objectMovementDelta;
+    if (state.onScreenCustomEvent) state.onScreenCustomEvent.x -= objectMovementDelta;
+    state.ignitedObstacles.forEach(ob => {
+        ob.x -= objectMovementDelta * (ob.speedMultiplier || 1);
+    });
+
+
+    // Handle new Firestorm V2
+    if (state.isFirestormActive) {
+        if (Date.now() > state.firestormEndTime) {
+            state.isFirestormActive = false;
+        } else {
+            // Robust catch-all: If there's a current obstacle and it's not already ignited, ignite it.
+            if (state.currentObstacle && !state.ignitedObstacles.some(o => o.x === state.currentObstacle.x)) {
+                const burnoutDuration = 500 + Math.random() * 1000; // Quicker burnout: 0.5 to 1.5 seconds
+                state.ignitedObstacles.push({
+                    ...state.currentObstacle,
+                    burnoutTime: Date.now() + burnoutDuration,
+                    speedMultiplier: 1.2 // 20% faster
+                });
+                state.currentObstacle = null; // Remove from main track
+                console.log("-> Firestorm: Robust catch-all ignited a stray obstacle.");
+            }
+
+            if (state.frameCount % 8 === 0) { // Reduced particle density for performance
+                drawing.createFirestormFlashes(angleRad);
+                drawing.createPlayerEmbers(runnerY);
+            }
+        }
+    }
+
+    // Update and check ignited obstacles
+    for (let i = state.ignitedObstacles.length - 1; i >= 0; i--) {
+        const obstacle = state.ignitedObstacles[i];
+        // Phase 2: Incinerate when burnout time is reached
+        if (Date.now() > obstacle.burnoutTime) {
+            state.incineratingObstacles.push({
+                ...obstacle,
+                animationProgress: 0,
+                startTime: performance.now()
+            });
+            playAnimationSound('incinerate');
+            state.ignitedObstacles.splice(i, 1);
+        } else if (obstacle.x < -OBSTACLE_WIDTH) {
+            state.ignitedObstacles.splice(i, 1);
+        }
+    }
+
     if (state.frameCount % 60 === 0) {
         if (!state.currentObstacle && !state.currentAccelerator && !state.onScreenCustomEvent) {
             const randomRoll = Math.random() * 100;
@@ -346,11 +428,7 @@ export function animate(timestamp) {
         }
     }
 
-    const angleRad = currentHurdle.angleRad;
-    const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * state.gameSpeedMultiplier;
-
     if (state.currentObstacle) {
-        state.currentObstacle.x -= objectMovementDelta;
         if (checkCollision(runnerY, angleRad)) {
             if (!state.isColliding) {
                 state.hitsCounter++;
@@ -373,8 +451,6 @@ export function animate(timestamp) {
     }
 
     if (state.currentAccelerator) {
-        state.currentAccelerator.x -= objectMovementDelta;
-
         if (checkAcceleratorCollision(runnerY, angleRad)) {
             if (!state.isAccelerating && !state.isDecelerating) {
                 state.stickFigureBurst = { ...state.stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
@@ -388,8 +464,6 @@ export function animate(timestamp) {
     }
 
     if (state.onScreenCustomEvent) {
-        state.onScreenCustomEvent.x -= objectMovementDelta;
-
         if (checkProximityEventCollection(runnerY, angleRad)) {
             if (!state.isAccelerating && !state.isDecelerating) {
                 if (state.onScreenCustomEvent.type === 'ACCELERATOR') {
@@ -666,19 +740,19 @@ export function animate(timestamp) {
         }
     }
 
-    if (state.jumpState.isFirestorm) {
-        state.jumpState.firestormDuration -= deltaTime;
-        if (state.jumpState.firestormDuration <= 0) {
-            state.jumpState.isFirestorm = false;
+    if (state.jumpState.isFireSpinner) {
+        state.jumpState.fireSpinnerDuration -= deltaTime;
+        if (state.jumpState.fireSpinnerDuration <= 0) {
+            state.jumpState.isFireSpinner = false;
         }
     }
 
-    // Check and update Firestorm cooldown
-    if (state.isFirestormOnCooldown) {
+    // Check and update Fire Spinner cooldown
+    if (state.isFireSpinnerOnCooldown) {
         const now = Date.now();
-        if (now - state.firestormLastActivationTime > state.firestormCooldown) {
-            state.isFirestormOnCooldown = false;
-            console.log("-> FIRESTORM: Cooldown finished. Ready.");
+        if (now - state.fireSpinnerLastActivationTime > state.fireSpinnerCooldown) {
+            state.isFireSpinnerOnCooldown = false;
+            console.log("-> FIRE SPINNER: Cooldown finished. Ready.");
         }
     }
 
@@ -723,6 +797,8 @@ export function resetGameState() {
     state.swooshParticles = [];
     state.flipTrail = [];
     state.corkscrewTrail = [];
+    state.shatteredObstacles.length = 0;
+    state.ignitedObstacles = [];
     state.manualJumpOverride = { isActive: false, startTime: 0, duration: state.manualJumpDurationMs };
     state.jumpState = {
         isJumping: false, progress: 0,
@@ -846,6 +922,8 @@ export function startGame() {
     state.swooshParticles = [];
     state.flipTrail = [];
     state.corkscrewTrail = [];
+    state.shatteredObstacles.length = 0;
+    state.ignitedObstacles = [];
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,

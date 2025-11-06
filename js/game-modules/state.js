@@ -36,11 +36,11 @@ const state = {
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
         isMeteorStrike: false, meteorStrikeDuration: 0,
-        isFirestorm: false, firestormDuration: 0
+        isFireSpinner: false, fireSpinnerDuration: 0
     },
-    firestormCooldown: 30000, // 30 seconds
-    isFirestormOnCooldown: false,
-    firestormLastActivationTime: 0,
+    fireSpinnerCooldown: 30000, // 30 seconds
+    isFireSpinnerOnCooldown: false,
+    fireSpinnerLastActivationTime: 0,
     meteorParticles: [],
     currentObstacle: null,
     isColliding: false,
@@ -71,7 +71,15 @@ const state = {
     diveParticles: [],
     swooshParticles: [],
     flipTrail: [],
-    corkscrewTrail: []
+    corkscrewTrail: [],
+    shatteredObstacles: [],
+    isFirestormActive: false,
+    firestormEndTime: 0,
+    firestormParticles: [],
+    playerEmberParticles: [],
+    ignitedObstacles: [],
+    MAX_FIRESTORM_PARTICLES: 50,
+    MAX_EMBER_PARTICLES: 100
 };
 
 export default state;
