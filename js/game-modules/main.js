@@ -799,7 +799,12 @@ export function resetGameState() {
     state.corkscrewTrail = [];
     state.shatteredObstacles.length = 0;
     state.ignitedObstacles = [];
-    state.manualJumpOverride = { isActive: false, startTime: 0, duration: state.manualJumpDurationMs };
+
+    state.isFirestormActive = false;
+    state.firestormEndTime = 0;
+    state.firestormParticles = [];
+    state.playerEmberParticles = [];
+    state.ignitedObstacles = [];
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
@@ -827,6 +832,9 @@ export function resetGameState() {
     state.isDecelerating = false;
     state.decelerationDuration = 0;
     state.gameSpeedMultiplier = intendedSpeedMultiplier;
+
+    state.isFireSpinnerOnCooldown = false;
+    state.fireSpinnerLastActivationTime = 0;
 
     state.activeCustomEvents = Object.values(customEvents).flat().map(event => ({
         ...event,
@@ -876,34 +884,7 @@ export function startGame() {
 
     console.log("-> START GAME: Initiating game start sequence.");
 
-    drawing.setInitialLoad(false);
-
-    applySkillLevelSettings(currentSkillLevel);
-
-    state.gameSpeedMultiplier = intendedSpeedMultiplier;
-
-    let musicUrl = DEFAULT_MUSIC_URL;
-    if (selectedPersona && selectedPersona !== 'custom' && personas[selectedPersona]) {
-        musicUrl = personas[selectedPersona].music;
-    } else {
-        const cleanEmoji = stickFigureEmoji.replace(/\uFE0F/g, '');
-        musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
-    }
-    initializeMusicPlayer(musicUrl);
-
-    hideResultsScreen();
-
-    if (Tone.context.state !== 'running') { Tone.start(); }
-    if (!isMuted) {
-        chaChingSynth.mute = false;
-        collisionSynth.mute = false;
-        debuffSynth.mute = false;
-        Tone.loaded().then(() => {
-            backgroundMusic.sync().start(0);
-            Tone.Transport.start();
-        });
-    }
-
+    // Reset all game state variables to their defaults
     state.currentSegmentIndex = 0;
     state.segmentProgress = 0;
     state.lastTime = 0;
@@ -923,6 +904,11 @@ export function startGame() {
     state.flipTrail = [];
     state.corkscrewTrail = [];
     state.shatteredObstacles.length = 0;
+    state.ignitedObstacles = [];
+    state.isFirestormActive = false;
+    state.firestormEndTime = 0;
+    state.firestormParticles = [];
+    state.playerEmberParticles = [];
     state.ignitedObstacles = [];
     state.jumpState = {
         isJumping: false, progress: 0,
@@ -952,7 +938,8 @@ export function startGame() {
     state.isDecelerating = false;
     state.decelerationDuration = 0;
     state.onScreenCustomEvent = null;
-
+    state.isFireSpinnerOnCooldown = false;
+    state.fireSpinnerLastActivationTime = 0;
     state.hitsCounter = 0;
     state.daysElapsedTotal = 0;
     state.daysAccumulatedAtSegmentStart = 0;
@@ -960,6 +947,34 @@ export function startGame() {
     state.isGameOverSequence = false;
     state.gameOverSequenceStartTime = 0;
     state.isPaused = false;
+
+    drawing.setInitialLoad(false);
+
+    applySkillLevelSettings(currentSkillLevel);
+
+    state.gameSpeedMultiplier = intendedSpeedMultiplier;
+
+    let musicUrl = DEFAULT_MUSIC_URL;
+    if (selectedPersona && selectedPersona !== 'custom' && personas[selectedPersona]) {
+        musicUrl = personas[selectedPersona].music;
+    } else {
+        const cleanEmoji = stickFigureEmoji.replace(/\uFE0F/g, '');
+        musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
+    }
+    initializeMusicPlayer(musicUrl);
+
+    hideResultsScreen();
+
+    if (Tone.context.state !== 'running') { Tone.start(); }
+    if (!isMuted) {
+        chaChingSynth.mute = false;
+        collisionSynth.mute = false;
+        debuffSynth.mute = false;
+        Tone.loaded().then(() => {
+            backgroundMusic.sync().start(0);
+            Tone.Transport.start();
+        });
+    }
 
     state.activeCustomEvents = Object.values(customEvents).flat().map(event => ({
         ...event,

@@ -1,5 +1,5 @@
 import state from './state.js';
-import { createHoudiniPoof } from './drawing.js';
+import { createHoudiniPoof } from './drawing/effects.js';
 import { STICK_FIGURE_FIXED_X, GROUND_Y } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 
@@ -12,7 +12,7 @@ const JUMP_DURATIONS = {
     phaseDash: 600,
     hover: 1000,
     groundPound: 600,
-    cartoonScramble: 500,
+    cartoonScramble: 800,
     moonwalk: 700,
     shockwave: 400,
     firestorm: 10000 // 10 seconds active time
@@ -115,6 +115,7 @@ export function startGroundPound() {
     state.jumpState.groundPoundDuration = JUMP_DURATIONS.groundPound;
     state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
     initiateJump(JUMP_DURATIONS.groundPound);
+    playAnimationSound('groundPound');
     console.log("-> startGroundPound: Ground Pound initiated.");
 }
 
@@ -123,6 +124,7 @@ export function startCartoonScramble() {
     state.jumpState.isCartoonScramble = true;
     state.jumpState.cartoonScrambleDuration = JUMP_DURATIONS.cartoonScramble;
     initiateJump(JUMP_DURATIONS.cartoonScramble);
+    playAnimationSound('cartoon-running');
     console.log("-> startCartoonScramble: Cartoon Scramble initiated.");
 }
 
@@ -170,6 +172,7 @@ export function startHoudini() {
     createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
 
     initiateJump(800);
+    playAnimationSound('houdini');
     console.log("-> startHoudini: Houdini initiated.");
 }
 
@@ -186,5 +189,6 @@ export function startFirestorm() {
     if (!state.gameRunning || state.isFirestormActive) return;
     state.isFirestormActive = true;
     state.firestormEndTime = Date.now() + 10000; // 10 seconds from now
+    playAnimationSound('firestorm');
     console.log("-> startFirestorm: Firestorm V2 initiated.");
 }

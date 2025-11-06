@@ -101,7 +101,14 @@ export const ANIMATION_SOUND_MAP = {
     manualJump: 'fx/default-hurdle.mp3',
     hurdle: 'fx/default-hurdle.mp3',
     meteorStrike: 'fx/meteor-strike.mp3',
-    moonwalk: 'fx/moonwalk.mp3'
+    moonwalk: 'fx/moonwalk.mp3',
+    firestorm: 'fx/firestorm.mp3',
+    fireball: 'fx/fireball.mp3',
+    incinerate: 'fx/incinerate.mp3',
+    shatter: 'fx/shatter.mp3',
+    houdini: 'fx/houdini.mp3',
+    'cartoon-running': 'fx/cartoon-running.mp3',
+    groundPound: 'fx/bomb.mp3'
     // Other animations will be added here
 };
 
