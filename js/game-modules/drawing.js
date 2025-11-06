@@ -1,5 +1,5 @@
 import { canvas, ctx } from '../dom-elements.js';
-import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, FADE_DURATION, COLLISION_DURATION_MS, CASH_BAG_EMOJI, CASH_BAG_FONT_SIZE, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, ACCELERATOR_DURATION_MS } from '../constants.js';
+import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, FADE_DURATION, COLLISION_DURATION_MS, CASH_BAG_EMOJI, CASH_BAG_FONT_SIZE, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, ACCELERATOR_DURATION_MS, SHATTER_PARTICLE_COUNT, SHATTER_PARTICLE_LIFESPAN, SHATTER_PARTICLE_GRAVITY, SHATTER_PARTICLE_VELOCITY_X_RANGE, SHATTER_PARTICLE_VELOCITY_Y_RANGE, SHATTER_PARTICLE_ROTATION_SPEED_RANGE } from '../constants.js';
 import { currentTheme } from '../theme.js';
 import state, { GRASS_ANIMATION_INTERVAL_MS } from './state.js';
 import { raceSegments, stickFigureEmoji, currentSkillLevel } from '../ui.js';
@@ -39,34 +39,37 @@ export function drawTipsOverlay() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
     ctx.fillRect(50, 50, canvas.width - 100, canvas.height - 100);
     ctx.fillStyle = '#00FF88';
-    ctx.font = 'bold 30px Impact, sans-serif';
+    ctx.font = 'bold 26px Impact, sans-serif'; // Reduced font size
     ctx.textAlign = 'center';
-    ctx.fillText('HEIST TIPS & TRICKS', canvas.width / 2, 95);
+    ctx.fillText('HEIST TIPS & TRICKS', canvas.width / 2, 80); // Reduced top padding
     ctx.fillStyle = 'white';
     ctx.font = '16px Inter, sans-serif';
     ctx.textAlign = 'left';
-    let lineY = 135;
-    const LINE_SPACING = 25;
-    const PADDING = 70;
+    let lineY = 125; // Adjusted starting Y for tips
+    const LINE_SPACING = 22; // Reduced line spacing
+    const PADDING = 45; // Reduced left padding
     const textX = 50 + PADDING;
 
     ctx.fillText('1. JUMP: Press **SPACE** or **TAP** the screen.', textX, lineY);
     lineY += LINE_SPACING;
     ctx.fillText('2. PAUSE: Press **P** to pause or resume the game.', textX, lineY);
     lineY += LINE_SPACING;
-    ctx.fillText('3. OBSTACLES (🐌): Avoid them! They cause a temporary slow-down (hit).', textX, lineY);
+    ctx.fillText('3. OBSTACLES (🐌): Avoid them! (hit).', textX, lineY);
     lineY += LINE_SPACING;
     ctx.fillText('4. ACCELERATORS (🔥): Collect them for a temporary **2x speed boost**!', textX, lineY);
     lineY += LINE_SPACING;
-    ctx.fillText('5. MILESTONES: The large hurdles are milestones. They are cleared automatically.', textX, lineY);
+    ctx.fillText('5. OBSTACLE DESTRUCTION: Use Special Move* **K / Dbl TAP** to shatter obstacles!', textX, lineY);
     lineY += LINE_SPACING;
-    ctx.fillText('6. SKILL LEVEL: Affects jump clearance needed and the frequency of obstacles.', textX, lineY);
+    ctx.fillText('6. MILESTONES: The large hurdles are milestones. They are cleared automatically.', textX, lineY);
     lineY += LINE_SPACING;
-    ctx.fillText('7. DATA: Segment length /slopes are based on the **time** between data points.', textX, lineY);
+    ctx.fillText('7. SKILL LEVEL: Affects jump clearance needed and the frequency of obstacles.', textX, lineY);
     lineY += LINE_SPACING;
-    ctx.fillText('8. WINNING: Finish the final milestone with **zero hits** for the ultimate victory!', textX, lineY);
+    ctx.fillText('8. DATA: Segment length /slopes are based on the **time** between data points.', textX, lineY);
+    lineY += LINE_SPACING;
+    ctx.fillText('9. WINNING: Finish the final milestone with **zero hits** for the ultimate victory!', textX, lineY);
     ctx.fillStyle = '#FFDD00';
     ctx.font = 'bold 22px Impact, sans-serif';
+    ctx.shadowBlur = 0; // Remove glow
     ctx.fillText('Click "Start the Heist!" to begin!', canvas.width / 2, canvas.height - 70);
     ctx.restore();
 }
@@ -1253,6 +1256,48 @@ export function drawObstacle(obstacle, angleRad) {
     ctx.restore();
 }
 
+export function createShatterEffect(x, y, emoji) {
+    for (let i = 0; i < SHATTER_PARTICLE_COUNT; i++) {
+        state.shatterParticles.push({
+            x: x,
+            y: y,
+            emoji: emoji,
+            vx: Math.random() * (SHATTER_PARTICLE_VELOCITY_X_RANGE[1] - SHATTER_PARTICLE_VELOCITY_X_RANGE[0]) + SHATTER_PARTICLE_VELOCITY_X_RANGE[0],
+            vy: Math.random() * (SHATTER_PARTICLE_VELOCITY_Y_RANGE[1] - SHATTER_PARTICLE_VELOCITY_Y_RANGE[0]) + SHATTER_PARTICLE_VELOCITY_Y_RANGE[0],
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: Math.random() * (SHATTER_PARTICLE_ROTATION_SPEED_RANGE[1] - SHATTER_PARTICLE_ROTATION_SPEED_RANGE[0]) + SHATTER_PARTICLE_ROTATION_SPEED_RANGE[0],
+            life: SHATTER_PARTICLE_LIFESPAN,
+            size: Math.random() * 10 + 10 // Random size for fragments
+        });
+    }
+}
+
+export function drawShatterParticles() {
+    for (let i = state.shatterParticles.length - 1; i >= 0; i--) {
+        const p = state.shatterParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += SHATTER_PARTICLE_GRAVITY; // Apply gravity
+        p.rotation += p.rotationSpeed;
+        p.life--;
+
+        if (p.life <= 0) {
+            state.shatterParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life / SHATTER_PARTICLE_LIFESPAN; // Fade out
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.font = `${p.size}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(p.emoji, 0, 0);
+            ctx.restore();
+        }
+    }
+}
+
 export function draw() {
     ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1268,6 +1313,7 @@ export function draw() {
     drawCorkscrewTrail();
     drawFireTrail();
     drawClouds();
+    drawShatterParticles(); // Draw shatter particles
 
     let groundAngleRad = 0;
     let stickFigureGroundY = GROUND_Y;

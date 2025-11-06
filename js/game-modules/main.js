@@ -28,12 +28,13 @@ import {
     EMOJI_MUSIC_MAP,
     DEFAULT_MUSIC_URL
 } from '../constants.js';
-import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds } from '../audio.js';
+import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
 import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona, exitFullScreenIfActive } from '../ui.js';
 import { currentTheme } from '../theme.js';
 import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
 import * as drawing from './drawing.js';
+import { createShatterEffect } from './drawing.js';
 
 function updateHighScore() {
     const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
@@ -99,6 +100,22 @@ function checkCollision(runnerY, angleRad) {
     const obstacleTopY = groundAtObstacleY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     const horizontalDistance = Math.abs(obstacleX - runnerX);
+    const collisionTolerance = 5;
+
+    // Check for Special Move destruction
+    if (state.jumpState.isSpecialMove) {
+        // A slightly larger destruction zone for the special move
+        const destructionRangeX = state.COLLISION_RANGE_X + 15;
+        if (horizontalDistance < destructionRangeX && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
+            console.log("-> OBSTACLE DESTROYED by Special Move!");
+            const obstacleY = groundAtObstacleY + OBSTACLE_EMOJI_Y_OFFSET; // Calculate obstacleY
+            createShatterEffect(obstacleX, obstacleY, state.currentObstacle.emoji);
+            playAnimationSound('shatter'); // Play shatter sound
+            state.currentObstacle = null; // Remove the obstacle
+            return false; // No regular collision
+        }
+    }
+
     if (horizontalDistance > state.COLLISION_RANGE_X) return false;
 
     const minClearanceY = obstacleTopY - STICK_FIGURE_TOTAL_HEIGHT + 5;
@@ -106,7 +123,6 @@ function checkCollision(runnerY, angleRad) {
     const runnerIsJumpingClear = state.jumpState.isJumping && (runnerY < minClearanceY);
 
     if (horizontalDistance < state.COLLISION_RANGE_X) {
-        const collisionTolerance = 5;
         if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
             return true;
         }
@@ -355,7 +371,8 @@ export function animate(timestamp) {
             state.decelerationDuration = 0;
             state.activeCustomEvents.forEach(e => e.isActive = false);
         }
-        if (state.currentObstacle.x < -OBSTACLE_WIDTH) {
+        // Add a null check here because the obstacle could have been destroyed by a special move
+        if (state.currentObstacle && state.currentObstacle.x < -OBSTACLE_WIDTH) {
             state.currentObstacle = null;
         }
     }
@@ -683,6 +700,7 @@ export function resetGameState() {
     state.swooshParticles = [];
     state.flipTrail = [];
     state.corkscrewTrail = [];
+    state.shatterParticles = []; // Clear shatter particles on reset
     state.manualJumpOverride = { isActive: false, startTime: 0, duration: state.manualJumpDurationMs };
     state.jumpState = {
         isJumping: false, progress: 0,
@@ -805,6 +823,7 @@ export function startGame() {
     state.swooshParticles = [];
     state.flipTrail = [];
     state.corkscrewTrail = [];
+    state.shatterParticles = []; // Clear shatter particles on game start
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,

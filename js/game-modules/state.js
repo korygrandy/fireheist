@@ -38,6 +38,7 @@ const state = {
         isMeteorStrike: false, meteorStrikeDuration: 0
     },
     meteorParticles: [],
+    shatterParticles: [], // New array for obstacle shatter particles
     currentObstacle: null,
     isColliding: false,
     collisionDuration: 0,
