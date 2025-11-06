@@ -26,7 +26,9 @@ import {
     STICK_FIGURE_FIXED_X,
     ACCELERATOR_EMOJI,
     EMOJI_MUSIC_MAP,
-    DEFAULT_MUSIC_URL
+    DEFAULT_MUSIC_URL,
+    ENERGY_SETTINGS,
+    ENERGY_GAIN_ACCELERATOR
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
 import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona, exitFullScreenIfActive } from '../ui.js';
@@ -269,6 +271,33 @@ export function animate(timestamp) {
 
     let deltaTime = timestamp - state.lastTime;
 
+    // Handle continuous energy drain for Firestorm and Fire Spinner
+    if (state.isFirestormDrainingEnergy) {
+        const remainingTime = state.firestormDrainEndTime - Date.now();
+        if (remainingTime <= 0) {
+            state.playerEnergy = 0;
+            state.isFirestormDrainingEnergy = false;
+        } else {
+            const energyToDrain = state.playerEnergy;
+            const drainRate = energyToDrain / remainingTime;
+            state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
+        }
+    } else if (state.isFireSpinnerDrainingEnergy) {
+        const remainingTime = state.fireSpinnerDrainEndTime - Date.now();
+        if (remainingTime <= 0) {
+            state.playerEnergy = 0;
+            state.isFireSpinnerDrainingEnergy = false;
+        } else {
+            const energyToDrain = state.playerEnergy;
+            const drainRate = energyToDrain / remainingTime;
+            state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
+        }
+    } else {
+        // Regular energy drain
+        const energyDrain = (ENERGY_SETTINGS.DRAIN_RATE * deltaTime) / 1000;
+        state.playerEnergy = Math.max(0, state.playerEnergy - energyDrain);
+    }
+
     if (state.currentSegmentIndex >= raceSegments.length) {
         if (!state.isGameOverSequence) {
             state.isVictory = (state.hitsCounter === 0);
@@ -436,6 +465,7 @@ export function animate(timestamp) {
                 state.collisionDuration = COLLISION_DURATION_MS;
                 playCollisionSound();
                 playQuackSound();
+                state.playerEnergy = 0; // Reset energy on obstacle collision
                 console.warn(`-> COLLISION: Hit obstacle! Total hits: ${state.hitsCounter}. Speed penalty applied.`);
             }
             state.currentObstacle.hasBeenHit = true;
@@ -456,6 +486,9 @@ export function animate(timestamp) {
                 state.stickFigureBurst = { ...state.stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
                 applySpeedEffect('ACCELERATOR');
                 playPowerUpSound();
+                if (!state.isFirestormActive && !state.jumpState.isFireSpinner) {
+                    state.playerEnergy = Math.min(state.maxPlayerEnergy, state.playerEnergy + (ENERGY_GAIN_ACCELERATOR * 0.5 * state.energyRegenMultiplier));
+                }
             }
         }
         if (state.currentAccelerator.x < -OBSTACLE_WIDTH) {
@@ -468,6 +501,7 @@ export function animate(timestamp) {
             if (!state.isAccelerating && !state.isDecelerating) {
                 if (state.onScreenCustomEvent.type === 'ACCELERATOR') {
                     state.stickFigureBurst = { ...state.stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
+                    state.playerEnergy = Math.min(state.maxPlayerEnergy, state.playerEnergy + (state.maxPlayerEnergy * 0.10));
                 }
                 applySpeedEffect(state.onScreenCustomEvent.type);
             }
@@ -804,9 +838,14 @@ export function resetGameState() {
     state.firestormEndTime = 0;
     state.firestormParticles = [];
     state.playerEmberParticles = [];
-    state.ignitedObstacles = [];
-    state.jumpState = {
-        isJumping: false, progress: 0,
+        state.ignitedObstacles = [];
+        state.isFirestormDrainingEnergy = false;
+        state.firestormDrainEndTime = 0;
+        state.isFireSpinnerDrainingEnergy = false;
+        state.fireSpinnerDrainEndTime = 0;
+    
+        state.jumpState = {
+            isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
         isSpecialMove: false, specialMoveDuration: 0,
         isPowerStomp: false, powerStompDuration: 0,
@@ -910,6 +949,10 @@ export function startGame() {
     state.firestormParticles = [];
     state.playerEmberParticles = [];
     state.ignitedObstacles = [];
+    state.isFirestormDrainingEnergy = false;
+    state.firestormDrainEndTime = 0;
+    state.isFireSpinnerDrainingEnergy = false;
+    state.fireSpinnerDrainEndTime = 0;
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,

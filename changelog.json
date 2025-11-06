@@ -1,5 +1,35 @@
 [
     {
+        "version": "1.4.38",
+        "date": "2025-11-06",
+        "changes": [
+            "feat: Implemented a new energy system for special moves.",
+            "Gameplay: Special moves now consume energy from a shared pool instead of having individual cooldowns.",
+            "Gameplay: Player energy drains over time, and is replenished by collecting accelerators.",
+            "Balance: Energy regeneration rates are now tied to skill level, with 'Rookie' players regenerating energy faster than 'Pro' players.",
+            "Gameplay: 'Firestorm' and 'Fire Spinner' moves now continuously drain the player's energy to zero over their animation duration.",
+            "Balance: 'Firestorm' and 'Fire Spinner' moves now require more than 50% energy to activate.",
+            "Balance: Disabled energy regeneration from accelerators while 'Firestorm' or 'Fire Spinner' moves are active.",
+            "Balance: Reduced energy gained from accelerator collisions by 50%.",
+            "Balance: Decelerator collisions now reduce energy by 10%.",
+            "Balance: Obstacle collisions now reset energy to 0.",
+            "Balance: Accelerator milestone collisions now increase energy by 10%.",
+            "UI: Added an energy bar to the UI to display the player's current energy level."
+        ]
+    },
+    {
+        "version": "1.4.37",
+        "date": "2025-11-06",
+        "changes": [
+            "feat: Implemented a new energy system for special moves.",
+            "Gameplay: Special moves now consume energy from a shared pool instead of having individual cooldowns.",
+            "Gameplay: Player energy drains over time, and is replenished by collecting accelerators.",
+            "Balance: Energy regeneration rates are now tied to skill level, with 'Rookie' players regenerating energy faster than 'Pro' players.",
+            "Gameplay: 'Firestorm' and 'Fire Spinner' moves now continuously drain the player's energy to zero over their animation duration.",
+            "UI: Added an energy bar to the UI to display the player's current energy level."
+        ]
+    },
+    {
         "version": "1.4.36",
         "date": "2025-11-05",
         "changes": [
@@ -81,13 +111,6 @@
         "changes": [
             "Bugfix: Fixed a regression where background music was not playing for any persona or custom emoji. The music player now correctly handles both persona-specific and emoji-based music URLs.",
             "Bugfix: Corrected a typo in the music file path for the 'lion' emoji."
-        ]
-    },
-    {
-        "version": "1.4.27",
-        "date": "2025-11-05",
-        "changes": [
-            "Bugfix: Fixed an issue where the background music for some personas was not loading correctly. The music player now correctly loads the music specified in the persona's `music` property."
         ]
     }
 ]

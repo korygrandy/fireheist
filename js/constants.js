@@ -45,6 +45,7 @@ export const ACCELERATOR_EMOJI_SIZE = '36px Impact';
 export const ACCELERATOR_EMOJI = '🔥';
 export const ACCELERATOR_BASE_SPEED_BOOST = 2.0; // 2x speed boost
 export const ACCELERATOR_DURATION_MS = 2500; // Boost lasts 2.5 seconds
+export const ENERGY_GAIN_ACCELERATOR = 25;
 
 // DECELERATOR Constants
 export const DECELERATOR_BASE_SPEED_DEBUFF = 0.5; // 0.5x speed
@@ -59,24 +60,36 @@ export const EVENT_PROXIMITY_VISUAL_STEPS = 5;
 export const EVENT_POPUP_HEIGHT = 35; // Max height the object pops up (similar to stickFigureTotalHeight)
 
 // SKILL LEVEL SETTINGS
+export const ENERGY_SETTINGS = {
+    DRAIN_RATE: 2.5, // Energy per second
+    ENERGY_COSTS: {
+        houdini: 15,
+        firestorm: 80,
+        default: 10,
+    }
+};
+
 export const DIFFICULTY_SETTINGS = {
     'Rookie': { // Formerly Easy
         COLLISION_RANGE_X: 25,
         manualJumpHeight: 120,
         manualJumpDurationMs: 350,
         ACCELERATOR_FREQUENCY_PERCENT: 50, // More frequent
+        energyRegenMultiplier: 2.0,
     },
     'Novice': { // Formerly Normal
         COLLISION_RANGE_X: 35,
         manualJumpHeight: 100,
         manualJumpDurationMs: 450,
         ACCELERATOR_FREQUENCY_PERCENT: 25, // Medium frequency
+        energyRegenMultiplier: 1.0,
     },
     'Pro': { // Formerly Hard
         COLLISION_RANGE_X: 50,
         manualJumpHeight: 60,
         manualJumpDurationMs: 450,
         ACCELERATOR_FREQUENCY_PERCENT: 10, // Less frequent
+        energyRegenMultiplier: 0.5,
     }
 };
 

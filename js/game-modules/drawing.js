@@ -4,7 +4,7 @@ import { currentTheme } from '../theme.js';
 import state from './state.js';
 import { raceSegments } from '../ui.js';
 
-import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounter, drawGameCounters, drawDaysCounter, drawCustomEventStatus } from './drawing/overlays.js';
+import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounter, drawGameCounters, drawDaysCounter, drawCustomEventStatus, drawEnergyBar } from './drawing/overlays.js';
 import { drawStickFigure } from './drawing/player.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, initializeClouds, generateGrassBlades } from './drawing/world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createShatterEffect } from './drawing/effects.js';
@@ -17,6 +17,7 @@ export {
     drawGameCounters,
     drawDaysCounter,
     drawCustomEventStatus,
+    drawEnergyBar,
     drawStickFigure,
     drawSlantedGround,
     drawHurdle,
@@ -187,6 +188,7 @@ export function draw() {
 
         drawMoneyCounter();
         drawGameCounters();
+        drawEnergyBar();
 
         if (state.daysCounter) { drawDaysCounter(); }
 
