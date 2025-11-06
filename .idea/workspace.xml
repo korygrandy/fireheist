@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="a4c9cc82-7067-441a-b691-42a993adc7cd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +53,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/pause-music-upon-mobile-device-screenlock",
+    "git-widget-placeholder": "feature/interactive-obstacle-animations",
     "last_opened_file_path": "C:/dev/fire",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",

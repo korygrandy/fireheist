@@ -101,9 +101,18 @@ export const ANIMATION_SOUND_MAP = {
     manualJump: 'fx/default-hurdle.mp3',
     hurdle: 'fx/default-hurdle.mp3',
     meteorStrike: 'fx/meteor-strike.mp3',
-    moonwalk: 'fx/moonwalk.mp3'
+    moonwalk: 'fx/moonwalk.mp3',
+    shatter: 'fx/shatter.mp3' // Use the new shatter sound
     // Other animations will be added here
 };
+
+// Obstacle Shatter Constants
+export const SHATTER_PARTICLE_COUNT = 10;
+export const SHATTER_PARTICLE_LIFESPAN = 50; // Frames
+export const SHATTER_PARTICLE_GRAVITY = 0.5;
+export const SHATTER_PARTICLE_VELOCITY_X_RANGE = [-5, 5];
+export const SHATTER_PARTICLE_VELOCITY_Y_RANGE = [-10, -5];
+export const SHATTER_PARTICLE_ROTATION_SPEED_RANGE = [-0.2, 0.2];
 
 export const defaultDataString = `12/15/2000: 0
 01/01/2001: 5000
