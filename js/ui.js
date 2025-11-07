@@ -27,6 +27,8 @@ import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryT
 import { themes, setTheme } from './theme.js';
 import { personas } from './personas.js';
 import { initializeMusicPlayer } from './audio.js';
+import { PLAYER_STATS_KEY } from './game-modules/state.js'; // Import PLAYER_STATS_KEY
+import state from './game-modules/state.js'; // Import the state object
 
 export let financialMilestones = {};
 export let raceSegments = [];
@@ -63,6 +65,7 @@ function saveSettings() {
     };
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settings));
     console.log("-> saveSettings: Settings saved to localStorage.");
+    savePlayerStats(); // Save player stats whenever settings are saved
 }
 
 function loadSettings() {
@@ -254,9 +257,11 @@ export function updateObstacleEmoji(event) {
 }
 
 export function handleFrequencyChange(event) {
-    obstacleFrequencyPercent = parseInt(event.target.value, 10);
-    frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
-    console.log(`-> handleFrequencyChange: Obstacle frequency updated to ${obstacleFrequencyPercent}%`);
+    const userSelectedFrequency = parseInt(event.target.value, 10);
+    // Reduce the actual frequency by 25% for gameplay balance
+    obstacleFrequencyPercent = Math.round(userSelectedFrequency * 0.75);
+    frequencyValueSpan.textContent = `${userSelectedFrequency}%`; // UI shows the user's selection
+    console.log(`-> handleFrequencyChange: User selected ${userSelectedFrequency}%, actual frequency set to ${obstacleFrequencyPercent}%`);
     saveSettings();
 }
 
@@ -275,6 +280,7 @@ export function applySkillLevelSettings(level) {
     const settings = DIFFICULTY_SETTINGS[level];
     if (settings) {
         currentSkillLevel = level; // Renamed
+        state.acceleratorFrequencyPercent = settings.ACCELERATOR_FREQUENCY_PERCENT; // Set state here
         console.log(`-> applySkillLevelSettings: Jump Height: ${settings.manualJumpHeight}, Duration: ${settings.manualJumpDurationMs}ms, Collision Range: ${settings.COLLISION_RANGE_X}, Accelerator Freq: ${settings.ACCELERATOR_FREQUENCY_PERCENT}%`);
     } else {
         console.error(`Unknown skill level: ${level}.`);
@@ -380,6 +386,29 @@ export function loadCustomData() {
     document.body.classList.remove('game-active-fullscreen'); // Remove immersive class
     exitFullScreenIfActive(); // Exit fullscreen when new data is loaded
 }
+export function savePlayerStats() {
+    if (disableSaveSettings.checked) {
+        return;
+    }
+    localStorage.setItem(PLAYER_STATS_KEY, JSON.stringify(state.playerStats));
+    console.log("-> savePlayerStats: Player stats saved to localStorage.");
+}
+
+export function loadPlayerStats() {
+    if (disableSaveSettings.checked) {
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0 }; // Reset if disabled
+        return;
+    }
+    const savedStats = localStorage.getItem(PLAYER_STATS_KEY);
+    if (savedStats) {
+        state.playerStats = JSON.parse(savedStats);
+        console.log("-> loadPlayerStats: Player stats loaded from localStorage.");
+    } else {
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0 };
+        console.log("-> loadPlayerStats: No player stats found. Initializing defaults.");
+    }
+}
+
 export async function initializeUIData() {
     // First, populate the UI elements
     populateThemeSelector();
@@ -387,6 +416,7 @@ export async function initializeUIData() {
 
     // Then, load the saved settings
     const settingsLoaded = loadSettings();
+    loadPlayerStats(); // Load player stats here
 
     if (!settingsLoaded) {
         try {

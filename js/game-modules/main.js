@@ -31,7 +31,7 @@ import {
     ENERGY_GAIN_ACCELERATOR
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona, exitFullScreenIfActive } from '../ui.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona, exitFullScreenIfActive, savePlayerStats } from '../ui.js';
 import { currentTheme } from '../theme.js';
 import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
@@ -129,6 +129,7 @@ function checkCollision(runnerY, angleRad) {
                 });
                 state.currentObstacle = null; // Remove the obstacle from the main track
                 playAnimationSound('fireball');
+                state.playerStats.obstaclesIncinerated++; // Increment stat
                 console.log("-> FIRE SPINNER: Obstacle incinerated!");
                 return false; // No penalty
             }
@@ -141,6 +142,7 @@ function checkCollision(runnerY, angleRad) {
                 });
                 state.currentObstacle = null;
                 playAnimationSound('incinerate');
+                state.playerStats.obstaclesIncinerated++; // Increment stat
                 console.log("-> FIRESTORM V2: Obstacle incinerated!");
                 return false; // No penalty
             }
@@ -148,6 +150,7 @@ function checkCollision(runnerY, angleRad) {
                 drawing.createShatterEffect(state.currentObstacle.x, obstacleTopY, state.currentObstacle.emoji);
                 state.currentObstacle = null;
                 playAnimationSound('shatter');
+                state.playerStats.obstaclesIncinerated++; // Increment stat
                 console.log("-> GROUND POUND: Obstacle shattered!");
                 return false; // No penalty
             }
@@ -303,6 +306,12 @@ export function animate(timestamp) {
             state.isVictory = (state.hitsCounter === 0);
             if (state.isVictory) {
                 playWinnerSound();
+                // Track flawless run
+                if (!state.playerStats.flawlessRuns) {
+                    state.playerStats.flawlessRuns = {};
+                }
+                state.playerStats.flawlessRuns[currentSkillLevel] = true;
+                savePlayerStats(); // Save stats on flawless victory
             } else {
                 playLoserSound();
             }
@@ -311,6 +320,7 @@ export function animate(timestamp) {
             console.log(`-> GAME OVER: Starting sequence. Victory: ${state.isVictory}`);
             state.gameRunning = false;
             updateHighScore();
+            savePlayerStats(); // Also save stats on a regular loss
         }
 
         drawing.draw();
@@ -438,22 +448,22 @@ export function animate(timestamp) {
                 startTime: performance.now()
             });
             playAnimationSound('incinerate');
+            state.playerStats.obstaclesIncinerated++; // Increment stat here
             state.ignitedObstacles.splice(i, 1);
         } else if (obstacle.x < -OBSTACLE_WIDTH) {
             state.ignitedObstacles.splice(i, 1);
         }
     }
 
-    if (state.frameCount % 60 === 0) {
-        if (!state.currentObstacle && !state.currentAccelerator && !state.onScreenCustomEvent) {
-            const randomRoll = Math.random() * 100;
-            let effectiveAcceleratorFrequency = enableRandomPowerUps ? state.acceleratorFrequencyPercent : 0;
+    if (state.frameCount % 60 === 0) { // Check every 60 frames
+        // Independent check for obstacle spawn
+        if (!state.currentObstacle && Math.random() * 100 < obstacleFrequencyPercent) {
+            spawnObstacle();
+        }
 
-            if (randomRoll < obstacleFrequencyPercent) {
-                spawnObstacle();
-            } else if (randomRoll < obstacleFrequencyPercent + effectiveAcceleratorFrequency) {
-                spawnAccelerator();
-            }
+        // Independent check for accelerator spawn
+        if (enableRandomPowerUps && !state.currentAccelerator && Math.random() * 100 < state.acceleratorFrequencyPercent) {
+            spawnAccelerator();
         }
     }
 
@@ -465,7 +475,7 @@ export function animate(timestamp) {
                 state.collisionDuration = COLLISION_DURATION_MS;
                 playCollisionSound();
                 playQuackSound();
-                state.playerEnergy = 0; // Reset energy on obstacle collision
+                state.playerEnergy *= 0.5; // Deplete energy by 50% of current level
                 console.warn(`-> COLLISION: Hit obstacle! Total hits: ${state.hitsCounter}. Speed penalty applied.`);
             }
             state.currentObstacle.hasBeenHit = true;

@@ -1,6 +1,7 @@
 import { DIFFICULTY_SETTINGS } from '../constants.js';
 
 export const HIGH_SCORE_KEY = 'fireHeistHighScores';
+export const PLAYER_STATS_KEY = 'fireHeistPlayerStats'; // New constant
 export const GRASS_ANIMATION_INTERVAL_MS = 200; // Update grass blades every 200ms
 
 const state = {
@@ -86,7 +87,11 @@ const state = {
     isFirestormDrainingEnergy: false,
     firestormDrainEndTime: 0,
     isFireSpinnerDrainingEnergy: false,
-    fireSpinnerDrainEndTime: 0
+    fireSpinnerDrainEndTime: 0,
+    playerStats: { // New player stats object
+        flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
+        obstaclesIncinerated: 0
+    }
 };
 
 export default state;
