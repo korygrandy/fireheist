@@ -1,5 +1,21 @@
 [
     {
+        "version": "1.4.39",
+        "date": "2025-11-06",
+        "changes": [
+            "feat: Implemented player progression system with unlockable personas.",
+            "Gameplay: Added `playerStats` to track `flawlessRuns` per difficulty and `obstaclesIncinerated`.",
+            "Persistence: Player stats are now saved and loaded from `localStorage`.",
+            "Balance: Obstacle incinerations (Fire Spinner, Firestorm, Ground Pound) now correctly increment `obstaclesIncinerated` stat.",
+            "Gameplay: Game over logic updated to record flawless runs and persist player stats.",
+            "Balance: Decoupled power-up (accelerator) spawning from obstacle spawning for independent generation.",
+            "Balance: Power-up frequency is now skill-level dependent (Rookie: most frequent, Pro: least frequent).",
+            "Balance: Reduced overall obstacle frequency by 25% across all skill levels for improved gameplay balance.",
+            "Balance: Obstacle collision energy depletion changed from 100% to 50% of current energy.",
+            "Feature: Created `js/unlocks.js` to define unlock conditions for personas."
+        ]
+    },
+    {
         "version": "1.4.38",
         "date": "2025-11-06",
         "changes": [
