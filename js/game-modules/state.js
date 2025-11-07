@@ -48,6 +48,7 @@ const state = {
     isFireMageOnCooldown: false, // Is Fire Mage on cooldown?
     fireMageLastActivationTime: 0, // When Fire Mage was last activated
     activeFireballs: [], // Array to track on-screen fireballs
+    vanishingObstacles: [], // Array for obstacles that "poof" on hit
     meteorParticles: [],
     currentObstacle: null,
     isColliding: false,

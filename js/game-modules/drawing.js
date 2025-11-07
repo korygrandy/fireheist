@@ -8,7 +8,7 @@ import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounte
 import { drawStickFigure } from './drawing/player.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, initializeClouds, generateGrassBlades } from './drawing/world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createShatterEffect } from './drawing/effects.js';
-import { FIREBALL_SIZE } from '../constants.js';
+import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 
 export {
     drawPausedOverlay,
@@ -67,6 +67,24 @@ function drawFireballs() {
         ctx.fill();
         ctx.restore();
     });
+}
+
+export function drawVanishingObstacle(obstacle, angleRad) {
+    const VANISH_DURATION = 300; // Vanish animation lasts 300ms
+    const elapsed = performance.now() - obstacle.startTime;
+    const progress = Math.min(1, elapsed / VANISH_DURATION);
+
+    if (progress >= 1) return; // Animation finished
+
+    const scale = 1 - progress;
+    const opacity = 1 - progress;
+
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.translate(obstacle.x, GROUND_Y - obstacle.x * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET);
+    ctx.scale(scale, scale);
+    ctx.fillText(obstacle.emoji, 0, 0);
+    ctx.restore();
 }
 
 export function draw() {
@@ -202,6 +220,10 @@ export function draw() {
 
         state.ignitedObstacles.forEach(obstacle => {
             drawIgnitedObstacle(obstacle, groundAngleRad);
+        });
+
+        state.vanishingObstacles.forEach(obstacle => {
+            drawVanishingObstacle(obstacle, groundAngleRad);
         });
 
         for (let i = state.activeCashBags.length - 1; i >= 0; i--) {

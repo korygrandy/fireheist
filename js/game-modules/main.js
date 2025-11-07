@@ -267,6 +267,47 @@ export function animate(timestamp) {
         return;
     }
 
+    if (state.currentSegmentIndex >= raceSegments.length) {
+        if (!state.isGameOverSequence) {
+            state.isVictory = (state.hitsCounter === 0);
+            if (state.isVictory) {
+                playWinnerSound();
+                // Track flawless run only if not using custom persona
+                if (selectedPersona !== 'custom') {
+                    if (!state.playerStats.flawlessRuns) {
+                        state.playerStats.flawlessRuns = {};
+                    }
+                    state.playerStats.flawlessRuns[currentSkillLevel] = true;
+                    savePlayerStats(); // Save stats on flawless victory
+                } else {
+                    console.log("-> GAME OVER: Flawless run not recorded for Custom Persona.");
+                }
+            } else {
+                playLoserSound();
+            }
+            state.isGameOverSequence = true;
+            state.gameOverSequenceStartTime = timestamp;
+            console.log(`-> GAME OVER: Starting sequence. Victory: ${state.isVictory}`);
+            state.gameRunning = false;
+            updateHighScore();
+            savePlayerStats(); // Also save stats on a regular loss
+            checkForNewUnlocks(state.playerStats); // Check for new unlocks
+        }
+
+        drawing.draw();
+        drawing.drawVictoryOverlay(timestamp - state.gameOverSequenceStartTime);
+
+        if (timestamp - state.gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
+            stopGame(false);
+            state.isGameOverSequence = false;
+            return;
+        }
+
+        state.lastTime = timestamp;
+        requestAnimationFrame(animate);
+        return;
+    }
+
     const currentHurdle = raceSegments[state.currentSegmentIndex];
     const angleRad = currentHurdle.angleRad;
 
@@ -319,47 +360,6 @@ export function animate(timestamp) {
             state.isFireMageOnCooldown = false;
             console.log("-> Fire Mage: Cooldown finished. Ready.");
         }
-    }
-
-    if (state.currentSegmentIndex >= raceSegments.length) {
-        if (!state.isGameOverSequence) {
-            state.isVictory = (state.hitsCounter === 0);
-            if (state.isVictory) {
-                playWinnerSound();
-                // Track flawless run only if not using custom persona
-                if (selectedPersona !== 'custom') {
-                    if (!state.playerStats.flawlessRuns) {
-                        state.playerStats.flawlessRuns = {};
-                    }
-                    state.playerStats.flawlessRuns[currentSkillLevel] = true;
-                    savePlayerStats(); // Save stats on flawless victory
-                } else {
-                    console.log("-> GAME OVER: Flawless run not recorded for Custom Persona.");
-                }
-            } else {
-                playLoserSound();
-            }
-            state.isGameOverSequence = true;
-            state.gameOverSequenceStartTime = timestamp;
-            console.log(`-> GAME OVER: Starting sequence. Victory: ${state.isVictory}`);
-            state.gameRunning = false;
-            updateHighScore();
-            savePlayerStats(); // Also save stats on a regular loss
-            checkForNewUnlocks(state.playerStats); // Check for new unlocks
-        }
-
-        drawing.draw();
-        drawing.drawVictoryOverlay(timestamp - state.gameOverSequenceStartTime);
-
-        if (timestamp - state.gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
-            stopGame(false);
-            state.isGameOverSequence = false;
-            return;
-        }
-
-        state.lastTime = timestamp;
-        requestAnimationFrame(animate);
-        return;
     }
 
     const targetSegmentDuration = currentHurdle.visualDurationMs / intendedSpeedMultiplier;
@@ -450,16 +450,35 @@ export function animate(timestamp) {
                 fireball.y + fireball.size > obstacleY &&
                 fireball.y < obstacleY + OBSTACLE_HEIGHT) {
 
-                // Incinerate the obstacle
-                state.incineratingObstacles.push({
-                    ...state.currentObstacle,
-                    animationProgress: 0,
-                    startTime: performance.now()
-                });
+                // Randomly choose a destruction type
+                const destructionType = Math.floor(Math.random() * 3);
+                switch (destructionType) {
+                    case 0: // Incinerate
+                        state.incineratingObstacles.push({
+                            ...state.currentObstacle,
+                            animationProgress: 0,
+                            startTime: performance.now()
+                        });
+                        playAnimationSound('fireball');
+                        break;
+                    case 1: // Shatter
+                        drawing.createShatterEffect(state.currentObstacle.x, obstacleY, state.currentObstacle.emoji);
+                        playAnimationSound('shatter');
+                        break;
+                    case 2: // Vanish (Poof)
+                        state.vanishingObstacles.push({
+                            ...state.currentObstacle,
+                            animationProgress: 0,
+                            startTime: performance.now()
+                        });
+                        drawing.createHoudiniPoof(state.currentObstacle.x, obstacleY);
+                        playAnimationSound('houdini');
+                        break;
+                }
+
                 state.currentObstacle = null; // Remove the obstacle from the main track
-                playAnimationSound('fireball'); // Use fireball sound for incineration
                 state.playerStats.obstaclesIncinerated++; // Increment stat
-                console.log("-> FIRE MAGE: Obstacle incinerated by fireball!");
+                console.log(`-> FIRE MAGE: Obstacle destroyed with type ${destructionType}!`);
                 state.activeFireballs.splice(i, 1); // Remove the fireball
                 continue; // Move to the next fireball
             }
@@ -869,6 +888,15 @@ export function animate(timestamp) {
         }
     }
 
+    // Update vanishing obstacles
+    for (let i = state.vanishingObstacles.length - 1; i >= 0; i--) {
+        const obstacle = state.vanishingObstacles[i];
+        const elapsed = performance.now() - obstacle.startTime;
+        if (elapsed > 300) { // Corresponds to VANISH_DURATION in drawing.js
+            state.vanishingObstacles.splice(i, 1);
+        }
+    }
+
     state.frameCount++;
 
     state.lastTime = timestamp;
@@ -889,6 +917,7 @@ export function resetGameState() {
     state.activeCashBags.length = 0;
     state.fireTrail = [];
     state.incineratingObstacles = [];
+    state.vanishingObstacles = [];
     state.houdiniParticles = [];
     state.groundPoundParticles = [];
     state.flipTrail = [];
@@ -1008,6 +1037,7 @@ export function startGame() {
     state.activeCashBags.length = 0;
     state.fireTrail = [];
     state.incineratingObstacles = [];
+    state.vanishingObstacles = [];
     state.houdiniParticles = [];
     state.groundPoundParticles = [];
     state.moonwalkParticles = [];

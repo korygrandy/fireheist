@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.4.41",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Implemented three varied destruction animations (Incinerate, Shatter, Vanish) for obstacles hit by Fire Mage fireballs.",
+            "Added new `vanishingObstacles` state to track obstacles undergoing the vanish animation.",
+            "Fixed a `ReferenceError` in `drawing.js` by importing `OBSTACLE_EMOJI_Y_OFFSET`.",
+            "Fixed a `TypeError` at game completion by moving game-over logic to the top of the `animate` function."
+        ]
+    },
+    {
         "version": "1.4.40",
         "date": "2025-11-07",
         "changes": [
