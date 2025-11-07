@@ -98,7 +98,8 @@ const state = {
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
         obstaclesIncinerated: 0,
         notifiedArmoryUnlocks: [], // To track shown notifications
-        unlockedArmoryItems: [] // New: To store keys of unlocked armory items
+        unlockedArmoryItems: [], // New: To store keys of unlocked armory items
+        activeArmorySkill: null // New: To store the key of the currently active armory skill
     }
 };
 

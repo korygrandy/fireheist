@@ -2,8 +2,8 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState, debugUnlockAllPersonas, checkForNewUnlocks, savePlayerStats, populatePersonaSelector, populateArmoryItems } from './ui.js';
+import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement, armoryItemsContainer } from './dom-elements.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState, debugUnlockAllPersonas, checkForNewUnlocks, savePlayerStats, populatePersonaSelector, populateArmoryItems, handleArmorySkillSelection, handleArmorySkillDeselection } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
@@ -69,11 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadVersion();
     loadMuteSetting(); // Load mute setting on startup
-    initializeDebugPanel(); // Initialize the debug panel
 
     // 1. Set up event listeners
-
-    // --- TAB SWITCHING ---
     const tabButtons = document.querySelectorAll('.tab-button');
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -81,11 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
             switchTab(tab);
         });
     });
-    // --- END TAB SWITCHING ---
 
     const infoIcon = document.getElementById('info-icon');
     const infoPanel = document.getElementById('info-panel');
-
     if (infoIcon && infoPanel) {
         infoIcon.addEventListener('click', () => {
             infoPanel.classList.toggle('hidden');
@@ -122,10 +117,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Load initial UI data
+    // Armory item selection
+    if (armoryItemsContainer) {
+        armoryItemsContainer.addEventListener('click', (event) => {
+            const button = event.target.closest('button');
+            if (!button) return;
+
+            const action = button.dataset.action;
+            if (action === 'select') {
+                const skillKey = button.dataset.skillKey;
+                handleArmorySkillSelection(skillKey);
+            } else if (action === 'unselect') {
+                handleArmorySkillDeselection();
+            }
+        });
+    }
+
+    // 2. Load initial UI data, then initialize debug panel
     initializeUIData();
     preloadGameStartSound();
     preloadAnimationSounds(); // Preload all animation sounds
+    initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
 
     // 3. Set up main buttons and controls
     if (startButton) {
@@ -166,6 +178,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- JUMP & PAUSE CONTROLS ---
 
+    const skillActionMap = {
+        firestorm: startFirestorm,
+        fireSpinner: startFireSpinner
+        // Add other skills here as they are implemented
+    };
+
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
@@ -181,10 +199,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (e.code === 'KeyK' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            if (state.isFireMageActive) {
-                castFireball(state);
+            const activeSkill = state.playerStats.activeArmorySkill;
+            if (activeSkill && skillActionMap[activeSkill]) {
+                skillActionMap[activeSkill](state);
             } else {
-                startFireMage(state);
+                // Default action if no skill is selected or if the skill is not in the map
+                if (state.isFireMageActive) {
+                    castFireball(state);
+                } else {
+                    startFireMage(state);
+                }
             }
         }
         if (e.code === 'KeyD' && state.gameRunning && !state.isPaused) {

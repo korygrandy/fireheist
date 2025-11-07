@@ -58,6 +58,20 @@ const armorySkills = {
     // Add more skills here as needed
 };
 
+export function handleArmorySkillSelection(skillKey) {
+    state.playerStats.activeArmorySkill = skillKey;
+    savePlayerStats();
+    populateArmoryItems(); // Refresh UI
+    console.log(`-> Armory: Skill '${skillKey}' selected.`);
+}
+
+export function handleArmorySkillDeselection() {
+    state.playerStats.activeArmorySkill = null;
+    savePlayerStats();
+    populateArmoryItems(); // Refresh UI
+    console.log("-> Armory: Active skill deselected.");
+}
+
 function getSkillUnlockProgress(condition, stats) {
     if (!condition || !stats) return { current: 0, target: 0 };
 
@@ -97,6 +111,12 @@ export function populateArmoryItems() {
             <h4 class="font-semibold text-gray-800 mt-2">${skill.name}</h4>
             <p class="text-sm text-gray-600">${skill.description}</p>
             ${lockedMessage}
+            <div class="mt-3">
+                ${isUnlocked && state.playerStats.activeArmorySkill !== skillKey ? 
+                    `<button class="control-btn primary-btn text-sm py-1 px-2" data-action="select" data-skill-key="${skillKey}">Select</button>` : ''}
+                ${isUnlocked && state.playerStats.activeArmorySkill === skillKey ? 
+                    `<button class="control-btn secondary-btn text-sm py-1 px-2" data-action="unselect">Unselect</button>` : ''}
+            </div>
         `;
         armoryItemsContainer.appendChild(skillCard);
     }
@@ -609,11 +629,12 @@ export function loadPlayerStats() {
             obstaclesIncinerated: loadedStats.obstaclesIncinerated || 0,
             notifiedArmoryUnlocks: loadedStats.notifiedArmoryUnlocks || [],
             unlockedArmoryItems: loadedStats.unlockedArmoryItems || [],
-            notifiedUnlocks: loadedStats.notifiedUnlocks || []
+            notifiedUnlocks: loadedStats.notifiedUnlocks || [],
+            activeArmorySkill: loadedStats.activeArmorySkill || null // New: Load active armory skill
         };
         console.log("-> loadPlayerStats: Player stats loaded and assigned to state.");
     } else {
-        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [] };
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null };
         console.log("-> loadPlayerStats: No player stats found. Initializing defaults.");
     }
 }
@@ -631,6 +652,17 @@ export async function initializeUIData() {
     // Then, load the saved settings
     const settingsLoaded = loadSettings();
     loadPlayerStats(); // Load player stats here
+
+    // Sanity check: If an active skill is somehow no longer unlocked, deselect it.
+    const activeSkill = state.playerStats.activeArmorySkill;
+    if (activeSkill) {
+        const skill = armorySkills[activeSkill];
+        if (skill && !checkSkillUnlockStatus(skill.unlockCondition, state.playerStats)) {
+            console.warn(`-> Sanity Check: Active skill '${activeSkill}' is no longer unlocked. Deselecting.`);
+            state.playerStats.activeArmorySkill = null;
+            savePlayerStats(); // Re-save the corrected stats
+        }
+    }
 
     if (!settingsLoaded) {
         try {

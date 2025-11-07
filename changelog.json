@@ -1,15 +1,31 @@
 [
     {
+        "version": "1.4.44",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Implemented the ability to select and unselect unlocked special skills from the Armory.",
+            "The 'K' key now dynamically triggers the currently selected Armory skill, or reverts to the default Fire Mage action if no skill is selected.",
+            "Added UI elements (Select/Unselect buttons) to the Armory tab for managing active skills.",
+            "Ensured the selected active skill persists across game sessions via `localStorage`.",
+            "Added a sanity check on application load to deselect any `activeArmorySkill` that is no longer unlocked, preventing inconsistent game states.",
+            "fix: Fixed a `ReferenceError` in `js/main.js` related to module scope for event handlers.",
+            "fix: Restored missing control panel event listeners in `js/main.js` that were inadvertently removed during a previous fix, resolving UI unresponsiveness.",
+            "fix: Ensured `activeArmorySkill` is reset to `null` when the game state is reset."
+        ]
+    },
+    {
         "version": "1.4.43",
         "date": "2025-11-07",
         "changes": [
-            "feat: Added a new \"Armory\" tab to the control panel.",
-            "Implemented dynamic display of unlockable skills in the Armory.",
-            "\"Firestorm\" is now the first unlockable skill, requiring 100 incinerations.",
-            "\"Fire Spinner\" is the second unlockable skill, with its unlock condition to be determined.",
-            "Added styling for Armory items, including locked/unlocked states.",
-            "Added unlock notifications for Armory items.",
-            "Fixed a critical bug where destructive moves (\"Firestorm\", \"Ground Pound\", etc.) would not count towards the `obstaclesIncinerated` total if the player's jump was high enough to clear the obstacle."
+            "feat: Implemented persistence for unlocked Armory items using `localStorage`.",
+            "Added `unlockedArmoryItems` to `playerStats` to track unlocked skills.",
+            "Updated `checkSkillUnlockStatus` to recognize permanently unlocked items.",
+            "Ensured `unlockedArmoryItems` is correctly saved and loaded across sessions.",
+            "Added a progress display for locked Armory items, showing current progress towards unlock conditions.",
+            "Fixed a critical bug where destructive moves (`Firestorm`, `Ground Pound`, etc.) would not count towards the `obstaclesIncinerated` total if the player's jump was high enough to clear the obstacle.",
+            "Fixed a critical bug where `playerStats` were being inadvertently overwritten with default values on page load due to an incorrect `savePlayerStats()` call within `loadSettings()`.",
+            "Fixed a bug where debug panel changes to `playerStats` were not persisting across reloads due to `initializeDebugPanel` being called before `initializeUIData`.",
+            "Enhanced the UI for unlocked Armory items by adding a subtle orange overlay and a glowing effect to the icon."
         ]
     },
     {

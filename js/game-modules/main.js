@@ -971,6 +971,7 @@ export function resetGameState() {
     state.isFireMageOnCooldown = false;
     state.fireMageLastActivationTime = 0;
     state.activeFireballs = [];
+    state.playerStats.activeArmorySkill = null; // Reset active armory skill
 
     state.activeCustomEvents = Object.values(customEvents).flat().map(event => ({
         ...event,
