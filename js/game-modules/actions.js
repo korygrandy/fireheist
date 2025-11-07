@@ -1,6 +1,5 @@
-import state from './state.js';
 import { createHoudiniPoof } from './drawing/effects.js';
-import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS } from '../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 
 const JUMP_DURATIONS = {
@@ -15,11 +14,12 @@ const JUMP_DURATIONS = {
     cartoonScramble: 800,
     moonwalk: 700,
     shockwave: 400,
-    firestorm: 10000 // 10 seconds active time
+    firestorm: 10000, // 10 seconds active time
+    fireMage: FIRE_MAGE_DURATION_MS // Duration for Fire Mage mode
 };
 
-function consumeEnergy(actionName) {
-    const cost = ENERGY_SETTINGS.ENERGY_COSTS[actionName] || ENERGY_SETTINGS.ENERGY_COSTS.default;
+function consumeEnergy(state, actionName, costOverride = null) {
+    const cost = costOverride !== null ? costOverride : (ENERGY_SETTINGS.ENERGY_COSTS[actionName] || ENERGY_SETTINGS.ENERGY_COSTS.default);
     if (state.playerEnergy >= cost) {
         state.playerEnergy -= cost;
         return true;
@@ -28,7 +28,7 @@ function consumeEnergy(actionName) {
     return false;
 }
 
-function initiateJump(duration) {
+function initiateJump(state, duration) {
     state.manualJumpOverride.duration = duration;
     state.jumpState.isJumping = true;
     state.jumpState.progress = 0;
@@ -36,7 +36,49 @@ function initiateJump(duration) {
     state.manualJumpOverride.startTime = Date.now();
 }
 
-export function startFireSpinner() {
+export function startFireMage(state) {
+    if (!state.gameRunning || state.isPaused || state.isFireMageActive || state.isFireMageOnCooldown) return;
+
+    const now = Date.now();
+    if (now - state.fireMageLastActivationTime < FIRE_MAGE_COOLDOWN_MS) {
+        console.log("-> startFireMage: Fire Mage is on cooldown.");
+        return;
+    }
+
+    if (!consumeEnergy(state, 'fireMage', FIRE_MAGE_ENERGY_COST)) return;
+
+    state.isFireMageActive = true;
+    state.fireMageEndTime = now + FIRE_MAGE_DURATION_MS;
+    state.fireMageLastActivationTime = now; // Start cooldown from now
+    state.isFireMageOnCooldown = true; // Cooldown starts immediately
+
+    playAnimationSound('fireball'); // Placeholder sound for activation
+    console.log("-> startFireMage: Fire Mage mode initiated.");
+}
+
+export function castFireball(state) {
+    if (!state.gameRunning || state.isPaused || !state.isFireMageActive) return;
+    if (!consumeEnergy(state, 'fireballCast', FIREBALL_CAST_ENERGY_COST)) return;
+
+    // Correctly calculate player's current Y position based on the ground angle
+    const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
+    const groundAngleRad = currentSegment.angleRad;
+    const playerGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
+    const playerHeight = STICK_FIGURE_FIXED_X / 2; // Approximate center of the player
+
+    const fireball = {
+        x: STICK_FIGURE_FIXED_X + 20, // Start slightly ahead of the player
+        y: playerGroundY - playerHeight, // Spawn from the player's vertical center
+        size: FIREBALL_SIZE,
+        velocity: FIREBALL_VELOCITY_PX_MS,
+        spawnTime: Date.now()
+    };
+    state.activeFireballs.push(fireball);
+    playAnimationSound('fireball');
+    console.log("-> castFireball: Fireball launched!");
+}
+
+export function startFireSpinner(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFireSpinnerOnCooldown) return;
     if (state.playerEnergy <= state.maxPlayerEnergy * 0.5) {
         console.log("-> startFireSpinner: Not enough energy to activate. Requires > 50%.");
@@ -56,142 +98,142 @@ export function startFireSpinner() {
     state.isFireSpinnerDrainingEnergy = true;
     state.fireSpinnerDrainEndTime = now + JUMP_DURATIONS.firestorm;
 
-    initiateJump(JUMP_DURATIONS.firestorm);
+    initiateJump(state, JUMP_DURATIONS.firestorm);
     playAnimationSound('fireball'); // Placeholder sound
     console.log("-> startFireSpinner: Fire Spinner initiated.");
 }
 
-export function startManualJump() {
+export function startManualJump(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    initiateJump(state.manualJumpDurationMs);
+    initiateJump(state, state.manualJumpDurationMs);
     playAnimationSound('manualJump'); // Play sound for manual jump
     console.log("-> startManualJump: Manual jump initiated.");
 }
 
-export function startHurdle() {
+export function startHurdle(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     state.jumpState.isHurdle = true;
     state.jumpState.hurdleDuration = JUMP_DURATIONS.hurdle;
-    initiateJump(JUMP_DURATIONS.hurdle);
+    initiateJump(state, JUMP_DURATIONS.hurdle);
     playAnimationSound('hurdle'); // Play sound for hurdle
     console.log("-> startHurdle: Hurdle initiated.");
 }
 
-export function startSpecialMove() {
+export function startSpecialMove(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('specialMove')) return;
+    if (!consumeEnergy(state, 'specialMove')) return;
     state.jumpState.isSpecialMove = true;
     state.jumpState.specialMoveDuration = JUMP_DURATIONS.specialMove;
-    initiateJump(JUMP_DURATIONS.specialMove);
+    initiateJump(state, JUMP_DURATIONS.specialMove);
     console.log("-> startSpecialMove: Special Move initiated.");
 }
 
-export function startDive() {
+export function startDive(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('dive')) return;
+    if (!consumeEnergy(state, 'dive')) return;
     state.jumpState.isDive = true;
     state.jumpState.diveDuration = JUMP_DURATIONS.dive;
-    initiateJump(JUMP_DURATIONS.dive);
+    initiateJump(state, JUMP_DURATIONS.dive);
     console.log("-> startDive: Dive initiated.");
 }
 
-export function startCorkscrewSpin() {
+export function startCorkscrewSpin(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('corkscrewSpin')) return;
+    if (!consumeEnergy(state, 'corkscrewSpin')) return;
     state.jumpState.isCorkscrewSpin = true;
     state.jumpState.corkscrewSpinDuration = JUMP_DURATIONS.corkscrewSpin;
-    initiateJump(JUMP_DURATIONS.corkscrewSpin);
+    initiateJump(state, JUMP_DURATIONS.corkscrewSpin);
     console.log("-> startCorkscrewSpin: Corkscrew Spin initiated.");
 }
 
-export function startScissorKick() {
+export function startScissorKick(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('scissorKick')) return;
+    if (!consumeEnergy(state, 'scissorKick')) return;
     state.jumpState.isScissorKick = true;
     state.jumpState.scissorKickDuration = JUMP_DURATIONS.scissorKick;
-    initiateJump(JUMP_DURATIONS.scissorKick);
+    initiateJump(state, JUMP_DURATIONS.scissorKick);
     console.log("-> startScissorKick: Scissor Kick initiated.");
 }
 
-export function startPhaseDash() {
+export function startPhaseDash(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('phaseDash')) return;
+    if (!consumeEnergy(state, 'phaseDash')) return;
     state.jumpState.isPhaseDash = true;
     state.jumpState.phaseDashDuration = JUMP_DURATIONS.phaseDash;
-    initiateJump(JUMP_DURATIONS.phaseDash);
+    initiateJump(state, JUMP_DURATIONS.phaseDash);
     console.log("-> startPhaseDash: Phase Dash initiated.");
 }
 
-export function startHover() {
+export function startHover(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('hover')) return;
+    if (!consumeEnergy(state, 'hover')) return;
     state.jumpState.isHover = true;
     state.jumpState.hoverDuration = JUMP_DURATIONS.hover;
-    initiateJump(JUMP_DURATIONS.hover);
+    initiateJump(state, JUMP_DURATIONS.hover);
     console.log("-> startHover: Hover initiated.");
 }
 
-export function startGroundPound() {
+export function startGroundPound(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('groundPound')) return;
+    if (!consumeEnergy(state, 'groundPound')) return;
     state.jumpState.isGroundPound = true;
     state.jumpState.groundPoundDuration = JUMP_DURATIONS.groundPound;
     state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
-    initiateJump(JUMP_DURATIONS.groundPound);
+    initiateJump(state, JUMP_DURATIONS.groundPound);
     playAnimationSound('groundPound');
     console.log("-> startGroundPound: Ground Pound initiated.");
 }
 
-export function startCartoonScramble() {
+export function startCartoonScramble(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('cartoonScramble')) return;
+    if (!consumeEnergy(state, 'cartoonScramble')) return;
     state.jumpState.isCartoonScramble = true;
     state.jumpState.cartoonScrambleDuration = JUMP_DURATIONS.cartoonScramble;
-    initiateJump(JUMP_DURATIONS.cartoonScramble);
+    initiateJump(state, JUMP_DURATIONS.cartoonScramble);
     playAnimationSound('cartoon-running');
     console.log("-> startCartoonScramble: Cartoon Scramble initiated.");
 }
 
-export function startMoonwalk() {
+export function startMoonwalk(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('moonwalk')) return;
+    if (!consumeEnergy(state, 'moonwalk')) return;
     state.jumpState.isMoonwalking = true;
     state.jumpState.moonwalkDuration = JUMP_DURATIONS.moonwalk;
-    initiateJump(JUMP_DURATIONS.moonwalk);
+    initiateJump(state, JUMP_DURATIONS.moonwalk);
     playAnimationSound('moonwalk'); // Play sound for Moonwalk
     console.log("-> startMoonwalk: Moonwalk initiated.");
 }
 
-export function startShockwave() {
+export function startShockwave(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('shockwave')) return;
+    if (!consumeEnergy(state, 'shockwave')) return;
     state.jumpState.isShockwave = true;
     state.jumpState.shockwaveDuration = JUMP_DURATIONS.shockwave;
-    initiateJump(JUMP_DURATIONS.shockwave);
+    initiateJump(state, JUMP_DURATIONS.shockwave);
     console.log("-> startShockwave: Shockwave initiated.");
 }
 
-export function startBackflip() {
+export function startBackflip(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('backflip')) return;
+    if (!consumeEnergy(state, 'backflip')) return;
     state.jumpState.isBackflip = true;
     state.jumpState.backflipDuration = 500;
-    initiateJump(500);
+    initiateJump(state, 500);
     console.log("-> startBackflip: Backflip initiated.");
 }
 
-export function startFrontflip() {
+export function startFrontflip(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('frontflip')) return;
+    if (!consumeEnergy(state, 'frontflip')) return;
     state.jumpState.isFrontflip = true;
     state.jumpState.frontflipDuration = 500;
-    initiateJump(500);
+    initiateJump(state, 500);
     console.log("-> startFrontflip: Frontflip initiated.");
 }
 
-export function startHoudini() {
+export function startHoudini(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('houdini')) return;
+    if (!consumeEnergy(state, 'houdini')) return;
     state.jumpState.isHoudini = true;
     state.jumpState.houdiniDuration = 800;
     state.jumpState.houdiniPhase = 'disappearing';
@@ -200,22 +242,22 @@ export function startHoudini() {
     const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
     createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
 
-    initiateJump(800);
+    initiateJump(state, 800);
     playAnimationSound('houdini');
     console.log("-> startHoudini: Houdini initiated.");
 }
 
-export function startMeteorStrike() {
+export function startMeteorStrike(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy('meteorStrike')) return;
+    if (!consumeEnergy(state, 'meteorStrike')) return;
     state.jumpState.isMeteorStrike = true;
     state.jumpState.meteorStrikeDuration = 800; // A longer duration for a dramatic effect
-    initiateJump(800);
+    initiateJump(state, 800);
     playAnimationSound('meteorStrike'); // Play sound for Meteor Strike
     console.log("-> startMeteorStrike: Meteor Strike initiated.");
 }
 
-export function startFirestorm() {
+export function startFirestorm(state) {
     if (!state.gameRunning || state.isFirestormActive) return;
     if (state.playerEnergy <= state.maxPlayerEnergy * 0.5) {
         console.log("-> startFirestorm: Not enough energy to activate. Requires > 50%.");

@@ -6,7 +6,7 @@ import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, fr
 import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState, debugUnlockAllPersonas, debugSetIncinerationCount } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFirestorm } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startManualJump();
+            startManualJump(state);
         }
         if (e.code === 'KeyP' && state.gameRunning) {
             e.preventDefault();
@@ -168,71 +168,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (e.code === 'KeyJ' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startHurdle();
+            startHurdle(state);
         }
         if (e.code === 'KeyK' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startSpecialMove();
+            if (state.isFireMageActive) {
+                castFireball(state);
+            } else {
+                startFireMage(state);
+            }
         }
         if (e.code === 'KeyD' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startDive();
+            startDive(state);
         }
         if (e.code === 'KeyC' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startCorkscrewSpin();
+            startCorkscrewSpin(state);
         }
         if (e.code === 'KeyS' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startScissorKick();
+            startScissorKick(state);
         }
         if (e.code === 'KeyV' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startPhaseDash();
+            startPhaseDash(state);
         }
         if (e.code === 'KeyH' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startHover();
+            startHover(state);
         }
         if (e.code === 'KeyG' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startGroundPound();
+            startGroundPound(state);
         }
         if (e.code === 'KeyB' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startBackflip();
+            startBackflip(state);
         }
         if (e.code === 'KeyM' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startMoonwalk();
+            startMoonwalk(state);
         }
         if (e.code === 'KeyN' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startShockwave();
+            startShockwave(state);
         }
         if (e.code === 'KeyZ' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startCartoonScramble();
+            startCartoonScramble(state);
         }
         if (e.code === 'KeyF' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startFrontflip();
+            startFrontflip(state);
         }
         if (e.code === 'KeyI' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startHoudini();
+            startHoudini(state);
         }
         if (e.code === 'KeyT' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startMeteorStrike();
+            startMeteorStrike(state);
         }
         if (e.code === 'KeyR' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startFireSpinner();
+            startFireSpinner(state);
         }
         if (e.code === 'KeyY' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            startFirestorm();
+            startFirestorm(state);
         }
 
         // Cheat code for max energy
@@ -262,25 +266,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Multi-finger taps
         if (e.touches.length === 5) {
-            startShockwave();
+            startShockwave(state);
             return;
         }
         if (e.touches.length === 4) {
-            startCartoonScramble();
+            startCartoonScramble(state);
             return;
         }
         if (e.touches.length === 3) {
-            startHoudini();
+            startHoudini(state);
             return;
         }
         if (e.touches.length === 2) {
-            startDive();
+            startDive(state);
             return;
         }
 
         // Long press timer
         longPressTimer = setTimeout(() => {
-            startHover();
+            startHover(state);
         }, 500); // 500ms for long press
 
     }, { passive: false });
@@ -307,15 +311,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (touchDuration < 500 && (Math.abs(deltaX) > 30 || Math.abs(deltaY) > 30)) {
             if (Math.abs(deltaX) > Math.abs(deltaY)) { // Horizontal swipe
                 if (deltaX > 0) {
-                    startBackflip(); // Swipe Right
+                    startBackflip(state); // Swipe Right
                 } else {
-                    startMoonwalk(); // Swipe Left
+                    startMoonwalk(state); // Swipe Left
                 }
             } else { // Vertical swipe
                 if (deltaY > 0) {
-                    startGroundPound(); // Swipe Down
+                    startGroundPound(state); // Swipe Down
                 } else {
-                    startFrontflip(); // Swipe Up
+                    startFrontflip(state); // Swipe Up
                 }
             }
         } else { // It's a tap
@@ -323,11 +327,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const tapLength = currentTime - lastTap;
             if (tapLength < 300 && tapLength > 0) {
                 // Double tap
-                startPhaseDash();
+                startFireMage(state);
                 lastTap = 0; // Reset lastTap to prevent triple taps
             } else {
                 // Single tap
-                startManualJump();
+                startManualJump(state);
             }
             lastTap = currentTime;
         }

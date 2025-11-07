@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.4.40",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Implemented core \"Fire Mage\" special move mechanics, including energy costs, duration, cooldown, and fireball casting.",
+            "Added visual effects for active \"Fire Mage\" mode and fireballs.",
+            "Temporarily assigned 'K' key and double-tap gesture to activate \"Fire Mage\" mode and cast fireballs.",
+            "Fixed multiple regressions related to action function state access and fireball rendering."
+        ]
+    },
+    {
         "version": "1.4.39",
         "date": "2025-11-06",
         "changes": [
@@ -105,28 +115,6 @@
         "date": "2025-11-05",
         "changes": [
             "Bugfix: Fixed a persistent issue where the selected persona was not correctly displayed on page load. The initialization sequence was corrected to ensure UI elements are populated before saved settings are applied."
-        ]
-    },
-    {
-        "version": "1.4.30",
-        "date": "2025-11-05",
-        "changes": [
-            "Bugfix: Fixed an issue where the `personaSelector`'s selected item was not being saved to localStorage, even though the persona details were correctly displayed. The `personaSelector` now correctly reflects the last saved persona on load."
-        ]
-    },
-    {
-        "version": "1.4.29",
-        "date": "2025-11-05",
-        "changes": [
-            "Bugfix: Fixed a regression where persona-specific background music was not playing. The game now correctly prioritizes persona music over custom emoji music when a persona is selected."
-        ]
-    },
-    {
-        "version": "1.4.28",
-        "date": "2025-11-05",
-        "changes": [
-            "Bugfix: Fixed a regression where background music was not playing for any persona or custom emoji. The music player now correctly handles both persona-specific and emoji-based music URLs.",
-            "Bugfix: Corrected a typo in the music file path for the 'lion' emoji."
         ]
     }
 ]

@@ -28,7 +28,9 @@ import {
     EMOJI_MUSIC_MAP,
     DEFAULT_MUSIC_URL,
     ENERGY_SETTINGS,
-    ENERGY_GAIN_ACCELERATOR
+    ENERGY_GAIN_ACCELERATOR,
+    FIRE_MAGE_COOLDOWN_MS,
+    FIREBALL_SIZE
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
 import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleEnabled, selectedPersona, exitFullScreenIfActive, savePlayerStats, checkForNewUnlocks } from '../ui.js';
@@ -265,6 +267,9 @@ export function animate(timestamp) {
         return;
     }
 
+    const currentHurdle = raceSegments[state.currentSegmentIndex];
+    const angleRad = currentHurdle.angleRad;
+
     if (!state.lastTime) {
         state.lastTime = timestamp;
         console.log(`-- ANIME START -- Segment ${state.currentSegmentIndex} initialized.`);
@@ -299,6 +304,21 @@ export function animate(timestamp) {
         // Regular energy drain
         const energyDrain = (ENERGY_SETTINGS.DRAIN_RATE * deltaTime) / 1000;
         state.playerEnergy = Math.max(0, state.playerEnergy - energyDrain);
+    }
+
+    // Check and update Fire Mage mode duration
+    if (state.isFireMageActive && Date.now() > state.fireMageEndTime) {
+        state.isFireMageActive = false;
+        console.log("-> Fire Mage mode ended.");
+    }
+
+    // Check and update Fire Mage cooldown
+    if (state.isFireMageOnCooldown) {
+        const now = Date.now();
+        if (now - state.fireMageLastActivationTime > FIRE_MAGE_COOLDOWN_MS) {
+            state.isFireMageOnCooldown = false;
+            console.log("-> Fire Mage: Cooldown finished. Ready.");
+        }
     }
 
     if (state.currentSegmentIndex >= raceSegments.length) {
@@ -342,7 +362,6 @@ export function animate(timestamp) {
         return;
     }
 
-    const currentHurdle = raceSegments[state.currentSegmentIndex];
     const targetSegmentDuration = currentHurdle.visualDurationMs / intendedSpeedMultiplier;
 
     if (state.manualJumpOverride.isActive) {
@@ -406,8 +425,6 @@ export function animate(timestamp) {
         runnerY += jumpOffset;
     }
 
-    const angleRad = currentHurdle.angleRad;
-
     // Update positions of all moving objects first
     const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * state.gameSpeedMultiplier;
     if (state.currentObstacle) state.currentObstacle.x -= objectMovementDelta;
@@ -417,6 +434,42 @@ export function animate(timestamp) {
         ob.x -= objectMovementDelta * (ob.speedMultiplier || 1);
     });
 
+    // Update and check active fireballs
+    for (let i = state.activeFireballs.length - 1; i >= 0; i--) {
+        const fireball = state.activeFireballs[i];
+        fireball.x += fireball.velocity * deltaTime; // Fireballs move forward
+
+        // Check for collision with current obstacle
+        if (state.currentObstacle && !state.currentObstacle.hasBeenHit) {
+            const obstacleX = state.currentObstacle.x;
+            const obstacleY = GROUND_Y - obstacleX * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+
+            // Simple AABB collision detection
+            if (fireball.x + fireball.size > obstacleX &&
+                fireball.x < obstacleX + OBSTACLE_WIDTH &&
+                fireball.y + fireball.size > obstacleY &&
+                fireball.y < obstacleY + OBSTACLE_HEIGHT) {
+
+                // Incinerate the obstacle
+                state.incineratingObstacles.push({
+                    ...state.currentObstacle,
+                    animationProgress: 0,
+                    startTime: performance.now()
+                });
+                state.currentObstacle = null; // Remove the obstacle from the main track
+                playAnimationSound('fireball'); // Use fireball sound for incineration
+                state.playerStats.obstaclesIncinerated++; // Increment stat
+                console.log("-> FIRE MAGE: Obstacle incinerated by fireball!");
+                state.activeFireballs.splice(i, 1); // Remove the fireball
+                continue; // Move to the next fireball
+            }
+        }
+
+        // Remove fireball if it goes off-screen
+        if (fireball.x > canvas.width + fireball.size) {
+            state.activeFireballs.splice(i, 1);
+        }
+    }
 
     // Handle new Firestorm V2
     if (state.isFirestormActive) {
@@ -889,6 +942,11 @@ export function resetGameState() {
 
     state.isFireSpinnerOnCooldown = false;
     state.fireSpinnerLastActivationTime = 0;
+    state.isFireMageActive = false;
+    state.fireMageEndTime = 0;
+    state.isFireMageOnCooldown = false;
+    state.fireMageLastActivationTime = 0;
+    state.activeFireballs = [];
 
     state.activeCustomEvents = Object.values(customEvents).flat().map(event => ({
         ...event,
@@ -935,6 +993,8 @@ export function startGame() {
         return;
     }
     if (state.gameRunning) return;
+
+    state.raceSegments = raceSegments; // Initialize raceSegments in the state
 
     console.log("-> START GAME: Initiating game start sequence.");
 
@@ -999,6 +1059,11 @@ export function startGame() {
     state.onScreenCustomEvent = null;
     state.isFireSpinnerOnCooldown = false;
     state.fireSpinnerLastActivationTime = 0;
+    state.isFireMageActive = false;
+    state.fireMageEndTime = 0;
+    state.isFireMageOnCooldown = false;
+    state.fireMageLastActivationTime = 0;
+    state.activeFireballs = [];
     state.hitsCounter = 0;
     state.daysElapsedTotal = 0;
     state.daysAccumulatedAtSegmentStart = 0;

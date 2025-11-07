@@ -43,6 +43,11 @@ const state = {
     fireSpinnerCooldown: 30000, // 30 seconds
     isFireSpinnerOnCooldown: false,
     fireSpinnerLastActivationTime: 0,
+    isFireMageActive: false, // Is Fire Mage mode currently active?
+    fireMageEndTime: 0, // When the Fire Mage mode will end
+    isFireMageOnCooldown: false, // Is Fire Mage on cooldown?
+    fireMageLastActivationTime: 0, // When Fire Mage was last activated
+    activeFireballs: [], // Array to track on-screen fireballs
     meteorParticles: [],
     currentObstacle: null,
     isColliding: false,

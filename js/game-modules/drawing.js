@@ -8,6 +8,7 @@ import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounte
 import { drawStickFigure } from './drawing/player.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, initializeClouds, generateGrassBlades } from './drawing/world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createShatterEffect } from './drawing/effects.js';
+import { FIREBALL_SIZE } from '../constants.js';
 
 export {
     drawPausedOverlay,
@@ -55,6 +56,19 @@ export function setInitialLoad(value) {
     isInitialLoad = value;
 }
 
+function drawFireballs() {
+    state.activeFireballs.forEach(fireball => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(fireball.x, fireball.y, fireball.size / 2, 0, Math.PI * 2, false);
+        ctx.fillStyle = 'orange';
+        ctx.shadowColor = 'red';
+        ctx.shadowBlur = 15;
+        ctx.fill();
+        ctx.restore();
+    });
+}
+
 export function draw() {
     ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -73,6 +87,7 @@ export function draw() {
     drawClouds();
     drawFirestormFlashes();
     drawPlayerEmbers();
+    drawFireballs(); // Draw fireballs
 
     let groundAngleRad = 0;
     let stickFigureGroundY = GROUND_Y;
@@ -168,6 +183,18 @@ export function draw() {
 
         drawStickFigure(currentX, currentY, state.jumpState, groundAngleRad);
         drawFireSpinner(currentX, currentY);
+
+        // Visual indicator for Fire Mage mode
+        if (state.isFireMageActive) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(currentX, currentY - STICK_FIGURE_TOTAL_HEIGHT / 2, STICK_FIGURE_TOTAL_HEIGHT * 0.8, 0, Math.PI * 2, false);
+            ctx.fillStyle = 'rgba(255, 100, 0, 0.3)';
+            ctx.shadowColor = 'orange';
+            ctx.shadowBlur = 20;
+            ctx.fill();
+            ctx.restore();
+        }
 
         state.incineratingObstacles.forEach(obstacle => {
             drawIncineration(obstacle, groundAngleRad);
