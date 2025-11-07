@@ -18,7 +18,6 @@ import {
     disableSaveSettings,
     highScoresContainer,
     themeSelector,
-    disableAutoHurdle,
     personaSelector,
     customPersonaControls,
     personaDetailsContainer
@@ -26,6 +25,7 @@ import {
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
 import { themes, setTheme } from './theme.js';
 import { personas } from './personas.js';
+import { personaUnlocks } from './unlocks.js';
 import { initializeMusicPlayer } from './audio.js';
 import { PLAYER_STATS_KEY } from './game-modules/state.js'; // Import PLAYER_STATS_KEY
 import state from './game-modules/state.js'; // Import the state object
@@ -40,7 +40,6 @@ export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
 export let enableRandomPowerUps = true;
 export let selectedTheme = 'grass';
-export let isAutoHurdleDisabled = false;
 export let selectedPersona = 'custom';
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
@@ -58,7 +57,6 @@ function saveSettings() {
         intendedSpeedMultiplier,
         enableRandomPowerUps,
         selectedTheme,
-        isAutoHurdleDisabled,
         selectedPersona,
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
@@ -79,7 +77,6 @@ function loadSettings() {
         intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
         enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
         selectedTheme = settings.selectedTheme || 'grass';
-        isAutoHurdleDisabled = typeof settings.isAutoHurdleDisabled === 'boolean' ? settings.isAutoHurdleDisabled : false;
         selectedPersona = settings.selectedPersona || 'custom';
 
         emojiInput.value = stickFigureEmoji;
@@ -88,7 +85,6 @@ function loadSettings() {
         frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
         document.getElementById('enablePowerUps').checked = enableRandomPowerUps;
         themeSelector.value = selectedTheme;
-        disableAutoHurdle.checked = isAutoHurdleDisabled;
         setTheme(selectedTheme);
 
         // Set skill level radio button
@@ -131,13 +127,82 @@ export function handleThemeChange(event) {
     saveSettings();
 }
 
+function displayUnlockNotification(personaName) {
+    const notificationElement = document.getElementById('unlock-notification');
+    if (notificationElement) {
+        notificationElement.textContent = `🎉 New Persona Unlocked: ${personaName}!`;
+        notificationElement.classList.remove('hidden');
+        setTimeout(() => {
+            notificationElement.classList.add('hidden');
+        }, 5000); // Hide after 5 seconds
+    }
+}
+
+function isPersonaUnlocked(personaKey, stats) {
+    const unlock = personaUnlocks[personaKey];
+    if (!unlock) {
+        return true; // No unlock condition means it's available by default
+    }
+
+    if (!stats) {
+        return false; // If stats aren't loaded, assume locked
+    }
+
+    switch (unlock.condition.type) {
+        case 'flawlessRun':
+            return stats.flawlessRuns && stats.flawlessRuns[unlock.condition.difficulty];
+        case 'incinerateCount':
+            return stats.obstaclesIncinerated >= unlock.condition.count;
+        default:
+            return false;
+    }
+}
+
 export function populatePersonaSelector() {
+    // Clear all existing options
+    personaSelector.innerHTML = '';
+
+    // Add the default 'Custom Persona' option first
+    const customOption = document.createElement('option');
+    customOption.value = 'custom';
+    customOption.textContent = 'Custom Persona';
+    personaSelector.appendChild(customOption);
+
     for (const key in personas) {
+        if (key === 'custom') continue; // Skip custom, it's already added
+
         const persona = personas[key];
         const option = document.createElement('option');
         option.value = key;
         option.textContent = persona.emoji ? `${persona.emoji} ${persona.name}` : persona.name;
+
+        if (isPersonaUnlocked(key, state.playerStats)) {
+            option.disabled = false;
+        } else {
+            option.disabled = true;
+            const unlockDescription = personaUnlocks[key]?.description || 'Unlock condition not specified';
+            option.title = `LOCKED: ${unlockDescription}`;
+            option.textContent += ` (Locked)`;
+        }
         personaSelector.appendChild(option);
+    }
+    // Ensure the currently selected persona is still selected after re-population
+    personaSelector.value = selectedPersona;
+}
+
+export function checkForNewUnlocks(stats) {
+    if (!stats.notifiedUnlocks) {
+        stats.notifiedUnlocks = [];
+    }
+
+    for (const key in personaUnlocks) {
+        if (isPersonaUnlocked(key, stats) && !stats.notifiedUnlocks.includes(key)) {
+            const personaName = personas[key]?.name || key;
+            displayUnlockNotification(personaName);
+            stats.notifiedUnlocks.push(key);
+            populatePersonaSelector(); // Re-populate to enable the new persona
+            savePlayerStats();
+        }
     }
 }
 
@@ -267,11 +332,6 @@ export function handleFrequencyChange(event) {
 
 export function handlePowerUpToggle(event) {
     enableRandomPowerUps = event.target.checked;
-    saveSettings();
-}
-
-export function handleDisableAutoHurdleToggle(event) {
-    isAutoHurdleDisabled = event.target.checked;
     saveSettings();
 }
 
@@ -451,7 +511,6 @@ export async function initializeUIData() {
     }
 
     displayHighScores(); // Display high scores on startup
-    disableAutoHurdle.addEventListener('change', handleDisableAutoHurdleToggle);
 }
 
 export function showResultsScreen(financialMilestones, raceSegments) {

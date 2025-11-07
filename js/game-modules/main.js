@@ -31,7 +31,7 @@ import {
     ENERGY_GAIN_ACCELERATOR
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleDisabled, selectedPersona, exitFullScreenIfActive, savePlayerStats } from '../ui.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, selectedPersona, exitFullScreenIfActive, savePlayerStats, checkForNewUnlocks } from '../ui.js';
 import { currentTheme } from '../theme.js';
 import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
@@ -306,12 +306,16 @@ export function animate(timestamp) {
             state.isVictory = (state.hitsCounter === 0);
             if (state.isVictory) {
                 playWinnerSound();
-                // Track flawless run
-                if (!state.playerStats.flawlessRuns) {
-                    state.playerStats.flawlessRuns = {};
+                // Track flawless run only if not using custom persona
+                if (selectedPersona !== 'custom') {
+                    if (!state.playerStats.flawlessRuns) {
+                        state.playerStats.flawlessRuns = {};
+                    }
+                    state.playerStats.flawlessRuns[currentSkillLevel] = true;
+                    savePlayerStats(); // Save stats on flawless victory
+                } else {
+                    console.log("-> GAME OVER: Flawless run not recorded for Custom Persona.");
                 }
-                state.playerStats.flawlessRuns[currentSkillLevel] = true;
-                savePlayerStats(); // Save stats on flawless victory
             } else {
                 playLoserSound();
             }
@@ -321,6 +325,7 @@ export function animate(timestamp) {
             state.gameRunning = false;
             updateHighScore();
             savePlayerStats(); // Also save stats on a regular loss
+            checkForNewUnlocks(state.playerStats); // Check for new unlocks
         }
 
         drawing.draw();
@@ -350,7 +355,7 @@ export function animate(timestamp) {
             state.jumpState.progress = 0;
         }
     } else {
-        if (!isAutoHurdleDisabled && state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
+        if (state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
             state.jumpState.isJumping = true;
             state.jumpState.progress = (state.segmentProgress - AUTO_JUMP_START_PROGRESS) / AUTO_JUMP_DURATION;
         } else {
@@ -851,11 +856,11 @@ export function resetGameState() {
         state.ignitedObstacles = [];
         state.isFirestormDrainingEnergy = false;
         state.firestormDrainEndTime = 0;
-        state.isFireSpinnerDrainingEnergy = false;
-        state.fireSpinnerDrainEndTime = 0;
-    
-        state.jumpState = {
-            isJumping: false, progress: 0,
+                    state.isFireSpinnerDrainingEnergy = false;
+                    state.fireSpinnerDrainEndTime = 0;
+                    state.playerEnergy = 0; // Reset energy to 0
+            
+                    state.jumpState = {            isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
         isSpecialMove: false, specialMoveDuration: 0,
         isPowerStomp: false, powerStompDuration: 0,
@@ -963,6 +968,7 @@ export function startGame() {
     state.firestormDrainEndTime = 0;
     state.isFireSpinnerDrainingEnergy = false;
     state.fireSpinnerDrainEndTime = 0;
+    state.playerEnergy = 0; // Start energy at 0
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,

@@ -25,7 +25,6 @@ export const frequencyValueSpan = document.getElementById('frequencyValue');
 export const skillLevelSelector = document.getElementById('skillLevelSelector');
 export const disableSaveSettings = document.getElementById('disableSaveSettings');
 export const enablePowerUps = document.getElementById('enablePowerUps');
-export const disableAutoHurdle = document.getElementById('disableAutoHurdle');
 export const themeSelector = document.getElementById('themeSelector');
 export const highScoresContainer = document.getElementById('highScoresContainer');
 export const personaSelector = document.getElementById('personaSelector');

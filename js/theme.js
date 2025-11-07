@@ -70,20 +70,32 @@ export const themes = {
             fill: 'white',
             stroke: 'white'
         }
-    },
+            },
+    
         'outerspace': {
-        name: '🌑 Outer Space',
-        sky: '#000000',
-        ground: '#2C003E',
-        grassBlades: '#9E7BB5',
-        roadLines: null,
-        curb: null,
-        hurdle: {
-            fill: '#A020F0',
-            stroke: '#FFFFFF'
+            name: '🌑 Outer Space',
+            sky: '#000000',
+            ground: '#2C003E',
+            grassBlades: '#9E7BB5',
+            roadLines: null,
+            curb: null,
+            hurdle: {
+                fill: '#A020F0',
+                stroke: '#FFFFFF'
+            }
+        },
+        'night': {
+            name: '🌙 Deep Night',
+            sky: '#1A1A2E',
+            ground: '#0F0F1A',
+            grassBlades: '#33334D',
+            roadLines: null,
+            hurdle: {
+                fill: '#4A4A6A',
+                stroke: '#BBBBBB'
+            }
         }
-    }
-};
+    };
 
 export let currentTheme = themes.grass; // Default theme
 
