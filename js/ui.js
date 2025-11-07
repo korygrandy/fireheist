@@ -39,6 +39,7 @@ export let obstacleFrequencyPercent = 20;
 export let currentSkillLevel = 'Rookie';
 export let intendedSpeedMultiplier = 1.0;
 export let enableRandomPowerUps = true;
+export let isAutoHurdleEnabled = false;
 export let selectedTheme = 'grass';
 export let selectedPersona = 'custom';
 
@@ -56,6 +57,7 @@ function saveSettings() {
         currentSkillLevel,
         intendedSpeedMultiplier,
         enableRandomPowerUps,
+        isAutoHurdleEnabled,
         selectedTheme,
         selectedPersona,
         milestoneData: dataInput.value,
@@ -76,6 +78,7 @@ function loadSettings() {
         currentSkillLevel = settings.currentSkillLevel || 'Rookie';
         intendedSpeedMultiplier = parseFloat(settings.intendedSpeedMultiplier) || 1.0;
         enableRandomPowerUps = typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true;
+        isAutoHurdleEnabled = typeof settings.isAutoHurdleEnabled === 'boolean' ? settings.isAutoHurdleEnabled : false;
         selectedTheme = settings.selectedTheme || 'grass';
         selectedPersona = settings.selectedPersona || 'custom';
 
@@ -84,6 +87,7 @@ function loadSettings() {
         document.getElementById('obstacleFrequency').value = obstacleFrequencyPercent;
         frequencyValueSpan.textContent = `${obstacleFrequencyPercent}%`;
         document.getElementById('enablePowerUps').checked = enableRandomPowerUps;
+        document.getElementById('enableAutoHurdle').checked = isAutoHurdleEnabled;
         themeSelector.value = selectedTheme;
         setTheme(selectedTheme);
 
@@ -335,6 +339,11 @@ export function handlePowerUpToggle(event) {
     saveSettings();
 }
 
+export function handleAutoHurdleToggle(event) {
+    isAutoHurdleEnabled = event.target.checked;
+    saveSettings();
+}
+
 export function applySkillLevelSettings(level) {
     console.log(`-> applySkillLevelSettings: Setting skill level to ${level}.`);
     const settings = DIFFICULTY_SETTINGS[level];
@@ -473,6 +482,11 @@ export async function initializeUIData() {
     // First, populate the UI elements
     populateThemeSelector();
     populatePersonaSelector();
+
+    const enableAutoHurdle = document.getElementById('enableAutoHurdle');
+    if (enableAutoHurdle) {
+        enableAutoHurdle.addEventListener('change', handleAutoHurdleToggle);
+    }
 
     // Then, load the saved settings
     const settingsLoaded = loadSettings();

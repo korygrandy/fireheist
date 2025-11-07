@@ -31,7 +31,7 @@ import {
     ENERGY_GAIN_ACCELERATOR
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, selectedPersona, exitFullScreenIfActive, savePlayerStats, checkForNewUnlocks } from '../ui.js';
+import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleEnabled, selectedPersona, exitFullScreenIfActive, savePlayerStats, checkForNewUnlocks } from '../ui.js';
 import { currentTheme } from '../theme.js';
 import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
@@ -355,7 +355,7 @@ export function animate(timestamp) {
             state.jumpState.progress = 0;
         }
     } else {
-        if (state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
+        if (isAutoHurdleEnabled && state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
             state.jumpState.isJumping = true;
             state.jumpState.progress = (state.segmentProgress - AUTO_JUMP_START_PROGRESS) / AUTO_JUMP_DURATION;
         } else {
