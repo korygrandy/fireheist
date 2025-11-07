@@ -591,3 +591,34 @@ export function updateControlPanelState(gameRunning, isPaused) {
     }
 }
 
+// =================================================================
+// DEBUG FUNCTIONS
+// =================================================================
+
+export function debugUnlockAllPersonas() {
+    for (const key in personaUnlocks) {
+        const unlock = personaUnlocks[key];
+        switch (unlock.condition.type) {
+            case 'flawlessRun':
+                if (!state.playerStats.flawlessRuns) state.playerStats.flawlessRuns = {};
+                state.playerStats.flawlessRuns[unlock.condition.difficulty] = true;
+                break;
+            case 'incinerateCount':
+                if (state.playerStats.obstaclesIncinerated < unlock.condition.count) {
+                    state.playerStats.obstaclesIncinerated = unlock.condition.count;
+                }
+                break;
+        }
+    }
+    savePlayerStats();
+    populatePersonaSelector(); // Re-populate to show unlocked personas
+    alert('All personas have been unlocked.');
+}
+
+export function debugSetIncinerationCount(count) {
+    state.playerStats.obstaclesIncinerated = count;
+    savePlayerStats();
+    populatePersonaSelector(); // Re-populate in case this unlocks a persona
+    alert(`Obstacle incineration count set to ${count}.`);
+}
+

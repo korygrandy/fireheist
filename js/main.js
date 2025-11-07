@@ -3,7 +3,7 @@
 // =================================================================
 
 import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState } from './ui.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState, debugUnlockAllPersonas, debugSetIncinerationCount } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFirestorm } from './game-modules/actions.js';
@@ -27,11 +27,40 @@ async function loadVersion() {
     }
 }
 
+function initializeDebugPanel() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('debug') === 'true') {
+        const debugPanel = document.getElementById('debug-panel');
+        if (debugPanel) {
+            debugPanel.classList.remove('hidden');
+
+            const unlockAllBtn = document.getElementById('debugUnlockAllBtn');
+            const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
+            const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
+
+            if (unlockAllBtn) {
+                unlockAllBtn.addEventListener('click', debugUnlockAllPersonas);
+            }
+            if (setIncinerateCountBtn && incinerateCountInput) {
+                setIncinerateCountBtn.addEventListener('click', () => {
+                    const count = parseInt(incinerateCountInput.value, 10);
+                    if (!isNaN(count) && count >= 0) {
+                        debugSetIncinerationCount(count);
+                    } else {
+                        alert('Please enter a valid number.');
+                    }
+                });
+            }
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log("-> DOMContentLoaded: Initializing game components.");
 
     loadVersion();
     loadMuteSetting(); // Load mute setting on startup
+    initializeDebugPanel(); // Initialize the debug panel
 
     // 1. Set up event listeners
 
@@ -204,6 +233,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.code === 'KeyY' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startFirestorm();
+        }
+
+        // Cheat code for max energy
+        if (e.ctrlKey && e.shiftKey && e.code === 'KeyE') {
+            if (state.gameRunning && !state.isPaused) {
+                e.preventDefault();
+                state.playerEnergy = state.maxPlayerEnergy;
+                console.log("-> CHEAT: Max energy granted!");
+            }
         }
     });
 

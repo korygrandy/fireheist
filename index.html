@@ -13,6 +13,18 @@
 <body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
 
     <div id="appContainer" class="w-full max-w-6xl space-y-8">
+        <div id="debug-panel" class="hidden bg-red-100 border-2 border-red-500 p-4 rounded-lg shadow-lg space-y-4">
+            <h2 class="text-xl font-bold text-red-700 text-center">--- DEBUG MODE ---</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <button id="debugUnlockAllBtn" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">Unlock All Personas</button>
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" id="debugIncinerateCountInput" class="w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Set Incineration Count">
+                    <button id="debugSetIncinerateCountBtn" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600">Set</button>
+                </div>
+            </div>
+        </div>
         <div id="unlock-notification" class="hidden fixed top-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50"></div>
         <header class="text-center">
             <h1 class="text-4xl font-extrabold text-gray-800">The 🔥FIRE🔥 Heist Game <span id="version-display" class="text-lg align-middle"></span></h1>
@@ -22,7 +34,7 @@
         <main class="grid grid-cols-1 lg:col-span-2 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-1 p-6 bg-white rounded-xl shadow-lg h-full">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-semibold text-gray-700">Heist Control Panel</h2>
+                 Savvy   <h2 class="text-2xl font-semibold text-gray-700">Heist Control Panel</h2>
                     <span id="info-icon" class="text-2xl cursor-pointer">ℹ️</span>
                 </div>
 
