@@ -96,7 +96,8 @@ const state = {
     fireSpinnerDrainEndTime: 0,
     playerStats: { // New player stats object
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
-        obstaclesIncinerated: 0
+        obstaclesIncinerated: 0,
+        notifiedArmoryUnlocks: [] // To track shown notifications
     }
 };
 

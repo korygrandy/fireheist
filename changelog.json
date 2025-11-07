@@ -1,5 +1,29 @@
 [
     {
+        "version": "1.4.43",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Added a new \"Armory\" tab to the control panel.",
+            "Implemented dynamic display of unlockable skills in the Armory.",
+            "\"Firestorm\" is now the first unlockable skill, requiring 100 incinerations.",
+            "\"Fire Spinner\" is the second unlockable skill, with its unlock condition to be determined.",
+            "Added styling for Armory items, including locked/unlocked states.",
+            "Added unlock notifications for Armory items.",
+            "Fixed a critical bug where destructive moves (\"Firestorm\", \"Ground Pound\", etc.) would not count towards the `obstaclesIncinerated` total if the player's jump was high enough to clear the obstacle."
+        ]
+    },
+    {
+        "version": "1.4.42",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Added a new \"Armory\" tab to the control panel.",
+            "Implemented dynamic display of unlockable skills in the Armory.",
+            "\"Firestorm\" is now the first unlockable skill, requiring 100 incinerations.",
+            "\"Fire Spinner\" is the second unlockable skill, with its unlock condition to be determined.",
+            "Added styling for Armory items, including locked/unlocked states."
+        ]
+    },
+    {
         "version": "1.4.41",
         "date": "2025-11-07",
         "changes": [
@@ -32,6 +56,10 @@
             "Balance: Power-up frequency is now skill-level dependent (Rookie: most frequent, Pro: least frequent).",
             "Balance: Reduced overall obstacle frequency by 25% across all skill levels for improved gameplay balance.",
             "Balance: Obstacle collision energy depletion changed from 100% to 50% of current energy.",
+            "Balance: Decelerator collisions now reduce energy by 10%.",
+            "Balance: Obstacle collisions now reset energy to 0.",
+            "Balance: Accelerator milestone collisions now increase energy by 10%.",
+            "UI: Added an energy bar to the UI to display the player's current energy level.",
             "Feature: Created `js/unlocks.js` to define unlock conditions for personas."
         ]
     },
@@ -83,48 +111,6 @@
         "changes": [
             "Feature: Added Firestorm V2 destruction animation.",
             "Refactor: Renamed original 'Firestorm' to 'Fire Spinner'."
-        ]
-    },
-    {
-        "version": "1.4.34",
-        "date": "2025-11-05",
-        "changes": [
-            "Feature: Implemented a new 'Firestorm' custom move, activated by the 'R' key.",
-            "Gameplay: When activated, Firestorm creates orbiting fireballs around the character for 10 seconds.",
-            "Collision: Obstacles colliding with the player during Firestorm are incinerated into ash, playing the 'fireball.mp3' sound effect.",
-            "Cooldown: The Firestorm ability has a 30-second cooldown after use.",
-            "Bugfix: Resolved an issue where Firestorm's cooldown was not resetting due to mismatched time sources ('Date.now()' vs 'performance.now()').",
-            "Bugfix: Fixed a 'TypeError' where 'state.currentObstacle' was null after incineration, causing the game to crash."
-        ]
-    },
-    {
-        "version": "1.4.33",
-        "date": "2025-11-05",
-        "changes": [
-            "Feature: Reassigned 'Backflip' to 'B' key and 'Cartoon Scramble' to 'Z' key.",
-            "Enhancement: 'Phase Dash' now leaves a dynamic motion trail.",
-            "Enhancement: 'Shockwave' now creates an expanding burst of particle rings.",
-            "Enhancement: 'Houdini' move now features realistic smoke particle effects for both disappearance and reappearance.",
-            "Enhancement: 'Ground Pound' now generates dynamic debris particles on impact, with colors adapting to the active theme's ground.",
-            "Bugfix: Resolved an issue where 'Ground Pound' particle effects failed to re-trigger on subsequent uses.",
-            "Improvement: 'Accelerator' power-up now includes a visual fade-out effect on the player's legs, indicating its remaining duration."
-        ]
-    },
-    {
-        "version": "1.4.32",
-        "date": "2025-11-05",
-        "changes": [
-            "Feature: Enhanced hurdle animations for a more dynamic visual experience.",
-            "Improvement: Hurdles now smoothly scale and fade in as they approach, starting from a smaller, semi-transparent state.",
-            "Improvement: After being cleared, hurdles now gradually shrink and fade into the distance, creating a natural horizon effect.",
-            "Bugfix: Corrected abrupt animation transitions, ensuring hurdles don't \"pop\" in or out of view."
-        ]
-    },
-    {
-        "version": "1.4.31",
-        "date": "2025-11-05",
-        "changes": [
-            "Bugfix: Fixed a persistent issue where the selected persona was not correctly displayed on page load. The initialization sequence was corrected to ensure UI elements are populated before saved settings are applied."
         ]
     }
 ]

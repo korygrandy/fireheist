@@ -129,3 +129,18 @@ body.game-active-fullscreen:fullscreen #mainGrid {
     justify-content: center;
     align-items: center;
 }
+
+/* Armory Item Styles */
+.armory-item {
+    border: 1px solid #e2e8f0; /* Light gray border */
+    transition: all 0.2s ease-in-out;
+}
+
+.armory-item:not(.opacity-50):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.armory-item.opacity-50 {
+    filter: grayscale(100%);
+}

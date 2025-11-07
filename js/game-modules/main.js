@@ -120,43 +120,38 @@ function checkCollision(runnerY, angleRad) {
     const runnerIsJumpingClear = state.jumpState.isJumping && (runnerY < minClearanceY);
 
     if (horizontalDistance < state.COLLISION_RANGE_X) {
+        // Priority 1: Check for active Firestorm first, as it overrides all other collision types.
+        if (state.isFirestormActive) {
+            state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
+            state.currentObstacle = null;
+            playAnimationSound('incinerate');
+            state.playerStats.obstaclesIncinerated++;
+            console.log("-> FIRESTORM V2: Obstacle incinerated by collision!");
+            return false; // No penalty
+        }
+
+        // Priority 2: Check for destructive jump moves.
+        if (state.jumpState.isFireSpinner) {
+            state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
+            state.currentObstacle = null;
+            playAnimationSound('fireball');
+            state.playerStats.obstaclesIncinerated++;
+            console.log("-> FIRE SPINNER: Obstacle incinerated!");
+            return false; // No penalty
+        }
+        if (state.jumpState.isGroundPound && state.jumpState.progress > 0.5) { // Shatter on the way down
+            drawing.createShatterEffect(state.currentObstacle.x, obstacleTopY, state.currentObstacle.emoji);
+            state.currentObstacle = null;
+            playAnimationSound('shatter');
+            state.playerStats.obstaclesIncinerated++;
+            console.log("-> GROUND POUND: Obstacle shattered!");
+            return false; // No penalty
+        }
+
+        // Priority 3: If no destructive moves are active, check for a standard collision.
         const collisionTolerance = 5;
         if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
-            if (state.jumpState.isFireSpinner) {
-                // Incinerate the obstacle instead of colliding
-                state.incineratingObstacles.push({
-                    ...state.currentObstacle,
-                    animationProgress: 0,
-                    startTime: performance.now()
-                });
-                state.currentObstacle = null; // Remove the obstacle from the main track
-                playAnimationSound('fireball');
-                state.playerStats.obstaclesIncinerated++; // Increment stat
-                console.log("-> FIRE SPINNER: Obstacle incinerated!");
-                return false; // No penalty
-            }
-            if (state.isFirestormActive) {
-                // Incinerate with the new Firestorm
-                state.incineratingObstacles.push({
-                    ...state.currentObstacle,
-                    animationProgress: 0,
-                    startTime: performance.now()
-                });
-                state.currentObstacle = null;
-                playAnimationSound('incinerate');
-                state.playerStats.obstaclesIncinerated++; // Increment stat
-                console.log("-> FIRESTORM V2: Obstacle incinerated!");
-                return false; // No penalty
-            }
-            if (state.jumpState.isGroundPound && state.jumpState.progress > 0.5) { // Shatter on the way down
-                drawing.createShatterEffect(state.currentObstacle.x, obstacleTopY, state.currentObstacle.emoji);
-                state.currentObstacle = null;
-                playAnimationSound('shatter');
-                state.playerStats.obstaclesIncinerated++; // Increment stat
-                console.log("-> GROUND POUND: Obstacle shattered!");
-                return false; // No penalty
-            }
-            return true;
+            return true; // This is a standard, damaging hit.
         }
     }
     return false;

@@ -20,7 +20,8 @@ import {
     themeSelector,
     personaSelector,
     customPersonaControls,
-    personaDetailsContainer
+    personaDetailsContainer,
+    armoryItemsContainer
 } from './dom-elements.js';
 import { parseData, parseEventData, prepareRaceData, drawChart, generateSummaryTable } from './utils.js';
 import { themes, setTheme } from './theme.js';
@@ -29,6 +30,64 @@ import { personaUnlocks } from './unlocks.js';
 import { initializeMusicPlayer } from './audio.js';
 import { PLAYER_STATS_KEY } from './game-modules/state.js'; // Import PLAYER_STATS_KEY
 import state from './game-modules/state.js'; // Import the state object
+
+// Define unlockable skills for the Armory
+const armorySkills = {
+    firestorm: {
+        name: 'Firestorm',
+        description: 'Unleash a continuous barrage of fire, incinerating all obstacles.',
+        emoji: '🌪️',
+        unlockCondition: {
+            type: 'incinerateCount',
+            count: 100
+        },
+        unlockText: 'Incinerate 100 obstacles'
+    },
+    fireSpinner: {
+        name: 'Fire Spinner',
+        description: 'A fiery spinning jump that incinerates obstacles.',
+        emoji: '🔥',
+        unlockCondition: {
+            type: 'placeholder',
+            count: 0 // Placeholder count
+        },
+        unlockText: 'Complete a flawless run on Novice difficulty' // Placeholder text
+    }
+    // Add more skills here as needed
+};
+
+export function populateArmoryItems() {
+    armoryItemsContainer.innerHTML = ''; // Clear existing items
+
+    for (const skillKey in armorySkills) {
+        const skill = armorySkills[skillKey];
+        const isUnlocked = checkSkillUnlockStatus(skill.unlockCondition, state.playerStats);
+
+        const skillCard = document.createElement('div');
+        skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center ${isUnlocked ? 'bg-white' : 'bg-gray-200 opacity-50 cursor-not-allowed'}`;
+        skillCard.innerHTML = `
+            <span class="text-4xl">${skill.emoji}</span>
+            <h4 class="font-semibold text-gray-800 mt-2">${skill.name}</h4>
+            <p class="text-sm text-gray-600">${skill.description}</p>
+            ${!isUnlocked ? `<p class="text-xs text-red-500 mt-2">Locked: ${skill.unlockText}</p>` : ''}
+        `;
+        armoryItemsContainer.appendChild(skillCard);
+    }
+}
+
+function checkSkillUnlockStatus(condition, stats) {
+    if (!condition || condition.type === 'placeholder') return false; // Placeholder conditions are always locked for now
+    if (!stats) return false; // No stats means nothing is unlocked
+
+    switch (condition.type) {
+        case 'incinerateCount':
+            return stats.obstaclesIncinerated >= condition.count;
+        // Add other unlock conditions here
+        default:
+            return false;
+    }
+}
+
 
 export let financialMilestones = {};
 export let raceSegments = [];
@@ -142,6 +201,17 @@ function displayUnlockNotification(personaName) {
     }
 }
 
+function displayArmoryUnlockNotification(skillName) {
+    const notificationElement = document.getElementById('unlock-notification');
+    if (notificationElement) {
+        notificationElement.textContent = `🛡️ New Armory Skill Unlocked: ${skillName}!`;
+        notificationElement.classList.remove('hidden');
+        setTimeout(() => {
+            notificationElement.classList.add('hidden');
+        }, 5000); // Hide after 5 seconds
+    }
+}
+
 function isPersonaUnlocked(personaKey, stats) {
     const unlock = personaUnlocks[personaKey];
     if (!unlock) {
@@ -194,6 +264,22 @@ export function populatePersonaSelector() {
     personaSelector.value = selectedPersona;
 }
 
+export function checkForArmoryUnlocks(stats) {
+    if (!stats.notifiedArmoryUnlocks) {
+        stats.notifiedArmoryUnlocks = [];
+    }
+
+    for (const key in armorySkills) {
+        const skill = armorySkills[key];
+        if (checkSkillUnlockStatus(skill.unlockCondition, stats) && !stats.notifiedArmoryUnlocks.includes(key)) {
+            displayArmoryUnlockNotification(skill.name);
+            stats.notifiedArmoryUnlocks.push(key);
+            populateArmoryItems(); // Refresh the armory to show the unlocked item
+            savePlayerStats();
+        }
+    }
+}
+
 export function checkForNewUnlocks(stats) {
     if (!stats.notifiedUnlocks) {
         stats.notifiedUnlocks = [];
@@ -208,6 +294,7 @@ export function checkForNewUnlocks(stats) {
             savePlayerStats();
         }
     }
+    checkForArmoryUnlocks(stats); // Also check for armory unlocks
 }
 
 export function handlePersonaChange(event) {
@@ -411,6 +498,11 @@ export function switchTab(tabId) {
         activeButton.classList.add('tab-button-active');
         activeButton.classList.remove('tab-button-inactive');
     }
+
+    // If the Armory tab is activated, populate it with items
+    if (tabId === 'armory') {
+        populateArmoryItems();
+    }
 }
 
 export function loadCustomData() {
@@ -465,15 +557,23 @@ export function savePlayerStats() {
 
 export function loadPlayerStats() {
     if (disableSaveSettings.checked) {
-        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0 }; // Reset if disabled
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [] }; // Reset if disabled
         return;
     }
     const savedStats = localStorage.getItem(PLAYER_STATS_KEY);
     if (savedStats) {
         state.playerStats = JSON.parse(savedStats);
+        // Ensure obstaclesIncinerated is a number
+        if (typeof state.playerStats.obstaclesIncinerated !== 'number') {
+            state.playerStats.obstaclesIncinerated = 0;
+        }
+        // Ensure notifiedArmoryUnlocks is an array
+        if (!Array.isArray(state.playerStats.notifiedArmoryUnlocks)) {
+            state.playerStats.notifiedArmoryUnlocks = [];
+        }
         console.log("-> loadPlayerStats: Player stats loaded from localStorage.");
     } else {
-        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0 };
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [] };
         console.log("-> loadPlayerStats: No player stats found. Initializing defaults.");
     }
 }
