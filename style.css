@@ -134,6 +134,8 @@ body.game-active-fullscreen:fullscreen #mainGrid {
 .armory-item {
     border: 1px solid #e2e8f0; /* Light gray border */
     transition: all 0.2s ease-in-out;
+    position: relative; /* Needed for pseudo-element positioning */
+    overflow: hidden; /* Ensures overlay stays within bounds */
 }
 
 .armory-item:not(.opacity-50):hover {
@@ -143,4 +145,21 @@ body.game-active-fullscreen:fullscreen #mainGrid {
 
 .armory-item.opacity-50 {
     filter: grayscale(100%);
+}
+
+.armory-item.unlocked::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 165, 0, 0.2); /* Orange with 20% opacity */
+    pointer-events: none; /* Allow interaction with content beneath */
+    border-radius: inherit; /* Inherit border-radius from parent */
+}
+
+.armory-item-icon.unlocked {
+    color: #ff4405;
+    text-shadow: 0 0 3px #fff, 0 0 5px #fff, 0 0 10px #ff4405;
 }

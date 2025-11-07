@@ -3,7 +3,7 @@
 // =================================================================
 
 import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState, debugUnlockAllPersonas, debugSetIncinerationCount } from './ui.js';
+import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState, debugUnlockAllPersonas, checkForNewUnlocks, savePlayerStats, populatePersonaSelector, populateArmoryItems } from './ui.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
@@ -37,6 +37,15 @@ function initializeDebugPanel() {
             const unlockAllBtn = document.getElementById('debugUnlockAllBtn');
             const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
             const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
+
+            function debugSetIncinerationCount(count) {
+                state.playerStats.obstaclesIncinerated = count;
+                checkForNewUnlocks(state.playerStats); // Check for unlocks first
+                savePlayerStats(); // Then save the updated stats
+                populatePersonaSelector(); // Re-populate in case this unlocks a persona
+                populateArmoryItems(); // Also refresh the armory view
+                alert(`Obstacle incineration count set to ${count}.`);
+            }
 
             if (unlockAllBtn) {
                 unlockAllBtn.addEventListener('click', debugUnlockAllPersonas);

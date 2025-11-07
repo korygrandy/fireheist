@@ -97,7 +97,8 @@ const state = {
     playerStats: { // New player stats object
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
         obstaclesIncinerated: 0,
-        notifiedArmoryUnlocks: [] // To track shown notifications
+        notifiedArmoryUnlocks: [], // To track shown notifications
+        unlockedArmoryItems: [] // New: To store keys of unlocked armory items
     }
 };
 
