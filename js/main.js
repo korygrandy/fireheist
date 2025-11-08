@@ -13,6 +13,7 @@ import { checkForNewUnlocks } from './ui-modules/unlocks.js';
 import { populateThemeSelector, handleThemeChange } from './ui-modules/theme.js';
 import { populatePersonaSelector, handlePersonaChange } from './ui-modules/persona.js';
 import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmoryItems } from './ui-modules/armory.js';
+import { displayDailyChallenge, displayDailyChallengeResults } from './ui-modules/daily-challenge-ui.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
@@ -45,6 +46,7 @@ function initializeDebugPanel() {
             debugPanel.classList.remove('hidden');
 
             const unlockAllBtn = document.getElementById('debugUnlockAllBtn');
+            const setShowDailyResultsBtn = document.getElementById('debugShowDailyResultsBtn');
             const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
             const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
 
@@ -59,6 +61,11 @@ function initializeDebugPanel() {
 
             if (unlockAllBtn) {
                 unlockAllBtn.addEventListener('click', debugUnlockAllAchievements);
+            }
+            if (setShowDailyResultsBtn) {
+                setShowDailyResultsBtn.addEventListener('click', () => {
+                    displayDailyChallengeResults({ days: 1234, hits: 5 });
+                });
             }
             if (setIncinerateCountBtn && incinerateCountInput) {
                 setIncinerateCountBtn.addEventListener('click', () => {
@@ -388,6 +395,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- END JUMP & PAUSE CONTROLS ---
 
     frequencyRange.dispatchEvent(new Event('input')); // Trigger initial display of frequency value
+
+    // Use a timeout to ensure the DOM is fully painted before we try to manipulate it
+    setTimeout(() => {
+        displayDailyChallenge();
+    }, 0);
 
     // Initial draw to show tips overlay
     draw();

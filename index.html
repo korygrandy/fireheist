@@ -18,6 +18,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <button id="debugUnlockAllBtn" class="control-btn text-xs">Unlock all Achievements</button>
+                    <button id="debugShowDailyResultsBtn" class="control-btn text-xs mt-2">Show Daily Results UI</button>
                 </div>
                 <div class="flex gap-2">
                     <input type="number" id="debugIncinerateCountInput" class="w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Set Incineration Count">
@@ -95,7 +96,7 @@
                     <button class="tab-button tab-button-inactive" data-tab="armory">⚔️ Armory</button>
                 </div>
 
-                <p class="text-sm text-gray-500 mb-4">
+                <p id="daily-challenge-placeholder" class="text-sm text-gray-500 mb-4">
                     Press **SPACEBAR** or **TAP anywhere on the screen** to jump over obstacles! Milestones are auto-hurdled.
                 </p>
 
