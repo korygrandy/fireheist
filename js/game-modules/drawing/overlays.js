@@ -1,7 +1,6 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { FADE_DURATION, STICK_FIGURE_FIXED_X, STICK_FIGURE_TOTAL_HEIGHT, GROUND_Y } from '../../constants.js';
 import state from '../state.js';
-import { currentSkillLevel } from '../../ui.js';
 
 export function drawPausedOverlay() {
     ctx.save();
@@ -172,7 +171,7 @@ export function drawMoneyCounter() {
 
 export function drawGameCounters() {
     const daysString = `Days Elapsed: ${Math.round(state.daysElapsedTotal).toLocaleString()}`;
-    const hitsString = `Hits: ${state.hitsCounter} (${currentSkillLevel} Skill)`;
+    const hitsString = `Hits: ${state.hitsCounter} (${state.currentSkillLevel} Skill)`;
 
     const PADDING = 10;
     const LINE_HEIGHT = 20;

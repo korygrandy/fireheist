@@ -3,7 +3,17 @@
 // =================================================================
 
 import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement, armoryItemsContainer } from './dom-elements.js';
-import { updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, setupSuggestedEmojis, handleSpeedChange, switchTab, initializeUIData, handlePowerUpToggle, loadCustomData, handleThemeChange, handlePersonaChange, toggleFullScreen, updateControlPanelState, debugUnlockAllPersonas, checkForNewUnlocks, savePlayerStats, populatePersonaSelector, populateArmoryItems, handleArmorySkillSelection, handleArmorySkillDeselection } from './ui.js';
+
+import { initializeUIData, loadCustomData } from './ui-modules/data.js';
+import { switchTab, toggleFullScreen, updateControlPanelState } from './ui-modules/ui-helpers.js';
+import { setupSuggestedEmojis, updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, handleSpeedChange, handlePowerUpToggle, handleAutoHurdleToggle, applySkillLevelSettings } from './ui-modules/input-handlers.js';
+import { debugUnlockAllPersonas } from './ui-modules/debug.js';
+import { savePlayerStats } from './ui-modules/settings.js';
+import { checkForNewUnlocks } from './ui-modules/unlocks.js';
+import { populateThemeSelector, handleThemeChange } from './ui-modules/theme.js';
+import { populatePersonaSelector, handlePersonaChange } from './ui-modules/persona.js';
+import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmoryItems } from './ui-modules/armory.js';
+
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';

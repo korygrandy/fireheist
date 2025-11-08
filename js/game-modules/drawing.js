@@ -2,7 +2,7 @@ import { canvas, ctx } from '../dom-elements.js';
 import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS, JUMP_HEIGHT_RATIO, STICK_FIGURE_FIXED_X } from '../constants.js';
 import { currentTheme } from '../theme.js';
 import state from './state.js';
-import { raceSegments } from '../ui.js';
+
 
 import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounter, drawGameCounters, drawDaysCounter, drawCustomEventStatus, drawEnergyBar } from './drawing/overlays.js';
 import { drawStickFigure } from './drawing/player.js';
@@ -110,8 +110,8 @@ export function draw() {
     let groundAngleRad = 0;
     let stickFigureGroundY = GROUND_Y;
 
-    if (state.currentSegmentIndex < raceSegments.length || state.isGameOverSequence) {
-        const currentSegment = raceSegments[Math.min(state.currentSegmentIndex, raceSegments.length - 1)];
+    if (state.currentSegmentIndex < state.raceSegments.length || state.isGameOverSequence) {
+        const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
 
         groundAngleRad = currentSegment.angleRad;
         drawSlantedGround(groundAngleRad);
@@ -265,7 +265,7 @@ export function draw() {
         drawPausedOverlay();
     }
 
-    if (state.currentSegmentIndex >= raceSegments.length && !state.isGameOverSequence) {
+    if (state.currentSegmentIndex >= state.raceSegments.length && !state.isGameOverSequence) {
         return;
     }
 }

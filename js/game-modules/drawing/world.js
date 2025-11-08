@@ -2,7 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import state, { GRASS_ANIMATION_INTERVAL_MS } from '../state.js';
-import { raceSegments } from '../../ui.js';
+
 
 export function drawAccelerator(accelerator, angleRad) {
     if (!accelerator) return;
@@ -160,7 +160,7 @@ export function drawHurdle(hurdleData) {
     if (!hurdleData || !hurdleData.isMilestone) return; // Only draw if it's a milestone
 
     const hurdleDrawX = canvas.width - 100 - state.backgroundOffset;
-    const currentAngleRad = raceSegments[state.currentSegmentIndex] ? raceSegments[state.currentSegmentIndex].angleRad : 0;
+    const currentAngleRad = state.raceSegments[state.currentSegmentIndex] ? state.raceSegments[state.currentSegmentIndex].angleRad : 0;
     const groundAtHurdleY = GROUND_Y - hurdleDrawX * Math.tan(currentAngleRad);
 
     if (hurdleDrawX > -34 && hurdleDrawX < canvas.width) {

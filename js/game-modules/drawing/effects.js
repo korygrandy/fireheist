@@ -2,7 +2,6 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_SIZE, GROUND_Y, STICK_FIGURE_FIXED_X } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import state from '../state.js';
-import { stickFigureEmoji } from '../../ui.js';
 
 function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -295,7 +294,7 @@ export function drawCorkscrewTrail() {
             ctx.font = '28px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(stickFigureEmoji, 0, -STICK_FIGURE_TOTAL_HEIGHT);
+            ctx.fillText(state.stickFigureEmoji, 0, -STICK_FIGURE_TOTAL_HEIGHT);
             ctx.restore();
 
             // Draw ghost body

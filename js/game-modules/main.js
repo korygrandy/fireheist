@@ -33,7 +33,13 @@ import {
     FIREBALL_SIZE
 } from '../constants.js';
 import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
-import { financialMilestones, raceSegments, customEvents, stickFigureEmoji, obstacleEmoji, obstacleFrequencyPercent, currentSkillLevel, intendedSpeedMultiplier, applySkillLevelSettings, showResultsScreen, hideResultsScreen, updateControlPanelState, displayHighScores, enableRandomPowerUps, isAutoHurdleEnabled, selectedPersona, exitFullScreenIfActive, savePlayerStats, checkForNewUnlocks } from '../ui.js';
+import { applySkillLevelSettings } from '../ui-modules/input-handlers.js';
+import { showResultsScreen, hideResultsScreen } from '../ui-modules/results.js';
+import { updateControlPanelState } from '../ui-modules/ui-helpers.js';
+import { displayHighScores } from '../ui-modules/high-scores.js';
+import { exitFullScreenIfActive } from '../ui-modules/ui-helpers.js';
+import { savePlayerStats } from '../ui-modules/settings.js';
+import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
 import { currentTheme } from '../theme.js';
 import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
@@ -44,16 +50,16 @@ function updateHighScore() {
     const currentScore = {
         days: Math.round(state.daysElapsedTotal),
         hits: state.hitsCounter,
-        emoji: stickFigureEmoji,
-        speed: intendedSpeedMultiplier
+        emoji: state.stickFigureEmoji,
+        speed: state.intendedSpeedMultiplier
     };
 
-    const existingScore = highScores[currentSkillLevel];
+    const existingScore = highScores[state.currentSkillLevel];
 
     if (!existingScore || currentScore.hits < existingScore.hits || (currentScore.hits === existingScore.hits && currentScore.days < existingScore.days)) {
-        highScores[currentSkillLevel] = currentScore;
+        highScores[state.currentSkillLevel] = currentScore;
         localStorage.setItem(HIGH_SCORE_KEY, JSON.stringify(highScores));
-        console.log(`-> updateHighScore: New high score for ${currentSkillLevel} saved!`);
+        console.log(`-> updateHighScore: New high score for ${state.currentSkillLevel} saved!`);
         displayHighScores(); // Update the UI immediately
     }
 }
@@ -61,7 +67,7 @@ function updateHighScore() {
 function spawnObstacle() {
     const newObstacle = {
         x: OBSTACLE_SPAWN_X,
-        emoji: obstacleEmoji,
+        emoji: state.obstacleEmoji,
         spawnTime: Date.now(),
         hasBeenHit: false
     };
@@ -234,14 +240,14 @@ function applySpeedEffect(type) {
     if (type === 'ACCELERATOR') {
         state.isAccelerating = true;
         state.accelerationDuration = ACCELERATOR_DURATION_MS;
-        state.gameSpeedMultiplier = intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
+        state.gameSpeedMultiplier = state.intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
         playChaChing();
         state.screenFlash = { opacity: 0.7, duration: 200, startTime: performance.now() };
         console.info("-> APPLY SPEED: Accelerator (2x) applied!");
     } else if (type === 'DECELERATOR') {
         state.isDecelerating = true;
         state.decelerationDuration = DECELERATOR_DURATION_MS;
-        state.gameSpeedMultiplier = intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF;
+        state.gameSpeedMultiplier = state.intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF;
         playDebuffSound();
         console.warn("-> APPLY SPEED: Decelerator (0.5x) applied!");
     }
@@ -273,7 +279,7 @@ export function animate(timestamp) {
         return;
     }
 
-    if (state.currentSegmentIndex >= raceSegments.length) {
+    if (state.currentSegmentIndex >= state.raceSegments.length) {
         if (!state.isGameOverSequence) {
             state.isVictory = (state.hitsCounter === 0);
             if (state.isVictory) {
@@ -283,7 +289,7 @@ export function animate(timestamp) {
                     if (!state.playerStats.flawlessRuns) {
                         state.playerStats.flawlessRuns = {};
                     }
-                    state.playerStats.flawlessRuns[currentSkillLevel] = true;
+                    state.playerStats.flawlessRuns[state.currentSkillLevel] = true;
                     savePlayerStats(); // Save stats on flawless victory
                 } else {
                     console.log("-> GAME OVER: Flawless run not recorded for Custom Persona.");
@@ -314,7 +320,7 @@ export function animate(timestamp) {
         return;
     }
 
-    const currentHurdle = raceSegments[state.currentSegmentIndex];
+    const currentHurdle = state.raceSegments[state.currentSegmentIndex];
     const angleRad = currentHurdle.angleRad;
 
     if (!state.lastTime) {
@@ -368,7 +374,7 @@ export function animate(timestamp) {
         }
     }
 
-    const targetSegmentDuration = currentHurdle.visualDurationMs / intendedSpeedMultiplier;
+    const targetSegmentDuration = currentHurdle.visualDurationMs / state.intendedSpeedMultiplier;
 
     if (state.manualJumpOverride.isActive) {
         const elapsed = Date.now() - state.manualJumpOverride.startTime;
@@ -380,7 +386,7 @@ export function animate(timestamp) {
             state.jumpState.progress = 0;
         }
     } else {
-        if (isAutoHurdleEnabled && state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
+        if (state.isAutoHurdleEnabled && state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
             state.jumpState.isJumping = true;
             state.jumpState.progress = (state.segmentProgress - AUTO_JUMP_START_PROGRESS) / AUTO_JUMP_DURATION;
         } else {
@@ -541,12 +547,12 @@ export function animate(timestamp) {
 
     if (state.frameCount % 60 === 0) { // Check every 60 frames
         // Independent check for obstacle spawn
-        if (!state.currentObstacle && Math.random() * 100 < obstacleFrequencyPercent) {
+        if (!state.currentObstacle && Math.random() * 100 < state.obstacleFrequencyPercent) {
             spawnObstacle();
         }
 
         // Independent check for accelerator spawn
-        if (enableRandomPowerUps && !state.currentAccelerator && Math.random() * 100 < state.acceleratorFrequencyPercent) {
+        if (state.enableRandomPowerUps && !state.currentAccelerator && Math.random() * 100 < state.acceleratorFrequencyPercent) {
             spawnAccelerator();
         }
     }
@@ -653,36 +659,36 @@ export function animate(timestamp) {
         if (state.collisionDuration <= 0) {
             state.isColliding = false;
             state.collisionDuration = 0;
-            state.gameSpeedMultiplier = intendedSpeedMultiplier;
+            state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
             console.info("-> COLLISION: Penalty ended. Speed restored.");
         } else {
-            state.gameSpeedMultiplier = intendedSpeedMultiplier * 0.1;
+            state.gameSpeedMultiplier = state.intendedSpeedMultiplier * 0.1;
         }
     } else {
         // If not in a burst (or burst just ended), check for regular acceleration/deceleration
         if (!state.stickFigureBurst.active) {
             if (state.isDecelerating) {
                 state.decelerationDuration -= deltaTime;
-                state.gameSpeedMultiplier = intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF;
+                state.gameSpeedMultiplier = state.intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF;
                 if (state.decelerationDuration <= 0) {
                     state.isDecelerating = false;
                     state.decelerationDuration = 0;
                     state.activeCustomEvents.forEach(e => { if (e.type === 'DECELERATOR') e.isActive = false; });
-                    state.gameSpeedMultiplier = intendedSpeedMultiplier;
+                    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
                     console.info("-> DECELERATOR: Debuff ended. Speed restored.");
                 }
             } else if (state.isAccelerating) {
                 state.accelerationDuration -= deltaTime;
-                state.gameSpeedMultiplier = intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
+                state.gameSpeedMultiplier = state.intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
                 if (state.accelerationDuration <= 0) {
                     state.isAccelerating = false;
                     state.accelerationDuration = 0;
                     state.activeCustomEvents.forEach(e => { if (e.type === 'ACCELERATOR') e.isActive = false; });
-                    state.gameSpeedMultiplier = intendedSpeedMultiplier;
+                    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
                     console.info("-> ACCELERATOR: Boost ended. Speed restored.");
                 }
             } else {
-                state.gameSpeedMultiplier = intendedSpeedMultiplier;
+                state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
             }
         }
     }
@@ -719,7 +725,7 @@ export function animate(timestamp) {
     }
 
     if (state.segmentProgress >= 1) {
-        const completedSegment = raceSegments[state.currentSegmentIndex];
+        const completedSegment = state.raceSegments[state.currentSegmentIndex];
         console.log(`-> SEGMENT COMPLETE: Reached Milestone ${state.currentSegmentIndex}. Value: $${completedSegment.milestoneValue.toLocaleString()}`);
 
         state.daysCounter = {
@@ -753,12 +759,12 @@ export function animate(timestamp) {
         state.currentAccelerator = null;
         state.onScreenCustomEvent = null;
 
-        if (state.currentSegmentIndex === raceSegments.length - 1) {
+        if (state.currentSegmentIndex === state.raceSegments.length - 1) {
             preloadEndgameSounds();
         }
 
-        if (state.currentSegmentIndex < raceSegments.length) {
-            console.log(`-> NEW SEGMENT START: Index ${state.currentSegmentIndex}. Visual Duration: ${raceSegments[state.currentSegmentIndex].visualDurationMs.toFixed(0)}ms`);
+        if (state.currentSegmentIndex < state.raceSegments.length) {
+            console.log(`-> NEW SEGMENT START: Index ${state.currentSegmentIndex}. Visual Duration: ${state.raceSegments[state.currentSegmentIndex].visualDurationMs.toFixed(0)}ms`);
         }
     }
 
@@ -815,7 +821,7 @@ export function animate(timestamp) {
         state.jumpState.groundPoundDuration -= deltaTime;
         // Check if the pound is about to hit the ground and the effect hasn't been triggered yet
         if (state.jumpState.groundPoundDuration < 100 && !state.jumpState.groundPoundEffectTriggered) {
-            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(raceSegments[state.currentSegmentIndex].angleRad);
+            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(state.raceSegments[state.currentSegmentIndex].angleRad);
             drawing.createGroundPoundEffect(STICK_FIGURE_FIXED_X, groundY);
             state.jumpState.groundPoundEffectTriggered = true;
         }
@@ -922,7 +928,7 @@ export function resetGameState() {
     state.lastTime = 0;
     state.backgroundOffset = 0;
     state.frameCount = 0;
-    state.accumulatedCash = raceSegments.length > 0 ? raceSegments[0].milestoneValue : 0;
+    state.accumulatedCash = state.raceSegments.length > 0 ? state.raceSegments[0].milestoneValue : 0;
     state.activeCashBags.length = 0;
     state.fireTrail = [];
     state.incineratingObstacles = [];
@@ -976,7 +982,7 @@ export function resetGameState() {
     state.accelerationDuration = 0;
     state.isDecelerating = false;
     state.decelerationDuration = 0;
-    state.gameSpeedMultiplier = intendedSpeedMultiplier;
+    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
 
     state.isFireSpinnerOnCooldown = false;
     state.fireSpinnerLastActivationTime = 0;
@@ -988,7 +994,7 @@ export function resetGameState() {
     state.playerStats.activeArmorySkill = null; // Reset active armory skill
     state.playerStats.consecutiveGroundPounds = 0; // Reset consecutive Ground Pounds
 
-    state.activeCustomEvents = Object.values(customEvents).flat().map(event => ({
+    state.activeCustomEvents = Object.values(state.customEvents).flat().map(event => ({
         ...event,
         wasTriggered: false,
         isActive: false,
@@ -998,7 +1004,7 @@ export function resetGameState() {
     state.onScreenCustomEvent = null;
 
     // Reset hurdle animation states
-    raceSegments.forEach(segment => {
+    state.raceSegments.forEach(segment => {
         if (segment.isMilestone) {
             segment.animationState = 'idle';
             segment.animationProgress = 0;
@@ -1026,7 +1032,7 @@ export function resetGameState() {
 }
 
 export function startGame() {
-    if (raceSegments.length < 2) {
+    if (state.raceSegments.length < 2) {
         // dataMessage.textContent = "Error: Cannot start. Load valid data with at least two milestones."; // Handled in UI
         // dataMessage.style.color = 'red';
         console.error("-> START GAME FAILED: Insufficient milestones.");
@@ -1034,7 +1040,7 @@ export function startGame() {
     }
     if (state.gameRunning) return;
 
-    state.raceSegments = raceSegments; // Initialize raceSegments in the state
+    state.raceSegments = state.raceSegments; // Initialize raceSegments in the state
 
     console.log("-> START GAME: Initiating game start sequence.");
 
@@ -1044,7 +1050,7 @@ export function startGame() {
     state.lastTime = 0;
     state.backgroundOffset = 0;
     state.frameCount = 0;
-    state.accumulatedCash = raceSegments[0].milestoneValue;
+    state.accumulatedCash = state.raceSegments[0].milestoneValue;
     state.activeCashBags.length = 0;
     state.fireTrail = [];
     state.incineratingObstacles = [];
@@ -1115,15 +1121,15 @@ export function startGame() {
 
     drawing.setInitialLoad(false);
 
-    applySkillLevelSettings(currentSkillLevel);
+    applySkillLevelSettings(state.currentSkillLevel);
 
-    state.gameSpeedMultiplier = intendedSpeedMultiplier;
+    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
 
     let musicUrl = DEFAULT_MUSIC_URL;
-    if (selectedPersona && selectedPersona !== 'custom' && personas[selectedPersona]) {
-        musicUrl = personas[selectedPersona].music;
+    if (state.selectedPersona && state.selectedPersona !== 'custom' && personas[state.selectedPersona]) {
+        musicUrl = personas[state.selectedPersona].music;
     } else {
-        const cleanEmoji = stickFigureEmoji.replace(/\uFE0F/g, '');
+        const cleanEmoji = state.stickFigureEmoji.replace(/\uFE0F/g, '');
         musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
     }
     initializeMusicPlayer(musicUrl);
@@ -1141,7 +1147,7 @@ export function startGame() {
         });
     }
 
-    state.activeCustomEvents = Object.values(customEvents).flat().map(event => ({
+    state.activeCustomEvents = Object.values(state.customEvents).flat().map(event => ({
         ...event,
         wasTriggered: false,
         isActive: false,
@@ -1198,7 +1204,7 @@ export function stopGame(shouldReset = true) {
         resetGameState();
         drawing.draw();
     } else {
-        showResultsScreen(financialMilestones, raceSegments);
+        showResultsScreen(state.financialMilestones, state.raceSegments);
         updateControlPanelState(false, false);
         document.getElementById('startButton').textContent = "Restart Heist!";
         console.log("-> STOP GAME: Game ended, displaying results.");

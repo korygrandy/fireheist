@@ -2,7 +2,6 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS, ACCELERATOR_DURATION_MS } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import state from '../state.js';
-import { stickFigureEmoji } from '../../ui.js';
 import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle } from './effects.js';
 
 export function drawStickFigure(x, y, jumpState, angleRad) {
@@ -112,11 +111,10 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         // --- Draw Head ---
         ctx.save();
         ctx.scale(headScaleX, 1);
-        ctx.font = '28px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(stickFigureEmoji, 0, headY);
-        ctx.restore();
+            ctx.font = '28px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(state.stickFigureEmoji, 0, headY);        ctx.restore();
 
         // --- Draw Body and Limbs ---
         ctx.save();
@@ -352,7 +350,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     ctx.font = '28px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(stickFigureEmoji, 0, headY);
+    ctx.fillText(state.stickFigureEmoji, 0, headY);
 
     ctx.strokeStyle = 'black';
     ctx.beginPath();
