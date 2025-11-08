@@ -7,7 +7,7 @@ import state from './state.js';
 import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounter, drawGameCounters, drawDaysCounter, drawCustomEventStatus, drawEnergyBar } from './drawing/overlays.js';
 import { drawStickFigure } from './drawing/player.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, initializeClouds, generateGrassBlades } from './drawing/world.js';
-import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createShatterEffect } from './drawing/effects.js';
+import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createShatterEffect, createFireExplosion } from './drawing/effects.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 
 export {
@@ -201,6 +201,11 @@ export function draw() {
 
         drawStickFigure(currentX, currentY, state.jumpState, groundAngleRad);
         drawFireSpinner(currentX, currentY);
+
+        if (state.jumpState.isFieryGroundPound && !state.jumpState.groundPoundEffectTriggered) {
+            createFireExplosion(currentX, currentY + STICK_FIGURE_TOTAL_HEIGHT / 2);
+            state.jumpState.groundPoundEffectTriggered = true;
+        }
 
         // Visual indicator for Fire Mage mode
         if (state.isFireMageActive) {

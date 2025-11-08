@@ -35,6 +35,17 @@ export const armorySkills = {
             skillKey: 'fireDash'
         },
         unlockText: 'Coming soon!'
+    },
+    fieryGroundPound: {
+        name: 'Fiery Ground Pound',
+        description: 'A powerful ground pound that creates a fiery explosion, incinerating all on-screen obstacles.',
+        emoji: '💥',
+        unlockCondition: {
+            type: 'consecutiveGroundPounds',
+            count: 2,
+            skillKey: 'fieryGroundPound'
+        },
+        unlockText: 'Destroy 10 obstacles in a row with Ground Pound'
     }
     // Add more skills here as needed
 };

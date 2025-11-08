@@ -471,6 +471,23 @@ export function createPlayerEmbers(playerY) {
     }
 }
 
+export function createFireExplosion(x, y) {
+    const particleCount = 50;
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 7 + 3;
+        state.firestormParticles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1,
+            size: Math.random() * 8 + 4,
+            color: `rgba(255, ${Math.floor(Math.random() * 150)}, 0, 0.8)` // Fiery colors
+        });
+    }
+}
+
 export function drawPlayerEmbers() {
     for (let i = state.playerEmberParticles.length - 1; i >= 0; i--) {
         const p = state.playerEmberParticles[i];

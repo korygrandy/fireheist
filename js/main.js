@@ -16,7 +16,7 @@ import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmor
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
@@ -74,7 +74,7 @@ function initializeDebugPanel() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log("-> DOMContentLoaded: Initializing game components.");
 
     loadVersion();
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Load initial UI data, then initialize debug panel
-    initializeUIData();
+    await initializeUIData();
     preloadGameStartSound();
     preloadAnimationSounds(); // Preload all animation sounds
     initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
@@ -190,7 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const skillActionMap = {
         firestorm: startFirestorm,
-        fireSpinner: startFireSpinner
+        fireSpinner: startFireSpinner,
+        fieryGroundPound: startFieryGroundPound
         // Add other skills here as they are implemented
     };
 

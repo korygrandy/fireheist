@@ -285,7 +285,7 @@ export function animate(timestamp) {
             if (state.isVictory) {
                 playWinnerSound();
                 // Track flawless run only if not using custom persona
-                if (selectedPersona !== 'custom') {
+                if (state.selectedPersona !== 'custom') {
                     if (!state.playerStats.flawlessRuns) {
                         state.playerStats.flawlessRuns = {};
                     }
@@ -753,7 +753,7 @@ export function animate(timestamp) {
         state.isDecelerating = false;
         state.decelerationDuration = 0;
         state.activeCustomEvents.forEach(e => e.isActive = false);
-        state.gameSpeedMultiplier = intendedSpeedMultiplier;
+        state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
 
         state.currentObstacle = null;
         state.currentAccelerator = null;

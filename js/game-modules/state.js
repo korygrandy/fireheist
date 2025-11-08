@@ -30,7 +30,11 @@ const state = {
         isScissorKick: false, scissorKickDuration: 0,
         isPhaseDash: false, phaseDashDuration: 0,
         isHover: false, hoverDuration: 0,
-        isGroundPound: false, groundPoundDuration: 0,
+        isGroundPound: false,
+        groundPoundDuration: 0,
+        isFieryGroundPound: false,
+        fieryGroundPoundDuration: 0,
+        groundPoundEffectTriggered: false, // To ensure effect only triggers once per ground pound
         isCartoonScramble: false, cartoonScrambleDuration: 0,
         isMoonwalking: false, moonwalkDuration: 0,
         isShockwave: false, shockwaveDuration: 0,
