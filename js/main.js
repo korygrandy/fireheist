@@ -184,6 +184,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add other skills here as they are implemented
     };
 
+    function handleSpecialMove() {
+        const activeSkill = state.playerStats.activeArmorySkill;
+        if (activeSkill && skillActionMap[activeSkill]) {
+            skillActionMap[activeSkill](state);
+        } else {
+            // Default action if no skill is selected or if the skill is not in the map
+            if (state.isFireMageActive) {
+                castFireball(state);
+            } else {
+                startFireMage(state);
+            }
+        }
+    }
+
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
@@ -199,17 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (e.code === 'KeyK' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
-            const activeSkill = state.playerStats.activeArmorySkill;
-            if (activeSkill && skillActionMap[activeSkill]) {
-                skillActionMap[activeSkill](state);
-            } else {
-                // Default action if no skill is selected or if the skill is not in the map
-                if (state.isFireMageActive) {
-                    castFireball(state);
-                } else {
-                    startFireMage(state);
-                }
-            }
+            handleSpecialMove();
         }
         if (e.code === 'KeyD' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
@@ -360,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tapLength = currentTime - lastTap;
             if (tapLength < 300 && tapLength > 0) {
                 // Double tap
-                startFireMage(state);
+                handleSpecialMove();
                 lastTap = 0; // Reset lastTap to prevent triple taps
             } else {
                 // Single tap

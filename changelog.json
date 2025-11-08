@@ -1,5 +1,49 @@
 [
     {
+        "version": "1.4.51",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Added a placeholder for the 'Fire Dash' skill in the Armory, making it visible but not yet unlockable."
+        ]
+    },
+    {
+        "version": "1.4.50",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Mapped the double-tap gesture to the general 'Special Move' action, allowing it to trigger any selected Armory skill.",
+            "refactor: Centralized special move logic into a `handleSpecialMove` function in `js/main.js` to streamline keyboard and gesture controls."
+        ]
+    },
+    {
+        "version": "1.4.49",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Greyed out the emoji and name of locked Personas in the selector to make their unavailability more apparent."
+        ]
+    },
+    {
+        "version": "1.4.48",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Right-justified the lock/unlock icon for Personas in the selector.",
+            "feat: The lock/unlock icon is now only displayed for Personas that have unlock conditions."
+        ]
+    },
+    {
+        "version": "1.4.47",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Updated Persona selector labels to use lock (🔒) and unlock (🔓) emojis to clearly indicate the status of each persona."
+        ]
+    },
+    {
+        "version": "1.4.46",
+        "date": "2025-11-07",
+        "changes": [
+            "fix: Resolved a wrapping issue with the Heist Control Panel tabs by adding `flex-wrap` to their container, ensuring they wrap correctly on smaller screens."
+        ]
+    },
+    {
         "version": "1.4.45",
         "date": "2025-11-07",
         "changes": [
@@ -47,96 +91,6 @@
             "\"Firestorm\" is now the first unlockable skill, requiring 100 incinerations.",
             "\"Fire Spinner\" is the second unlockable skill, with its unlock condition to be determined.",
             "Added styling for Armory items, including locked/unlocked states."
-        ]
-    },
-    {
-        "version": "1.4.41",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Implemented three varied destruction animations (Incinerate, Shatter, Vanish) for obstacles hit by Fire Mage fireballs.",
-            "Added new `vanishingObstacles` state to track obstacles undergoing the vanish animation.",
-            "Fixed a `ReferenceError` in `drawing.js` by importing `OBSTACLE_EMOJI_Y_OFFSET`.",
-            "Fixed a `TypeError` at game completion by moving game-over logic to the top of the `animate` function."
-        ]
-    },
-    {
-        "version": "1.4.40",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Implemented core \"Fire Mage\" special move mechanics, including energy costs, duration, cooldown, and fireball casting.",
-            "Added visual effects for active \"Fire Mage\" mode and fireballs.",
-            "Temporarily assigned 'K' key and double-tap gesture to activate \"Fire Mage\" mode and cast fireballs.",
-            "Fixed multiple regressions related to action function state access and fireball rendering."
-        ]
-    },
-    {
-        "version": "1.4.39",
-        "date": "2025-11-06",
-        "changes": [
-            "feat: Implemented player progression system with unlockable personas.",
-            "Gameplay: Added `playerStats` to track `flawlessRuns` per difficulty and `obstaclesIncinerated`.",
-            "Persistence: Player stats are now saved and loaded from `localStorage`.",
-            "Balance: Obstacle incinerations (Fire Spinner, Firestorm, Ground Pound) now correctly increment `obstaclesIncinerated` stat.",
-            "Gameplay: Game over logic updated to record flawless runs and persist player stats.",
-            "Balance: Decoupled power-up (accelerator) spawning from obstacle spawning for independent generation.",
-            "Balance: Power-up frequency is now skill-level dependent (Rookie: most frequent, Pro: least frequent).",
-            "Balance: Reduced overall obstacle frequency by 25% across all skill levels for improved gameplay balance.",
-            "Balance: Obstacle collision energy depletion changed from 100% to 50% of current energy.",
-            "Balance: Decelerator collisions now reduce energy by 10%.",
-            "Balance: Obstacle collisions now reset energy to 0.",
-            "Balance: Accelerator milestone collisions now increase energy by 10%.",
-            "UI: Added an energy bar to the UI to display the player's current energy level.",
-            "Feature: Created `js/unlocks.js` to define unlock conditions for personas."
-        ]
-    },
-    {
-        "version": "1.4.38",
-        "date": "2025-11-06",
-        "changes": [
-            "feat: Implemented a new energy system for special moves.",
-            "Gameplay: Special moves now consume energy from a shared pool instead of having individual cooldowns.",
-            "Gameplay: Player energy drains over time, and is replenished by collecting accelerators.",
-            "Balance: Energy regeneration rates are now tied to skill level, with 'Rookie' players regenerating energy faster than 'Pro' players.",
-            "Gameplay: 'Firestorm' and 'Fire Spinner' moves now continuously drain the player's energy to zero over their animation duration.",
-            "Balance: 'Firestorm' and 'Fire Spinner' moves now require more than 50% energy to activate.",
-            "Balance: Disabled energy regeneration from accelerators while 'Firestorm' or 'Fire Spinner' moves are active.",
-            "Balance: Reduced energy gained from accelerator collisions by 50%.",
-            "Balance: Decelerator collisions now reduce energy by 10%.",
-            "Balance: Obstacle collisions now reset energy to 0.",
-            "Balance: Accelerator milestone collisions now increase energy by 10%.",
-            "UI: Added an energy bar to the UI to display the player's current energy level."
-        ]
-    },
-    {
-        "version": "1.4.37",
-        "date": "2025-11-06",
-        "changes": [
-            "feat: Implemented a new energy system for special moves.",
-            "Gameplay: Special moves now consume energy from a shared pool instead of having individual cooldowns.",
-            "Gameplay: Player energy drains over time, and is replenished by collecting accelerators.",
-            "Balance: Energy regeneration rates are now tied to skill level, with 'Rookie' players regenerating energy faster than 'Pro' players.",
-            "Gameplay: 'Firestorm' and 'Fire Spinner' moves now continuously drain the player's energy to zero over their animation duration.",
-            "UI: Added an energy bar to the UI to display the player's current energy level."
-        ]
-    },
-    {
-        "version": "1.4.36",
-        "date": "2025-11-05",
-        "changes": [
-            "feat: Modularize drawing logic and enhance special moves",
-            "Refactor: Split the monolithic `drawing.js` into smaller, specialized modules (`effects.js`, `overlays.js`, `player.js`, `world.js`) to improve maintainability.",
-            "Feature: Added sound effects to the \"Firestorm,\" \"Cartoon Scramble,\" \"Houdini,\" and \"Ground Pound\" special moves.",
-            "Fix: Resolved multiple state persistence bugs where cooldowns and animations would not reset when starting a new game.",
-            "Fix: Corrected a canvas aspect-ratio bug that caused stretching and incorrect padding in fullscreen mode on desktop.",
-            "Tweak: Increased the \"hangtime\" for the \"Cartoon Scramble\" jump."
-        ]
-    },
-    {
-        "version": "1.4.35",
-        "date": "2025-11-05",
-        "changes": [
-            "Feature: Added Firestorm V2 destruction animation.",
-            "Refactor: Renamed original 'Firestorm' to 'Fire Spinner'."
         ]
     }
 ]

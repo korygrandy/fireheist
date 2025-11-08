@@ -54,6 +54,16 @@ const armorySkills = {
             skillKey: 'fireSpinner'
         },
         unlockText: 'Destroy 3 obstacles in a row with Ground Pound'
+    },
+    fireDash: {
+        name: 'Fire Dash',
+        description: 'A quick burst of speed, leaving a trail of fire.',
+        emoji: '💨',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'fireDash'
+        },
+        unlockText: 'Coming soon!'
     }
     // Add more skills here as needed
 };
@@ -313,18 +323,27 @@ export function populatePersonaSelector() {
         if (key === 'custom') continue; // Skip custom, it's already added
 
         const persona = personas[key];
+        const unlockInfo = personaUnlocks[key];
         const option = document.createElement('option');
         option.value = key;
-        option.textContent = persona.emoji ? `${persona.emoji} ${persona.name}` : persona.name;
 
-        if (isPersonaUnlocked(key, state.playerStats)) {
-            option.disabled = false;
-        } else {
+        const isUnlocked = isPersonaUnlocked(key, state.playerStats);
+
+        // Use innerHTML to structure the content with spans for flexbox styling
+        option.innerHTML = `
+            <span class="flex justify-between items-center w-full">
+                <span class="${!isUnlocked ? 'locked-persona' : ''}">${persona.emoji ? `${persona.emoji} ${persona.name}` : persona.name}</span>
+                ${unlockInfo ? `<span class="text-xs">${isUnlocked ? '🔓' : '🔒'}</span>` : ''}
+            </span>
+        `;
+
+        if (unlockInfo && !isUnlocked) {
             option.disabled = true;
-            const unlockDescription = personaUnlocks[key]?.description || 'Unlock condition not specified';
-            option.title = `LOCKED: ${unlockDescription}`;
-            option.textContent += ` (Locked)`;
+            option.title = `LOCKED: ${unlockInfo.description || 'Unlock condition not specified'}`;
+        } else {
+            option.disabled = false;
         }
+
         personaSelector.appendChild(option);
     }
     // Ensure the currently selected persona is still selected after re-population
@@ -817,4 +836,3 @@ export function debugUnlockAllPersonas() {
     populatePersonaSelector(); // Re-populate to show unlocked personas
     alert('All personas have been unlocked.');
 }
-
