@@ -49,11 +49,11 @@ const armorySkills = {
         description: 'A fiery spinning jump that incinerates obstacles.',
         emoji: '🔥',
         unlockCondition: {
-            type: 'placeholder',
-            count: 0, // Placeholder count
+            type: 'consecutiveGroundPounds',
+            count: 3,
             skillKey: 'fireSpinner'
         },
-        unlockText: 'Complete a flawless run on Novice difficulty' // Placeholder text
+        unlockText: 'Destroy 3 obstacles in a row with Ground Pound'
     }
     // Add more skills here as needed
 };
@@ -79,6 +79,17 @@ function getSkillUnlockProgress(condition, stats) {
         case 'incinerateCount':
             return {
                 current: stats.obstaclesIncinerated || 0,
+                target: condition.count
+            };
+        case 'flawlessRun':
+            const isComplete = stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
+            return {
+                current: isComplete ? 1 : 0,
+                target: 1
+            };
+        case 'consecutiveGroundPounds':
+            return {
+                current: stats.consecutiveGroundPounds || 0,
                 target: condition.count
             };
         // Add other progress tracking here
@@ -135,6 +146,10 @@ function checkSkillUnlockStatus(condition, stats) {
     switch (condition.type) {
         case 'incinerateCount':
             return stats.obstaclesIncinerated >= condition.count;
+        case 'flawlessRun':
+            return stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
+        case 'consecutiveGroundPounds':
+            return stats.consecutiveGroundPounds >= condition.count;
         // Add other unlock conditions here
         default:
             return false;
@@ -329,6 +344,7 @@ export function checkForArmoryUnlocks(stats) {
             stats.unlockedArmoryItems.push(key); // Add to unlocked items
             populateArmoryItems(); // Refresh the armory to show the unlocked item
             savePlayerStats();
+            console.info(`-> ARMORY UNLOCK: '${skill.name}' unlocked! Condition met: ${skill.unlockText}`);
         }
     }
 }
@@ -617,7 +633,7 @@ export function savePlayerStats() {
 
 export function loadPlayerStats() {
     if (disableSaveSettings.checked) {
-        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [] }; // Reset if disabled
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], consecutiveGroundPounds: 0 }; // Reset if disabled
         return;
     }
     const savedStats = localStorage.getItem(PLAYER_STATS_KEY);
@@ -630,11 +646,12 @@ export function loadPlayerStats() {
             notifiedArmoryUnlocks: loadedStats.notifiedArmoryUnlocks || [],
             unlockedArmoryItems: loadedStats.unlockedArmoryItems || [],
             notifiedUnlocks: loadedStats.notifiedUnlocks || [],
-            activeArmorySkill: loadedStats.activeArmorySkill || null // New: Load active armory skill
+            activeArmorySkill: loadedStats.activeArmorySkill || null,
+            consecutiveGroundPounds: loadedStats.consecutiveGroundPounds || 0
         };
         console.log("-> loadPlayerStats: Player stats loaded and assigned to state.");
     } else {
-        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null };
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null, consecutiveGroundPounds: 0 };
         console.log("-> loadPlayerStats: No player stats found. Initializing defaults.");
     }
 }

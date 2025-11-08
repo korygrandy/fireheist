@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.4.45",
+        "date": "2025-11-07",
+        "changes": [
+            "feat: Implemented the \"Destroy 3 obstacles in a row using only the Ground Pound move\" achievement for the Fire Spinner skill.",
+            "Added logic to track `consecutiveGroundPounds` in `state.playerStats`, incrementing on successful Ground Pound destruction and resetting on other collisions, missed obstacles, or other destructive moves.",
+            "Ensured `consecutiveGroundPounds` is correctly saved, loaded, and reset with the game state.",
+            "Added a console notification when an Armory achievement is met."
+        ]
+    },
+    {
         "version": "1.4.44",
         "date": "2025-11-07",
         "changes": [

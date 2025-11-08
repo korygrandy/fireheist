@@ -126,6 +126,7 @@ function checkCollision(runnerY, angleRad) {
             state.currentObstacle = null;
             playAnimationSound('incinerate');
             state.playerStats.obstaclesIncinerated++;
+            state.playerStats.consecutiveGroundPounds = 0; // Reset streak
             console.log("-> FIRESTORM V2: Obstacle incinerated by collision!");
             return false; // No penalty
         }
@@ -136,6 +137,10 @@ function checkCollision(runnerY, angleRad) {
             state.currentObstacle = null;
             playAnimationSound('fireball');
             state.playerStats.obstaclesIncinerated++;
+            if (state.playerStats.consecutiveGroundPounds > 0) {
+                console.log(`[DEBUG] Streak RESET by Fire Spinner. Was: ${state.playerStats.consecutiveGroundPounds}`);
+                state.playerStats.consecutiveGroundPounds = 0; // Reset streak
+            }
             console.log("-> FIRE SPINNER: Obstacle incinerated!");
             return false; // No penalty
         }
@@ -144,13 +149,19 @@ function checkCollision(runnerY, angleRad) {
             state.currentObstacle = null;
             playAnimationSound('shatter');
             state.playerStats.obstaclesIncinerated++;
-            console.log("-> GROUND POUND: Obstacle shattered!");
+            state.playerStats.consecutiveGroundPounds++; // Increment consecutive Ground Pounds
+            console.log(`[DEBUG] Streak INCREMENTED to: ${state.playerStats.consecutiveGroundPounds}`);
+            checkForNewUnlocks(state.playerStats); // Check for unlocks immediately
             return false; // No penalty
         }
 
         // Priority 3: If no destructive moves are active, check for a standard collision.
         const collisionTolerance = 5;
         if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
+            if (state.playerStats.consecutiveGroundPounds > 0) {
+                console.log(`[DEBUG] Streak RESET by standard collision. Was: ${state.playerStats.consecutiveGroundPounds}`);
+                state.playerStats.consecutiveGroundPounds = 0; // Reset on standard collision
+            }
             return true; // This is a standard, damaging hit.
         }
     }
@@ -473,6 +484,7 @@ export function animate(timestamp) {
 
                 state.currentObstacle = null; // Remove the obstacle from the main track
                 state.playerStats.obstaclesIncinerated++; // Increment stat
+                state.playerStats.consecutiveGroundPounds = 0; // Reset streak
                 console.log(`-> FIRE MAGE: Obstacle destroyed with type ${destructionType}!`);
                 state.activeFireballs.splice(i, 1); // Remove the fireball
                 continue; // Move to the next fireball
@@ -558,6 +570,8 @@ export function animate(timestamp) {
             state.activeCustomEvents.forEach(e => e.isActive = false);
         }
         if (state.currentObstacle && state.currentObstacle.x < -OBSTACLE_WIDTH) {
+            state.playerStats.consecutiveGroundPounds = 0; // Reset if obstacle is missed
+            console.log("-> STREAK RESET: Obstacle missed.");
             state.currentObstacle = null;
         }
     }
@@ -972,6 +986,7 @@ export function resetGameState() {
     state.fireMageLastActivationTime = 0;
     state.activeFireballs = [];
     state.playerStats.activeArmorySkill = null; // Reset active armory skill
+    state.playerStats.consecutiveGroundPounds = 0; // Reset consecutive Ground Pounds
 
     state.activeCustomEvents = Object.values(customEvents).flat().map(event => ({
         ...event,
