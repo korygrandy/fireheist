@@ -7,15 +7,26 @@ import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, fr
 import { initializeUIData, loadCustomData } from './ui-modules/data.js';
 import { switchTab, toggleFullScreen, updateControlPanelState } from './ui-modules/ui-helpers.js';
 import { setupSuggestedEmojis, updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, handleSpeedChange, handlePowerUpToggle, handleAutoHurdleToggle, applySkillLevelSettings } from './ui-modules/input-handlers.js';
-import { debugUnlockAllAchievements } from './ui-modules/debug.js';
+import { debugUnlockAllAchievements, debugEndGame, debugCycleDailyTheme } from './ui-modules/debug.js';
 import { savePlayerStats } from './ui-modules/settings.js';
 import { checkForNewUnlocks } from './ui-modules/unlocks.js';
 import { populateThemeSelector, handleThemeChange } from './ui-modules/theme.js';
 import { populatePersonaSelector, handlePersonaChange } from './ui-modules/persona.js';
 import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmoryItems } from './ui-modules/armory.js';
 import { displayDailyChallenge, displayDailyChallengeResults } from './ui-modules/daily-challenge-ui.js';
+import { startDailyChallengeGame } from './daily-challenge.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
+
+function initializeDailyChallengeUI() {
+    displayDailyChallenge();
+    const startDailyChallengeBtn = document.getElementById('startDailyChallengeBtn');
+    if (startDailyChallengeBtn) {
+        startDailyChallengeBtn.addEventListener('click', () => {
+            startDailyChallengeGame();
+        });
+    }
+}
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
 import state from './game-modules/state.js';
@@ -47,6 +58,9 @@ function initializeDebugPanel() {
 
             const unlockAllBtn = document.getElementById('debugUnlockAllBtn');
             const setShowDailyResultsBtn = document.getElementById('debugShowDailyResultsBtn');
+            const debugWinBtn = document.getElementById('debugWinBtn');
+            const debugLoseBtn = document.getElementById('debugLoseBtn');
+            const debugCycleThemeBtn = document.getElementById('debugCycleThemeBtn');
             const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
             const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
 
@@ -66,6 +80,15 @@ function initializeDebugPanel() {
                 setShowDailyResultsBtn.addEventListener('click', () => {
                     displayDailyChallengeResults({ days: 1234, hits: 5 });
                 });
+            }
+            if (debugWinBtn) {
+                debugWinBtn.addEventListener('click', () => debugEndGame(true));
+            }
+            if (debugLoseBtn) {
+                debugLoseBtn.addEventListener('click', () => debugEndGame(false));
+            }
+            if (debugCycleThemeBtn) {
+                debugCycleThemeBtn.addEventListener('click', debugCycleDailyTheme);
             }
             if (setIncinerateCountBtn && incinerateCountInput) {
                 setIncinerateCountBtn.addEventListener('click', () => {
@@ -155,6 +178,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     preloadGameStartSound();
     preloadAnimationSounds(); // Preload all animation sounds
     initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
+    initializeDailyChallengeUI(); // Initialize the Daily Challenge UI after all other UI is ready
 
     // 3. Set up main buttons and controls
     if (startButton) {
@@ -398,7 +422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Use a timeout to ensure the DOM is fully painted before we try to manipulate it
     setTimeout(() => {
-        displayDailyChallenge();
+        initializeDailyChallengeUI();
     }, 0);
 
     // Initial draw to show tips overlay

@@ -4,14 +4,12 @@
 
 import { getDailyChallengeData } from '../daily-challenge.js';
 
-export function displayDailyChallenge() {
+export function updateDailyChallengeUI(challengeData) {
     const container = document.getElementById('daily-challenge-placeholder');
     if (!container) {
         console.error("-> Daily Challenge UI: Could not find the container element.");
         return;
     }
-
-    const challengeData = getDailyChallengeData();
 
     const dailyChallengeHTML = `
         <div class="text-center p-4 border-2 border-dashed border-gray-300 rounded-lg">
@@ -35,9 +33,13 @@ export function displayDailyChallenge() {
         </div>
     `;
 
-    // Replace the entire content of the container
     container.innerHTML = dailyChallengeHTML;
     container.className = ''; // Remove old classes
+}
+
+export function displayDailyChallenge() {
+    const challengeData = getDailyChallengeData();
+    updateDailyChallengeUI(challengeData);
 }
 
 export function displayDailyChallengeResults(stats) {

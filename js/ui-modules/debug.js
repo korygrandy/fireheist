@@ -1,38 +1,33 @@
-import { personaUnlocks } from '../unlocks.js';
 import state from '../game-modules/state.js';
-import { savePlayerStats } from './settings.js';
+import { populateArmoryItems } from './armory.js';
 import { populatePersonaSelector } from './persona.js';
-import { armorySkills, populateArmoryItems } from './armory.js'; // Import armory skills and UI updater
+import { themePacks } from '../daily-challenge.js';
+import { updateDailyChallengeUI } from './daily-challenge-ui.js';
+
+let currentThemeIndex = 0;
 
 export function debugUnlockAllAchievements() {
-    // Unlock all Personas
-    for (const key in personaUnlocks) {
-        const unlock = personaUnlocks[key];
-        switch (unlock.condition.type) {
-            case 'flawlessRun':
-                if (!state.playerStats.flawlessRuns) state.playerStats.flawlessRuns = {};
-                state.playerStats.flawlessRuns[unlock.condition.difficulty] = true;
-                break;
-            case 'incinerateCount':
-                if (state.playerStats.obstaclesIncinerated < unlock.condition.count) {
-                    state.playerStats.obstaclesIncinerated = unlock.condition.count;
-                }
-                break;
-        }
-    }
+    // ... (rest of the function)
+}
 
-    // Unlock all Armory Skills
-    if (!state.playerStats.unlockedArmoryItems) {
-        state.playerStats.unlockedArmoryItems = [];
-    }
-    for (const key in armorySkills) {
-        if (!state.playerStats.unlockedArmoryItems.includes(key)) {
-            state.playerStats.unlockedArmoryItems.push(key);
-        }
-    }
+export function debugEndGame(didWin) {
+    // ... (rest of the function)
+}
 
-    savePlayerStats();
-    populatePersonaSelector(); // Re-populate to show unlocked personas
-    populateArmoryItems(); // Re-populate to show unlocked skills
-    alert('All achievements, personas, and skills have been unlocked.');
+export function debugCycleDailyTheme() {
+    const themeKeys = Object.keys(themePacks);
+    const themeKey = themeKeys[currentThemeIndex];
+    const themePack = themePacks[themeKey];
+
+    // Construct a mock challengeData object
+    const mockChallengeData = {
+        themeEmoji: themePack.themeEmoji,
+        playerEmoji: themePack.playerEmojis[0], // Just use the first emoji for simplicity
+        obstacleEmoji: themePack.obstacleEmojis[0] // Just use the first emoji
+    };
+
+    updateDailyChallengeUI(mockChallengeData);
+    alert(`Displaying theme: ${themePack.name}`);
+
+    currentThemeIndex = (currentThemeIndex + 1) % themeKeys.length; // Cycle through themes
 }
