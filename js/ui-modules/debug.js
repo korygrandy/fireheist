@@ -2,10 +2,10 @@ import { personaUnlocks } from '../unlocks.js';
 import state from '../game-modules/state.js';
 import { savePlayerStats } from './settings.js';
 import { populatePersonaSelector } from './persona.js';
-import { populateArmoryItems } from './armory.js';
-import { checkForNewUnlocks } from './unlocks.js';
+import { armorySkills, populateArmoryItems } from './armory.js'; // Import armory skills and UI updater
 
-export function debugUnlockAllPersonas() {
+export function debugUnlockAllAchievements() {
+    // Unlock all Personas
     for (const key in personaUnlocks) {
         const unlock = personaUnlocks[key];
         switch (unlock.condition.type) {
@@ -20,7 +20,19 @@ export function debugUnlockAllPersonas() {
                 break;
         }
     }
+
+    // Unlock all Armory Skills
+    if (!state.playerStats.unlockedArmoryItems) {
+        state.playerStats.unlockedArmoryItems = [];
+    }
+    for (const key in armorySkills) {
+        if (!state.playerStats.unlockedArmoryItems.includes(key)) {
+            state.playerStats.unlockedArmoryItems.push(key);
+        }
+    }
+
     savePlayerStats();
     populatePersonaSelector(); // Re-populate to show unlocked personas
-    alert('All personas have been unlocked.');
+    populateArmoryItems(); // Re-populate to show unlocked skills
+    alert('All achievements, personas, and skills have been unlocked.');
 }

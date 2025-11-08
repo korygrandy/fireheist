@@ -7,7 +7,7 @@ import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, fr
 import { initializeUIData, loadCustomData } from './ui-modules/data.js';
 import { switchTab, toggleFullScreen, updateControlPanelState } from './ui-modules/ui-helpers.js';
 import { setupSuggestedEmojis, updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, handleSpeedChange, handlePowerUpToggle, handleAutoHurdleToggle, applySkillLevelSettings } from './ui-modules/input-handlers.js';
-import { debugUnlockAllPersonas } from './ui-modules/debug.js';
+import { debugUnlockAllAchievements } from './ui-modules/debug.js';
 import { savePlayerStats } from './ui-modules/settings.js';
 import { checkForNewUnlocks } from './ui-modules/unlocks.js';
 import { populateThemeSelector, handleThemeChange } from './ui-modules/theme.js';
@@ -58,7 +58,7 @@ function initializeDebugPanel() {
             }
 
             if (unlockAllBtn) {
-                unlockAllBtn.addEventListener('click', debugUnlockAllPersonas);
+                unlockAllBtn.addEventListener('click', debugUnlockAllAchievements);
             }
             if (setIncinerateCountBtn && incinerateCountInput) {
                 setIncinerateCountBtn.addEventListener('click', () => {

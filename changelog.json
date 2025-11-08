@@ -1,5 +1,12 @@
 [
     {
+        "version": "1.4.52",
+        "date": "2025-11-08",
+        "changes": [
+            "Feature: Enhanced the debug panel's \"Unlock all\" functionality. The button now unlocks all Armory skills in addition to all Personas, providing a more comprehensive testing tool."
+        ]
+    },
+    {
         "version": "1.4.51",
         "date": "2025-11-07",
         "changes": [
@@ -80,17 +87,6 @@
             "Fixed a critical bug where `playerStats` were being inadvertently overwritten with default values on page load due to an incorrect `savePlayerStats()` call within `loadSettings()`.",
             "Fixed a bug where debug panel changes to `playerStats` were not persisting across reloads due to `initializeDebugPanel` being called before `initializeUIData`.",
             "Enhanced the UI for unlocked Armory items by adding a subtle orange overlay and a glowing effect to the icon."
-        ]
-    },
-    {
-        "version": "1.4.42",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Added a new \"Armory\" tab to the control panel.",
-            "Implemented dynamic display of unlockable skills in the Armory.",
-            "\"Firestorm\" is now the first unlockable skill, requiring 100 incinerations.",
-            "\"Fire Spinner\" is the second unlockable skill, with its unlock condition to be determined.",
-            "Added styling for Armory items, including locked/unlocked states."
         ]
     }
 ]
