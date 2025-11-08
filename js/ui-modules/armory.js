@@ -1,6 +1,7 @@
 import { armoryItemsContainer } from '../dom-elements.js';
-import state from '../game-modules/state.js';
+import { getSkillUnlockProgress, checkSkillUnlockStatus } from './unlocks.js';
 import { savePlayerStats } from './settings.js';
+import state from '../game-modules/state.js';
 
 // Define unlockable skills for the Armory
 export const armorySkills = {
@@ -50,54 +51,9 @@ export const armorySkills = {
     // Add more skills here as needed
 };
 
-export function getSkillUnlockProgress(condition, stats) {
-    if (!condition || !stats) return { current: 0, target: 0 };
 
-    switch (condition.type) {
-        case 'incinerateCount':
-            return {
-                current: stats.obstaclesIncinerated || 0,
-                target: condition.count
-            };
-        case 'flawlessRun':
-            const isComplete = stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
-            return {
-                current: isComplete ? 1 : 0,
-                target: 1
-            };
-        case 'consecutiveGroundPounds':
-            return {
-                current: stats.consecutiveGroundPounds || 0,
-                target: condition.count
-            };
-        // Add other progress tracking here
-        default:
-            return { current: 0, target: 0 };
-    }
-}
 
-export function checkSkillUnlockStatus(condition, stats) {
-    if (!stats) return false; // No stats means nothing is unlocked
 
-    // If the skill is already in the unlockedArmoryItems array, it's unlocked.
-    if (stats.unlockedArmoryItems && stats.unlockedArmoryItems.includes(condition.skillKey)) {
-        return true;
-    }
-
-    if (!condition || condition.type === 'placeholder') return false; // Placeholder conditions are always locked for now
-
-    switch (condition.type) {
-        case 'incinerateCount':
-            return stats.obstaclesIncinerated >= condition.count;
-        case 'flawlessRun':
-            return stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
-        case 'consecutiveGroundPounds':
-            return stats.consecutiveGroundPounds >= condition.count;
-        // Add other unlock conditions here
-        default:
-            return false;
-    }
-}
 
 export function handleArmorySkillSelection(skillKey) {
     state.playerStats.activeArmorySkill = skillKey;

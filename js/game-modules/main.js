@@ -991,7 +991,6 @@ export function resetGameState() {
     state.isFireMageOnCooldown = false;
     state.fireMageLastActivationTime = 0;
     state.activeFireballs = [];
-    state.playerStats.activeArmorySkill = null; // Reset active armory skill
     state.playerStats.consecutiveGroundPounds = 0; // Reset consecutive Ground Pounds
 
     state.activeCustomEvents = Object.values(state.customEvents).flat().map(event => ({

@@ -81,6 +81,16 @@ export function loadSettings() {
         return true; // Indicate that settings were loaded
     } else {
         console.log("-> loadSettings: No settings found or saving is disabled. Using defaults.");
+        // Explicitly set defaults on the state object
+        state.stickFigureEmoji = '🦹‍♂️';
+        state.obstacleEmoji = '🐌';
+        state.obstacleFrequencyPercent = 20;
+        state.currentSkillLevel = 'Rookie';
+        state.intendedSpeedMultiplier = 1.0;
+        state.enableRandomPowerUps = true;
+        state.isAutoHurdleEnabled = false;
+        state.selectedTheme = 'grass';
+        state.selectedPersona = 'custom';
         return false; // Indicate that settings were not loaded
     }
 }

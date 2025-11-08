@@ -5,6 +5,32 @@ import { savePlayerStats } from './settings.js';
 import { populatePersonaSelector } from './persona.js';
 import { populateArmoryItems, displayArmoryUnlockNotification, checkForArmoryUnlocks } from './armory.js';
 
+export function getSkillUnlockProgress(condition, stats) {
+    if (!condition || !stats) return { current: 0, target: 0 };
+
+    switch (condition.type) {
+        case 'incinerateCount':
+            return {
+                current: stats.obstaclesIncinerated || 0,
+                target: condition.count
+            };
+        case 'flawlessRun':
+            const isComplete = stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
+            return {
+                current: isComplete ? 1 : 0,
+                target: 1
+            };
+        case 'consecutiveGroundPounds':
+            return {
+                current: stats.consecutiveGroundPounds || 0,
+                target: condition.count
+            };
+        // Add other progress tracking here
+        default:
+            return { current: 0, target: 0 };
+    }
+}
+
 export function displayUnlockNotification(personaName) {
     const notificationElement = document.getElementById('unlock-notification');
     if (notificationElement) {
