@@ -130,6 +130,11 @@ const state = {
         nebulaCloudState: { active: false, startTime: 0, opacity: 0 },
         fireflies: [],
         moonGlow: { active: false, opacity: 0, rays: [] },
+        volcanoSmoke: [],
+        embers: [],
+        ash: [],
+        steamVents: [],
+        heatShimmer: { active: false, waveY: 0 },
         headlightFadeState: {
             opacity: 0.6 + Math.random() * 0.4,
             fadeDirection: Math.random() > 0.5 ? 1 : -1,

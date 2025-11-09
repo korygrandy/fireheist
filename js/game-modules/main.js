@@ -1111,6 +1111,11 @@ export function resetGameState() {
     state.environmentalEffects.nebulaCloudState = { active: false, startTime: 0, opacity: 0 };
     state.environmentalEffects.fireflies = [];
     state.environmentalEffects.moonGlow = { active: false, opacity: 0, rays: [] };
+    state.environmentalEffects.volcanoSmoke = [];
+    state.environmentalEffects.embers = [];
+    state.environmentalEffects.ash = [];
+    state.environmentalEffects.steamVents = [];
+    state.environmentalEffects.heatShimmer = { active: false, waveY: 0 };
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;

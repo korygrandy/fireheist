@@ -35,6 +35,12 @@ export function startThemeEffect() {
             startFireflies();
             startMoonGlow();
             break;
+        case 'volcano':
+            startVolcanoSmoke();
+            startAshfall();
+            startHeatShimmer();
+            startEmberShower();
+            break;
         default:
             console.log(`-> DEBUG: No specific effect to trigger for theme '${state.selectedTheme}'.`);
             break;
@@ -546,616 +552,310 @@ function updateDesertThemeEffects(deltaTime) {
 }
 
 function drawDesertThemeEffects() {
-
     // Draw Tumbleweeds
-
     for (const tumbleweed of state.environmentalEffects.tumbleweeds) {
-
         ctx.save();
-
         ctx.translate(tumbleweed.x, tumbleweed.y + tumbleweed.yOffset);
-
         ctx.scale(tumbleweed.scale, tumbleweed.scale);
-
         ctx.rotate(tumbleweed.rotation * Math.PI / 180);
-
         ctx.fillStyle = '#A0522D'; // Lighter brown
-
         ctx.beginPath();
-
         ctx.arc(0, 0, tumbleweed.size, 0, Math.PI * 2);
-
         ctx.fill();
 
-
-
         // Draw inner spiral
-
         ctx.strokeStyle = '#8B4513'; // Darker brown for contrast
-
         ctx.lineWidth = 2;
-
         ctx.beginPath();
-
         for (let i = 0; i < 360; i++) {
-
             const angle = i * Math.PI / 180;
-
             const radius = tumbleweed.size * (i / 360);
-
             const x = radius * Math.cos(angle);
-
             const y = radius * Math.sin(angle);
-
             if (i === 0) {
-
                 ctx.moveTo(x, y);
-
             } else {
-
                 ctx.lineTo(x, y);
-
             }
-
         }
-
         ctx.stroke();
-
         ctx.restore();
-
     }
-
-
 
     // Draw Sand Grains
-
     for (const grain of state.environmentalEffects.sandGrains) {
-
         ctx.save();
-
         ctx.fillStyle = `rgba(210, 180, 140, ${grain.opacity})`;
-
         ctx.fillRect(grain.x, grain.y, grain.size, grain.size);
-
         ctx.restore();
-
     }
-
-
 
     // Draw Tornadoes
-
     for (const tornado of state.environmentalEffects.tornadoes) {
-
         for (const particle of tornado.particles) {
-
             ctx.save();
-
             ctx.fillStyle = `rgba(210, 180, 140, ${particle.opacity})`;
-
             ctx.beginPath();
-
             ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-
             ctx.fill();
-
             ctx.restore();
-
         }
-
     }
-
 }
-
-
 
 // --- OuterSpace Theme Effects ---
 
-
-
 const ASTEROID_COUNT = 15;
-
-
 
 const ASTEROID_DURATION = 10000; // 10 seconds
 
-
-
 const SHOOTING_STAR_DURATION = 1000; // 1 second
-
-
 
 const STAR_BURST_PARTICLE_COUNT = 20;
 
-
-
 const STAR_TRAIL_PARTICLE_COUNT = 3;
-
-
 
 const NEBULA_CLOUD_COUNT = 3;
 
-
-
 const NEBULA_MAX_OPACITY = 0.1;
-
-
 
 const NEBULA_FADE_IN_DURATION = 1000; // 1 second
 
-
-
 const NEBULA_IDLE_DURATION = 10000; // 10 seconds
-
-
 
 const NEBULA_FADE_OUT_DURATION = 4000; // 4 seconds
 
-
-
 const NEBULA_TOTAL_DURATION = NEBULA_FADE_IN_DURATION + NEBULA_IDLE_DURATION + NEBULA_FADE_OUT_DURATION;
 
-
-
 function startAsteroidField() {
-
     if (state.environmentalEffects.asteroids.length > 0) return;
-
     console.log("-> DEBUG: Starting asteroid field.");
-
     for (let i = 0; i < ASTEROID_COUNT; i++) {
-
         const depth = Math.random();
-
         state.environmentalEffects.asteroids.push({
-
             x: Math.random() * canvas.width,
-
             y: Math.random() * canvas.height,
-
             size: (Math.random() * 15 + 5) * depth,
-
             speedX: (Math.random() * 1 + 0.5) * (1 - depth), // Slower for distant asteroids
-
             rotation: 0,
-
             rotationSpeed: Math.random() * 2 - 1,
-
             opacity: depth * 0.5 + 0.3
-
         });
-
     }
-
     setTimeout(() => {
-
         state.environmentalEffects.asteroids = [];
-
     }, ASTEROID_DURATION);
-
 }
-
-
 
 function startShootingStar() {
-
     if (state.environmentalEffects.shootingStars.length > 0) return;
-
     console.log("-> DEBUG: Starting shooting star.");
-
     const startX = Math.random() * canvas.width;
-
     const startY = Math.random() * canvas.height / 2;
-
     state.environmentalEffects.shootingStars.push({
-
         x: startX,
-
         y: startY,
-
         length: Math.random() * 100 + 50,
-
         speedX: - (Math.random() * 15 + 10),
-
         speedY: Math.random() * 10 + 5,
-
         opacity: 1.0,
-
         life: 1.0
-
     });
-
     setTimeout(() => {
-
         state.environmentalEffects.shootingStars = [];
-
     }, SHOOTING_STAR_DURATION);
-
 }
-
-
 
 function createStarBurst(x, y) {
-
     console.log("-> DEBUG: Creating star burst.");
-
     for (let i = 0; i < STAR_BURST_PARTICLE_COUNT; i++) {
-
         const angle = Math.random() * 360;
-
         const speed = Math.random() * 2 + 1;
-
         state.environmentalEffects.shootingStarBursts.push({
-
             x: x,
-
             y: y,
-
             speedX: Math.cos(angle * Math.PI / 180) * speed,
-
             speedY: Math.sin(angle * Math.PI / 180) * speed,
-
             size: Math.random() * 2 + 1,
-
             life: 1.0,
-
             opacity: 1.0
-
         });
-
     }
-
 }
-
-
 
 function createStarTrail(x, y) {
-
     for (let i = 0; i < STAR_TRAIL_PARTICLE_COUNT; i++) {
-
         state.environmentalEffects.shootingStarTrails.push({
-
             x: x + (Math.random() - 0.5) * 10,
-
             y: y + (Math.random() - 0.5) * 10,
-
             size: Math.random() * 1.5 + 0.5,
-
             life: 1.0,
-
             opacity: 1.0
-
         });
-
     }
-
 }
-
-
 
 function startNebulaCloud() {
-
     if (state.environmentalEffects.nebulaCloudState.active) return;
-
     console.log("-> DEBUG: Starting nebula cloud.");
 
-
-
     state.environmentalEffects.nebulaCloudState.active = true;
-
     state.environmentalEffects.nebulaCloudState.startTime = Date.now();
 
-
-
     const colors = ['138, 43, 226', '0, 191, 255', '255, 20, 147']; // RGB strings
-
     for (let i = 0; i < NEBULA_CLOUD_COUNT; i++) {
-
         state.environmentalEffects.nebulaClouds.push({
-
             x: Math.random() * canvas.width,
-
             y: Math.random() * canvas.height,
-
             radiusX: Math.random() * 300 + 200,
-
             radiusY: Math.random() * 150 + 100,
-
             color: colors[Math.floor(Math.random() * colors.length)],
-
             speedX: Math.random() * 0.2 - 0.1
-
         });
-
     }
-
 }
 
-
-
 function updateOuterSpaceThemeEffects(deltaTime) {
-
     // Update Asteroids
-
     for (const asteroid of state.environmentalEffects.asteroids) {
-
         asteroid.x += asteroid.speedX;
-
         asteroid.rotation += asteroid.rotationSpeed;
-
         if (asteroid.x > canvas.width + asteroid.size) {
-
             asteroid.x = -asteroid.size;
-
         }
-
     }
 
-
-
     // Update Shooting Stars
-
     for (let i = state.environmentalEffects.shootingStars.length - 1; i >= 0; i--) {
-
         const star = state.environmentalEffects.shootingStars[i];
-
         star.x += star.speedX;
-
         star.y += star.speedY;
-
         star.life -= 0.02;
-
         star.opacity = star.life;
-
-
 
         createStarTrail(star.x, star.y);
 
-
-
         if (star.life <= 0) {
-
             if (Math.random() < 0.5) { // 50% chance of a burst
-
                 createStarBurst(star.x, star.y);
-
             }
-
             state.environmentalEffects.shootingStars.splice(i, 1);
-
         }
-
     }
-
-
 
     // Update Star Bursts
-
     for (let i = state.environmentalEffects.shootingStarBursts.length - 1; i >= 0; i--) {
-
         const particle = state.environmentalEffects.shootingStarBursts[i];
-
         particle.x += particle.speedX;
-
         particle.y += particle.speedY;
-
         particle.life -= 0.04; // Faster fade
-
         particle.opacity = particle.life;
-
         if (particle.life <= 0) {
-
             state.environmentalEffects.shootingStarBursts.splice(i, 1);
-
         }
-
     }
-
-
 
     // Update Star Trails
-
     for (let i = state.environmentalEffects.shootingStarTrails.length - 1; i >= 0; i--) {
-
         const particle = state.environmentalEffects.shootingStarTrails[i];
-
         particle.life -= 0.05; // Even faster fade for trails
-
         particle.opacity = particle.life;
-
         if (particle.life <= 0) {
-
             state.environmentalEffects.shootingStarTrails.splice(i, 1);
-
         }
-
     }
-
-
 
     // Update Nebula Clouds
-
     if (state.environmentalEffects.nebulaCloudState.active) {
-
         const cloudState = state.environmentalEffects.nebulaCloudState;
-
         const elapsedTime = Date.now() - cloudState.startTime;
 
-
-
         if (elapsedTime < NEBULA_FADE_IN_DURATION) {
-
             // Fading in
-
             cloudState.opacity = (elapsedTime / NEBULA_FADE_IN_DURATION) * NEBULA_MAX_OPACITY;
-
         } else if (elapsedTime < NEBULA_FADE_IN_DURATION + NEBULA_IDLE_DURATION) {
-
             // Idle
-
             cloudState.opacity = NEBULA_MAX_OPACITY;
-
         } else if (elapsedTime < NEBULA_TOTAL_DURATION) {
-
             // Fading out
-
             const fadeOutElapsedTime = elapsedTime - (NEBULA_FADE_IN_DURATION + NEBULA_IDLE_DURATION);
-
             cloudState.opacity = (1 - (fadeOutElapsedTime / NEBULA_FADE_OUT_DURATION)) * NEBULA_MAX_OPACITY;
-
         } else {
-
             // End of life
-
             cloudState.active = false;
-
             state.environmentalEffects.nebulaClouds = [];
-
         }
-
-
 
         for (const cloud of state.environmentalEffects.nebulaClouds) {
-
             cloud.x += cloud.speedX;
-
             if (cloud.x > canvas.width + cloud.radiusX) {
-
                 cloud.x = -cloud.radiusX;
-
             }
-
         }
-
     }
-
 }
-
-
 
 function drawOuterSpaceThemeEffects() {
-
     // Draw Nebula Clouds
-
     if (state.environmentalEffects.nebulaCloudState.active) {
-
         const opacity = state.environmentalEffects.nebulaCloudState.opacity;
-
         for (const cloud of state.environmentalEffects.nebulaClouds) {
-
             ctx.save();
-
             ctx.fillStyle = `rgba(${cloud.color}, ${opacity})`;
-
             ctx.beginPath();
-
             ctx.ellipse(cloud.x, cloud.y, cloud.radiusX, cloud.radiusY, 0, 0, 2 * Math.PI);
-
             ctx.fill();
-
             ctx.restore();
-
         }
-
     }
-
-
 
     // Draw Asteroids
-
     for (const asteroid of state.environmentalEffects.asteroids) {
-
         ctx.save();
-
         ctx.translate(asteroid.x, asteroid.y);
-
         ctx.rotate(asteroid.rotation * Math.PI / 180);
-
         ctx.fillStyle = `rgba(128, 128, 128, ${asteroid.opacity})`;
-
         ctx.beginPath();
-
         ctx.arc(0, 0, asteroid.size, 0, Math.PI * 2);
-
         ctx.fill();
-
         ctx.restore();
-
     }
-
-
 
     // Draw Star Trails
-
     for (const particle of state.environmentalEffects.shootingStarTrails) {
-
         ctx.save();
-
         ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
-
         ctx.beginPath();
-
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-
         ctx.fill();
-
         ctx.restore();
-
     }
-
-
 
     // Draw Shooting Stars
-
     for (const star of state.environmentalEffects.shootingStars) {
-
         ctx.save();
-
         const gradient = ctx.createLinearGradient(star.x, star.y, star.x + star.length, star.y - star.length / 2);
-
         gradient.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
-
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
         ctx.strokeStyle = gradient;
-
         ctx.lineWidth = 2;
-
         ctx.beginPath();
-
         ctx.moveTo(star.x, star.y);
-
         ctx.lineTo(star.x + star.length, star.y - star.length / 2);
-
         ctx.stroke();
-
         ctx.restore();
-
     }
-
-
 
     // Draw Star Bursts
-
     for (const particle of state.environmentalEffects.shootingStarBursts) {
-
         ctx.save();
-
         ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
-
         ctx.beginPath();
-
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-
         ctx.fill();
-
         ctx.restore();
-
     }
-
 }
-
-
 
 // --- Night Theme Effects ---
 
@@ -1274,6 +974,214 @@ function drawNightThemeEffects() {
     }
 }
 
+// --- Volcano Theme Effects ---
+
+const SMOKE_PARTICLE_COUNT = 25;
+const SMOKE_DURATION = 20000; // 20 seconds
+const EMBER_COUNT = 15;
+const ASH_DENSITY = 100;
+const ASH_DURATION = 10000; // 10 seconds
+const EMBER_SHOWER_COUNT = 50;
+const EMBER_SHOWER_DURATION = 3000; // 3 seconds
+const STEAM_VENT_COUNT = 5;
+const STEAM_PARTICLE_COUNT = 10;
+const STEAM_DURATION = 5000; // 5 seconds
+
+function startVolcanoSmoke() {
+    if (state.environmentalEffects.volcanoSmoke.length > 0) return;
+    console.log("-> DEBUG: Starting volcano smoke.");
+    for (let i = 0; i < SMOKE_PARTICLE_COUNT; i++) {
+        state.environmentalEffects.volcanoSmoke.push({
+            x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+            y: canvas.height,
+            radiusX: Math.random() * 80 + 40,
+            radiusY: Math.random() * 30 + 20,
+            speedY: - (Math.random() * 0.5 + 0.2),
+            speedX: Math.random() * 1 - 0.5,
+            opacity: Math.random() * 0.2 + 0.1,
+            life: 1.0
+        });
+    }
+    // Also start some embers within the smoke
+    for (let i = 0; i < EMBER_COUNT; i++) {
+        state.environmentalEffects.embers.push({
+            x: canvas.width / 2 + (Math.random() - 0.5) * 150,
+            y: canvas.height,
+            size: Math.random() * 3 + 1,
+            speedY: - (Math.random() * 1 + 0.5),
+            speedX: Math.random() * 1 - 0.5,
+            life: 1.0,
+            opacity: 1.0
+        });
+    }
+    setTimeout(() => {
+        state.environmentalEffects.volcanoSmoke = [];
+        state.environmentalEffects.embers = [];
+    }, SMOKE_DURATION);
+}
+
+function startAshfall() {
+    if (state.environmentalEffects.ash.length > 0) return;
+    console.log("-> DEBUG: Starting ashfall.");
+    for (let i = 0; i < ASH_DENSITY; i++) {
+        state.environmentalEffects.ash.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -canvas.height,
+            size: Math.random() * 2 + 1,
+            speedY: Math.random() * 1 + 0.5,
+            speedX: Math.random() * 0.5 - 0.25
+        });
+    }
+    setTimeout(() => {
+        state.environmentalEffects.ash = [];
+    }, ASH_DURATION);
+}
+
+function startHeatShimmer() {
+    if (!state.environmentalEffects.heatShimmer.active) {
+        console.log("-> DEBUG: Starting heat shimmer.");
+        state.environmentalEffects.heatShimmer.active = true;
+        setTimeout(() => {
+            state.environmentalEffects.heatShimmer.active = false;
+        }, 10000); // 10 seconds duration
+    }
+}
+
+function startEmberShower() {
+    if (state.environmentalEffects.embers.length > EMBER_COUNT) return; // Prevent overlap with smoke embers
+    console.log("-> DEBUG: Starting ember shower.");
+    for (let i = 0; i < EMBER_SHOWER_COUNT; i++) {
+        state.environmentalEffects.embers.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -50,
+            size: Math.random() * 3 + 1,
+            speedY: Math.random() * 2 + 1,
+            speedX: 0,
+            life: 1.0,
+            opacity: 1.0
+        });
+    }
+    // Also trigger some steam vents
+    for (let i = 0; i < STEAM_VENT_COUNT; i++) {
+        const ventX = Math.random() * canvas.width;
+        for (let j = 0; j < STEAM_PARTICLE_COUNT; j++) {
+            state.environmentalEffects.steamVents.push({
+                x: ventX + (Math.random() - 0.5) * 20,
+                y: canvas.height,
+                radius: Math.random() * 10 + 5,
+                speedY: -(Math.random() * 1 + 0.5),
+                life: 1.0,
+                opacity: Math.random() * 0.3 + 0.1
+            });
+        }
+    }
+    setTimeout(() => {
+        state.environmentalEffects.steamVents = [];
+    }, STEAM_DURATION);
+}
+
+function updateVolcanoThemeEffects(deltaTime) {
+    // Update Smoke
+    for (let i = state.environmentalEffects.volcanoSmoke.length - 1; i >= 0; i--) {
+        const smoke = state.environmentalEffects.volcanoSmoke[i];
+        smoke.x += smoke.speedX;
+        smoke.y += smoke.speedY;
+        smoke.life -= 0.001;
+        if (smoke.life <= 0) {
+            state.environmentalEffects.volcanoSmoke.splice(i, 1);
+        }
+    }
+
+    // Update Embers (from both smoke and showers)
+    for (let i = state.environmentalEffects.embers.length - 1; i >= 0; i--) {
+        const ember = state.environmentalEffects.embers[i];
+        ember.x += ember.speedX;
+        ember.y += ember.speedY;
+        ember.life -= 0.01;
+        ember.opacity = ember.life;
+        if (ember.life <= 0) {
+            state.environmentalEffects.embers.splice(i, 1);
+        }
+    }
+
+    // Update Ash
+    for (const ash of state.environmentalEffects.ash) {
+        ash.y += ash.speedY;
+        ash.x += ash.speedX;
+        if (ash.y > canvas.height) {
+            ash.y = 0;
+            ash.x = Math.random() * canvas.width;
+        }
+    }
+
+    // Update Steam Vents
+    for (let i = state.environmentalEffects.steamVents.length - 1; i >= 0; i--) {
+        const steam = state.environmentalEffects.steamVents[i];
+        steam.y += steam.speedY;
+        steam.life -= 0.015;
+        steam.opacity = steam.life * 0.3;
+        if (steam.life <= 0) {
+            state.environmentalEffects.steamVents.splice(i, 1);
+        }
+    }
+
+    // Update Heat Shimmer
+    if (state.environmentalEffects.heatShimmer.active) {
+        state.environmentalEffects.heatShimmer.waveY = (state.environmentalEffects.heatShimmer.waveY + 0.5) % 20;
+    }
+}
+
+function drawVolcanoThemeEffects() {
+    // Draw Smoke
+    for (const smoke of state.environmentalEffects.volcanoSmoke) {
+        ctx.save();
+        ctx.fillStyle = `rgba(50, 50, 50, ${smoke.opacity * smoke.life})`;
+        ctx.beginPath();
+        ctx.ellipse(smoke.x, smoke.y, smoke.radiusX, smoke.radiusY, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Draw Ash
+    for (const ash of state.environmentalEffects.ash) {
+        ctx.save();
+        ctx.fillStyle = `rgba(20, 20, 20, 0.5)`;
+        ctx.fillRect(ash.x, ash.y, ash.size, ash.size);
+        ctx.restore();
+    }
+
+    // Draw Embers
+    for (const ember of state.environmentalEffects.embers) {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 100, 0, ${ember.opacity})`;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = 'red';
+        ctx.beginPath();
+        ctx.arc(ember.x, ember.y, ember.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Draw Steam Vents
+    for (const steam of state.environmentalEffects.steamVents) {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 255, 255, ${steam.opacity})`;
+        ctx.beginPath();
+        ctx.arc(steam.x, steam.y, steam.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Apply Heat Shimmer to the whole canvas if active
+    if (state.environmentalEffects.heatShimmer.active) {
+        const waveY = state.environmentalEffects.heatShimmer.waveY;
+        for (let y = 0; y < canvas.height; y += 20) {
+            const xOffset = Math.sin((y + waveY) * 0.1) * 5;
+            ctx.drawImage(canvas, 0, y, canvas.width, 20, xOffset, y, canvas.width, 20);
+        }
+    }
+}
+
 
 // --- Manager Functions ---
 
@@ -1353,6 +1261,14 @@ case 'desert':
                 startMoonGlow();
             }
             break;
+        case 'volcano':
+            updateVolcanoThemeEffects(deltaTime);
+            // Trigger effects randomly
+            if (Math.random() < 0.001 && state.gameRunning) startVolcanoSmoke();
+            if (Math.random() < 0.002 && state.gameRunning) startAshfall();
+            if (Math.random() < 0.0005 && state.gameRunning) startHeatShimmer();
+            if (Math.random() < 0.0015 && state.gameRunning) startEmberShower();
+            break;
     }
 }
 
@@ -1384,6 +1300,8 @@ export function drawEnvironmentalEffects() {
         case 'night':
             drawNightThemeEffects();
             break;
+        case 'volcano':
+            drawVolcanoThemeEffects();
+            break;
     }
 }
-
