@@ -2,7 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS, ACCELERATOR_DURATION_MS } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import state from '../state.js';
-import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle } from './effects.js';
+import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle, createPlayerEmbers } from './effects.js';
 
 export function drawStickFigure(x, y, jumpState, angleRad) {
 
@@ -338,6 +338,13 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         legMovementX2 = -5; legMovementY2 = bodyY;
         armMovementX1 = 5; armMovementY1 = headY + 20;
         armMovementX2 = -5; armMovementY2 = headY + 20;
+    } else if (state.isMageSpinnerActive) {
+        // Add a fiery glow and embers for Mage Spinner
+        ctx.shadowColor = 'orange';
+        ctx.shadowBlur = 20;
+        if (state.frameCount % 3 === 0) {
+            createPlayerEmbers(y);
+        }
     }
 
     // Reset shadow properties if they were set by a special move

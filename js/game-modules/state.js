@@ -53,6 +53,12 @@ const state = {
     fireMageEndTime: 0, // When the Fire Mage mode will end
     isFireMageOnCooldown: false, // Is Fire Mage on cooldown?
     fireMageLastActivationTime: 0, // When Fire Mage was last activated
+    isMageSpinnerActive: false, // Is Mage Spinner mode currently active?
+    mageSpinnerEndTime: 0, // When the Mage Spinner mode will end
+    isMageSpinnerOnCooldown: false, // Is Mage Spinner on cooldown?
+    mageSpinnerLastActivationTime: 0, // When Mage Spinner was last activated
+    mageSpinnerFireballTimer: 0, // Timer for spawning fireballs
+    mageSpinnerFireballsSpawned: 0, // Counter for fireballs spawned
     activeFireballs: [], // Array to track on-screen fireballs
     vanishingObstacles: [], // Array for obstacles that "poof" on hit
     meteorParticles: [],

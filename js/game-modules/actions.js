@@ -1,5 +1,5 @@
 import { createHoudiniPoof } from './drawing/effects.js';
-import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE } from '../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 
 const JUMP_DURATIONS = {
@@ -59,7 +59,7 @@ export function startFireMage(state) {
 }
 
 export function castFireball(state) {
-    if (!state.gameRunning || state.isPaused || !state.isFireMageActive) return;
+    if (!state.gameRunning || state.isPaused || (!state.isFireMageActive && !state.isMageSpinnerActive)) return;
     if (!consumeEnergy(state, 'fireballCast', FIREBALL_CAST_ENERGY_COST)) return;
 
     // Correctly calculate player's current Y position based on the ground angle
@@ -103,6 +103,67 @@ export function startFireSpinner(state) {
     initiateJump(state, JUMP_DURATIONS.firestorm);
     playAnimationSound('fireball'); // Placeholder sound
     console.log("-> startFireSpinner: Fire Spinner initiated.");
+}
+
+export function startMageSpinner(state) {
+    if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive || state.isMageSpinnerOnCooldown) return;
+
+    const now = Date.now();
+    if (now - state.mageSpinnerLastActivationTime < MAGE_SPINNER_COOLDOWN_MS) {
+        console.log("-> startMageSpinner: Mage Spinner is on cooldown.");
+        return;
+    }
+
+    if (!consumeEnergy(state, 'mageSpinner', MAGE_SPINNER_ENERGY_COST)) return;
+
+    state.isMageSpinnerActive = true;
+    state.mageSpinnerEndTime = now + MAGE_SPINNER_DURATION_MS;
+    state.mageSpinnerLastActivationTime = now; // Start cooldown from now
+    state.isMageSpinnerOnCooldown = true; // Cooldown starts immediately
+    state.mageSpinnerFireballTimer = MAGE_SPINNER_FIREBALL_INTERVAL_MS; // Initialize timer for first fireball
+    state.mageSpinnerFireballsSpawned = 0; // Reset fireball counter
+
+    playAnimationSound('firestorm'); // Placeholder sound for activation
+    console.log("-> startMageSpinner: Mage Spinner initiated.");
+}
+
+export function castMageSpinnerFireball(state, targetObstacle) {
+    if (!state.gameRunning || state.isPaused || !targetObstacle) return;
+
+    // Calculate player's current Y position (approximate center)
+    const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
+    const groundAngleRad = currentSegment.angleRad;
+    const playerGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
+    const playerCenterY = playerGroundY - (STICK_FIGURE_TOTAL_HEIGHT / 2);
+
+    // Fireball starts from player's X, slightly above player's center
+    const startX = STICK_FIGURE_FIXED_X + 10;
+    const startY = playerCenterY - 10; // Slightly above player center
+
+    // Calculate target Y for the fireball (top of the obstacle)
+    const obstacleTopY = GROUND_Y - targetObstacle.x * Math.tan(groundAngleRad) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+
+    // Calculate velocity components to hit the obstacle
+    const distanceX = targetObstacle.x - startX;
+    const distanceY = obstacleTopY - startY;
+
+    // Using a fixed horizontal velocity, calculate vertical velocity
+    const velocityX = FIREBALL_VELOCITY_PX_MS * 1.5; // Slightly faster than regular fireballs
+    const duration = distanceX / velocityX; // Time to reach obstacle horizontally
+    const velocityY = distanceY / duration; // Required vertical velocity
+
+    const fireball = {
+        x: startX,
+        y: startY,
+        size: FIREBALL_SIZE,
+        velocityX: velocityX,
+        velocityY: velocityY,
+        spawnTime: Date.now(),
+        isMageSpinnerFireball: true // Mark this fireball as from Mage Spinner
+    };
+    state.activeFireballs.push(fireball);
+    playAnimationSound('fireball');
+    console.log("-> castMageSpinnerFireball: Fireball launched at obstacle!");
 }
 
 export function startManualJump(state) {

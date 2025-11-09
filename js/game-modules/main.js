@@ -1,4 +1,4 @@
-import { canvas, ctx, header, controlPanel, mainElement } from '../dom-elements.js';
+import {canvas, ctx, header, controlPanel, mainElement} from '../dom-elements.js';
 import {
     VICTORY_DISPLAY_TIME,
     HURDLE_FIXED_START_DISTANCE,
@@ -30,42 +30,63 @@ import {
     ENERGY_SETTINGS,
     ENERGY_GAIN_ACCELERATOR,
     FIRE_MAGE_COOLDOWN_MS,
-    FIREBALL_SIZE
+    FIREBALL_SIZE,
+    MAGE_SPINNER_COOLDOWN_MS,
+    MAGE_SPINNER_DURATION_MS,
+    MAGE_SPINNER_FIREBALL_INTERVAL_MS,
+    MAGE_SPINNER_FIREBALL_COUNT,
+    MAGE_SPINNER_ENERGY_COST
 } from '../constants.js';
-import { isMuted, backgroundMusic, chaChingSynth, collisionSynth, debuffSynth, initializeMusicPlayer, playChaChing, playCollisionSound, playDebuffSound, playQuackSound, playPowerUpSound, playWinnerSound, playLoserSound, preloadEndgameSounds, playAnimationSound } from '../audio.js';
-import { applySkillLevelSettings } from '../ui-modules/input-handlers.js';
-import { showResultsScreen, hideResultsScreen } from '../ui-modules/results.js';
-import { updateControlPanelState } from '../ui-modules/ui-helpers.js';
-import { displayHighScores } from '../ui-modules/high-scores.js';
-import { exitFullScreenIfActive } from '../ui-modules/ui-helpers.js';
-import { savePlayerStats } from '../ui-modules/settings.js';
-import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
-import { currentTheme } from '../theme.js';
-import { personas } from '../personas.js';
-import state, { HIGH_SCORE_KEY } from './state.js';
+import {
+    isMuted,
+    backgroundMusic,
+    chaChingSynth,
+    collisionSynth,
+    debuffSynth,
+    initializeMusicPlayer,
+    playChaChing,
+    playCollisionSound,
+    playDebuffSound,
+    playQuackSound,
+    playPowerUpSound,
+    playWinnerSound,
+    playLoserSound,
+    preloadEndgameSounds,
+    playAnimationSound
+} from '../audio.js';
+import {applySkillLevelSettings} from '../ui-modules/input-handlers.js';
+import {showResultsScreen, hideResultsScreen} from '../ui-modules/results.js';
+import {updateControlPanelState} from '../ui-modules/ui-helpers.js';
+import {displayHighScores} from '../ui-modules/high-scores.js';
+import {exitFullScreenIfActive} from '../ui-modules/ui-helpers.js';
+import {savePlayerStats} from '../ui-modules/settings.js';
+import {checkForNewUnlocks} from '../ui-modules/unlocks.js';
+import {currentTheme} from '../theme.js';
+import {personas} from '../personas.js';
+import state, {HIGH_SCORE_KEY} from './state.js';
 import * as drawing from './drawing.js';
-import { initializeUIData } from '../ui-modules/data.js';
-import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from '../ui-modules/daily-challenge-ui.js';
-import { showSandboxControls } from '../ui-modules/ui-helpers.js';
-import { markDailyChallengeAsPlayed, updateDailyChallengeWinStreak } from '../daily-challenge.js';
+import {initializeUIData} from '../ui-modules/data.js';
+import {displayDailyChallenge, displayDailyChallengeCompletedScreen} from '../ui-modules/daily-challenge-ui.js';
+import {showSandboxControls} from '../ui-modules/ui-helpers.js';
+import {markDailyChallengeAsPlayed, updateDailyChallengeWinStreak} from '../daily-challenge.js';
+import {castMageSpinnerFireball} from './actions.js';
 
-function updateHighScore() {
-    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
-    const currentScore = {
-        days: Math.round(state.daysElapsedTotal),
-        hits: state.hitsCounter,
-        emoji: state.stickFigureEmoji,
-        speed: state.intendedSpeedMultiplier
-    };
+const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
+const currentScore = {
+    days: Math.round(state.daysElapsedTotal),
+    hits: state.hitsCounter,
+    emoji: state.stickFigureEmoji,
+    speed: state.intendedSpeedMultiplier
+};
 
-    const existingScore = highScores[state.currentSkillLevel];
+const existingScore = highScores[state.currentSkillLevel];
 
-    if (!existingScore || currentScore.hits < existingScore.hits || (currentScore.hits === existingScore.hits && currentScore.days < existingScore.days)) {
-        highScores[state.currentSkillLevel] = currentScore;
-        localStorage.setItem(HIGH_SCORE_KEY, JSON.stringify(highScores));
-        console.log(`-> updateHighScore: New high score for ${state.currentSkillLevel} saved!`);
-        displayHighScores(); // Update the UI immediately
-    }
+if (!existingScore || currentScore.hits < existingScore.hits || (currentScore.hits === existingScore.hits && currentScore.days < existingScore.days)) {
+    highScores[state.currentSkillLevel] = currentScore;
+    localStorage.setItem(HIGH_SCORE_KEY, JSON.stringify(highScores));
+    console.log(`-> updateHighScore: New high score for ${state.currentSkillLevel} saved!`);
+    displayHighScores(); // Update the UI immediately
+
 }
 
 function spawnObstacle() {
@@ -132,7 +153,11 @@ function checkCollision(runnerY, angleRad) {
     if (horizontalDistance < state.COLLISION_RANGE_X) {
         // Priority 1: Check for active Firestorm first, as it overrides all other collision types.
         if (state.isFirestormActive) {
-            state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
+            state.incineratingObstacles.push({
+                ...state.currentObstacle,
+                animationProgress: 0,
+                startTime: performance.now()
+            });
             state.currentObstacle = null;
             playAnimationSound('incinerate');
             state.playerStats.obstaclesIncinerated++;
@@ -143,7 +168,11 @@ function checkCollision(runnerY, angleRad) {
 
         // Priority 2: Check for destructive jump moves.
         if (state.jumpState.isFireSpinner) {
-            state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
+            state.incineratingObstacles.push({
+                ...state.currentObstacle,
+                animationProgress: 0,
+                startTime: performance.now()
+            });
             state.currentObstacle = null;
             playAnimationSound('fireball');
             state.playerStats.obstaclesIncinerated++;
@@ -233,12 +262,16 @@ function applySpeedEffect(type) {
     if (state.isAccelerating) {
         state.isAccelerating = false;
         state.accelerationDuration = 0;
-        state.activeCustomEvents.forEach(e => { if (e.type === 'ACCELERATOR') e.isActive = false; });
+        state.activeCustomEvents.forEach(e => {
+            if (e.type === 'ACCELERATOR') e.isActive = false;
+        });
     }
     if (state.isDecelerating) {
         state.isDecelerating = false;
         state.decelerationDuration = 0;
-        state.activeCustomEvents.forEach(e => { if (e.type === 'DECELERATOR') e.isActive = false; });
+        state.activeCustomEvents.forEach(e => {
+            if (e.type === 'DECELERATOR') e.isActive = false;
+        });
     }
 
     if (type === 'ACCELERATOR') {
@@ -246,7 +279,7 @@ function applySpeedEffect(type) {
         state.accelerationDuration = ACCELERATOR_DURATION_MS;
         state.gameSpeedMultiplier = state.intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
         playChaChing();
-        state.screenFlash = { opacity: 0.7, duration: 200, startTime: performance.now() };
+        state.screenFlash = {opacity: 0.7, duration: 200, startTime: performance.now()};
         console.info("-> APPLY SPEED: Accelerator (2x) applied!");
     } else if (type === 'DECELERATOR') {
         state.isDecelerating = true;
@@ -357,6 +390,16 @@ export function animate(timestamp) {
             const drainRate = energyToDrain / remainingTime;
             state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
         }
+    } else if (state.isMageSpinnerActive) { // Mage Spinner drains energy over its duration
+        const remainingTime = state.mageSpinnerEndTime - Date.now();
+        if (remainingTime <= 0) {
+            state.playerEnergy = 0; // Ensure energy is fully drained if skill ends
+        } else {
+            // Calculate drain rate to deplete energy over the skill's duration
+            const energyToDrain = MAGE_SPINNER_ENERGY_COST; // Total cost of the skill
+            const drainRate = energyToDrain / MAGE_SPINNER_DURATION_MS; // Energy per millisecond
+            state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
+        }
     } else {
         // Regular energy drain
         const energyDrain = (ENERGY_SETTINGS.DRAIN_RATE * deltaTime) / 1000;
@@ -375,6 +418,36 @@ export function animate(timestamp) {
         if (now - state.fireMageLastActivationTime > FIRE_MAGE_COOLDOWN_MS) {
             state.isFireMageOnCooldown = false;
             console.log("-> Fire Mage: Cooldown finished. Ready.");
+        }
+    }
+
+    // Check and update Mage Spinner mode duration
+    if (state.isMageSpinnerActive) {
+        const now = Date.now();
+        if (now > state.mageSpinnerEndTime) {
+            state.isMageSpinnerActive = false;
+            console.log("-> Mage Spinner mode ended.");
+        } else {
+            // Handle fireball spawning during Mage Spinner active time
+            state.mageSpinnerFireballTimer -= deltaTime;
+            if (state.mageSpinnerFireballTimer <= 0 && state.mageSpinnerFireballsSpawned < MAGE_SPINNER_FIREBALL_COUNT) {
+                // Find the closest obstacle to target
+                const targetObstacle = state.currentObstacle || state.ignitedObstacles[0] || state.vanishingObstacles[0];
+                if (targetObstacle) {
+                    castMageSpinnerFireball(state, targetObstacle); // Pass the target obstacle
+                    state.mageSpinnerFireballsSpawned++;
+                    state.mageSpinnerFireballTimer = MAGE_SPINNER_FIREBALL_INTERVAL_MS; // Reset timer
+                }
+            }
+        }
+    }
+
+    // Check and update Mage Spinner cooldown
+    if (state.isMageSpinnerOnCooldown) {
+        const now = Date.now();
+        if (now - state.mageSpinnerLastActivationTime > MAGE_SPINNER_COOLDOWN_MS) {
+            state.isMageSpinnerOnCooldown = false;
+            console.log("-> Mage Spinner: Cooldown finished. Ready.");
         }
     }
 
@@ -412,7 +485,7 @@ export function animate(timestamp) {
         const nextEventToTrigger = state.activeCustomEvents.find(event => !event.wasTriggered && !event.wasSpawned);
         if (nextEventToTrigger) {
             const daysPerCanvas = totalDaysForCurrentSegment;
-            const proximityDays = daysPerCanvas * (EVENT_PROXIMITY_VISUAL_STEPS * (MIN_VISUAL_DURATION_MS/MAX_VISUAL_DURATION_MS));
+            const proximityDays = daysPerCanvas * (EVENT_PROXIMITY_VISUAL_STEPS * (MIN_VISUAL_DURATION_MS / MAX_VISUAL_DURATION_MS));
 
             if (nextEventToTrigger.daysSinceStart <= daysCheck + proximityDays) {
                 spawnProximityEvent(nextEventToTrigger);
@@ -453,7 +526,12 @@ export function animate(timestamp) {
     // Update and check active fireballs
     for (let i = state.activeFireballs.length - 1; i >= 0; i--) {
         const fireball = state.activeFireballs[i];
-        fireball.x += fireball.velocity * deltaTime; // Fireballs move forward
+        if (fireball.isMageSpinnerFireball) {
+            fireball.x += fireball.velocityX * deltaTime;
+            fireball.y += fireball.velocityY * deltaTime;
+        } else {
+            fireball.x += fireball.velocity * deltaTime; // Regular fireballs move forward
+        }
 
         // Check for collision with current obstacle
         if (state.currentObstacle && !state.currentObstacle.hasBeenHit) {
@@ -502,7 +580,7 @@ export function animate(timestamp) {
         }
 
         // Remove fireball if it goes off-screen
-        if (fireball.x > canvas.width + fireball.size) {
+        if (fireball.x > canvas.width + fireball.size || fireball.y > canvas.height + fireball.size) {
             state.activeFireballs.splice(i, 1);
         }
     }
@@ -589,7 +667,7 @@ export function animate(timestamp) {
     if (state.currentAccelerator) {
         if (checkAcceleratorCollision(runnerY, angleRad)) {
             if (!state.isAccelerating && !state.isDecelerating) {
-                state.stickFigureBurst = { ...state.stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
+                state.stickFigureBurst = {...state.stickFigureBurst, active: true, startTime: timestamp, progress: 0};
                 applySpeedEffect('ACCELERATOR');
                 playPowerUpSound();
                 if (!state.isFirestormActive && !state.jumpState.isFireSpinner) {
@@ -606,7 +684,12 @@ export function animate(timestamp) {
         if (checkProximityEventCollection(runnerY, angleRad)) {
             if (!state.isAccelerating && !state.isDecelerating) {
                 if (state.onScreenCustomEvent.type === 'ACCELERATOR') {
-                    state.stickFigureBurst = { ...state.stickFigureBurst, active: true, startTime: timestamp, progress: 0 };
+                    state.stickFigureBurst = {
+                        ...state.stickFigureBurst,
+                        active: true,
+                        startTime: timestamp,
+                        progress: 0
+                    };
                     state.playerEnergy = Math.min(state.maxPlayerEnergy, state.playerEnergy + (state.maxPlayerEnergy * 0.10));
                 }
                 applySpeedEffect(state.onScreenCustomEvent.type);
@@ -677,7 +760,9 @@ export function animate(timestamp) {
                 if (state.decelerationDuration <= 0) {
                     state.isDecelerating = false;
                     state.decelerationDuration = 0;
-                    state.activeCustomEvents.forEach(e => { if (e.type === 'DECELERATOR') e.isActive = false; });
+                    state.activeCustomEvents.forEach(e => {
+                        if (e.type === 'DECELERATOR') e.isActive = false;
+                    });
                     state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
                     console.info("-> DECELERATOR: Debuff ended. Speed restored.");
                 }
@@ -687,7 +772,9 @@ export function animate(timestamp) {
                 if (state.accelerationDuration <= 0) {
                     state.isAccelerating = false;
                     state.accelerationDuration = 0;
-                    state.activeCustomEvents.forEach(e => { if (e.type === 'ACCELERATOR') e.isActive = false; });
+                    state.activeCustomEvents.forEach(e => {
+                        if (e.type === 'ACCELERATOR') e.isActive = false;
+                    });
                     state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
                     console.info("-> ACCELERATOR: Boost ended. Speed restored.");
                 }
@@ -740,7 +827,15 @@ export function animate(timestamp) {
 
         if (state.currentSegmentIndex > 0) {
             state.accumulatedCash = completedSegment.milestoneValue;
-            state.activeCashBags.push({ x: STICK_FIGURE_FIXED_X, y: collectionY, currentX: STICK_FIGURE_FIXED_X, currentY: collectionY, opacity: 1.0, progress: 0, isDone: false });
+            state.activeCashBags.push({
+                x: STICK_FIGURE_FIXED_X,
+                y: collectionY,
+                currentX: STICK_FIGURE_FIXED_X,
+                currentY: collectionY,
+                opacity: 1.0,
+                progress: 0,
+                isDone: false
+            });
             playChaChing();
         }
 
@@ -954,14 +1049,21 @@ export function resetGameState() {
     state.firestormEndTime = 0;
     state.firestormParticles = [];
     state.playerEmberParticles = [];
-        state.ignitedObstacles = [];
-        state.isFirestormDrainingEnergy = false;
-        state.firestormDrainEndTime = 0;
-                    state.isFireSpinnerDrainingEnergy = false;
-                    state.fireSpinnerDrainEndTime = 0;
-                    state.playerEnergy = 0; // Reset energy to 0
-            
-                    state.jumpState = {            isJumping: false, progress: 0,
+    state.ignitedObstacles = [];
+    state.isFirestormDrainingEnergy = false;
+    state.firestormDrainEndTime = 0;
+    state.isFireSpinnerDrainingEnergy = false;
+    state.fireSpinnerDrainEndTime = 0;
+    state.isMageSpinnerActive = false;
+    state.mageSpinnerEndTime = 0;
+    state.isMageSpinnerOnCooldown = false;
+    state.mageSpinnerLastActivationTime = 0;
+    state.mageSpinnerFireballTimer = 0;
+    state.mageSpinnerFireballsSpawned = 0;
+    state.playerEnergy = 0; // Reset energy to 0
+
+    state.jumpState = {
+        isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
         isSpecialMove: false, specialMoveDuration: 0,
         isPowerStomp: false, powerStompDuration: 0,
@@ -1078,6 +1180,12 @@ export function startGame() {
     state.firestormDrainEndTime = 0;
     state.isFireSpinnerDrainingEnergy = false;
     state.fireSpinnerDrainEndTime = 0;
+    state.isMageSpinnerActive = false;
+    state.mageSpinnerEndTime = 0;
+    state.isMageSpinnerOnCooldown = false;
+    state.mageSpinnerLastActivationTime = 0;
+    state.mageSpinnerFireballTimer = 0;
+    state.mageSpinnerFireballsSpawned = 0;
     state.playerEnergy = 0; // Start energy at 0
     state.jumpState = {
         isJumping: false, progress: 0,
@@ -1097,7 +1205,7 @@ export function startGame() {
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
     };
-    state.manualJumpOverride = { isActive: false, startTime: 0, duration: state.manualJumpDurationMs };
+    state.manualJumpOverride = {isActive: false, startTime: 0, duration: state.manualJumpDurationMs};
     state.isColliding = false;
     state.collisionDuration = 0;
     state.currentObstacle = null;
@@ -1139,7 +1247,9 @@ export function startGame() {
 
     hideResultsScreen();
 
-    if (Tone.context.state !== 'running') { Tone.start(); }
+    if (Tone.context.state !== 'running') {
+        Tone.start();
+    }
     if (!isMuted) {
         chaChingSynth.mute = false;
         collisionSynth.mute = false;
@@ -1167,7 +1277,7 @@ export function startGame() {
 
     const mobileBreakpoint = 768;
     if (window.innerWidth < mobileBreakpoint) {
-        document.getElementById('gameCanvas').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('gameCanvas').scrollIntoView({behavior: 'smooth', block: 'start'});
     }
 
     // If starting in fullscreen, apply the immersive class and hide controls
@@ -1216,7 +1326,7 @@ export function stopGame(shouldReset = true) {
                 days: Math.round(state.daysElapsedTotal),
                 hits: state.hitsCounter
             };
-            const results = { ...stats, winStreak: newWinStreak };
+            const results = {...stats, winStreak: newWinStreak};
 
             markDailyChallengeAsPlayed(stats, newWinStreak);
             displayDailyChallengeCompletedScreen(results);

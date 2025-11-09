@@ -17,6 +17,10 @@ import { startDailyChallengeGame, getDailyChallengeResults } from './daily-chall
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './ui-modules/daily-challenge-ui.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
+import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner } from './game-modules/actions.js';
+import state from './game-modules/state.js';
+import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -28,7 +32,8 @@ function initializeDailyChallengeUI() {
     // Event listener is now handled by delegation in DOMContentLoaded
 }
 
-// ... inside the DOMContentLoaded event listener ...
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log("-> DOMContentLoaded: Initializing game components.");
 
     // Delegated event listener for the daily challenge start button
     const controlPanelContainer = document.getElementById('control-panel-container');
@@ -40,85 +45,77 @@ function initializeDailyChallengeUI() {
         });
     }
 
-import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
-import state from './game-modules/state.js';
-import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
-
-async function loadVersion() {
-    try {
-        const response = await fetch('version.py');
-        const text = await response.text();
-        const match = text.match(/APP_VERSION = "(.+)"/);
-        if (match) {
-            const version = match[1];
-            const versionDisplay = document.getElementById('version-display');
-            if (versionDisplay) {
-                versionDisplay.textContent = `v${version}`;
+    async function loadVersion() {
+        try {
+            const response = await fetch('version.py');
+            const text = await response.text();
+            const match = text.match(/APP_VERSION = "(.+)"/);
+            if (match) {
+                const version = match[1];
+                const versionDisplay = document.getElementById('version-display');
+                if (versionDisplay) {
+                    versionDisplay.textContent = `v${version}`;
+                }
             }
+        } catch (error) {
+            console.error('Error loading version:', error);
         }
-    } catch (error) {
-        console.error('Error loading version:', error);
     }
-}
 
-function initializeDebugPanel() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('debug') === 'true') {
-        const debugPanel = document.getElementById('debug-panel');
-        if (debugPanel) {
-            debugPanel.classList.remove('hidden');
+    function initializeDebugPanel() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('debug') === 'true') {
+            const debugPanel = document.getElementById('debug-panel');
+            if (debugPanel) {
+                debugPanel.classList.remove('hidden');
 
-            const unlockAllBtn = document.getElementById('debugUnlockAllBtn');
-            const setShowDailyResultsBtn = document.getElementById('debugShowDailyResultsBtn');
-            const debugWinBtn = document.getElementById('debugWinBtn');
-            const debugLoseBtn = document.getElementById('debugLoseBtn');
-            const debugCycleThemeBtn = document.getElementById('debugCycleThemeBtn');
-            const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
-            const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
+                const unlockAllBtn = document.getElementById('debugUnlockAllBtn');
+                const setShowDailyResultsBtn = document.getElementById('debugShowDailyResultsBtn');
+                const debugWinBtn = document.getElementById('debugWinBtn');
+                const debugLoseBtn = document.getElementById('debugLoseBtn');
+                const debugCycleThemeBtn = document.getElementById('debugCycleThemeBtn');
+                const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
+                const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
 
-            function debugSetIncinerationCount(count) {
-                state.playerStats.obstaclesIncinerated = count;
-                checkForNewUnlocks(state.playerStats); // Check for unlocks first
-                savePlayerStats(); // Then save the updated stats
-                populatePersonaSelector(); // Re-populate in case this unlocks a persona
-                populateArmoryItems(); // Also refresh the armory view
-                alert(`Obstacle incineration count set to ${count}.`);
-            }
+                function debugSetIncinerationCount(count) {
+                    state.playerStats.obstaclesIncinerated = count;
+                    checkForNewUnlocks(state.playerStats); // Check for unlocks first
+                    savePlayerStats(); // Then save the updated stats
+                    populatePersonaSelector(); // Re-populate in case this unlocks a persona
+                    populateArmoryItems(); // Also refresh the armory view
+                    alert(`Obstacle incineration count set to ${count}.`);
+                }
 
-            if (unlockAllBtn) {
-                unlockAllBtn.addEventListener('click', debugUnlockAllAchievements);
-            }
-            if (setShowDailyResultsBtn) {
-                setShowDailyResultsBtn.addEventListener('click', () => {
-                    displayDailyChallengeResults({ days: 1234, hits: 5 });
-                });
-            }
-            if (debugWinBtn) {
-                debugWinBtn.addEventListener('click', () => debugEndGame(true));
-            }
-            if (debugLoseBtn) {
-                debugLoseBtn.addEventListener('click', () => debugEndGame(false));
-            }
-            if (debugCycleThemeBtn) {
-                debugCycleThemeBtn.addEventListener('click', debugCycleDailyTheme);
-            }
-            if (setIncinerateCountBtn && incinerateCountInput) {
-                setIncinerateCountBtn.addEventListener('click', () => {
-                    const count = parseInt(incinerateCountInput.value, 10);
-                    if (!isNaN(count) && count >= 0) {
-                        debugSetIncinerationCount(count);
-                    } else {
-                        alert('Please enter a valid number.');
-                    }
-                });
+                if (unlockAllBtn) {
+                    unlockAllBtn.addEventListener('click', debugUnlockAllAchievements);
+                }
+                if (setShowDailyResultsBtn) {
+                    setShowDailyResultsBtn.addEventListener('click', () => {
+                        displayDailyChallengeResults({ days: 1234, hits: 5 });
+                    });
+                }
+                if (debugWinBtn) {
+                    debugWinBtn.addEventListener('click', () => debugEndGame(true));
+                }
+                if (debugLoseBtn) {
+                    debugLoseBtn.addEventListener('click', () => debugEndGame(false));
+                }
+                if (debugCycleThemeBtn) {
+                    debugCycleThemeBtn.addEventListener('click', debugCycleDailyTheme);
+                }
+                if (setIncinerateCountBtn && incinerateCountInput) {
+                    setIncinerateCountBtn.addEventListener('click', () => {
+                        const count = parseInt(incinerateCountInput.value, 10);
+                        if (!isNaN(count) && count >= 0) {
+                            debugSetIncinerationCount(count);
+                        } else {
+                            alert('Please enter a valid number.');
+                        }
+                    });
+                }
             }
         }
     }
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log("-> DOMContentLoaded: Initializing game components.");
 
     loadVersion();
     loadMuteSetting(); // Load mute setting on startup
@@ -236,7 +233,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         firestorm: startFirestorm,
         fireSpinner: startFireSpinner,
         fieryGroundPound: startFieryGroundPound,
-        fireStomper: startFireStomper
+        fireStomper: startFireStomper,
+        mageSpinner: startMageSpinner
         // Add other skills here as they are implemented
     };
 
@@ -330,6 +328,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.code === 'KeyY' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startFirestorm(state);
+        }
+        if (e.code === 'KeyU' && state.gameRunning && !state.isPaused) {
+            e.preventDefault();
+            if (state.isMageSpinnerActive) {
+                castFireball(state);
+            } else {
+                startMageSpinner(state);
+            }
         }
 
         // Cheat code for max energy
@@ -428,7 +434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             lastTap = currentTime;
         }
-    }, { passive: false }); // Corrected: Added missing closing parenthesis
+    }, { passive: false });
 
     // --- END JUMP & PAUSE CONTROLS ---
 

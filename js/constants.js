@@ -55,6 +55,13 @@ export const FIREBALL_CAST_ENERGY_COST = 10; // Cost per fireball while in Fire 
 export const FIREBALL_VELOCITY_PX_MS = 0.8; // Fireball moves faster than obstacles
 export const FIREBALL_SIZE = 20; // Size of the fireball for drawing and collision
 
+// Mage Spinner Constants
+export const MAGE_SPINNER_ENERGY_COST = 80; // Higher cost for a powerful skill
+export const MAGE_SPINNER_DURATION_MS = 7000; // Lasts 7 seconds
+export const MAGE_SPINNER_COOLDOWN_MS = 15000; // 15 seconds cooldown
+export const MAGE_SPINNER_FIREBALL_INTERVAL_MS = 500; // Shoots a fireball every 0.5 seconds
+export const MAGE_SPINNER_FIREBALL_COUNT = 14; // Total fireballs over duration (7000ms / 500ms)
+
 // DECELERATOR Constants
 export const DECELERATOR_BASE_SPEED_DEBUFF = 0.5; // 0.5x speed
 export const DECELERATOR_DURATION_MS = 3000; // Debuff lasts 3 seconds
@@ -73,6 +80,7 @@ export const ENERGY_SETTINGS = {
     ENERGY_COSTS: {
         houdini: 15,
         firestorm: 80,
+        mageSpinner: MAGE_SPINNER_ENERGY_COST, // Add Mage Spinner cost
         default: 10,
     }
 };
