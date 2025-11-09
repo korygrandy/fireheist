@@ -35,7 +35,9 @@ import {
     MAGE_SPINNER_DURATION_MS,
     MAGE_SPINNER_FIREBALL_INTERVAL_MS,
     MAGE_SPINNER_FIREBALL_COUNT,
-    MAGE_SPINNER_ENERGY_COST
+    MAGE_SPINNER_ENERGY_COST,
+    FIERY_HOUDINI_COOLDOWN_MS,
+    FIERY_HOUDINI_DURATION_MS
 } from '../constants.js';
 import {
     isMuted,
@@ -71,22 +73,23 @@ import {showSandboxControls} from '../ui-modules/ui-helpers.js';
 import {markDailyChallengeAsPlayed, updateDailyChallengeWinStreak} from '../daily-challenge.js';
 import {castMageSpinnerFireball} from './actions.js';
 
-const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
-const currentScore = {
-    days: Math.round(state.daysElapsedTotal),
-    hits: state.hitsCounter,
-    emoji: state.stickFigureEmoji,
-    speed: state.intendedSpeedMultiplier
-};
+function updateHighScore() {
+    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
+    const currentScore = {
+        days: Math.round(state.daysElapsedTotal),
+        hits: state.hitsCounter,
+        emoji: state.stickFigureEmoji,
+        speed: state.intendedSpeedMultiplier
+    };
 
-const existingScore = highScores[state.currentSkillLevel];
+    const existingScore = highScores[state.currentSkillLevel];
 
-if (!existingScore || currentScore.hits < existingScore.hits || (currentScore.hits === existingScore.hits && currentScore.days < existingScore.days)) {
-    highScores[state.currentSkillLevel] = currentScore;
-    localStorage.setItem(HIGH_SCORE_KEY, JSON.stringify(highScores));
-    console.log(`-> updateHighScore: New high score for ${state.currentSkillLevel} saved!`);
-    displayHighScores(); // Update the UI immediately
-
+    if (!existingScore || currentScore.hits < existingScore.hits || (currentScore.hits === existingScore.hits && currentScore.days < existingScore.days)) {
+        highScores[state.currentSkillLevel] = currentScore;
+        localStorage.setItem(HIGH_SCORE_KEY, JSON.stringify(highScores));
+        console.log(`-> updateHighScore: New high score for ${state.currentSkillLevel} saved!`);
+        displayHighScores(); // Update the UI immediately
+    }
 }
 
 function spawnObstacle() {
@@ -400,9 +403,12 @@ export function animate(timestamp) {
             const drainRate = energyToDrain / MAGE_SPINNER_DURATION_MS; // Energy per millisecond
             state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
         }
+    } else if (state.jumpState.isHover) { // Hover drains energy continuously
+        const energyDrain = (ENERGY_SETTINGS.HOVER_DRAIN_RATE * deltaTime) / 1000;
+        state.playerEnergy = Math.max(0, state.playerEnergy - energyDrain);
     } else {
-        // Regular energy drain
-        const energyDrain = (ENERGY_SETTINGS.DRAIN_RATE * deltaTime) / 1000;
+        // Passive energy drain based on skill level
+        const energyDrain = (state.passiveDrainRate * deltaTime) / 1000;
         state.playerEnergy = Math.max(0, state.playerEnergy - energyDrain);
     }
 
@@ -448,6 +454,15 @@ export function animate(timestamp) {
         if (now - state.mageSpinnerLastActivationTime > MAGE_SPINNER_COOLDOWN_MS) {
             state.isMageSpinnerOnCooldown = false;
             console.log("-> Mage Spinner: Cooldown finished. Ready.");
+        }
+    }
+
+    // Check and update Fiery Houdini cooldown
+    if (state.isFieryHoudiniOnCooldown) {
+        const now = Date.now();
+        if (now - state.fieryHoudiniLastActivationTime > FIERY_HOUDINI_COOLDOWN_MS) {
+            state.isFieryHoudiniOnCooldown = false;
+            console.log("-> Fiery Houdini: Cooldown finished. Ready.");
         }
     }
 
@@ -975,6 +990,22 @@ export function animate(timestamp) {
         }
     }
 
+    if (state.jumpState.isFieryHoudini) {
+        const previousPhase = state.jumpState.fieryHoudiniPhase;
+        state.jumpState.fieryHoudiniDuration -= deltaTime;
+
+        if (state.jumpState.fieryHoudiniDuration <= FIERY_HOUDINI_DURATION_MS / 2) {
+            state.jumpState.fieryHoudiniPhase = 'reappearing';
+            if (previousPhase === 'disappearing') {
+                const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
+                drawing.createFieryHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
+            }
+        }
+        if (state.jumpState.fieryHoudiniDuration <= 0) {
+            state.jumpState.isFieryHoudini = false;
+        }
+    }
+
     if (state.jumpState.isFireSpinner) {
         state.jumpState.fireSpinnerDuration -= deltaTime;
         if (state.jumpState.fireSpinnerDuration <= 0) {
@@ -1060,7 +1091,7 @@ export function resetGameState() {
     state.mageSpinnerLastActivationTime = 0;
     state.mageSpinnerFireballTimer = 0;
     state.mageSpinnerFireballsSpawned = 0;
-    state.playerEnergy = 0; // Reset energy to 0
+    state.playerEnergy = state.maxPlayerEnergy; // Initialize to max energy
 
     state.jumpState = {
         isJumping: false, progress: 0,
@@ -1078,7 +1109,8 @@ export function resetGameState() {
         isShockwave: false, shockwaveDuration: 0,
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
-        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
+        isFieryHoudini: false, fieryHoudiniDuration: 0
     };
     state.currentObstacle = null;
     state.isColliding = false;
@@ -1186,7 +1218,7 @@ export function startGame() {
     state.mageSpinnerLastActivationTime = 0;
     state.mageSpinnerFireballTimer = 0;
     state.mageSpinnerFireballsSpawned = 0;
-    state.playerEnergy = 0; // Start energy at 0
+    state.playerEnergy = state.maxPlayerEnergy; // Start energy at max
     state.jumpState = {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
@@ -1203,7 +1235,8 @@ export function startGame() {
         isShockwave: false, shockwaveDuration: 0,
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
-        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing'
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
+        isFieryHoudini: false, fieryHoudiniDuration: 0
     };
     state.manualJumpOverride = {isActive: false, startTime: 0, duration: state.manualJumpDurationMs};
     state.isColliding = false;

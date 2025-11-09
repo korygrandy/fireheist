@@ -1,5 +1,5 @@
-import { createHoudiniPoof } from './drawing/effects.js';
-import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../constants.js';
+import { createHoudiniPoof, createFieryHoudiniPoof } from './drawing/effects.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 
 const JUMP_DURATIONS = {
@@ -17,7 +17,8 @@ const JUMP_DURATIONS = {
     moonwalk: 700,
     shockwave: 400,
     firestorm: 10000, // 10 seconds active time
-    fireMage: FIRE_MAGE_DURATION_MS // Duration for Fire Mage mode
+    fireMage: FIRE_MAGE_DURATION_MS, // Duration for Fire Mage mode
+    fieryHoudini: FIERY_HOUDINI_DURATION_MS
 };
 
 function consumeEnergy(state, actionName, costOverride = null) {
@@ -383,6 +384,39 @@ export function startHoudini(state) {
     initiateJump(state, 800);
     playAnimationSound('houdini');
     console.log("-> startHoudini: Houdini initiated.");
+}
+
+export function startFieryHoudini(state) {
+    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFieryHoudiniOnCooldown) return;
+
+    const now = Date.now();
+    if (now - state.fieryHoudiniLastActivationTime < FIERY_HOUDINI_COOLDOWN_MS) {
+        console.log("-> startFieryHoudini: Fiery Houdini is on cooldown.");
+        return;
+    }
+
+    if (!consumeEnergy(state, 'fieryHoudini')) return;
+
+    state.jumpState.isFieryHoudini = true;
+    state.jumpState.fieryHoudiniDuration = FIERY_HOUDINI_DURATION_MS;
+    state.jumpState.fieryHoudiniPhase = 'disappearing';
+    state.fieryHoudiniEndTime = now + FIERY_HOUDINI_DURATION_MS;
+    state.fieryHoudiniLastActivationTime = now;
+    state.isFieryHoudiniOnCooldown = true;
+
+    const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
+    createFieryHoudiniPoof(STICK_FIGURE_FIXED_X + FIERY_HOUDINI_RANGE / 2, playerY - 50);
+
+    // Find and incinerate the current obstacle if it's in range
+    if (state.currentObstacle && state.currentObstacle.x < STICK_FIGURE_FIXED_X + FIERY_HOUDINI_RANGE) {
+        state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
+        state.currentObstacle = null;
+        state.playerStats.obstaclesIncinerated++;
+    }
+
+    initiateJump(state, JUMP_DURATIONS.fieryHoudini);
+    playAnimationSound('fieryHoudini');
+    console.log("-> startFieryHoudini: Fiery Houdini initiated.");
 }
 
 export function startMeteorStrike(state) {

@@ -39,6 +39,11 @@ export const OBSTACLE_EMOJI_Y_OFFSET = -10;
 export const OBSTACLE_SPAWN_X = 800 + 150;
 export const OBSTACLE_WIDTH = 32;
 export const OBSTACLE_HEIGHT = 32;
+export const OBSTACLE_BASE_VELOCITY_PX_MS = 0.2;
+
+// Event Constants
+export const EVENT_PROXIMITY_VISUAL_STEPS = 2;
+export const EVENT_POPUP_HEIGHT = 50;
 
 // Accelerator Constants
 export const ACCELERATOR_EMOJI_SIZE = '36px Impact';
@@ -46,6 +51,10 @@ export const ACCELERATOR_EMOJI = '🔥';
 export const ACCELERATOR_BASE_SPEED_BOOST = 2.0; // 2x speed boost
 export const ACCELERATOR_DURATION_MS = 2500; // Boost lasts 2.5 seconds
 export const ENERGY_GAIN_ACCELERATOR = 25;
+
+// Decelerator Constants
+export const DECELERATOR_BASE_SPEED_DEBUFF = 0.5; // 0.5x speed debuff
+export const DECELERATOR_DURATION_MS = 2500; // Debuff lasts 2.5 seconds
 
 // Fire Mage Constants
 export const FIRE_MAGE_ENERGY_COST = 60; // Cost to activate Fire Mage mode
@@ -60,28 +69,41 @@ export const MAGE_SPINNER_ENERGY_COST = 80; // Higher cost for a powerful skill
 export const MAGE_SPINNER_DURATION_MS = 7000; // Lasts 7 seconds
 export const MAGE_SPINNER_COOLDOWN_MS = 15000; // 15 seconds cooldown
 export const MAGE_SPINNER_FIREBALL_INTERVAL_MS = 500; // Shoots a fireball every 0.5 seconds
-export const MAGE_SPINNER_FIREBALL_COUNT = 14; // Total fireballs over duration (7000ms / 500ms)
+export const MAGE_SPINNER_FIREBALL_COUNT = 14; // 14 fireballs over the duration
 
-// DECELERATOR Constants
-export const DECELERATOR_BASE_SPEED_DEBUFF = 0.5; // 0.5x speed
-export const DECELERATOR_DURATION_MS = 3000; // Debuff lasts 3 seconds
+// Fiery Houdini Constants
+export const FIERY_HOUDINI_ENERGY_COST = 60;
+export const FIERY_HOUDINI_DURATION_MS = 800;
+export const FIERY_HOUDINI_COOLDOWN_MS = 12000; // 12 seconds cooldown
+export const FIERY_HOUDINI_RANGE = 300; // The range of the destructive poof in pixels
 
-// Constant, faster velocity for obstacles and accelerators
-export const OBSTACLE_BASE_VELOCITY_PX_MS = 0.5;
-
-// CUSTOM EVENT PROXIMITY CONSTANTS
-// Distance in visual duration steps where the object becomes "visible"
-export const EVENT_PROXIMITY_VISUAL_STEPS = 5;
-export const EVENT_POPUP_HEIGHT = 35; // Max height the object pops up (similar to stickFigureTotalHeight)
-
-// SKILL LEVEL SETTINGS
 export const ENERGY_SETTINGS = {
-    DRAIN_RATE: 2.5, // Energy per second
+    REGEN_RATE: 0.1, // Energy points per frame
+    HOVER_DRAIN_RATE: 5, // Energy points per second for hover
     ENERGY_COSTS: {
-        houdini: 15,
-        firestorm: 80,
-        mageSpinner: MAGE_SPINNER_ENERGY_COST, // Add Mage Spinner cost
         default: 10,
+        specialMove: 20,
+        dive: 15,
+        corkscrewSpin: 15,
+        scissorKick: 15,
+        phaseDash: 25,
+        hover: 5, // Lower cost, but drains over time
+        groundPound: 20,
+        fieryGroundPound: 40,
+        fireStomper: 35,
+        cartoonScramble: 30,
+        moonwalk: 10,
+        shockwave: 25,
+        backflip: 10,
+        frontflip: 10,
+        houdini: 30,
+        meteorStrike: 50,
+        firestorm: 0, // No initial cost, drains over time
+        fireMage: 25,
+        fireballCast: 10,
+        fireSpinner: 0, // No initial cost, drains over time
+        mageSpinner: MAGE_SPINNER_ENERGY_COST,
+        fieryHoudini: FIERY_HOUDINI_ENERGY_COST
     }
 };
 
@@ -92,6 +114,8 @@ export const DIFFICULTY_SETTINGS = {
         manualJumpDurationMs: 350,
         ACCELERATOR_FREQUENCY_PERCENT: 50, // More frequent
         energyRegenMultiplier: 2.0,
+        maxPlayerEnergy: 200,
+        passiveDrainRate: 1.0 // Slower drain
     },
     'Novice': { // Formerly Normal
         COLLISION_RANGE_X: 35,
@@ -99,6 +123,8 @@ export const DIFFICULTY_SETTINGS = {
         manualJumpDurationMs: 450,
         ACCELERATOR_FREQUENCY_PERCENT: 25, // Medium frequency
         energyRegenMultiplier: 1.0,
+        maxPlayerEnergy: 100,
+        passiveDrainRate: 2.0 // Medium drain
     },
     'Pro': { // Formerly Hard
         COLLISION_RANGE_X: 50,
@@ -106,6 +132,8 @@ export const DIFFICULTY_SETTINGS = {
         manualJumpDurationMs: 450,
         ACCELERATOR_FREQUENCY_PERCENT: 10, // Less frequent
         energyRegenMultiplier: 0.5,
+        maxPlayerEnergy: 50,
+        passiveDrainRate: 4.0 // Faster drain
     }
 };
 
@@ -136,6 +164,7 @@ export const ANIMATION_SOUND_MAP = {
     incinerate: 'fx/incinerate.mp3',
     shatter: 'fx/shatter.mp3',
     houdini: 'fx/houdini.mp3',
+    fieryHoudini: 'fx/fiery-houdini.mp3',
     'cartoon-running': 'fx/cartoon-running.mp3',
     groundPound: 'fx/bomb.mp3'
     // Other animations will be added here

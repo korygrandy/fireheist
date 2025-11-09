@@ -39,6 +39,8 @@ export function applySkillLevelSettings(level) {
     const settings = DIFFICULTY_SETTINGS[level];
     if (settings) {
         state.currentSkillLevel = level; // Renamed
+        state.maxPlayerEnergy = settings.maxPlayerEnergy;
+        state.passiveDrainRate = settings.passiveDrainRate;
         state.acceleratorFrequencyPercent = settings.ACCELERATOR_FREQUENCY_PERCENT; // Set state here
         console.log(`-> applySkillLevelSettings: Jump Height: ${settings.manualJumpHeight}, Duration: ${settings.manualJumpDurationMs}ms, Collision Range: ${settings.COLLISION_RANGE_X}, Accelerator Freq: ${settings.ACCELERATOR_FREQUENCY_PERCENT}%`);
     } else {

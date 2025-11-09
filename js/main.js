@@ -18,7 +18,7 @@ import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './u
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini } from './game-modules/actions.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
@@ -234,7 +234,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         fireSpinner: startFireSpinner,
         fieryGroundPound: startFieryGroundPound,
         fireStomper: startFireStomper,
-        mageSpinner: startMageSpinner
+        mageSpinner: startMageSpinner,
+        fieryHoudini: startFieryHoudini
         // Add other skills here as they are implemented
     };
 
@@ -339,7 +340,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Cheat code for max energy
-        if (e.ctrlKey && e.shiftKey && e.code === 'KeyE') {
+        if (e.ctrlKey && e.altKey && e.code === 'KeyE') {
             if (state.gameRunning && !state.isPaused) {
                 e.preventDefault();
                 state.playerEnergy = state.maxPlayerEnergy;

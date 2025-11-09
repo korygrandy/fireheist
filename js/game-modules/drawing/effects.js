@@ -328,6 +328,26 @@ export function createHoudiniPoof(x, y) {
             size: Math.random() * 10 + 5,
             life: 1, // Represents full life (100%)
             color: poofColor
+        })
+    }
+}
+
+export function createFieryHoudiniPoof(x, y) {
+    const particleCount = 40; // More particles for a bigger effect
+    const poofColor1 = 'rgba(255, 165, 0, 0.8)'; // Bright Orange
+    const poofColor2 = 'rgba(255, 100, 0, 0.7)'; // Deeper Orange
+
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 2;
+        state.fieryHoudiniParticles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: Math.random() * 12 + 6,
+            life: 1,
+            color: Math.random() > 0.5 ? poofColor1 : poofColor2
         });
     }
 }
@@ -346,6 +366,30 @@ export function drawHoudiniParticles() {
             ctx.save();
             ctx.globalAlpha = p.life;
             ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+export function drawFieryHoudiniParticles() {
+    for (let i = state.fieryHoudiniParticles.length - 1; i >= 0; i--) {
+        const p = state.fieryHoudiniParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.03; // Slower fade for a more lingering effect
+
+        if (p.life <= 0) {
+            state.fieryHoudiniParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.shadowColor = 'orange';
+            ctx.shadowBlur = 10;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();

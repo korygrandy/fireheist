@@ -4,32 +4,7 @@ import state from '../game-modules/state.js';
 import { savePlayerStats } from './settings.js';
 import { populatePersonaSelector } from './persona.js';
 import { populateArmoryItems, displayArmoryUnlockNotification, checkForArmoryUnlocks } from './armory.js';
-
-export function getSkillUnlockProgress(condition, stats) {
-    if (!condition || !stats) return { current: 0, target: 0 };
-
-    switch (condition.type) {
-        case 'incinerateCount':
-            return {
-                current: stats.obstaclesIncinerated || 0,
-                target: condition.count
-            };
-        case 'flawlessRun':
-            const isComplete = stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
-            return {
-                current: isComplete ? 1 : 0,
-                target: 1
-            };
-        case 'consecutiveGroundPounds':
-            return {
-                current: stats.consecutiveGroundPounds || 0,
-                target: condition.count
-            };
-        // Add other progress tracking here
-        default:
-            return { current: 0, target: 0 };
-    }
-}
+import { getSkillUnlockProgress, checkSkillUnlockStatus } from '../unlocks.js';
 
 export function displayUnlockNotification(personaName) {
     const notificationElement = document.getElementById('unlock-notification');
@@ -57,29 +32,6 @@ export function isPersonaUnlocked(personaKey, stats) {
             return stats.flawlessRuns && stats.flawlessRuns[unlock.condition.difficulty];
         case 'incinerateCount':
             return stats.obstaclesIncinerated >= unlock.condition.count;
-        default:
-            return false;
-    }
-}
-
-export function checkSkillUnlockStatus(condition, stats) {
-    if (!stats) return false; // No stats means nothing is unlocked
-
-    // If the skill is already in the unlockedArmoryItems array, it's unlocked.
-    if (stats.unlockedArmoryItems && stats.unlockedArmoryItems.includes(condition.skillKey)) {
-        return true;
-    }
-
-    if (!condition || condition.type === 'placeholder') return false; // Placeholder conditions are always locked for now
-
-    switch (condition.type) {
-        case 'incinerateCount':
-            return stats.obstaclesIncinerated >= condition.count;
-        case 'flawlessRun':
-            return stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
-        case 'consecutiveGroundPounds':
-            return stats.consecutiveGroundPounds >= condition.count;
-        // Add other unlock conditions here
         default:
             return false;
     }

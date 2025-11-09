@@ -7,7 +7,7 @@ import state from './state.js';
 import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounter, drawGameCounters, drawDaysCounter, drawCustomEventStatus, drawEnergyBar } from './drawing/overlays.js';
 import { drawStickFigure } from './drawing/player.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble, initializeClouds, generateGrassBlades } from './drawing/world.js';
-import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createShatterEffect, createFireExplosion } from './drawing/effects.js';
+import { drawGroundPoundParticles, drawHoudiniParticles, drawFieryHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createFieryHoudiniPoof, createShatterEffect, createFireExplosion } from './drawing/effects.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 
 export {
@@ -49,6 +49,7 @@ export {
     createPlayerEmbers,
     createGroundPoundEffect,
     createHoudiniPoof,
+    createFieryHoudiniPoof,
     createShatterEffect
 };
 
@@ -94,6 +95,7 @@ export function draw() {
 
     drawGroundPoundParticles();
     drawHoudiniParticles();
+    drawFieryHoudiniParticles();
     drawMoonwalkParticles();
     drawHoverParticles();
     drawScrambleDust();

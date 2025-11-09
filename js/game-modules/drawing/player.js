@@ -313,6 +313,20 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         // Keep the stick figure static during the effect
         legMovementX1 = 10; armMovementY1 = headY + 15;
         armMovementX2 = -10; armMovementY2 = headY + 15;
+    } else if (jumpState.isFieryHoudini) {
+        const duration = 800;
+        const t = (duration - jumpState.fieryHoudiniDuration) / duration;
+
+        if (jumpState.fieryHoudiniPhase === 'disappearing') {
+            ctx.restore();
+            return;
+        } else { // Reappearing phase
+            ctx.globalAlpha = (t - 0.5) * 2;
+        }
+
+        // Keep the stick figure static during the effect
+        legMovementX1 = 10; armMovementY1 = headY + 15;
+        armMovementX2 = -10; armMovementY2 = headY + 15;
     } else if (jumpState.isMeteorStrike) {
         const t = (800 - jumpState.meteorStrikeDuration) / 800;
         animationRotation = t * Math.PI * 1.5; // Rotate into a downward arc

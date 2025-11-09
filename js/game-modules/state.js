@@ -21,6 +21,7 @@ const state = {
     manualJumpHeight: DIFFICULTY_SETTINGS.Rookie.manualJumpHeight,
     acceleratorFrequencyPercent: DIFFICULTY_SETTINGS.Rookie.ACCELERATOR_FREQUENCY_PERCENT,
     energyRegenMultiplier: DIFFICULTY_SETTINGS.Rookie.energyRegenMultiplier,
+    passiveDrainRate: DIFFICULTY_SETTINGS.Rookie.passiveDrainRate,
     jumpState: {
         isJumping: false, progress: 0,
         isHurdle: false, hurdleDuration: 0,
@@ -43,8 +44,7 @@ const state = {
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
-        isMeteorStrike: false, meteorStrikeDuration: 0,
-        isFireSpinner: false, fireSpinnerDuration: 0
+        isFieryHoudini: false, fieryHoudiniDuration: 0, fieryHoudiniPhase: 'disappearing'
     },
     fireSpinnerCooldown: 30000, // 30 seconds
     isFireSpinnerOnCooldown: false,
@@ -59,6 +59,13 @@ const state = {
     mageSpinnerLastActivationTime: 0, // When Mage Spinner was last activated
     mageSpinnerFireballTimer: 0, // Timer for spawning fireballs
     mageSpinnerFireballsSpawned: 0, // Counter for fireballs spawned
+
+    // Fiery Houdini State
+    isFieryHoudiniActive: false,
+    fieryHoudiniEndTime: 0,
+    isFieryHoudiniOnCooldown: false,
+    fieryHoudiniLastActivationTime: 0,
+
     activeFireballs: [], // Array to track on-screen fireballs
     vanishingObstacles: [], // Array for obstacles that "poof" on hit
     meteorParticles: [],
@@ -83,6 +90,7 @@ const state = {
     fireTrail: [],
     incineratingObstacles: [],
     houdiniParticles: [],
+    fieryHoudiniParticles: [],
     groundPoundParticles: [],
     flippingObstacles: [],
     flipTrail: [],
@@ -101,8 +109,8 @@ const state = {
     ignitedObstacles: [],
     MAX_FIRESTORM_PARTICLES: 50,
     MAX_EMBER_PARTICLES: 100,
-    playerEnergy: 100,
-    maxPlayerEnergy: 100,
+    playerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,
+    maxPlayerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,
     isFirestormDrainingEnergy: false,
     firestormDrainEndTime: 0,
     isFireSpinnerDrainingEnergy: false,

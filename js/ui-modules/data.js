@@ -7,8 +7,8 @@ import { displayHighScores } from "./high-scores.js";
 import { populateThemeSelector } from './theme.js';
 import { populatePersonaSelector } from './persona.js';
 import { handleAutoHurdleToggle } from './input-handlers.js';
-import { armorySkills } from './armory.js';
-import { checkSkillUnlockStatus } from './unlocks.js';
+import { ARMORY_ITEMS } from '../unlocks.js';
+import { checkSkillUnlockStatus } from '../unlocks.js';
 import state from '../game-modules/state.js';
 
 export let financialMilestones = {};
@@ -76,7 +76,7 @@ export async function initializeUIData() {
     // Sanity check: If an active skill is somehow no longer unlocked, deselect it.
     const activeSkill = state.playerStats.activeArmorySkill;
     if (activeSkill) {
-        const skill = armorySkills[activeSkill];
+        const skill = ARMORY_ITEMS[activeSkill];
         if (skill && !checkSkillUnlockStatus(skill.unlockCondition, state.playerStats)) {
             console.warn(`-> Sanity Check: Active skill '${activeSkill}' is no longer unlocked. Deselecting.`);
             state.playerStats.activeArmorySkill = null;
