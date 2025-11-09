@@ -275,6 +275,10 @@ function drawRoadwayThemeEffects() {
 
 const SNOW_DENSITY = 150;
 const SNOW_DURATION = 8000; // 8 seconds
+const WIND_GUST_PARTICLES = 50;
+const WIND_GUST_DURATION = 1500; // 1.5 seconds
+const KICKED_UP_SNOW_COUNT = 30;
+const GRAVITY = 0.1; // A simple gravity effect for the kicked up snow
 
 function startSnowfall() {
     if (state.environmentalEffects.snowflakes.length > 0) return;
@@ -283,9 +287,9 @@ function startSnowfall() {
         state.environmentalEffects.snowflakes.push({
             x: Math.random() * canvas.width,
             y: Math.random() * -canvas.height,
-            size: Math.random() * 3 + 1, // Small snowflakes
-            speedY: Math.random() * 1 + 0.5, // Slow falling speed
-            speedX: Math.random() * 2 - 1, // Gentle side-to-side drift
+            size: Math.random() * 3 + 1,
+            speedY: Math.random() * 1 + 0.5,
+            speedX: Math.random() * 2 - 1,
             opacity: Math.random() * 0.5 + 0.3
         });
     }
@@ -295,32 +299,114 @@ function startSnowfall() {
     }, SNOW_DURATION);
 }
 
+function startWindGust() {
+    // Wind Gust Lines
+    if (state.environmentalEffects.windGusts.length === 0) {
+        const startY = Math.random() * canvas.height;
+        const gustSpeed = Math.random() * 15 + 10;
+
+        for (let i = 0; i < WIND_GUST_PARTICLES; i++) {
+            state.environmentalEffects.windGusts.push({
+                x: -50 - (Math.random() * 100),
+                y: startY + (Math.random() - 0.5) * 80,
+                length: Math.random() * 30 + 20,
+                speedX: gustSpeed + (Math.random() * 5 - 2.5),
+                opacity: Math.random() * 0.3 + 0.1
+            });
+        }
+
+        setTimeout(() => {
+            state.environmentalEffects.windGusts = [];
+        }, WIND_GUST_DURATION);
+    }
+
+    // Kicked Up Snow Particles
+    if (state.environmentalEffects.kickedUpSnow.length === 0) {
+        const gustSpeed = Math.random() * 10 + 5; // Horizontal speed for the snow
+        for (let i = 0; i < KICKED_UP_SNOW_COUNT; i++) {
+            state.environmentalEffects.kickedUpSnow.push({
+                x: Math.random() * canvas.width,
+                y: canvas.height, // Start at the bottom
+                size: Math.random() * 2 + 1,
+                speedX: gustSpeed + (Math.random() - 0.5) * 5,
+                speedY: -Math.random() * 3 - 2, // Initial upward velocity
+                opacity: Math.random() * 0.5 + 0.5,
+                life: 1.0 // Lifespan of the particle
+            });
+        }
+    }
+}
+
 function updateSnowThemeEffects(deltaTime) {
+    // Update Snowflakes
     for (const flake of state.environmentalEffects.snowflakes) {
         flake.y += flake.speedY;
         flake.x += flake.speedX;
-
-        // Reset flake when it goes off-screen
         if (flake.y > canvas.height) {
             flake.y = Math.random() * -50;
             flake.x = Math.random() * canvas.width;
         }
-        // Loop horizontally
         if (flake.x > canvas.width) flake.x = 0;
         if (flake.x < 0) flake.x = canvas.width;
+    }
+
+    // Update Wind Gusts
+    for (const gust of state.environmentalEffects.windGusts) {
+        gust.x += gust.speedX;
+    }
+
+    // Update Kicked Up Snow
+    for (let i = state.environmentalEffects.kickedUpSnow.length - 1; i >= 0; i--) {
+        const particle = state.environmentalEffects.kickedUpSnow[i];
+        particle.speedY += GRAVITY; // Apply gravity
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.life -= 0.01; // Decrease life
+        particle.opacity = particle.life; // Fade out
+
+        if (particle.life <= 0) {
+            state.environmentalEffects.kickedUpSnow.splice(i, 1);
+        }
     }
 }
 
 function drawSnowThemeEffects() {
-    if (state.environmentalEffects.snowflakes.length === 0) return;
+    // Draw Snowflakes
+    if (state.environmentalEffects.snowflakes.length > 0) {
+        for (const flake of state.environmentalEffects.snowflakes) {
+            ctx.save();
+            ctx.fillStyle = `rgba(255, 255, 255, ${flake.opacity})`;
+            ctx.beginPath();
+            ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
 
-    for (const flake of state.environmentalEffects.snowflakes) {
-        ctx.save();
-        ctx.fillStyle = `rgba(255, 255, 255, ${flake.opacity})`;
-        ctx.beginPath();
-        ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+    // Draw Wind Gusts
+    if (state.environmentalEffects.windGusts.length > 0) {
+        for (const gust of state.environmentalEffects.windGusts) {
+            ctx.save();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${gust.opacity})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(gust.x, gust.y);
+            ctx.lineTo(gust.x + gust.length, gust.y);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+
+    // Draw Kicked Up Snow
+    if (state.environmentalEffects.kickedUpSnow.length > 0) {
+        for (const particle of state.environmentalEffects.kickedUpSnow) {
+            ctx.save();
+            ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
     }
 }
 
@@ -366,8 +452,12 @@ export function updateEnvironmentalEffects(deltaTime) {
         case 'snow':
             updateSnowThemeEffects(deltaTime);
             // Trigger snowfall randomly during gameplay
-            if (Math.random() < 0.002 && state.gameRunning) {
+            if (Math.random() < 0.0008 && state.gameRunning) {
                 startSnowfall();
+            }
+            // Trigger wind gust randomly
+            if (Math.random() < 0.001 && state.gameRunning) {
+                startWindGust();
             }
             break;
         case 'space':

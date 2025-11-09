@@ -377,6 +377,9 @@ export function animate(timestamp) {
     }
 
     let deltaTime = timestamp - state.lastTime;
+    if (deltaTime > 100) {
+        deltaTime = 100;
+    }
 
     updateEnvironmentalEffects(deltaTime);
 
@@ -1094,6 +1097,8 @@ export function resetGameState() {
     state.environmentalEffects.headlights = [];
     state.environmentalEffects.fogPatches = [];
     state.environmentalEffects.snowflakes = [];
+    state.environmentalEffects.windGusts = [];
+    state.environmentalEffects.kickedUpSnow = [];
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;

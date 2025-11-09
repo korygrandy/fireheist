@@ -116,6 +116,8 @@ const state = {
         headlights: [],
         fogPatches: [],
         snowflakes: [],
+        windGusts: [],
+        kickedUpSnow: [],
         headlightFadeState: {
             opacity: 0.6 + Math.random() * 0.4,
             fadeDirection: Math.random() > 0.5 ? 1 : -1,
