@@ -3,7 +3,7 @@ import { populateArmoryItems } from './armory.js';
 import { populatePersonaSelector } from './persona.js';
 import { themePacks } from '../daily-challenge.js';
 import { updateDailyChallengeUI } from './daily-challenge-ui.js';
-import { stopGame } from '../game-modules/main.js';
+import { stopGame } from '../game-modules/lifecycle.js';
 import { personaUnlocks, ARMORY_ITEMS } from '../unlocks.js';
 import { savePlayerStats } from './settings.js';
 

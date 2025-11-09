@@ -1,5 +1,5 @@
 import state from './game-modules/state.js';
-import { startGame } from './game-modules/main.js';
+import { startGame } from './game-modules/lifecycle.js';
 import { setTheme } from './theme.js';
 import { initializeMusicPlayer } from './audio.js';
 import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from './constants.js';
