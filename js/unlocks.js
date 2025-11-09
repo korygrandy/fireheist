@@ -22,7 +22,8 @@ export const ARMORY_ITEMS = {
         emoji: '🌪️',
         unlockCondition: {
             type: 'incinerateCount',
-            count: 100
+            count: 100,
+            skillKey: 'firestorm'
         },
         unlockText: 'Incinerate 100 obstacles'
     },
@@ -32,7 +33,8 @@ export const ARMORY_ITEMS = {
         emoji: '🔥',
         unlockCondition: {
             type: 'consecutiveGroundPounds',
-            count: 3
+            count: 3,
+            skillKey: 'fireSpinner'
         },
         unlockText: 'Destroy 3 obstacles in a row with Ground Pound'
     },
@@ -42,7 +44,8 @@ export const ARMORY_ITEMS = {
         emoji: '💥',
         unlockCondition: {
             type: 'consecutiveGroundPounds',
-            count: 2
+            count: 2,
+            skillKey: 'fieryGroundPound'
         },
         unlockText: 'Destroy 10 obstacles in a row with Ground Pound'
     },
@@ -52,7 +55,8 @@ export const ARMORY_ITEMS = {
         emoji: '👣',
         unlockCondition: {
             type: 'fieryGroundPoundCount',
-            count: 50
+            count: 50,
+            skillKey: 'fireStomper'
         },
         unlockText: 'Destroy 50 obstacles with Fiery Ground Pound'
     },

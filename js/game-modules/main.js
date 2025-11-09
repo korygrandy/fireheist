@@ -195,10 +195,14 @@ function checkCollision(runnerY, angleRad) {
             playAnimationSound('shatter');
             state.playerStats.obstaclesIncinerated++;
             state.playerStats.consecutiveIncinerations++;
+            
+            // Check for unlocks BEFORE incrementing, so we unlock based on the NEXT count
+            checkForNewUnlocks(state.playerStats); 
+            
             state.playerStats.consecutiveGroundPounds++; // Increment consecutive Ground Pounds
             state.playerStats.totalGroundPoundCollisions++;
             console.log(`[DEBUG] Streak INCREMENTED to: ${state.playerStats.consecutiveGroundPounds}`);
-            checkForNewUnlocks(state.playerStats); // Check for unlocks immediately
+            savePlayerStats(); // Save stats immediately to persist the streak
             return false; // No penalty
         }
 
