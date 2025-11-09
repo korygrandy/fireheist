@@ -238,9 +238,6 @@ function updateRoadwayThemeEffects(deltaTime) {
 }
 
 function drawRoadwayThemeEffects() {
-    // Draw Cityscape first so it's in the back
-    drawCityscape();
-
     // Draw Headlights
     for (const light of state.environmentalEffects.headlights) {
         ctx.save();
@@ -628,30 +625,28 @@ function updateDesertThemeEffects(deltaTime) {
     }
 
     // Update Tornadoes
-    if (state.frameCount % 2 === 0) { // Throttle the tornado update to every other frame
-        for (let i = state.environmentalEffects.tornadoes.length - 1; i >= 0; i--) {
-            const tornado = state.environmentalEffects.tornadoes[i];
-            const elapsedTime = Date.now() - tornado.startTime;
+    for (let i = state.environmentalEffects.tornadoes.length - 1; i >= 0; i--) {
+        const tornado = state.environmentalEffects.tornadoes[i];
+        const elapsedTime = Date.now() - tornado.startTime;
 
-            if (elapsedTime > tornado.duration) {
-                state.environmentalEffects.tornadoes.splice(i, 1);
-                continue;
-            }
+        if (elapsedTime > tornado.duration) {
+            state.environmentalEffects.tornadoes.splice(i, 1);
+            continue;
+        }
 
-            for (const particle of tornado.particles) {
-                particle.angle += particle.speed;
-                particle.y += particle.yVelocity;
+        for (const particle of tornado.particles) {
+            particle.angle += particle.speed;
+            particle.y += particle.yVelocity;
 
-                // Funnel shape logic
-                const heightRatio = (canvas.height - particle.y) / canvas.height;
-                const currentRadius = particle.radius * heightRatio;
+            // Funnel shape logic
+            const heightRatio = (canvas.height - particle.y) / canvas.height;
+            const currentRadius = particle.radius * heightRatio;
 
-                particle.x = tornado.x + Math.cos(particle.angle * Math.PI / 180) * currentRadius;
+            particle.x = tornado.x + Math.cos(particle.angle * Math.PI / 180) * currentRadius;
 
-                // Reset particle if it goes off the top
-                if (particle.y < 0) {
-                    particle.y = canvas.height;
-                }
+            // Reset particle if it goes off the top
+            if (particle.y < 0) {
+                particle.y = canvas.height;
             }
         }
     }

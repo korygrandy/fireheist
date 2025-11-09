@@ -283,7 +283,7 @@ export function drawObstacle(obstacle, angleRad) {
 export function drawFireSpinner(playerX, playerY) {
     if (!state.jumpState.isFireSpinner && !state.isMageSpinnerActive) return;
 
-    const numFireballs = 5;
+    const numFireballs = 12;
     const orbitRadius = 50;
     const rotationSpeed = 0.1;
     const angle = state.frameCount * rotationSpeed;

@@ -92,34 +92,28 @@ export function drawVanishingObstacle(obstacle, angleRad) {
 }
 
 export function draw() {
+    // 1. Clear canvas with sky color
     ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw cityscape first, with clipping, if the theme is right
-    if (state.selectedTheme === 'roadway' && state.environmentalEffects.cityscape.buildings.length > 0) {
-        const currentSegmentForClip = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
-        const angleRadForClip = currentSegmentForClip ? currentSegmentForClip.angleRad : 0;
-        const slopeHeight = Math.tan(angleRadForClip) * canvas.width;
-        const endY = GROUND_Y - slopeHeight;
+    const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
+    const groundAngleRad = currentSegment ? currentSegment.angleRad : 0;
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(canvas.width, 0);
-        ctx.lineTo(canvas.width, endY);
-        ctx.lineTo(0, GROUND_Y);
-        ctx.closePath();
-        ctx.clip();
-
+    // Draw cityscape first, behind all other elements
+    if (state.selectedTheme === 'roadway') {
         drawCityscape();
-
-        ctx.restore();
     }
 
-    // This first call handles effects when the game is not running (e.g., on the menu).
-    // When the game is running, these effects will be drawn under the ground, which is acceptable.
-    drawEnvironmentalEffects();
+    // 3. Draw Clouds
+    drawClouds();
 
+    // 4. Draw Ground
+    if (state.currentSegmentIndex < state.raceSegments.length || state.isGameOverSequence) {
+        drawSlantedGround(groundAngleRad);
+    }
+
+    // 5. Draw Environmental & Particle Effects on top of the ground
+    drawEnvironmentalEffects();
     drawGroundPoundParticles();
     drawHoudiniParticles();
     drawFieryHoudiniParticles();
@@ -134,22 +128,11 @@ export function draw() {
     drawShatteredObstacles();
     drawFirestormFlashes();
     drawPlayerEmbers();
-    drawFireballs(); // Draw fireballs
+    drawFireballs();
 
-    let groundAngleRad = 0;
-    let stickFigureGroundY = GROUND_Y;
-
+    // 6. Draw Game Objects (Player, Obstacles, etc.)
     if (state.currentSegmentIndex < state.raceSegments.length || state.isGameOverSequence) {
-        const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
-
-        groundAngleRad = currentSegment.angleRad;
-        drawSlantedGround(groundAngleRad);
-
-        // Draw clouds and effects on top of the ground
-        drawClouds();
-        drawEnvironmentalEffects();
-
-        stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
+        const stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
 
         if (!state.isGameOverSequence) {
             if (currentSegment.isMilestone) {
@@ -174,16 +157,9 @@ export function draw() {
             }
             drawHurdle(currentSegment);
 
-            if (state.currentObstacle) {
-                drawObstacle(state.currentObstacle, groundAngleRad);
-            }
-            if (state.currentAccelerator) {
-                drawAccelerator(state.currentAccelerator, groundAngleRad);
-            }
-
-            if (state.onScreenCustomEvent) {
-                drawProximityEvent(state.onScreenCustomEvent, groundAngleRad);
-            }
+            if (state.currentObstacle) drawObstacle(state.currentObstacle, groundAngleRad);
+            if (state.currentAccelerator) drawAccelerator(state.currentAccelerator, groundAngleRad);
+            if (state.onScreenCustomEvent) drawProximityEvent(state.onScreenCustomEvent, groundAngleRad);
 
             if (state.isAccelerating && !state.currentAccelerator) {
                 const activeEvent = state.activeCustomEvents.find(e => e.type === 'ACCELERATOR' && e.isActive);
@@ -200,16 +176,9 @@ export function draw() {
             const p = state.stickFigureBurst.progress;
             let burstDistance = 0;
 
-            if (p < 0.3) {
-                const phaseProgress = p / 0.3;
-                burstDistance = state.stickFigureBurst.maxOffset * 0.4 * Math.sin(phaseProgress * Math.PI);
-            } else if (p < 0.6) {
-                const phaseProgress = (p - 0.3) / 0.3;
-                burstDistance = state.stickFigureBurst.maxOffset * 0.7 * Math.sin(phaseProgress * Math.PI);
-            } else {
-                const phaseProgress = (p - 0.6) / 0.4;
-                burstDistance = state.stickFigureBurst.maxOffset * 1.0 * Math.sin(phaseProgress * Math.PI);
-            }
+            if (p < 0.3) burstDistance = state.stickFigureBurst.maxOffset * 0.4 * Math.sin((p / 0.3) * Math.PI);
+            else if (p < 0.6) burstDistance = state.stickFigureBurst.maxOffset * 0.7 * Math.sin(((p - 0.3) / 0.3) * Math.PI);
+            else burstDistance = state.stickFigureBurst.maxOffset * 1.0 * Math.sin(((p - 0.6) / 0.4) * Math.PI);
 
             const burstAngleRad = 15 * (Math.PI / 180);
             stickFigureOffsetX = burstDistance * Math.cos(burstAngleRad);
@@ -219,15 +188,8 @@ export function draw() {
         let currentY = stickFigureGroundY + stickFigureOffsetY;
 
         if (state.jumpState.isJumping) {
-            let maxJumpHeight = 0;
-            let jumpProgress = state.jumpState.progress;
-
-            if (state.manualJumpOverride.isActive) {
-                maxJumpHeight = state.manualJumpHeight;
-            } else {
-                maxJumpHeight = currentSegment.hurdleHeight * JUMP_HEIGHT_RATIO;
-            }
-
+            const jumpProgress = state.jumpState.progress;
+            const maxJumpHeight = state.manualJumpOverride.isActive ? state.manualJumpHeight : currentSegment.hurdleHeight * JUMP_HEIGHT_RATIO;
             const jumpOffset = -4 * maxJumpHeight * (jumpProgress - jumpProgress * jumpProgress);
             currentY += jumpOffset;
         }
@@ -240,7 +202,6 @@ export function draw() {
             state.jumpState.groundPoundEffectTriggered = true;
         }
 
-        // Visual indicator for Fire Mage mode
         if (state.isFireMageActive) {
             ctx.save();
             ctx.beginPath();
@@ -252,75 +213,41 @@ export function draw() {
             ctx.restore();
         }
 
-        state.incineratingObstacles.forEach(obstacle => {
-            drawIncineration(obstacle, groundAngleRad);
-        });
+        state.incineratingObstacles.forEach(obstacle => drawIncineration(obstacle, groundAngleRad));
+        state.ignitedObstacles.forEach(obstacle => drawIgnitedObstacle(obstacle, groundAngleRad));
+        state.vanishingObstacles.forEach(obstacle => drawVanishingObstacle(obstacle, groundAngleRad));
 
-        // Draw and manage flipping obstacles
         for (let i = state.flippingObstacles.length - 1; i >= 0; i--) {
             const obstacle = state.flippingObstacles[i];
             const elapsed = performance.now() - obstacle.startTime;
-            const FLIP_CRUMBLE_DURATION = 1000; // 1 second for flip and crumble
-            obstacle.animationProgress = Math.min(1, elapsed / FLIP_CRUMBLE_DURATION);
-
-            if (obstacle.animationProgress >= 1) {
-                state.flippingObstacles.splice(i, 1);
-            } else {
-                drawFlipAndCrumble(obstacle, groundAngleRad);
-            }
+            obstacle.animationProgress = Math.min(1, elapsed / 1000);
+            if (obstacle.animationProgress >= 1) state.flippingObstacles.splice(i, 1);
+            else drawFlipAndCrumble(obstacle, groundAngleRad);
         }
-
-        state.ignitedObstacles.forEach(obstacle => {
-            drawIgnitedObstacle(obstacle, groundAngleRad);
-        });
-
-        state.vanishingObstacles.forEach(obstacle => {
-            drawVanishingObstacle(obstacle, groundAngleRad);
-        });
-
-        for (let i = state.activeCashBags.length - 1; i >= 0; i--) {
-            const bag = state.activeCashBags[i];
-            if (bag.isDone) {
-                state.activeCashBags.splice(i, 1);
-            } else {
-                // drawCashBagEmoji(bag.currentX, bag.currentY, bag.opacity);
-            }
-        }
-
-        drawMoneyCounter();
-        drawGameCounters();
-        drawEnergyBar();
-
-        if (state.daysCounter) { drawDaysCounter(); }
-
-        if (state.isColliding && state.collisionDuration > 0) {
-            const fadeProgress = state.collisionDuration / COLLISION_DURATION_MS;
-            ctx.save();
-            ctx.fillStyle = `rgba(255, 0, 0, ${fadeProgress * 0.4})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.restore();
-        }
-
-        if (state.screenFlash.opacity > 0) {
-            ctx.save();
-            ctx.fillStyle = `rgba(255, 165, 0, ${state.screenFlash.opacity})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.restore();
-        }
-    } else {
-        // If the game is not running (e.g., on the main menu), draw clouds on the sky.
-        drawClouds();
     }
 
-    if (!state.gameRunning && isInitialLoad) {
-        drawTipsOverlay();
+    // 7. Draw UI Overlays
+    drawMoneyCounter();
+    drawGameCounters();
+    drawEnergyBar();
+    if (state.daysCounter) drawDaysCounter();
+
+    if (state.isColliding && state.collisionDuration > 0) {
+        const fadeProgress = state.collisionDuration / COLLISION_DURATION_MS;
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 0, 0, ${fadeProgress * 0.4})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
     }
 
-    if (state.isPaused) {
-        drawPausedOverlay();
+    if (state.screenFlash.opacity > 0) {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 165, 0, ${state.screenFlash.opacity})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
     }
 
-    if (state.currentSegmentIndex >= state.raceSegments.length && !state.isGameOverSequence) {
-        return;
-    }
+    if (!state.gameRunning && isInitialLoad) drawTipsOverlay();
+    if (state.isPaused) drawPausedOverlay();
+    if (state.currentSegmentIndex >= state.raceSegments.length && !state.isGameOverSequence) return;
 }
