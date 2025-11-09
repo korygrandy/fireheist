@@ -13,20 +13,33 @@ import { checkForNewUnlocks } from './ui-modules/unlocks.js';
 import { populateThemeSelector, handleThemeChange } from './ui-modules/theme.js';
 import { populatePersonaSelector, handlePersonaChange } from './ui-modules/persona.js';
 import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmoryItems } from './ui-modules/armory.js';
-import { displayDailyChallenge, displayDailyChallengeResults } from './ui-modules/daily-challenge-ui.js';
-import { startDailyChallengeGame } from './daily-challenge.js';
+import { startDailyChallengeGame, getDailyChallengeResults } from './daily-challenge.js';
+import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './ui-modules/daily-challenge-ui.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 
 function initializeDailyChallengeUI() {
-    displayDailyChallenge();
-    const startDailyChallengeBtn = document.getElementById('startDailyChallengeBtn');
-    if (startDailyChallengeBtn) {
-        startDailyChallengeBtn.addEventListener('click', () => {
-            startDailyChallengeGame();
+    const results = getDailyChallengeResults();
+    if (results) {
+        displayDailyChallengeCompletedScreen(results);
+    } else {
+        displayDailyChallenge();
+    }
+    // Event listener is now handled by delegation in DOMContentLoaded
+}
+
+// ... inside the DOMContentLoaded event listener ...
+
+    // Delegated event listener for the daily challenge start button
+    const controlPanelContainer = document.getElementById('control-panel-container');
+    if (controlPanelContainer) {
+        controlPanelContainer.addEventListener('click', (event) => {
+            if (event.target.id === 'startDailyChallengeBtn') {
+                startDailyChallengeGame();
+            }
         });
     }
-}
+
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
 import state from './game-modules/state.js';

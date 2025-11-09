@@ -92,7 +92,9 @@ export function updateControlPanelState(gameRunning, isPaused) {
     skillLevelSelector.querySelectorAll('input').forEach(input => input.disabled = disableControls);
 
     // Stop button is enabled only when the game is actively running or paused
-    stopButton.disabled = !gameRunning;
+    if (!state.isDailyChallengeActive) {
+        stopButton.disabled = !gameRunning;
+    }
 
     // Start button state logic
     if (!gameRunning) {

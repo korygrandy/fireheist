@@ -7,6 +7,59 @@ import { dataInput, eventDataInput } from './dom-elements.js';
 import { loadCustomData } from './ui-modules/data.js';
 import { hideSandboxControls } from './ui-modules/ui-helpers.js';
 
+const WIN_STREAK_KEY = 'dailyChallengeWinStreak';
+
+export function getDailyChallengeWinStreak() {
+    return parseInt(localStorage.getItem(WIN_STREAK_KEY) || '0', 10);
+}
+
+export function updateDailyChallengeWinStreak(didWin) {
+    let currentStreak = getDailyChallengeWinStreak();
+    if (didWin) {
+        currentStreak++;
+        console.log(`-> Daily Challenge: Win streak incremented to ${currentStreak}.`);
+    } else {
+        currentStreak = 0;
+        console.log("-> Daily Challenge: Win streak reset.");
+    }
+    localStorage.setItem(WIN_STREAK_KEY, currentStreak);
+    return currentStreak; // Return the new streak
+}
+
+// --- Daily Challenge Played Status ---
+function getDailyChallengeKey() {
+    const today = new Date();
+    return `dailyChallengePlayed_${today.getUTCFullYear()}${String(today.getUTCMonth() + 1).padStart(2, '0')}${String(today.getUTCDate()).padStart(2, '0')}`;
+}
+
+export function getDailyChallengeResults() {
+    const storedValue = localStorage.getItem(getDailyChallengeKey());
+    if (!storedValue) return null;
+
+    try {
+        const results = JSON.parse(storedValue);
+        // Check if it's a valid results object, not just `true` from the old format
+        if (typeof results === 'object' && results !== null && 'days' in results) {
+            return results;
+        }
+        // If not, it's old data. Clear it.
+        localStorage.removeItem(getDailyChallengeKey());
+        return null;
+    } catch (e) {
+        // If parsing fails, it's invalid data. Clear it.
+        console.warn("-> Daily Challenge: Clearing invalid data from localStorage.", e);
+        localStorage.removeItem(getDailyChallengeKey());
+        return null;
+    }
+}
+
+export function markDailyChallengeAsPlayed(stats, winStreak) {
+    const results = { ...stats, winStreak };
+    localStorage.setItem(getDailyChallengeKey(), JSON.stringify(results));
+    console.log("-> Daily Challenge: Marked as played for today with results.");
+}
+
+
 // --- Seeded Random Number Generator ---
 // A simple LCG (Linear Congruential Generator) to produce a predictable sequence of numbers.
 function createSeededRandom(seed) {
@@ -115,40 +168,56 @@ export function getDailyChallengeData() {
     };
 }
 
+import { showCountdown } from './ui-modules/daily-challenge-ui.js';
+
+// ... (other imports)
+
 export function startDailyChallengeGame() {
     console.log("-> Daily Challenge: Starting game.");
 
-    const challengeData = getDailyChallengeData();
+    // Disable the reset button immediately
+    const stopButton = document.getElementById('stopButton');
+    if (stopButton) {
+        stopButton.disabled = true;
+    }
 
-    // Update global state with daily challenge parameters
-    state.isDailyChallengeActive = true;
-    state.selectedTheme = challengeData.themeKey;
-    state.stickFigureEmoji = challengeData.playerEmoji;
-    state.obstacleEmoji = challengeData.obstacleEmoji;
+    const startButton = document.getElementById('startDailyChallengeBtn');
+    if (!startButton) return;
 
-    // Apply theme and music
-    setTheme(challengeData.themeKey);
-    initializeMusicPlayer(challengeData.music);
+    showCountdown(startButton, () => {
+        const challengeData = getDailyChallengeData();
 
-    // Update milestone and event data
-    // Temporarily set the data input values and call loadCustomData to parse them
-    const originalDataInput = dataInput.value;
-    const originalEventDataInput = eventDataInput.value;
+        // Update global state with daily challenge parameters
+        state.isDailyChallengeActive = true;
+        state.selectedTheme = challengeData.themeKey;
+        state.stickFigureEmoji = challengeData.playerEmoji;
+        state.obstacleEmoji = challengeData.obstacleEmoji;
 
-    dataInput.value = challengeData.milestones.join('\n');
-    eventDataInput.value = challengeData.events.join('\n');
+        // Apply theme and music
+        setTheme(challengeData.themeKey);
+        initializeMusicPlayer(challengeData.music);
 
-    loadCustomData(); // This will parse the data and update state.raceSegments and state.customEvents
+        // Update milestone and event data
+        const originalDataInput = dataInput.value;
+        const originalEventDataInput = eventDataInput.value;
+        dataInput.value = challengeData.milestones.join('\n');
+        eventDataInput.value = challengeData.events.join('\n');
+        loadCustomData();
+        dataInput.value = originalDataInput;
+        eventDataInput.value = originalEventDataInput;
 
-    // Restore original data input values
-    dataInput.value = originalDataInput;
-    eventDataInput.value = originalEventDataInput;
+        // Hide control panel tabs
+        hideSandboxControls();
 
-    // Hide control panel tabs to enforce challenge parameters
-    hideSandboxControls();
+        // Start the game
+        startGame();
 
-    // Start the game
-    startGame();
+        // Disable the reset button AFTER startGame has run
+        const stopButton = document.getElementById('stopButton');
+        if (stopButton) {
+            stopButton.disabled = true;
+        }
+    });
 }
 
 console.log("-> daily-challenge.js loaded");
