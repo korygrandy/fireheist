@@ -302,6 +302,82 @@ export function drawIncineration(obstacle, angleRad) {
     ctx.restore();
 }
 
+export function drawFlipAndCrumble(obstacle, angleRad) {
+    const { x, emoji, animationProgress } = obstacle;
+    const groundY = GROUND_Y - x * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET;
+
+    ctx.save();
+    ctx.translate(x, groundY);
+    ctx.rotate(-angleRad);
+
+    if (animationProgress < 0.5) { // Flipping phase
+        const flipProgress = animationProgress / 0.5;
+        const rotation = Math.PI * flipProgress; // 0 to 180 degrees
+        const scale = 1 - (flipProgress * 0.2); // Shrinks to 80%
+        const opacity = 1 - (flipProgress * 0.3); // Fades to 70%
+
+        ctx.globalAlpha = opacity;
+        ctx.rotate(rotation); // Apply flip rotation
+        ctx.scale(scale, scale);
+
+        ctx.font = `${OBSTACLE_EMOJI_SIZE}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(emoji, 0, 0);
+
+    } else { // Crumbling phase
+        const crumbleProgress = (animationProgress - 0.5) / 0.5;
+        const numRubblePieces = 4; // 4 rubble pieces + 1 ember
+
+        if (!obstacle.rubblePieces) {
+            obstacle.rubblePieces = [];
+            for (let i = 0; i < numRubblePieces; i++) {
+                obstacle.rubblePieces.push({
+                    emoji: '🪨',
+                    offsetX: (Math.random() - 0.5) * 40,
+                    offsetY: (Math.random() - 0.5) * 20,
+                    initialScale: Math.random() * 0.5 + 0.5
+                });
+            }
+            // Add one special ember piece
+            obstacle.rubblePieces.push({
+                isEmber: true,
+                offsetX: (Math.random() - 0.5) * 20,
+                offsetY: (Math.random() - 0.5) * 10,
+                initialScale: 0.8
+            });
+        }
+
+        obstacle.rubblePieces.forEach(piece => {
+            if (piece.isEmber) {
+                // Ember burnout animation
+                const emberOpacity = 1 - crumbleProgress;
+                const emberScale = piece.initialScale * (1 - crumbleProgress); // Shrinks to nothing
+                const emberColor = `rgba(255, ${100 * (1 - crumbleProgress)}, 0, ${emberOpacity})`;
+
+                ctx.globalAlpha = emberOpacity;
+                ctx.fillStyle = emberColor;
+                ctx.font = `${OBSTACLE_EMOJI_SIZE * emberScale}px Arial`;
+                ctx.fillText('🔥', piece.offsetX, piece.offsetY);
+
+            } else {
+                // Regular rubble animation
+                const pieceOpacity = 1 - crumbleProgress;
+                const pieceScale = piece.initialScale * (1 - crumbleProgress * 0.5);
+                const pieceYOffset = 30 * crumbleProgress;
+
+                ctx.globalAlpha = pieceOpacity;
+                ctx.font = `${OBSTACLE_EMOJI_SIZE * pieceScale * 0.5}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(piece.emoji, piece.offsetX, piece.offsetY + pieceYOffset);
+            }
+        });
+    }
+
+    ctx.restore();
+}
+
 export function drawIgnitedObstacle(obstacle, angleRad) {
     // First, draw the original obstacle
     drawObstacle(obstacle, angleRad);

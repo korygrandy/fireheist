@@ -47,6 +47,17 @@ export const armorySkills = {
             skillKey: 'fieryGroundPound'
         },
         unlockText: 'Destroy 10 obstacles in a row with Ground Pound'
+    },
+    fireStomper: {
+        name: 'Fire Stomper',
+        description: 'A massive stomp that flips all on-screen obstacles upside down before turning them to rubble.',
+        emoji: '👣',
+        unlockCondition: {
+            type: 'fieryGroundPoundCount',
+            count: 50,
+            skillKey: 'fireStomper'
+        },
+        unlockText: 'Destroy 50 obstacles with Fiery Ground Pound'
     }
     // Add more skills here as needed
 };
