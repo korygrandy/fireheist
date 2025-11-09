@@ -1099,6 +1099,10 @@ export function resetGameState() {
     state.environmentalEffects.snowflakes = [];
     state.environmentalEffects.windGusts = [];
     state.environmentalEffects.kickedUpSnow = [];
+    state.environmentalEffects.heatHaze = [];
+    state.environmentalEffects.tumbleweeds = [];
+    state.environmentalEffects.sandGrains = [];
+    state.environmentalEffects.tornadoes = [];
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;

@@ -21,6 +21,11 @@ export function startThemeEffect() {
         case 'mountains':
             startRockslide();
             break;
+                case 'desert':
+            startTumbleweed();
+            startSandGust();
+            startTornado();
+            break;
         default:
             console.log(`-> DEBUG: No specific effect to trigger for theme '${state.selectedTheme}'.`);
             break;
@@ -31,7 +36,7 @@ export function startThemeEffect() {
 
 export function startRainShower() {
     if (state.environmentalEffects.raindrops.length > 0) return; // Prevent starting a new shower if one is active
-
+    console.log("-> DEBUG: Starting rain shower.");
     for (let i = 0; i < RAIN_DENSITY; i++) {
         state.environmentalEffects.raindrops.push({
             x: Math.random() * canvas.width,
@@ -79,7 +84,7 @@ const ROCK_DURATION = 1000; // 1 second
 
 function startRockslide() {
     if (state.environmentalEffects.rocks.length > 0) return;
-
+    console.log("-> DEBUG: Starting rockslide.");
     for (let i = 0; i < ROCK_COUNT; i++) {
         state.environmentalEffects.rocks.push({
             x: Math.random() * canvas.width,
@@ -127,7 +132,7 @@ const HEADLIGHT_DURATION = 2000; // 2 seconds
 function startHeadlights() {
     // Only allow one set of headlights at a time for simplicity
     if (state.environmentalEffects.headlights.length > 0) return;
-
+    console.log("-> DEBUG: Starting headlights.");
     const yPosition = Math.random() * (canvas.height * 0.6) + (canvas.height * 0.2); // Middle 60% of screen
     const baseWidth = 10; // Width of the headlight beam at its origin
     const spread = 100; // How much the beam spreads out over its length
@@ -158,7 +163,7 @@ const FOG_DURATION = 10000; // 10 seconds
 
 function startFog() {
     if (state.environmentalEffects.fogPatches.length > 0) return;
-
+    console.log("-> DEBUG: Starting fog.");
     for (let i = 0; i < FOG_PATCH_COUNT; i++) {
         const type = Math.random() > 0.5 ? 'oval' : 'streak';
         const patch = {
@@ -282,7 +287,7 @@ const GRAVITY = 0.1; // A simple gravity effect for the kicked up snow
 
 function startSnowfall() {
     if (state.environmentalEffects.snowflakes.length > 0) return;
-
+    console.log("-> DEBUG: Starting snowfall.");
     for (let i = 0; i < SNOW_DENSITY; i++) {
         state.environmentalEffects.snowflakes.push({
             x: Math.random() * canvas.width,
@@ -302,6 +307,7 @@ function startSnowfall() {
 function startWindGust() {
     // Wind Gust Lines
     if (state.environmentalEffects.windGusts.length === 0) {
+        console.log("-> DEBUG: Starting wind gust.");
         const startY = Math.random() * canvas.height;
         const gustSpeed = Math.random() * 15 + 10;
 
@@ -410,9 +416,180 @@ function drawSnowThemeEffects() {
     }
 }
 
+// --- Desert Theme Effects ---
+
+const TUMBLEWEED_DURATION = 5000; // 5 seconds
+const SAND_GUST_PARTICLES = 100;
+const SAND_GUST_DURATION = 1000; // 1 second
+const TORNADO_DURATION = 8000; // 8 seconds
+const TORNADO_PARTICLE_COUNT = 300;
+
+function startTumbleweed() {
+    if (state.environmentalEffects.tumbleweeds.length > 0) return;
+    console.log("-> DEBUG: Starting tumbleweed.");
+    state.environmentalEffects.tumbleweeds.push({
+        x: -50,
+        y: canvas.height - 50,
+        size: Math.random() * 30 + 20,
+        speedX: Math.random() * 5 + 5,
+        rotation: 0,
+        rotationSpeed: Math.random() * 5 + 5,
+        yOffset: 0,
+        scale: 1,
+        bounceSpeed: Math.random() * 0.025 + 0.015 // Slower bounce for 2-5 hops
+    });
+
+    setTimeout(() => {
+        state.environmentalEffects.tumbleweeds = [];
+    }, TUMBLEWEED_DURATION);
+}
+
+function startSandGust() {
+    if (state.environmentalEffects.sandGrains.length > 0) return;
+    console.log("-> DEBUG: Starting sand gust.");
+    for (let i = 0; i < SAND_GUST_PARTICLES; i++) {
+        state.environmentalEffects.sandGrains.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 1,
+            speedX: Math.random() * 10 + 10,
+            opacity: Math.random() * 0.3 + 0.1
+        });
+    }
+
+    setTimeout(() => {
+        state.environmentalEffects.sandGrains = [];
+    }, SAND_GUST_DURATION);
+}
+
+function startTornado() {
+    if (state.environmentalEffects.tornadoes.length > 0) return;
+    console.log("-> DEBUG: Starting tornado.");
+
+    const tornado = {
+        x: Math.random() * canvas.width,
+        startTime: Date.now(),
+        duration: TORNADO_DURATION,
+        maxWidth: Math.random() * 80 + 60,
+        particles: []
+    };
+
+    for (let i = 0; i < TORNADO_PARTICLE_COUNT; i++) {
+        tornado.particles.push({
+            angle: Math.random() * 360,
+            radius: Math.random() * tornado.maxWidth,
+            y: canvas.height,
+            speed: Math.random() * 2 + 1,
+            yVelocity: -(Math.random() * 2 + 1),
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.4 + 0.2
+        });
+    }
+    state.environmentalEffects.tornadoes.push(tornado);
+}
+
+
+function updateDesertThemeEffects(deltaTime) {
+    // Update Tumbleweeds
+    for (const tumbleweed of state.environmentalEffects.tumbleweeds) {
+        tumbleweed.x += tumbleweed.speedX;
+        tumbleweed.rotation += tumbleweed.rotationSpeed;
+        tumbleweed.yOffset = Math.sin(tumbleweed.x * tumbleweed.bounceSpeed) * 20;
+        tumbleweed.scale = 1 + Math.sin(tumbleweed.x * tumbleweed.bounceSpeed) * 0.2;
+    }
+
+    // Update Sand Grains
+    for (const grain of state.environmentalEffects.sandGrains) {
+        grain.x += grain.speedX;
+        if (grain.x > canvas.width) {
+            grain.x = 0;
+        }
+    }
+
+    // Update Tornadoes
+    for (let i = state.environmentalEffects.tornadoes.length - 1; i >= 0; i--) {
+        const tornado = state.environmentalEffects.tornadoes[i];
+        const elapsedTime = Date.now() - tornado.startTime;
+
+        if (elapsedTime > tornado.duration) {
+            state.environmentalEffects.tornadoes.splice(i, 1);
+            continue;
+        }
+
+        for (const particle of tornado.particles) {
+            particle.angle += particle.speed;
+            particle.y += particle.yVelocity;
+
+            // Funnel shape logic
+            const heightRatio = (canvas.height - particle.y) / canvas.height;
+            const currentRadius = particle.radius * heightRatio;
+
+            particle.x = tornado.x + Math.cos(particle.angle * Math.PI / 180) * currentRadius;
+
+            // Reset particle if it goes off the top
+            if (particle.y < 0) {
+                particle.y = canvas.height;
+            }
+        }
+    }
+}
+
+function drawDesertThemeEffects() {
+    // Draw Tumbleweeds
+    for (const tumbleweed of state.environmentalEffects.tumbleweeds) {
+        ctx.save();
+        ctx.translate(tumbleweed.x, tumbleweed.y + tumbleweed.yOffset);
+        ctx.scale(tumbleweed.scale, tumbleweed.scale);
+        ctx.rotate(tumbleweed.rotation * Math.PI / 180);
+        ctx.fillStyle = '#A0522D'; // Lighter brown
+        ctx.beginPath();
+        ctx.arc(0, 0, tumbleweed.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw inner spiral
+        ctx.strokeStyle = '#8B4513'; // Darker brown for contrast
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i < 360; i++) {
+            const angle = i * Math.PI / 180;
+            const radius = tumbleweed.size * (i / 360);
+            const x = radius * Math.cos(angle);
+            const y = radius * Math.sin(angle);
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    // Draw Sand Grains
+    for (const grain of state.environmentalEffects.sandGrains) {
+        ctx.save();
+        ctx.fillStyle = `rgba(210, 180, 140, ${grain.opacity})`;
+        ctx.fillRect(grain.x, grain.y, grain.size, grain.size);
+        ctx.restore();
+    }
+
+    // Draw Tornadoes
+    for (const tornado of state.environmentalEffects.tornadoes) {
+        for (const particle of tornado.particles) {
+            ctx.save();
+            ctx.fillStyle = `rgba(210, 180, 140, ${particle.opacity})`;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
 // --- Placeholder for Space Theme ---
 function updateSpaceThemeEffects(deltaTime) {}
 function drawSpaceThemeEffects() {}
+
 
 
 // --- Placeholder for Night Theme ---
@@ -460,6 +637,17 @@ export function updateEnvironmentalEffects(deltaTime) {
                 startWindGust();
             }
             break;
+        case 'desert':
+            updateDesertThemeEffects(deltaTime);
+            // Trigger tumbleweed randomly
+            if (Math.random() < 0.001 && state.gameRunning) {
+                startTumbleweed();
+            }
+            // Trigger sand gust randomly
+            if (Math.random() < 0.0005 && state.gameRunning) {
+                startSandGust();
+            }
+            break;
         case 'space':
             updateSpaceThemeEffects(deltaTime);
             break;
@@ -488,6 +676,9 @@ export function drawEnvironmentalEffects() {
         case 'snow':
             drawSnowThemeEffects();
             break;
+        case 'desert':
+            drawDesertThemeEffects();
+            break;
         case 'space':
             drawSpaceThemeEffects();
             break;
@@ -496,3 +687,4 @@ export function drawEnvironmentalEffects() {
             break;
     }
 }
+
