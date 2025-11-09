@@ -4,6 +4,29 @@ import { canvas, ctx } from '../../dom-elements.js';
 const RAIN_DENSITY = 100; // Number of raindrops
 const RAIN_DURATION = 5000; // 5 seconds
 
+// --- Universal Effect Trigger for Debugging ---
+export function startThemeEffect() {
+    console.log(`-> DEBUG: startThemeEffect called for theme: ${state.selectedTheme}`);
+    switch (state.selectedTheme) {
+        case 'grass':
+            startRainShower();
+            break;
+        case 'snow':
+            startSnowfall();
+            break;
+        case 'roadway':
+            startHeadlights();
+            startFog();
+            break;
+        case 'mountains':
+            startRockslide();
+            break;
+        default:
+            console.log(`-> DEBUG: No specific effect to trigger for theme '${state.selectedTheme}'.`);
+            break;
+    }
+}
+
 // --- Rain Effect Logic ---
 
 export function startRainShower() {
@@ -117,9 +140,8 @@ function startHeadlights() {
             baseWidth: baseWidth,
             spread: spread,
             length: length,
-            opacity: 0.6 + Math.random() * 0.4, // Vary opacity slightly
             color: i === 0 ? '255, 255, 200' : '255, 255, 255', // Slightly different colors (RGB components)
-            speed: HEADLIGHT_SPEED + (Math.random() * 2 - 1) // Slight speed variation
+            speed: HEADLIGHT_SPEED // Use constant speed
         });
     }
 
@@ -166,6 +188,17 @@ function updateRoadwayThemeEffects(deltaTime) {
     // Update Headlights
     for (const light of state.environmentalEffects.headlights) {
         light.x += light.speed;
+    }
+
+    // Update shared headlight fade state
+    const fadeState = state.environmentalEffects.headlightFadeState;
+    fadeState.opacity += fadeState.fadeDirection * fadeState.fadeSpeed;
+    if (fadeState.opacity > 1) { fadeState.opacity = 1; fadeState.fadeDirection = -1; }
+    if (fadeState.opacity < 0.3) { fadeState.opacity = 0.3; fadeState.fadeDirection = 1; }
+
+    // Apply shared opacity to all headlights
+    for (const light of state.environmentalEffects.headlights) {
+        light.opacity = fadeState.opacity;
     }
 
     // Update Fog
@@ -238,6 +271,59 @@ function drawRoadwayThemeEffects() {
     }
 }
 
+// --- Snowfall Effect (Snow Theme) ---
+
+const SNOW_DENSITY = 150;
+const SNOW_DURATION = 8000; // 8 seconds
+
+function startSnowfall() {
+    if (state.environmentalEffects.snowflakes.length > 0) return;
+
+    for (let i = 0; i < SNOW_DENSITY; i++) {
+        state.environmentalEffects.snowflakes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -canvas.height,
+            size: Math.random() * 3 + 1, // Small snowflakes
+            speedY: Math.random() * 1 + 0.5, // Slow falling speed
+            speedX: Math.random() * 2 - 1, // Gentle side-to-side drift
+            opacity: Math.random() * 0.5 + 0.3
+        });
+    }
+
+    setTimeout(() => {
+        state.environmentalEffects.snowflakes = [];
+    }, SNOW_DURATION);
+}
+
+function updateSnowThemeEffects(deltaTime) {
+    for (const flake of state.environmentalEffects.snowflakes) {
+        flake.y += flake.speedY;
+        flake.x += flake.speedX;
+
+        // Reset flake when it goes off-screen
+        if (flake.y > canvas.height) {
+            flake.y = Math.random() * -50;
+            flake.x = Math.random() * canvas.width;
+        }
+        // Loop horizontally
+        if (flake.x > canvas.width) flake.x = 0;
+        if (flake.x < 0) flake.x = canvas.width;
+    }
+}
+
+function drawSnowThemeEffects() {
+    if (state.environmentalEffects.snowflakes.length === 0) return;
+
+    for (const flake of state.environmentalEffects.snowflakes) {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 255, 255, ${flake.opacity})`;
+        ctx.beginPath();
+        ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
 // --- Placeholder for Space Theme ---
 function updateSpaceThemeEffects(deltaTime) {}
 function drawSpaceThemeEffects() {}
@@ -269,12 +355,19 @@ export function updateEnvironmentalEffects(deltaTime) {
         case 'roadway':
             updateRoadwayThemeEffects(deltaTime);
             // Trigger headlights randomly
-            if (Math.random() < 0.001 && state.gameRunning) { // Less frequent
+            if (Math.random() < 0.001 && state.gameRunning) { // More frequent
                 startHeadlights();
             }
             // Trigger fog randomly
-            if (Math.random() < 0.0001 && state.gameRunning) { // Much less frequent fog
+            if (Math.random() < 0.002 && state.gameRunning) { // Even more frequent fog
                 startFog();
+            }
+            break;
+        case 'snow':
+            updateSnowThemeEffects(deltaTime);
+            // Trigger snowfall randomly during gameplay
+            if (Math.random() < 0.002 && state.gameRunning) {
+                startSnowfall();
             }
             break;
         case 'space':
@@ -299,7 +392,11 @@ export function drawEnvironmentalEffects() {
             drawMountainsThemeEffects();
             break;
         case 'roadway':
+            updateRoadwayThemeEffects(0); // Pass 0 for deltaTime as it's already handled in the main loop
             drawRoadwayThemeEffects();
+            break;
+        case 'snow':
+            drawSnowThemeEffects();
             break;
         case 'space':
             drawSpaceThemeEffects();

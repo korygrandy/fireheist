@@ -114,7 +114,13 @@ const state = {
         raindrops: [],
         rocks: [],
         headlights: [],
-        fogPatches: []
+        fogPatches: [],
+        snowflakes: [],
+        headlightFadeState: {
+            opacity: 0.6 + Math.random() * 0.4,
+            fadeDirection: Math.random() > 0.5 ? 1 : -1,
+            fadeSpeed: Math.random() * 0.0005 + 0.0001
+        }
     },
     playerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,
     maxPlayerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,

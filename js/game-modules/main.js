@@ -1056,6 +1056,7 @@ export function animate(timestamp) {
     state.frameCount++;
 
     state.lastTime = timestamp;
+    drawing.updateClouds(); // Update clouds before drawing
     drawing.draw();
     requestAnimationFrame(animate);
 }
@@ -1092,6 +1093,7 @@ export function resetGameState() {
     state.environmentalEffects.rocks = [];
     state.environmentalEffects.headlights = [];
     state.environmentalEffects.fogPatches = [];
+    state.environmentalEffects.snowflakes = [];
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;

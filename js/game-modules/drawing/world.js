@@ -62,26 +62,57 @@ export function initializeClouds() {
     }
 }
 
+export function updateClouds() {
+    state.clouds.forEach(cloud => {
+        cloud.x -= (state.backgroundOffsetSpeed * cloud.speedFactor);
+
+        // Wrap clouds around when they go off-screen
+        if (cloud.x + cloud.size * 2 < 0) {
+            cloud.x = canvas.width + cloud.size * 2;
+            cloud.y = Math.random() * (canvas.height / 3) + 20; // New random height
+        }
+
+        if (state.selectedTheme === 'roadway') {
+            // City Night theme: Fade out as the cloud crosses the midpoint of the screen.
+            const screenMidpoint = canvas.width / 2;
+            const minOpacity = 0.1;
+            const maxOpacity = 1.0;
+
+            if (cloud.x > screenMidpoint) {
+                // On the right half of the screen, remain fully visible.
+                cloud.opacity = maxOpacity;
+            } else {
+                // On the left half, fade out based on position.
+                const progress = cloud.x / screenMidpoint; // Progress goes from 1 down to 0.
+                cloud.opacity = minOpacity + (maxOpacity - minOpacity) * progress;
+            }
+            // Ensure opacity stays within the defined bounds.
+            cloud.opacity = Math.max(minOpacity, Math.min(maxOpacity, cloud.opacity));
+
+        } else {
+            // Original fading logic for all other themes.
+            cloud.opacity += cloud.fadeDirection * cloud.fadeSpeed;
+            if (cloud.opacity > 1) { cloud.opacity = 1; cloud.fadeDirection = -1; }
+            if (cloud.opacity < 0.3) { cloud.opacity = 0.3; cloud.fadeDirection = 1; }
+        }
+    });
+}
+
 export function drawClouds() {
     ctx.fillStyle = 'white';
     state.clouds.forEach(cloud => {
-        const currentX = cloud.x - (state.backgroundOffset * cloud.speedFactor);
-        const wrappedX = currentX % (canvas.width + cloud.size * 2);
-
-        // Update cloud opacity for fading effect
-        cloud.opacity += cloud.fadeDirection * cloud.fadeSpeed; // Use individual fade speed
-        if (cloud.opacity > 1) { cloud.opacity = 1; cloud.fadeDirection = -1; }
-        if (cloud.opacity < 0.3) { cloud.opacity = 0.3; cloud.fadeDirection = 1; } // Fade between 0.3 and 1
+        const currentX = cloud.x;
+        // console.log(`Drawing cloud at x: ${currentX}, y: ${cloud.y}, opacity: ${cloud.opacity}`); // Debug log
 
         ctx.save();
         ctx.globalAlpha = cloud.opacity;
 
         ctx.beginPath();
-        ctx.arc(wrappedX, cloud.y, cloud.size * 0.6, 0, Math.PI * 2);
-        ctx.arc(wrappedX + cloud.size * 0.5, cloud.y, cloud.size * 0.7, 0, Math.PI * 2);
-        ctx.arc(wrappedX - cloud.size * 0.5, cloud.y, cloud.size * 0.7, 0, Math.PI * 2);
-        ctx.arc(wrappedX + cloud.size * 0.25, cloud.y - cloud.size * 0.4, cloud.size * 0.5, 0, Math.PI * 2);
-        ctx.arc(wrappedX - cloud.size * 0.25, cloud.y - cloud.size * 0.4, cloud.size * 0.5, 0, Math.PI * 2);
+        ctx.arc(currentX, cloud.y, cloud.size * 0.6, 0, Math.PI * 2);
+        ctx.arc(currentX + cloud.size * 0.5, cloud.y, cloud.size * 0.7, 0, Math.PI * 2);
+        ctx.arc(currentX - cloud.size * 0.5, cloud.y, cloud.size * 0.7, 0, Math.PI * 2);
+        ctx.arc(currentX + cloud.size * 0.25, cloud.y - cloud.size * 0.4, cloud.size * 0.5, 0, Math.PI * 2);
+        ctx.arc(currentX - cloud.size * 0.25, cloud.y - cloud.size * 0.4, cloud.size * 0.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
     });
