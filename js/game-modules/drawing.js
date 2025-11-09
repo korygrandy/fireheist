@@ -6,7 +6,7 @@ import state from './state.js';
 
 import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounter, drawGameCounters, drawDaysCounter, drawCustomEventStatus, drawEnergyBar } from './drawing/overlays.js';
 import { drawStickFigure } from './drawing/player.js';
-import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, initializeClouds, generateGrassBlades } from './drawing/world.js';
+import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble, initializeClouds, generateGrassBlades } from './drawing/world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createShatterEffect, createFireExplosion } from './drawing/effects.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 
@@ -29,6 +29,7 @@ export {
     drawFireSpinner,
     drawIncineration,
     drawIgnitedObstacle,
+    drawFlipAndCrumble,
     initializeClouds,
     generateGrassBlades,
     drawGroundPoundParticles,
@@ -222,6 +223,20 @@ export function draw() {
         state.incineratingObstacles.forEach(obstacle => {
             drawIncineration(obstacle, groundAngleRad);
         });
+
+        // Draw and manage flipping obstacles
+        for (let i = state.flippingObstacles.length - 1; i >= 0; i--) {
+            const obstacle = state.flippingObstacles[i];
+            const elapsed = performance.now() - obstacle.startTime;
+            const FLIP_CRUMBLE_DURATION = 1000; // 1 second for flip and crumble
+            obstacle.animationProgress = Math.min(1, elapsed / FLIP_CRUMBLE_DURATION);
+
+            if (obstacle.animationProgress >= 1) {
+                state.flippingObstacles.splice(i, 1);
+            } else {
+                drawFlipAndCrumble(obstacle, groundAngleRad);
+            }
+        }
 
         state.ignitedObstacles.forEach(obstacle => {
             drawIgnitedObstacle(obstacle, groundAngleRad);

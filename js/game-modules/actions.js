@@ -12,6 +12,7 @@ const JUMP_DURATIONS = {
     hover: 1000,
     groundPound: 600,
     fieryGroundPound: 600, // Same duration as regular ground pound for now
+    fireStomper: 600,
     cartoonScramble: 800,
     moonwalk: 700,
     shockwave: 400,
@@ -218,6 +219,46 @@ export function startFieryGroundPound(state) {
     state.vanishingObstacles.length = 0; // Clear vanishing obstacles
 
     console.log("-> startFieryGroundPound: Fiery Ground Pound initiated. All obstacles incinerated!");
+}
+
+export function startFireStomper(state) {
+    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
+    if (!consumeEnergy(state, 'fireStomper')) return;
+
+    state.jumpState.isFireStomper = true;
+    state.jumpState.fireStomperDuration = JUMP_DURATIONS.fireStomper;
+    state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
+    initiateJump(state, JUMP_DURATIONS.fireStomper);
+    playAnimationSound('groundPound'); // Use regular ground pound sound for now
+
+    // Mark all active obstacles for the new flip-and-crumble animation
+    let now = performance.now();
+    const timeIncrement = 0.0001;
+
+    const allObstacles = [
+        ...(state.currentObstacle ? [state.currentObstacle] : []),
+        ...state.ignitedObstacles,
+        ...state.vanishingObstacles
+    ];
+
+    allObstacles.forEach(ob => {
+        state.flippingObstacles.push({
+            ...ob,
+            animationProgress: 0,
+            startTime: now,
+            animationType: 'flip-and-crumble'
+        });
+        now += timeIncrement;
+    });
+
+    if (state.currentObstacle) {
+        state.playerStats.obstaclesDestroyed++; // Or a more specific counter
+        state.currentObstacle = null;
+    }
+    state.ignitedObstacles.length = 0;
+    state.vanishingObstacles.length = 0;
+
+    console.log("-> startFireStomper: Fire Stomper initiated. All obstacles marked for destruction!");
 }
 
 export function startCartoonScramble(state) {

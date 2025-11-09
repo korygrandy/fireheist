@@ -41,7 +41,7 @@ function initializeDailyChallengeUI() {
     }
 
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball } from './game-modules/actions.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
@@ -235,7 +235,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const skillActionMap = {
         firestorm: startFirestorm,
         fireSpinner: startFireSpinner,
-        fieryGroundPound: startFieryGroundPound
+        fieryGroundPound: startFieryGroundPound,
+        fireStomper: startFireStomper
         // Add other skills here as they are implemented
     };
 

@@ -34,6 +34,8 @@ const state = {
         groundPoundDuration: 0,
         isFieryGroundPound: false,
         fieryGroundPoundDuration: 0,
+        isFireStomper: false,
+        fireStomperDuration: 0,
         groundPoundEffectTriggered: false, // To ensure effect only triggers once per ground pound
         isCartoonScramble: false, cartoonScrambleDuration: 0,
         isMoonwalking: false, moonwalkDuration: 0,
@@ -76,6 +78,7 @@ const state = {
     incineratingObstacles: [],
     houdiniParticles: [],
     groundPoundParticles: [],
+    flippingObstacles: [],
     flipTrail: [],
     moonwalkParticles: [],
     hoverParticles: [],
