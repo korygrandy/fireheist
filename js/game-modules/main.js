@@ -1109,6 +1109,8 @@ export function resetGameState() {
     state.environmentalEffects.shootingStarBursts = [];
     state.environmentalEffects.shootingStarTrails = [];
     state.environmentalEffects.nebulaCloudState = { active: false, startTime: 0, opacity: 0 };
+    state.environmentalEffects.fireflies = [];
+    state.environmentalEffects.moonGlow = { active: false, opacity: 0, rays: [] };
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;

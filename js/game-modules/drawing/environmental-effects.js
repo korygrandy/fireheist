@@ -31,6 +31,10 @@ export function startThemeEffect() {
             startShootingStar();
             startNebulaCloud();
             break;
+        case 'night':
+            startFireflies();
+            startMoonGlow();
+            break;
         default:
             console.log(`-> DEBUG: No specific effect to trigger for theme '${state.selectedTheme}'.`);
             break;
@@ -1153,11 +1157,122 @@ function drawOuterSpaceThemeEffects() {
 
 
 
-// --- Placeholder for Night Theme ---
+// --- Night Theme Effects ---
 
-function updateNightThemeEffects(deltaTime) {}
+const FIREFLY_COUNT = 20;
+const FIREFLY_DURATION = 15000; // 15 seconds
+const MOON_GLOW_FADE_DURATION = 5000; // 5 seconds
+const MOON_GLOW_IDLE_DURATION = 10000; // 10 seconds
+const MOON_GLOW_TOTAL_DURATION = MOON_GLOW_FADE_DURATION * 2 + MOON_GLOW_IDLE_DURATION;
+const MOON_RAY_COUNT = 5;
 
-function drawNightThemeEffects() {}
+function startFireflies() {
+    if (state.environmentalEffects.fireflies.length > 0) return;
+    console.log("-> DEBUG: Starting fireflies.");
+    for (let i = 0; i < FIREFLY_COUNT; i++) {
+        state.environmentalEffects.fireflies.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 1,
+            speedX: Math.random() * 0.5 - 0.25,
+            speedY: Math.random() * 0.5 - 0.25,
+            opacity: 0,
+            fadeDirection: 1,
+            fadeSpeed: Math.random() * 0.02 + 0.01
+        });
+    }
+    setTimeout(() => {
+        state.environmentalEffects.fireflies = [];
+    }, FIREFLY_DURATION);
+}
+
+function startMoonGlow() {
+    if (state.environmentalEffects.moonGlow.active) return;
+    console.log("-> DEBUG: Starting moon glow.");
+    const glowState = state.environmentalEffects.moonGlow;
+    glowState.active = true;
+    glowState.startTime = Date.now();
+    glowState.rays = []; // Clear old rays
+
+    for (let i = 0; i < MOON_RAY_COUNT; i++) {
+        glowState.rays.push({
+            x: Math.random() * canvas.width,
+            width: Math.random() * 15 + 5,
+            initialOpacity: Math.random() * 0.05 + 0.02
+        });
+    }
+}
+
+function updateNightThemeEffects(deltaTime) {
+    // Update Fireflies
+    for (const fly of state.environmentalEffects.fireflies) {
+        fly.x += fly.speedX;
+        fly.y += fly.speedY;
+
+        // Drifting boundary check
+        if (fly.x < 0 || fly.x > canvas.width) fly.speedX *= -1;
+        if (fly.y < 0 || fly.y > canvas.height) fly.speedY *= -1;
+
+        // Pulsing opacity
+        fly.opacity += fly.fadeSpeed * fly.fadeDirection;
+        if (fly.opacity > 1) { fly.opacity = 1; fly.fadeDirection = -1; }
+        if (fly.opacity < 0) { fly.opacity = 0; fly.fadeDirection = 1; }
+    }
+
+    // Update Moon Glow
+    const glowState = state.environmentalEffects.moonGlow;
+    if (glowState.active) {
+        const elapsedTime = Date.now() - glowState.startTime;
+        if (elapsedTime < MOON_GLOW_FADE_DURATION) {
+            // Fade in
+            glowState.opacity = (elapsedTime / MOON_GLOW_FADE_DURATION);
+        } else if (elapsedTime < MOON_GLOW_FADE_DURATION + MOON_GLOW_IDLE_DURATION) {
+            // Idle
+            glowState.opacity = 1.0;
+        } else if (elapsedTime < MOON_GLOW_TOTAL_DURATION) {
+            // Fade out
+            const fadeOutTime = elapsedTime - (MOON_GLOW_FADE_DURATION + MOON_GLOW_IDLE_DURATION);
+            glowState.opacity = 1.0 - (fadeOutTime / MOON_GLOW_FADE_DURATION);
+        } else {
+            glowState.active = false;
+        }
+    }
+}
+
+function drawNightThemeEffects() {
+    // Draw Fireflies
+    for (const fly of state.environmentalEffects.fireflies) {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 255, 0, ${fly.opacity})`;
+        ctx.beginPath();
+        ctx.arc(fly.x, fly.y, fly.size, 0, Math.PI * 2);
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = 'yellow';
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Draw Moon Glow and Rays
+    const glowState = state.environmentalEffects.moonGlow;
+    if (glowState.active) {
+        // Draw main glow
+        const gradient = ctx.createRadialGradient(canvas.width / 2, -100, 100, canvas.width / 2, 100, 400);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${0.05 * glowState.opacity})`);
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw rays
+        for (const ray of glowState.rays) {
+            const rayGradient = ctx.createLinearGradient(ray.x, 0, ray.x, canvas.height);
+            const finalOpacity = ray.initialOpacity * glowState.opacity * (0.5 + Math.sin(Date.now() / 1000) * 0.5); // Shimmer
+            rayGradient.addColorStop(0, `rgba(255, 255, 255, ${finalOpacity})`);
+            rayGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = rayGradient;
+            ctx.fillRect(ray.x - ray.width / 2, 0, ray.width, canvas.height);
+        }
+    }
+}
 
 
 // --- Manager Functions ---
@@ -1230,6 +1345,13 @@ case 'desert':
             break;
         case 'night':
             updateNightThemeEffects(deltaTime);
+            // Trigger effects randomly
+            if (Math.random() < 0.002 && state.gameRunning) {
+                startFireflies();
+            }
+            if (Math.random() < 0.0008 && state.gameRunning) {
+                startMoonGlow();
+            }
             break;
     }
 }
