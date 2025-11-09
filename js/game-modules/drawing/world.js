@@ -54,7 +54,10 @@ export function initializeClouds() {
             x: Math.random() * canvas.width,
             y: Math.random() * (canvas.height / 3) + 20,
             size: Math.random() * 20 + 30,
-            speedFactor: CLOUD_SPEED_FACTOR + (Math.random() * 0.05)
+            speedFactor: CLOUD_SPEED_FACTOR + (Math.random() * 0.05),
+            opacity: 0.5 + Math.random() * 0.5, // Initial random opacity
+            fadeDirection: Math.random() > 0.5 ? 1 : -1, // Random initial fade direction
+            fadeSpeed: Math.random() * 0.0005 + 0.0001 // Random fade speed for each cloud
         });
     }
 }
@@ -65,6 +68,14 @@ export function drawClouds() {
         const currentX = cloud.x - (state.backgroundOffset * cloud.speedFactor);
         const wrappedX = currentX % (canvas.width + cloud.size * 2);
 
+        // Update cloud opacity for fading effect
+        cloud.opacity += cloud.fadeDirection * cloud.fadeSpeed; // Use individual fade speed
+        if (cloud.opacity > 1) { cloud.opacity = 1; cloud.fadeDirection = -1; }
+        if (cloud.opacity < 0.3) { cloud.opacity = 0.3; cloud.fadeDirection = 1; } // Fade between 0.3 and 1
+
+        ctx.save();
+        ctx.globalAlpha = cloud.opacity;
+
         ctx.beginPath();
         ctx.arc(wrappedX, cloud.y, cloud.size * 0.6, 0, Math.PI * 2);
         ctx.arc(wrappedX + cloud.size * 0.5, cloud.y, cloud.size * 0.7, 0, Math.PI * 2);
@@ -72,6 +83,7 @@ export function drawClouds() {
         ctx.arc(wrappedX + cloud.size * 0.25, cloud.y - cloud.size * 0.4, cloud.size * 0.5, 0, Math.PI * 2);
         ctx.arc(wrappedX - cloud.size * 0.25, cloud.y - cloud.size * 0.4, cloud.size * 0.5, 0, Math.PI * 2);
         ctx.fill();
+        ctx.restore();
     });
 }
 

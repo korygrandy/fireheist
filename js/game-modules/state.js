@@ -111,7 +111,10 @@ const state = {
     MAX_EMBER_PARTICLES: 100,
     selectedTheme: 'grass', // Add this line
     environmentalEffects: {
-        raindrops: []
+        raindrops: [],
+        rocks: [],
+        headlights: [],
+        fogPatches: []
     },
     playerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,
     maxPlayerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,

@@ -1089,6 +1089,9 @@ export function resetGameState() {
 
     // Reset environmental effects
     state.environmentalEffects.raindrops = [];
+    state.environmentalEffects.rocks = [];
+    state.environmentalEffects.headlights = [];
+    state.environmentalEffects.fogPatches = [];
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;

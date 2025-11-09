@@ -353,7 +353,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.code === 'KeyQ' && state.gameRunning && !state.isPaused) {
             e.preventDefault();
             startRainShower();
-            console.log("-> DEBUG: Rain effect triggered!");
+            initializeClouds(); // Re-initialize clouds for debugging
+            console.log("-> DEBUG: Rain effect and Cloud re-initialization triggered!");
         }
     });
 
