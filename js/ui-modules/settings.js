@@ -104,7 +104,12 @@ export function savePlayerStats() {
     const savedStats = savedStatsRaw ? JSON.parse(savedStatsRaw) : {};
 
     // Merge the current in-memory state onto the saved state
-    const mergedStats = { ...savedStats, ...state.playerStats };
+    const mergedStats = {
+        ...savedStats,
+        ...state.playerStats,
+        totalGroundPoundCollisions: (savedStats.totalGroundPoundCollisions || 0) + state.playerStats.totalGroundPoundCollisions,
+        obstaclesIncinerated: (savedStats.obstaclesIncinerated || 0) + state.playerStats.obstaclesIncinerated
+    };
 
     localStorage.setItem(PLAYER_STATS_KEY, JSON.stringify(mergedStats));
     console.log("-> savePlayerStats: Player stats merged and saved to localStorage.");
@@ -126,11 +131,13 @@ export function loadPlayerStats() {
             unlockedArmoryItems: loadedStats.unlockedArmoryItems || [],
             notifiedUnlocks: loadedStats.notifiedUnlocks || [],
             activeArmorySkill: loadedStats.activeArmorySkill || null,
-            consecutiveGroundPounds: loadedStats.consecutiveGroundPounds || 0
+            consecutiveGroundPounds: loadedStats.consecutiveGroundPounds || 0,
+            totalGroundPoundCollisions: loadedStats.totalGroundPoundCollisions || 0,
+            consecutiveIncinerations: loadedStats.consecutiveIncinerations || 0
         };
         console.log("-> loadPlayerStats: Player stats loaded and assigned to state.");
     } else {
-        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null, consecutiveGroundPounds: 0 };
+        state.playerStats = { flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null, consecutiveGroundPounds: 0, totalGroundPoundCollisions: 0, consecutiveIncinerations: 0 };
         console.log("-> loadPlayerStats: No player stats found. Initializing defaults.");
     }
 }

@@ -121,7 +121,9 @@ const state = {
         notifiedArmoryUnlocks: [], // To track shown notifications
         unlockedArmoryItems: [], // New: To store keys of unlocked armory items
         activeArmorySkill: null, // New: To store the key of the currently active armory skill
-        consecutiveGroundPounds: 0 // New: To track consecutive ground pounds for an achievement
+        consecutiveGroundPounds: 0, // New: To track consecutive ground pounds for an achievement
+        totalGroundPoundCollisions: 0,
+        consecutiveIncinerations: 0
     }
 };
 
