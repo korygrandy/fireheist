@@ -3,7 +3,6 @@ import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, ACCELERATOR_EMOJI_SIZE, ACCELERATO
 import { currentTheme } from '../../theme.js';
 import state, { GRASS_ANIMATION_INTERVAL_MS } from '../state.js';
 
-
 export function drawAccelerator(accelerator, angleRad) {
     if (!accelerator) return;
 

@@ -229,9 +229,18 @@ function updateRoadwayThemeEffects(deltaTime) {
             fog.x = -offScreenWidth; // Loop fog around
         }
     }
+
+    // Update Cityscape
+    updateCityscape();
+    if (state.environmentalEffects.cityscape.buildings.length === 0 && Math.random() < 0.001 && state.gameRunning) {
+        startCityscape();
+    }
 }
 
 function drawRoadwayThemeEffects() {
+    // Draw Cityscape first so it's in the back
+    drawCityscape();
+
     // Draw Headlights
     for (const light of state.environmentalEffects.headlights) {
         ctx.save();
@@ -290,6 +299,103 @@ function drawRoadwayThemeEffects() {
         ctx.restore();
     }
 }
+
+// --- Cityscape Effect (Roadway Theme) ---
+
+const BUILDING_COUNT = 15;
+const WINDOW_SIZE = 8;
+const WINDOW_SPACING = 4;
+const WINDOW_FLICKER_CHANCE = 0.01; // Increased chance per frame to toggle a window
+
+function startCityscape() {
+    if (state.environmentalEffects.cityscape.buildings.length > 0) return;
+    console.log("-> DEBUG: Starting cityscape.");
+
+    const buildings = [];
+    let currentX = 0;
+
+    for (let i = 0; i < BUILDING_COUNT; i++) {
+        const width = Math.random() * 100 + 50;
+        const height = Math.random() * (canvas.height * 0.6) + (canvas.height * 0.2);
+        const building = {
+            x: currentX,
+            y: canvas.height - height,
+            width: width,
+            height: height,
+            windows: []
+        };
+
+        // Populate windows
+        const totalWindowWidth = WINDOW_SIZE + WINDOW_SPACING;
+        const totalWindowHeight = WINDOW_SIZE + WINDOW_SPACING;
+        const cols = Math.floor((width - WINDOW_SPACING) / totalWindowWidth);
+        const rows = Math.floor((height - WINDOW_SPACING) / totalWindowHeight);
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const on = Math.random() > 0.4; // 60% chance a window is on initially
+                building.windows.push({
+                    x: building.x + WINDOW_SPACING + c * totalWindowWidth,
+                    y: building.y + WINDOW_SPACING + r * totalWindowHeight,
+                    on: on,
+                    opacity: on ? 1.0 : 0.0,
+                    targetOpacity: on ? 1.0 : 0.0,
+                    fadeSpeed: 0.05
+                });
+            }
+        }
+
+        buildings.push(building);
+        currentX += width + Math.random() * 20 + 10; // Gap between buildings
+    }
+    state.environmentalEffects.cityscape.buildings = buildings;
+}
+
+function updateCityscape() {
+    const buildings = state.environmentalEffects.cityscape.buildings;
+    if (buildings.length === 0) return;
+
+    // Randomly toggle a window's state
+    if (Math.random() < WINDOW_FLICKER_CHANCE) {
+        const randomBuilding = buildings[Math.floor(Math.random() * buildings.length)];
+        if (randomBuilding.windows.length > 0) {
+            const randomWindow = randomBuilding.windows[Math.floor(Math.random() * randomBuilding.windows.length)];
+            randomWindow.on = !randomWindow.on;
+            randomWindow.targetOpacity = randomWindow.on ? 1.0 : 0.0;
+        }
+    }
+
+    // Update window opacity for smooth transitions
+    for (const building of buildings) {
+        for (const window of building.windows) {
+            if (window.opacity < window.targetOpacity) {
+                window.opacity = Math.min(window.opacity + window.fadeSpeed, window.targetOpacity);
+            } else if (window.opacity > window.targetOpacity) {
+                window.opacity = Math.max(window.opacity - window.fadeSpeed, window.targetOpacity);
+            }
+        }
+    }
+}
+
+export function drawCityscape() {
+    const buildings = state.environmentalEffects.cityscape.buildings;
+    if (buildings.length === 0) return;
+
+    for (const building of buildings) {
+        // Draw building silhouette
+        ctx.fillStyle = 'rgba(26, 26, 42, 0.2)'; // Dark blue/purple with 20% opacity
+        ctx.fillRect(building.x, building.y, building.width, building.height);
+
+        // Draw windows
+        for (const window of building.windows) {
+            if (window.opacity > 0) {
+                ctx.fillStyle = `rgba(255, 220, 100, ${window.opacity * 0.2})`; // Warm yellow light with reduced base opacity
+                ctx.fillRect(window.x, window.y, WINDOW_SIZE, WINDOW_SIZE);
+            }
+        }
+    }
+}
+
 
 // --- Snowfall Effect (Snow Theme) ---
 

@@ -8,7 +8,7 @@ import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounte
 import { drawStickFigure } from './drawing/player.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble, initializeClouds, generateGrassBlades, updateClouds } from './drawing/world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawFieryHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createFieryHoudiniPoof, createShatterEffect, createFireExplosion } from './drawing/effects.js';
-import { drawEnvironmentalEffects } from './drawing/environmental-effects.js';
+import { drawEnvironmentalEffects, drawCityscape } from './drawing/environmental-effects.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 
 export {
@@ -95,6 +95,29 @@ export function draw() {
     ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Draw cityscape first, with clipping, if the theme is right
+    if (state.selectedTheme === 'roadway' && state.environmentalEffects.cityscape.buildings.length > 0) {
+        const currentSegmentForClip = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
+        const angleRadForClip = currentSegmentForClip ? currentSegmentForClip.angleRad : 0;
+        const slopeHeight = Math.tan(angleRadForClip) * canvas.width;
+        const endY = GROUND_Y - slopeHeight;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(canvas.width, 0);
+        ctx.lineTo(canvas.width, endY);
+        ctx.lineTo(0, GROUND_Y);
+        ctx.closePath();
+        ctx.clip();
+
+        drawCityscape();
+
+        ctx.restore();
+    }
+
+    // This first call handles effects when the game is not running (e.g., on the menu).
+    // When the game is running, these effects will be drawn under the ground, which is acceptable.
     drawEnvironmentalEffects();
 
     drawGroundPoundParticles();
@@ -109,7 +132,6 @@ export function draw() {
     drawCorkscrewTrail();
     drawFireTrail();
     drawShatteredObstacles();
-    drawClouds();
     drawFirestormFlashes();
     drawPlayerEmbers();
     drawFireballs(); // Draw fireballs
@@ -123,6 +145,8 @@ export function draw() {
         groundAngleRad = currentSegment.angleRad;
         drawSlantedGround(groundAngleRad);
 
+        // Draw clouds and effects on top of the ground
+        drawClouds();
         drawEnvironmentalEffects();
 
         stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
@@ -283,6 +307,9 @@ export function draw() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.restore();
         }
+    } else {
+        // If the game is not running (e.g., on the main menu), draw clouds on the sky.
+        drawClouds();
     }
 
     if (!state.gameRunning && isInitialLoad) {

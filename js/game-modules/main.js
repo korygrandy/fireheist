@@ -1116,6 +1116,7 @@ export function resetGameState() {
     state.environmentalEffects.ash = [];
     state.environmentalEffects.steamVents = [];
     state.environmentalEffects.heatShimmer = { active: false, waveY: 0 };
+    state.environmentalEffects.cityscape = { buildings: [] };
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;
