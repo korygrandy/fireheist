@@ -49,6 +49,33 @@ export function exitFullScreenIfActive() {
     }
 }
 
+export function hideSandboxControls() {
+    const tabButtonsContainer = document.getElementById('tab-buttons-container');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    if (tabButtonsContainer) {
+        tabButtonsContainer.classList.add('hidden');
+    }
+    tabContents.forEach(tab => {
+        tab.classList.add('hidden');
+    });
+    console.log("-> UI: Sandbox controls hidden for Daily Challenge.");
+}
+
+export function showSandboxControls() {
+    const tabButtonsContainer = document.getElementById('tab-buttons-container');
+    const playerTab = document.getElementById('playerTab');
+
+    if (tabButtonsContainer) {
+        tabButtonsContainer.classList.remove('hidden');
+    }
+    if (playerTab) {
+        playerTab.classList.remove('hidden'); // Show the default tab
+    }
+    // Ensure other tabs are hidden by default, handled by switchTab logic
+    console.log("-> UI: Sandbox controls restored.");
+}
+
 export function updateControlPanelState(gameRunning, isPaused) {
     const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');

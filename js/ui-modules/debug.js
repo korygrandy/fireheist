@@ -3,6 +3,7 @@ import { populateArmoryItems } from './armory.js';
 import { populatePersonaSelector } from './persona.js';
 import { themePacks } from '../daily-challenge.js';
 import { updateDailyChallengeUI } from './daily-challenge-ui.js';
+import { stopGame } from '../game-modules/main.js';
 
 let currentThemeIndex = 0;
 
@@ -11,7 +12,14 @@ export function debugUnlockAllAchievements() {
 }
 
 export function debugEndGame(didWin) {
-    // ... (rest of the function)
+    if (!state.gameRunning) {
+        alert("Please start the game first.");
+        return;
+    }
+    state.hitsCounter = didWin ? 0 : 1; // Set hits to reflect win/loss
+    state.isVictory = didWin; // Set victory state directly
+    stopGame(false); // Stop the game, do not reset immediately, let results display
+    alert(`Immediately stopping game. Result: ${didWin ? 'WIN' : 'LOSS'}`);
 }
 
 export function debugCycleDailyTheme() {

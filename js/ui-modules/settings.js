@@ -17,8 +17,8 @@ import state, { PLAYER_STATS_KEY } from '../game-modules/state.js';
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 
 export function saveSettings() {
-    if (disableSaveSettings.checked) {
-        return; // Don't save if the checkbox is checked
+    if (disableSaveSettings.checked || state.isDailyChallengeActive) {
+        return; // Don't save if the checkbox is checked or if a daily challenge is active
     }
     const settings = {
         stickFigureEmoji: state.stickFigureEmoji,
@@ -96,7 +96,7 @@ export function loadSettings() {
 }
 
 export function savePlayerStats() {
-    if (disableSaveSettings.checked) {
+    if (disableSaveSettings.checked || state.isDailyChallengeActive) {
         return;
     }
     // Read the latest from storage first to prevent overwriting with a stale object

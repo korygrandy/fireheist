@@ -3,6 +3,9 @@ import { startGame } from './game-modules/main.js';
 import { setTheme } from './theme.js';
 import { initializeMusicPlayer } from './audio.js';
 import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from './constants.js';
+import { dataInput, eventDataInput } from './dom-elements.js';
+import { loadCustomData } from './ui-modules/data.js';
+import { hideSandboxControls } from './ui-modules/ui-helpers.js';
 
 // --- Seeded Random Number Generator ---
 // A simple LCG (Linear Congruential Generator) to produce a predictable sequence of numbers.
@@ -128,18 +131,21 @@ export function startDailyChallengeGame() {
     initializeMusicPlayer(challengeData.music);
 
     // Update milestone and event data
-    // These need to be parsed and prepared by the existing data loading functions
-    // For now, we'll directly assign them as strings, assuming startGame will handle parsing.
-    // This might need refinement if startGame expects parsed objects.
-    state.milestoneDataString = challengeData.milestones.join('\n');
-    state.eventDataString = challengeData.events.join('\n');
+    // Temporarily set the data input values and call loadCustomData to parse them
+    const originalDataInput = dataInput.value;
+    const originalEventDataInput = eventDataInput.value;
+
+    dataInput.value = challengeData.milestones.join('\n');
+    eventDataInput.value = challengeData.events.join('\n');
+
+    loadCustomData(); // This will parse the data and update state.raceSegments and state.customEvents
+
+    // Restore original data input values
+    dataInput.value = originalDataInput;
+    eventDataInput.value = originalEventDataInput;
 
     // Hide control panel tabs to enforce challenge parameters
-    document.getElementById('playerTab').classList.add('hidden');
-    document.getElementById('gameplayTab').classList.add('hidden');
-    document.getElementById('dataTab').classList.add('hidden');
-    document.getElementById('hallOfFameTab').classList.add('hidden');
-    document.getElementById('armoryTab').classList.add('hidden');
+    hideSandboxControls();
 
     // Start the game
     startGame();

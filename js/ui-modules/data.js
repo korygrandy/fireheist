@@ -1,7 +1,7 @@
 import { dataInput, eventDataInput, dataMessage } from '../dom-elements.js';
 import { parseData, parseEventData, prepareRaceData } from '../utils.js';
 import { defaultDataString, defaultEventDataString } from '../constants.js';
-import { loadSettings, loadPlayerStats, savePlayerStats } from './settings.js';
+import { loadSettings, loadPlayerStats, savePlayerStats, saveSettings } from './settings.js';
 import { exitFullScreenIfActive } from './ui-helpers.js';
 import { displayHighScores } from "./high-scores.js";
 import { populateThemeSelector } from './theme.js';

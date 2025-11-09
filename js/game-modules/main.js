@@ -44,6 +44,9 @@ import { currentTheme } from '../theme.js';
 import { personas } from '../personas.js';
 import state, { HIGH_SCORE_KEY } from './state.js';
 import * as drawing from './drawing.js';
+import { initializeUIData } from '../ui-modules/data.js';
+import { displayDailyChallenge, displayDailyChallengeResults } from '../ui-modules/daily-challenge-ui.js';
+import { showSandboxControls } from '../ui-modules/ui-helpers.js';
 
 function updateHighScore() {
     const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
@@ -1198,7 +1201,18 @@ export function stopGame(shouldReset = true) {
 
     Tone.Transport.stop();
 
-    if (shouldReset) {
+    if (state.isDailyChallengeActive) {
+        console.log("-> STOP GAME: Daily Challenge ended, displaying results.");
+        displayDailyChallengeResults({
+            days: Math.round(state.daysElapsedTotal),
+            hits: state.hitsCounter
+        });
+        // Restore control panel tabs
+        showSandboxControls();
+
+        state.isDailyChallengeActive = false; // Reset the flag
+        document.getElementById('startButton').textContent = "Start the Heist!";
+    } else if (shouldReset) {
         drawing.setInitialLoad(true);
         resetGameState();
         drawing.draw();
