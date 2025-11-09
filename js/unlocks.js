@@ -61,8 +61,9 @@ export const ARMORY_ITEMS = {
         description: 'Teleport with a burst of fire, incinerating nearby obstacles.',
         emoji: '🔥💨',
         unlockCondition: {
-            type: 'obstaclesIncinerated',
-            count: 50
+            type: 'incinerateCount',
+            count: 50,
+            skillKey: 'fieryHoudini'
         },
         unlockText: 'Incinerate 50 obstacles'
     }
