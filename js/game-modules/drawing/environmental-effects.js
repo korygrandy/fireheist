@@ -26,6 +26,11 @@ export function startThemeEffect() {
             startSandGust();
             startTornado();
             break;
+        case 'outerspace':
+            startAsteroidField();
+            startShootingStar();
+            startNebulaCloud();
+            break;
         default:
             console.log(`-> DEBUG: No specific effect to trigger for theme '${state.selectedTheme}'.`);
             break;
@@ -507,93 +512,651 @@ function updateDesertThemeEffects(deltaTime) {
     }
 
     // Update Tornadoes
-    for (let i = state.environmentalEffects.tornadoes.length - 1; i >= 0; i--) {
-        const tornado = state.environmentalEffects.tornadoes[i];
-        const elapsedTime = Date.now() - tornado.startTime;
+    if (state.frameCount % 2 === 0) { // Throttle the tornado update to every other frame
+        for (let i = state.environmentalEffects.tornadoes.length - 1; i >= 0; i--) {
+            const tornado = state.environmentalEffects.tornadoes[i];
+            const elapsedTime = Date.now() - tornado.startTime;
 
-        if (elapsedTime > tornado.duration) {
-            state.environmentalEffects.tornadoes.splice(i, 1);
-            continue;
-        }
+            if (elapsedTime > tornado.duration) {
+                state.environmentalEffects.tornadoes.splice(i, 1);
+                continue;
+            }
 
-        for (const particle of tornado.particles) {
-            particle.angle += particle.speed;
-            particle.y += particle.yVelocity;
+            for (const particle of tornado.particles) {
+                particle.angle += particle.speed;
+                particle.y += particle.yVelocity;
 
-            // Funnel shape logic
-            const heightRatio = (canvas.height - particle.y) / canvas.height;
-            const currentRadius = particle.radius * heightRatio;
+                // Funnel shape logic
+                const heightRatio = (canvas.height - particle.y) / canvas.height;
+                const currentRadius = particle.radius * heightRatio;
 
-            particle.x = tornado.x + Math.cos(particle.angle * Math.PI / 180) * currentRadius;
+                particle.x = tornado.x + Math.cos(particle.angle * Math.PI / 180) * currentRadius;
 
-            // Reset particle if it goes off the top
-            if (particle.y < 0) {
-                particle.y = canvas.height;
+                // Reset particle if it goes off the top
+                if (particle.y < 0) {
+                    particle.y = canvas.height;
+                }
             }
         }
     }
 }
 
 function drawDesertThemeEffects() {
+
     // Draw Tumbleweeds
+
     for (const tumbleweed of state.environmentalEffects.tumbleweeds) {
+
         ctx.save();
+
         ctx.translate(tumbleweed.x, tumbleweed.y + tumbleweed.yOffset);
+
         ctx.scale(tumbleweed.scale, tumbleweed.scale);
+
         ctx.rotate(tumbleweed.rotation * Math.PI / 180);
+
         ctx.fillStyle = '#A0522D'; // Lighter brown
+
         ctx.beginPath();
+
         ctx.arc(0, 0, tumbleweed.size, 0, Math.PI * 2);
+
         ctx.fill();
 
+
+
         // Draw inner spiral
+
         ctx.strokeStyle = '#8B4513'; // Darker brown for contrast
+
         ctx.lineWidth = 2;
+
         ctx.beginPath();
+
         for (let i = 0; i < 360; i++) {
+
             const angle = i * Math.PI / 180;
+
             const radius = tumbleweed.size * (i / 360);
+
             const x = radius * Math.cos(angle);
+
             const y = radius * Math.sin(angle);
+
             if (i === 0) {
+
                 ctx.moveTo(x, y);
+
             } else {
+
                 ctx.lineTo(x, y);
+
             }
+
         }
+
         ctx.stroke();
+
         ctx.restore();
+
     }
+
+
 
     // Draw Sand Grains
+
     for (const grain of state.environmentalEffects.sandGrains) {
+
         ctx.save();
+
         ctx.fillStyle = `rgba(210, 180, 140, ${grain.opacity})`;
+
         ctx.fillRect(grain.x, grain.y, grain.size, grain.size);
+
         ctx.restore();
+
     }
+
+
 
     // Draw Tornadoes
+
     for (const tornado of state.environmentalEffects.tornadoes) {
+
         for (const particle of tornado.particles) {
+
             ctx.save();
+
             ctx.fillStyle = `rgba(210, 180, 140, ${particle.opacity})`;
+
             ctx.beginPath();
+
             ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+
             ctx.fill();
+
             ctx.restore();
+
         }
+
     }
+
 }
 
-// --- Placeholder for Space Theme ---
-function updateSpaceThemeEffects(deltaTime) {}
-function drawSpaceThemeEffects() {}
+
+
+// --- OuterSpace Theme Effects ---
+
+
+
+const ASTEROID_COUNT = 15;
+
+
+
+const ASTEROID_DURATION = 10000; // 10 seconds
+
+
+
+const SHOOTING_STAR_DURATION = 1000; // 1 second
+
+
+
+const STAR_BURST_PARTICLE_COUNT = 20;
+
+
+
+const STAR_TRAIL_PARTICLE_COUNT = 3;
+
+
+
+const NEBULA_CLOUD_COUNT = 3;
+
+
+
+const NEBULA_MAX_OPACITY = 0.1;
+
+
+
+const NEBULA_FADE_IN_DURATION = 1000; // 1 second
+
+
+
+const NEBULA_IDLE_DURATION = 10000; // 10 seconds
+
+
+
+const NEBULA_FADE_OUT_DURATION = 4000; // 4 seconds
+
+
+
+const NEBULA_TOTAL_DURATION = NEBULA_FADE_IN_DURATION + NEBULA_IDLE_DURATION + NEBULA_FADE_OUT_DURATION;
+
+
+
+function startAsteroidField() {
+
+    if (state.environmentalEffects.asteroids.length > 0) return;
+
+    console.log("-> DEBUG: Starting asteroid field.");
+
+    for (let i = 0; i < ASTEROID_COUNT; i++) {
+
+        const depth = Math.random();
+
+        state.environmentalEffects.asteroids.push({
+
+            x: Math.random() * canvas.width,
+
+            y: Math.random() * canvas.height,
+
+            size: (Math.random() * 15 + 5) * depth,
+
+            speedX: (Math.random() * 1 + 0.5) * (1 - depth), // Slower for distant asteroids
+
+            rotation: 0,
+
+            rotationSpeed: Math.random() * 2 - 1,
+
+            opacity: depth * 0.5 + 0.3
+
+        });
+
+    }
+
+    setTimeout(() => {
+
+        state.environmentalEffects.asteroids = [];
+
+    }, ASTEROID_DURATION);
+
+}
+
+
+
+function startShootingStar() {
+
+    if (state.environmentalEffects.shootingStars.length > 0) return;
+
+    console.log("-> DEBUG: Starting shooting star.");
+
+    const startX = Math.random() * canvas.width;
+
+    const startY = Math.random() * canvas.height / 2;
+
+    state.environmentalEffects.shootingStars.push({
+
+        x: startX,
+
+        y: startY,
+
+        length: Math.random() * 100 + 50,
+
+        speedX: - (Math.random() * 15 + 10),
+
+        speedY: Math.random() * 10 + 5,
+
+        opacity: 1.0,
+
+        life: 1.0
+
+    });
+
+    setTimeout(() => {
+
+        state.environmentalEffects.shootingStars = [];
+
+    }, SHOOTING_STAR_DURATION);
+
+}
+
+
+
+function createStarBurst(x, y) {
+
+    console.log("-> DEBUG: Creating star burst.");
+
+    for (let i = 0; i < STAR_BURST_PARTICLE_COUNT; i++) {
+
+        const angle = Math.random() * 360;
+
+        const speed = Math.random() * 2 + 1;
+
+        state.environmentalEffects.shootingStarBursts.push({
+
+            x: x,
+
+            y: y,
+
+            speedX: Math.cos(angle * Math.PI / 180) * speed,
+
+            speedY: Math.sin(angle * Math.PI / 180) * speed,
+
+            size: Math.random() * 2 + 1,
+
+            life: 1.0,
+
+            opacity: 1.0
+
+        });
+
+    }
+
+}
+
+
+
+function createStarTrail(x, y) {
+
+    for (let i = 0; i < STAR_TRAIL_PARTICLE_COUNT; i++) {
+
+        state.environmentalEffects.shootingStarTrails.push({
+
+            x: x + (Math.random() - 0.5) * 10,
+
+            y: y + (Math.random() - 0.5) * 10,
+
+            size: Math.random() * 1.5 + 0.5,
+
+            life: 1.0,
+
+            opacity: 1.0
+
+        });
+
+    }
+
+}
+
+
+
+function startNebulaCloud() {
+
+    if (state.environmentalEffects.nebulaCloudState.active) return;
+
+    console.log("-> DEBUG: Starting nebula cloud.");
+
+
+
+    state.environmentalEffects.nebulaCloudState.active = true;
+
+    state.environmentalEffects.nebulaCloudState.startTime = Date.now();
+
+
+
+    const colors = ['138, 43, 226', '0, 191, 255', '255, 20, 147']; // RGB strings
+
+    for (let i = 0; i < NEBULA_CLOUD_COUNT; i++) {
+
+        state.environmentalEffects.nebulaClouds.push({
+
+            x: Math.random() * canvas.width,
+
+            y: Math.random() * canvas.height,
+
+            radiusX: Math.random() * 300 + 200,
+
+            radiusY: Math.random() * 150 + 100,
+
+            color: colors[Math.floor(Math.random() * colors.length)],
+
+            speedX: Math.random() * 0.2 - 0.1
+
+        });
+
+    }
+
+}
+
+
+
+function updateOuterSpaceThemeEffects(deltaTime) {
+
+    // Update Asteroids
+
+    for (const asteroid of state.environmentalEffects.asteroids) {
+
+        asteroid.x += asteroid.speedX;
+
+        asteroid.rotation += asteroid.rotationSpeed;
+
+        if (asteroid.x > canvas.width + asteroid.size) {
+
+            asteroid.x = -asteroid.size;
+
+        }
+
+    }
+
+
+
+    // Update Shooting Stars
+
+    for (let i = state.environmentalEffects.shootingStars.length - 1; i >= 0; i--) {
+
+        const star = state.environmentalEffects.shootingStars[i];
+
+        star.x += star.speedX;
+
+        star.y += star.speedY;
+
+        star.life -= 0.02;
+
+        star.opacity = star.life;
+
+
+
+        createStarTrail(star.x, star.y);
+
+
+
+        if (star.life <= 0) {
+
+            if (Math.random() < 0.5) { // 50% chance of a burst
+
+                createStarBurst(star.x, star.y);
+
+            }
+
+            state.environmentalEffects.shootingStars.splice(i, 1);
+
+        }
+
+    }
+
+
+
+    // Update Star Bursts
+
+    for (let i = state.environmentalEffects.shootingStarBursts.length - 1; i >= 0; i--) {
+
+        const particle = state.environmentalEffects.shootingStarBursts[i];
+
+        particle.x += particle.speedX;
+
+        particle.y += particle.speedY;
+
+        particle.life -= 0.04; // Faster fade
+
+        particle.opacity = particle.life;
+
+        if (particle.life <= 0) {
+
+            state.environmentalEffects.shootingStarBursts.splice(i, 1);
+
+        }
+
+    }
+
+
+
+    // Update Star Trails
+
+    for (let i = state.environmentalEffects.shootingStarTrails.length - 1; i >= 0; i--) {
+
+        const particle = state.environmentalEffects.shootingStarTrails[i];
+
+        particle.life -= 0.05; // Even faster fade for trails
+
+        particle.opacity = particle.life;
+
+        if (particle.life <= 0) {
+
+            state.environmentalEffects.shootingStarTrails.splice(i, 1);
+
+        }
+
+    }
+
+
+
+    // Update Nebula Clouds
+
+    if (state.environmentalEffects.nebulaCloudState.active) {
+
+        const cloudState = state.environmentalEffects.nebulaCloudState;
+
+        const elapsedTime = Date.now() - cloudState.startTime;
+
+
+
+        if (elapsedTime < NEBULA_FADE_IN_DURATION) {
+
+            // Fading in
+
+            cloudState.opacity = (elapsedTime / NEBULA_FADE_IN_DURATION) * NEBULA_MAX_OPACITY;
+
+        } else if (elapsedTime < NEBULA_FADE_IN_DURATION + NEBULA_IDLE_DURATION) {
+
+            // Idle
+
+            cloudState.opacity = NEBULA_MAX_OPACITY;
+
+        } else if (elapsedTime < NEBULA_TOTAL_DURATION) {
+
+            // Fading out
+
+            const fadeOutElapsedTime = elapsedTime - (NEBULA_FADE_IN_DURATION + NEBULA_IDLE_DURATION);
+
+            cloudState.opacity = (1 - (fadeOutElapsedTime / NEBULA_FADE_OUT_DURATION)) * NEBULA_MAX_OPACITY;
+
+        } else {
+
+            // End of life
+
+            cloudState.active = false;
+
+            state.environmentalEffects.nebulaClouds = [];
+
+        }
+
+
+
+        for (const cloud of state.environmentalEffects.nebulaClouds) {
+
+            cloud.x += cloud.speedX;
+
+            if (cloud.x > canvas.width + cloud.radiusX) {
+
+                cloud.x = -cloud.radiusX;
+
+            }
+
+        }
+
+    }
+
+}
+
+
+
+function drawOuterSpaceThemeEffects() {
+
+    // Draw Nebula Clouds
+
+    if (state.environmentalEffects.nebulaCloudState.active) {
+
+        const opacity = state.environmentalEffects.nebulaCloudState.opacity;
+
+        for (const cloud of state.environmentalEffects.nebulaClouds) {
+
+            ctx.save();
+
+            ctx.fillStyle = `rgba(${cloud.color}, ${opacity})`;
+
+            ctx.beginPath();
+
+            ctx.ellipse(cloud.x, cloud.y, cloud.radiusX, cloud.radiusY, 0, 0, 2 * Math.PI);
+
+            ctx.fill();
+
+            ctx.restore();
+
+        }
+
+    }
+
+
+
+    // Draw Asteroids
+
+    for (const asteroid of state.environmentalEffects.asteroids) {
+
+        ctx.save();
+
+        ctx.translate(asteroid.x, asteroid.y);
+
+        ctx.rotate(asteroid.rotation * Math.PI / 180);
+
+        ctx.fillStyle = `rgba(128, 128, 128, ${asteroid.opacity})`;
+
+        ctx.beginPath();
+
+        ctx.arc(0, 0, asteroid.size, 0, Math.PI * 2);
+
+        ctx.fill();
+
+        ctx.restore();
+
+    }
+
+
+
+    // Draw Star Trails
+
+    for (const particle of state.environmentalEffects.shootingStarTrails) {
+
+        ctx.save();
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
+
+        ctx.beginPath();
+
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+
+        ctx.fill();
+
+        ctx.restore();
+
+    }
+
+
+
+    // Draw Shooting Stars
+
+    for (const star of state.environmentalEffects.shootingStars) {
+
+        ctx.save();
+
+        const gradient = ctx.createLinearGradient(star.x, star.y, star.x + star.length, star.y - star.length / 2);
+
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
+
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        ctx.strokeStyle = gradient;
+
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+
+        ctx.moveTo(star.x, star.y);
+
+        ctx.lineTo(star.x + star.length, star.y - star.length / 2);
+
+        ctx.stroke();
+
+        ctx.restore();
+
+    }
+
+
+
+    // Draw Star Bursts
+
+    for (const particle of state.environmentalEffects.shootingStarBursts) {
+
+        ctx.save();
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
+
+        ctx.beginPath();
+
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+
+        ctx.fill();
+
+        ctx.restore();
+
+    }
+
+}
 
 
 
 // --- Placeholder for Night Theme ---
+
 function updateNightThemeEffects(deltaTime) {}
+
 function drawNightThemeEffects() {}
 
 
@@ -637,7 +1200,7 @@ export function updateEnvironmentalEffects(deltaTime) {
                 startWindGust();
             }
             break;
-        case 'desert':
+case 'desert':
             updateDesertThemeEffects(deltaTime);
             // Trigger tumbleweed randomly
             if (Math.random() < 0.001 && state.gameRunning) {
@@ -647,9 +1210,23 @@ export function updateEnvironmentalEffects(deltaTime) {
             if (Math.random() < 0.0005 && state.gameRunning) {
                 startSandGust();
             }
+            // Trigger tornado randomly
+            if (Math.random() < 0.0002 && state.gameRunning) {
+                startTornado();
+            }
             break;
-        case 'space':
-            updateSpaceThemeEffects(deltaTime);
+        case 'outerspace':
+            updateOuterSpaceThemeEffects(deltaTime);
+            // Trigger effects randomly
+            if (Math.random() < 0.001 && state.gameRunning) {
+                startAsteroidField();
+            }
+            if (Math.random() < 0.002 && state.gameRunning) {
+                startShootingStar();
+            }
+            if (Math.random() < 0.0005 && state.gameRunning) {
+                startNebulaCloud();
+            }
             break;
         case 'night':
             updateNightThemeEffects(deltaTime);
@@ -679,8 +1256,8 @@ export function drawEnvironmentalEffects() {
         case 'desert':
             drawDesertThemeEffects();
             break;
-        case 'space':
-            drawSpaceThemeEffects();
+        case 'outerspace':
+            drawOuterSpaceThemeEffects();
             break;
         case 'night':
             drawNightThemeEffects();

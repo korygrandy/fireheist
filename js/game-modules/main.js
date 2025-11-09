@@ -1103,6 +1103,12 @@ export function resetGameState() {
     state.environmentalEffects.tumbleweeds = [];
     state.environmentalEffects.sandGrains = [];
     state.environmentalEffects.tornadoes = [];
+    state.environmentalEffects.asteroids = [];
+    state.environmentalEffects.shootingStars = [];
+    state.environmentalEffects.nebulaClouds = [];
+    state.environmentalEffects.shootingStarBursts = [];
+    state.environmentalEffects.shootingStarTrails = [];
+    state.environmentalEffects.nebulaCloudState = { active: false, startTime: 0, opacity: 0 };
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;

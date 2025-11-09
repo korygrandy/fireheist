@@ -122,6 +122,12 @@ const state = {
         tumbleweeds: [],
         sandGrains: [],
         tornadoes: [],
+        asteroids: [],
+        shootingStars: [],
+        nebulaClouds: [],
+        shootingStarBursts: [],
+        shootingStarTrails: [],
+        nebulaCloudState: { active: false, startTime: 0, opacity: 0 },
         headlightFadeState: {
             opacity: 0.6 + Math.random() * 0.4,
             fadeDirection: Math.random() > 0.5 ? 1 : -1,
