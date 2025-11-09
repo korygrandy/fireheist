@@ -109,6 +109,10 @@ const state = {
     ignitedObstacles: [],
     MAX_FIRESTORM_PARTICLES: 50,
     MAX_EMBER_PARTICLES: 100,
+    selectedTheme: 'grass', // Add this line
+    environmentalEffects: {
+        raindrops: []
+    },
     playerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,
     maxPlayerEnergy: DIFFICULTY_SETTINGS.Rookie.maxPlayerEnergy,
     isFirestormDrainingEnergy: false,

@@ -8,6 +8,7 @@ import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounte
 import { drawStickFigure } from './drawing/player.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawClouds, drawFireSpinner, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble, initializeClouds, generateGrassBlades } from './drawing/world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawFieryHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFirestormFlashes, createPlayerEmbers, createGroundPoundEffect, createHoudiniPoof, createFieryHoudiniPoof, createShatterEffect, createFireExplosion } from './drawing/effects.js';
+import { drawEnvironmentalEffects } from './drawing/environmental-effects.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 
 export {
@@ -93,6 +94,8 @@ export function draw() {
     ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    drawEnvironmentalEffects();
+
     drawGroundPoundParticles();
     drawHoudiniParticles();
     drawFieryHoudiniParticles();
@@ -118,6 +121,8 @@ export function draw() {
 
         groundAngleRad = currentSegment.angleRad;
         drawSlantedGround(groundAngleRad);
+
+        drawEnvironmentalEffects();
 
         stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
 

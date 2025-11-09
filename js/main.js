@@ -19,6 +19,7 @@ import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './u
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/main.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini } from './game-modules/actions.js';
+import { startRainShower } from './game-modules/drawing/environmental-effects.js';
 import state from './game-modules/state.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
@@ -346,6 +347,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 state.playerEnergy = state.maxPlayerEnergy;
                 console.log("-> CHEAT: Max energy granted!");
             }
+        }
+
+        // Debug hotkey for rain effect
+        if (e.code === 'KeyQ' && state.gameRunning && !state.isPaused) {
+            e.preventDefault();
+            startRainShower();
+            console.log("-> DEBUG: Rain effect triggered!");
         }
     });
 

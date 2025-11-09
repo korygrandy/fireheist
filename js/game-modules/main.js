@@ -72,6 +72,7 @@ import {displayDailyChallenge, displayDailyChallengeCompletedScreen} from '../ui
 import {showSandboxControls} from '../ui-modules/ui-helpers.js';
 import {markDailyChallengeAsPlayed, updateDailyChallengeWinStreak} from '../daily-challenge.js';
 import {castMageSpinnerFireball} from './actions.js';
+import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
 
 function updateHighScore() {
     const highScores = JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)) || {};
@@ -376,6 +377,8 @@ export function animate(timestamp) {
     }
 
     let deltaTime = timestamp - state.lastTime;
+
+    updateEnvironmentalEffects(deltaTime);
 
     // Handle continuous energy drain for Firestorm and Fire Spinner
     if (state.isFirestormDrainingEnergy) {
@@ -1083,6 +1086,9 @@ export function resetGameState() {
     state.corkscrewTrail = [];
     state.shatteredObstacles.length = 0;
     state.ignitedObstacles = [];
+
+    // Reset environmental effects
+    state.environmentalEffects.raindrops = [];
 
     state.isFirestormActive = false;
     state.firestormEndTime = 0;
