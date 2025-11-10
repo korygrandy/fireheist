@@ -1,5 +1,20 @@
 [
     {
+        "version": "1.5.02",
+        "date": "2025-11-09",
+        "changes": [
+            "feat(gameplay): Added full gamepad support for gameplay and UI navigation.",
+            "feat(gameplay): Created a new `gamepad.js` module to handle all controller input, running in a separate loop to ensure responsiveness.",
+            "feat(ui): Implemented UI navigation via D-pad, allowing selection of buttons and dropdowns.",
+            "feat(ui): Added a UI indicator to show when a gamepad is connected.",
+            "feat(gameplay): Mapped all core player moves to an intuitive controller layout, including bumpers and triggers.",
+            "feat(gameplay): Added a gamepad cheat code (Left + Right Bumper) to grant maximum energy.",
+            "feat(gameplay): Unified the 'Back' button and 'Escape' key behavior to intelligently exit fullscreen or reset the game.",
+            "fix(gamepad): Resolved multiple cross-browser compatibility issues, ensuring D-pad navigation works in both Chrome and Edge.",
+            "fix(gamepad): Fixed numerous state management bugs that caused the controller to become unresponsive after pausing, resetting, or changing button mappings."
+        ]
+    },
+    {
         "version": "1.5.01",
         "date": "2025-11-08",
         "changes": [
@@ -72,20 +87,6 @@
             "Added logic to track `consecutiveGroundPounds` in `state.playerStats`, incrementing on successful Ground Pound destruction and resetting on other collisions, missed obstacles, or other destructive moves.",
             "Ensured `consecutiveGroundPounds` is correctly saved, loaded, and reset with the game state.",
             "Added a console notification when an Armory achievement is met."
-        ]
-    },
-    {
-        "version": "1.4.44",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Implemented the ability to select and unselect unlocked special skills from the Armory.",
-            "The 'K' key now dynamically triggers the currently selected Armory skill, or reverts to the default Fire Mage action if no skill is selected.",
-            "Added UI elements (Select/Unselect buttons) to the Armory tab for managing active skills.",
-            "Ensured the selected active skill persists across game sessions via `localStorage`.",
-            "Added a sanity check on application load to deselect any `activeArmorySkill` that is no longer unlocked, preventing inconsistent game states.",
-            "fix: Fixed a `ReferenceError` in `js/main.js` related to module scope for event handlers.",
-            "fix: Restored missing control panel event listeners in `js/main.js` that were inadvertently removed during a previous fix, resolving UI unresponsiveness.",
-            "fix: Ensured `activeArmorySkill` is reset to `null` when the game state is reset."
         ]
     }
 ]

@@ -1156,3 +1156,11 @@ export function stopGame(shouldReset = true) {
         console.log("-> STOP GAME: Game ended, displaying results.");
     }
 }
+
+export function handleExitOrReset() {
+    if (document.fullscreenElement) {
+        exitFullScreenIfActive();
+    } else {
+        stopGame(true);
+    }
+}
