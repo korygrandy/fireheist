@@ -1,4 +1,4 @@
-import state from '../game-modules/state.js';
+import { gameState, setPlayerStats, setHitsCounter, setVictory } from '../game-modules/state-manager.js';
 import { populateArmoryItems } from './armory.js';
 import { populatePersonaSelector } from './persona.js';
 import { themePacks } from '../daily-challenge.js';
@@ -12,23 +12,22 @@ let currentThemeIndex = 0;
 export function debugUnlockAllAchievements() {
     console.log("-> DEBUG: Unlocking all achievements...");
 
-    if (!state.playerStats) {
-        state.playerStats = {};
-    }
+    let playerStats = gameState.playerStats || {};
 
     // Satisfy all known unlock conditions
-    state.playerStats.obstaclesIncinerated = 9999;
-    state.playerStats.consecutiveGroundPounds = 9999;
-    state.playerStats.fieryGroundPoundCount = 9999;
-    state.playerStats.flawlessRuns = {
+    playerStats.obstaclesIncinerated = 9999;
+    playerStats.consecutiveGroundPounds = 9999;
+    playerStats.fieryGroundPoundCount = 9999;
+    playerStats.flawlessRuns = {
         Novice: true,
         Pro: true,
         Veteran: true
     };
 
     // Directly unlock all armory items by their skillKey
-    state.playerStats.unlockedArmoryItems = Object.keys(ARMORY_ITEMS);
+    playerStats.unlockedArmoryItems = Object.keys(ARMORY_ITEMS);
 
+    setPlayerStats(playerStats);
     savePlayerStats();
 
     // Refresh the UI
@@ -36,16 +35,16 @@ export function debugUnlockAllAchievements() {
     populateArmoryItems();
 
     alert('All personas and armory items have been unlocked!');
-    console.log("-> DEBUG: All achievements unlocked.", state.playerStats);
+    console.log("-> DEBUG: All achievements unlocked.", gameState.playerStats);
 }
 
 export function debugEndGame(didWin) {
-    if (!state.gameRunning) {
+    if (!gameState.gameRunning) {
         alert("Please start the game first.");
         return;
     }
-    state.hitsCounter = didWin ? 0 : 1;
-    state.isVictory = didWin;
+    setHitsCounter(didWin ? 0 : 1);
+    setVictory(didWin);
     stopGame(false);
     alert(`Immediately stopping game. Result: ${didWin ? 'WIN' : 'LOSS'}`);
 }

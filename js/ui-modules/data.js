@@ -9,7 +9,7 @@ import { populatePersonaSelector } from './persona.js';
 import { handleAutoHurdleToggle } from './input-handlers.js';
 import { ARMORY_ITEMS } from '../unlocks.js';
 import { checkSkillUnlockStatus } from '../unlocks.js';
-import state from '../game-modules/state.js';
+import { gameState, setFinancialMilestones, setRaceSegments, setCustomEvents, setActiveArmorySkill } from '../game-modules/state-manager.js';
 
 export let financialMilestones = {};
 export let raceSegments = [];
@@ -26,12 +26,12 @@ export function loadCustomData() {
         dataMessage.style.color = 'red';
         console.error("-> loadCustomData: Milestone Data loading failed.", errorMsg);
         // Clear out events to prevent mismatch
-        customEvents = {};
+        setCustomEvents({});
         return;
     }
 
-    state.financialMilestones = customMilestoneData;
-    raceSegments = prepareRaceData(state.financialMilestones);
+    setFinancialMilestones(customMilestoneData);
+    const raceSegments = prepareRaceData(gameState.financialMilestones);
     const firstMilestoneDate = Object.keys(financialMilestones)[0];
 
     // 2. Load Custom Event Data (Only if milestones loaded successfully)
@@ -43,15 +43,15 @@ export function loadCustomData() {
         dataMessage.style.color = 'red';
         console.error("-> loadCustomData: Custom Event Data loading failed.", errorMsg);
         // Continue with just milestone data, but warn user.
-        customEvents = {};
+        setCustomEvents({});
         return;
     }
 
-    state.raceSegments = raceSegments;
-    state.customEvents = customEvents;
-    console.log(`-> loadCustomData: ${Object.values(state.customEvents).flat().length} Custom Events loaded.`);
+    setRaceSegments(raceSegments);
+    setCustomEvents(customEventData);
+    console.log(`-> loadCustomData: ${Object.values(gameState.customEvents).flat().length} Custom Events loaded.`);
 
-    dataMessage.textContent = `Data successfully loaded! ${state.raceSegments.length} milestones and ${Object.values(state.customEvents).flat().length} custom events ready.`;
+    dataMessage.textContent = `Data successfully loaded! ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} custom events ready.`;
     dataMessage.style.color = 'green';
     console.log("-> loadCustomData: Data loaded and game reset for new segments.");
     saveSettings(); // Save the newly loaded custom data
@@ -74,12 +74,12 @@ export async function initializeUIData() {
     loadPlayerStats(); // Load player stats here
 
     // Sanity check: If an active skill is somehow no longer unlocked, deselect it.
-    const activeSkill = state.playerStats.activeArmorySkill;
+    const activeSkill = gameState.playerStats.activeArmorySkill;
     if (activeSkill) {
         const skill = ARMORY_ITEMS[activeSkill];
-        if (skill && !checkSkillUnlockStatus(skill.unlockCondition, state.playerStats)) {
+        if (skill && !checkSkillUnlockStatus(skill.unlockCondition, gameState.playerStats)) {
             console.warn(`-> Sanity Check: Active skill '${activeSkill}' is no longer unlocked. Deselecting.`);
-            state.playerStats.activeArmorySkill = null;
+            setActiveArmorySkill(null);
             savePlayerStats(); // Re-save the corrected stats
         }
     }
@@ -101,19 +101,22 @@ export async function initializeUIData() {
     }
 
     // Directly parse and prepare the initial data
-    state.financialMilestones = parseData(dataInput.value);
-    if (state.financialMilestones && Object.keys(state.financialMilestones).length >= 2) {
-        state.raceSegments = prepareRaceData(state.financialMilestones);
-        const firstMilestoneDate = Object.keys(state.financialMilestones)[0];
-        state.customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
-        dataMessage.textContent = `Default data loaded. ${state.raceSegments.length} milestones and ${Object.values(state.customEvents).flat().length} events ready.`;
+    const financialMilestones = parseData(dataInput.value);
+    setFinancialMilestones(financialMilestones);
+    if (gameState.financialMilestones && Object.keys(gameState.financialMilestones).length >= 2) {
+        const raceSegments = prepareRaceData(gameState.financialMilestones);
+        setRaceSegments(raceSegments);
+        const firstMilestoneDate = Object.keys(gameState.financialMilestones)[0];
+        const customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
+        setCustomEvents(customEvents);
+        dataMessage.textContent = `Default data loaded. ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} events ready.`;
         dataMessage.style.color = 'green';
     } else {
         dataMessage.textContent = "Error: Default data is invalid. Please check 'milestones.json' or provide valid custom data.";
         dataMessage.style.color = 'red';
-        state.financialMilestones = {};
-        state.raceSegments = [];
-        state.customEvents = {};
+        setFinancialMilestones({});
+        setRaceSegments([]);
+        setCustomEvents({});
     }
 
     displayHighScores(); // Display high scores on startup

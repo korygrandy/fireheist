@@ -1,4 +1,4 @@
-import state from './game-modules/state.js';
+import { setDailyChallengeActive, setSelectedTheme, setStickFigureEmoji, setObstacleEmoji } from './game-modules/state-manager.js';
 import { startGame } from './game-modules/lifecycle.js';
 import { setTheme } from './theme.js';
 import { initializeMusicPlayer } from './audio.js';
@@ -188,10 +188,10 @@ export function startDailyChallengeGame() {
         const challengeData = getDailyChallengeData();
 
         // Update global state with daily challenge parameters
-        state.isDailyChallengeActive = true;
-        state.selectedTheme = challengeData.themeKey;
-        state.stickFigureEmoji = challengeData.playerEmoji;
-        state.obstacleEmoji = challengeData.obstacleEmoji;
+        setDailyChallengeActive(true);
+        setSelectedTheme(challengeData.themeKey);
+        setStickFigureEmoji(challengeData.playerEmoji);
+        setObstacleEmoji(challengeData.obstacleEmoji);
 
         // Apply theme and music
         setTheme(challengeData.themeKey);

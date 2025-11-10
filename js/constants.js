@@ -152,6 +152,20 @@ export const EMOJI_MUSIC_MAP = {
     '👽': 'fx/alien.mp3',
 };
 
+export const THEME_MUSIC_MAP = {
+    'default': 'fx/funk.mp3',
+    'dark': 'fx/ufo-hover.mp3',
+    'light': 'fx/power-up.mp3',
+    'forest': 'fx/quack.mp3',
+    'desert': 'fx/lion.mp3',
+    'ocean': 'fx/dog.mp3',
+    'space': 'fx/alien.mp3',
+    'city': 'fx/rocket.mp3',
+    'volcano': 'fx/firestorm.mp3',
+    'snow': 'fx/shatter.mp3',
+};
+
+
 export const suggestedEmojiList = ['🧟', '🥷', '🦁', '💃', '🐶', '🚀','👽'];
 
 export const ANIMATION_SOUND_MAP = {

@@ -1,6 +1,6 @@
 import { personaUnlocks } from '../unlocks.js';
 import { personas } from '../personas.js';
-import state from '../game-modules/state.js';
+import { gameState } from '../game-modules/state-manager.js';
 import { savePlayerStats } from './settings.js';
 import { populatePersonaSelector } from './persona.js';
 import { populateArmoryItems, displayArmoryUnlockNotification, checkForArmoryUnlocks } from './armory.js';

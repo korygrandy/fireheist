@@ -1,6 +1,6 @@
 import { chartContainer, tableContainer, armoryItemsContainer, emojiInput, obstacleEmojiInput, skillLevelSelector, dataMessage } from '../dom-elements.js';
 import { populateArmoryItems } from './armory.js';
-import state from '../game-modules/state.js';
+import { gameState } from '../game-modules/state-manager.js';
 
 export function switchTab(tabId) {
     const tabs = document.querySelectorAll('.tab-content');
@@ -92,7 +92,7 @@ export function updateControlPanelState(gameRunning, isPaused) {
     skillLevelSelector.querySelectorAll('input').forEach(input => input.disabled = disableControls);
 
     // Stop button is enabled only when the game is actively running or paused
-    if (!state.isDailyChallengeActive) {
+    if (!gameState.isDailyChallengeActive) {
         stopButton.disabled = !gameRunning;
     }
 

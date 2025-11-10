@@ -330,6 +330,14 @@ export function incrementObstaclesIncinerated() {
 }
 
 /**
+ * Sets the obstacles incinerated count.
+ * @param {number} count
+ */
+export function setObstaclesIncinerated(count) {
+    state.playerStats.obstaclesIncinerated = count;
+}
+
+/**
  * Increments the consecutive incinerations count.
  */
 export function incrementConsecutiveIncinerations() {
@@ -809,6 +817,82 @@ export function addIncineratingObstacle(obstacle) {
  */
 export function removeIncineratingObstacle(index) {
     state.incineratingObstacles.splice(index, 1);
+}
+
+export function setDailyChallengeActive(isActive) {
+    state.isDailyChallengeActive = isActive;
+}
+
+export function setSelectedTheme(theme) {
+    state.selectedTheme = theme;
+}
+
+export function setStickFigureEmoji(emoji) {
+    state.stickFigureEmoji = emoji;
+}
+
+export function setObstacleEmoji(emoji) {
+    state.obstacleEmoji = emoji;
+}
+
+export function setActiveArmorySkill(skillKey) {
+    state.playerStats.activeArmorySkill = skillKey;
+}
+
+export function setFinancialMilestones(milestones) {
+    state.financialMilestones = milestones;
+}
+
+export function setRaceSegments(segments) {
+    state.raceSegments = segments;
+}
+
+export function setCustomEvents(events) {
+    state.customEvents = events;
+}
+
+export function setPlayerStats(stats) {
+    state.playerStats = stats;
+}
+
+export function setHitsCounter(count) {
+    state.hitsCounter = count;
+}
+
+export function setObstacleFrequencyPercent(percent) {
+    state.obstacleFrequencyPercent = percent;
+}
+
+export function setEnableRandomPowerUps(enabled) {
+    state.enableRandomPowerUps = enabled;
+}
+
+export function setAutoHurdleEnabled(enabled) {
+    state.isAutoHurdleEnabled = enabled;
+}
+
+export function setCurrentSkillLevel(level) {
+    state.currentSkillLevel = level;
+}
+
+export function setMaxPlayerEnergy(energy) {
+    state.maxPlayerEnergy = energy;
+}
+
+export function setPassiveDrainRate(rate) {
+    state.passiveDrainRate = rate;
+}
+
+export function setAcceleratorFrequencyPercent(percent) {
+    state.acceleratorFrequencyPercent = percent;
+}
+
+export function setIntendedSpeedMultiplier(multiplier) {
+    state.intendedSpeedMultiplier = multiplier;
+}
+
+export function setSelectedPersona(personaKey) {
+    state.selectedPersona = personaKey;
 }
 
 // More state management functions will be added here as we refactor.

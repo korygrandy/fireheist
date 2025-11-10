@@ -20,7 +20,7 @@ import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame } from './game-modules/lifecycle.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
-import state from './game-modules/state.js';
+import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
 
 function initializeDailyChallengeUI() {
@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
 
                 function debugSetIncinerationCount(count) {
-                    state.playerStats.obstaclesIncinerated = count;
-                    checkForNewUnlocks(state.playerStats); // Check for unlocks first
+                    setObstaclesIncinerated(count);
+                    checkForNewUnlocks(gameState.playerStats); // Check for unlocks first
                     savePlayerStats(); // Then save the updated stats
                     populatePersonaSelector(); // Re-populate in case this unlocks a persona
                     populateArmoryItems(); // Also refresh the armory view
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         themeSelector.addEventListener('change', handleThemeChange);
         personaSelector.addEventListener('change', (event) => {
             handlePersonaChange(event);
-            if (state.gameRunning) {
+            if (gameState.gameRunning) {
                 stopGame(true);
             }
         });
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3. Set up main buttons and controls
     if (startButton) {
         startButton.addEventListener('click', () => {
-            if (state.gameRunning) {
+            if (gameState.gameRunning) {
                 togglePauseGame();
             } else {
                 playGameStartSound();
@@ -209,9 +209,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Listen for fullscreen changes to update button text and apply immersive class
     document.addEventListener('fullscreenchange', () => {
-        updateControlPanelState(state.gameRunning, state.isPaused);
+        updateControlPanelState(gameState.gameRunning, gameState.isPaused);
         const actionButtons = document.getElementById('actionButtons');
-        if (document.fullscreenElement && state.gameRunning) {
+        if (document.fullscreenElement && gameState.gameRunning) {
             document.body.classList.add('game-active-fullscreen');
             header.classList.add('hidden');
             controlPanel.classList.add('hidden');
@@ -241,116 +241,116 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     function handleSpecialMove() {
-        const activeSkill = state.playerStats.activeArmorySkill;
+        const activeSkill = gameState.playerStats.activeArmorySkill;
         if (activeSkill && skillActionMap[activeSkill]) {
-            skillActionMap[activeSkill](state);
+            skillActionMap[activeSkill](gameState);
         } else {
             // Default action if no skill is selected or if the skill is not in the map
-            if (state.isFireMageActive) {
-                castFireball(state);
+            if (gameState.isFireMageActive) {
+                castFireball(gameState);
             } else {
-                startFireMage(state);
+                startFireMage(gameState);
             }
         }
     }
 
     document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'Space' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startManualJump(state);
+            startManualJump(gameState);
         }
-        if (e.code === 'KeyP' && state.gameRunning) {
+        if (e.code === 'KeyP' && gameState.gameRunning) {
             e.preventDefault();
             togglePauseGame();
         }
-        if (e.code === 'KeyJ' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyJ' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startHurdle(state);
+            startHurdle(gameState);
         }
-        if (e.code === 'KeyK' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyK' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
             handleSpecialMove();
         }
-        if (e.code === 'KeyD' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyD' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startDive(state);
+            startDive(gameState);
         }
-        if (e.code === 'KeyC' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyC' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startCorkscrewSpin(state);
+            startCorkscrewSpin(gameState);
         }
-        if (e.code === 'KeyS' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyS' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startScissorKick(state);
+            startScissorKick(gameState);
         }
-        if (e.code === 'KeyV' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyV' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startPhaseDash(state);
+            startPhaseDash(gameState);
         }
-        if (e.code === 'KeyH' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyH' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startHover(state);
+            startHover(gameState);
         }
-        if (e.code === 'KeyG' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyG' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startGroundPound(state);
+            startGroundPound(gameState);
         }
-        if (e.code === 'KeyB' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startBackflip(state);
+            startBackflip(gameState);
         }
-        if (e.code === 'KeyM' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startMoonwalk(state);
+            startMoonwalk(gameState);
         }
-        if (e.code === 'KeyN' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startShockwave(state);
+            startShockwave(gameState);
         }
-        if (e.code === 'KeyZ' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startCartoonScramble(state);
+            startCartoonScramble(gameState);
         }
-        if (e.code === 'KeyF' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyF' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startFrontflip(state);
+            startFrontflip(gameState);
         }
-        if (e.code === 'KeyI' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyI' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startHoudini(state);
+            startHoudini(gameState);
         }
-        if (e.code === 'KeyT' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyT' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startMeteorStrike(state);
+            startMeteorStrike(gameState);
         }
-        if (e.code === 'KeyR' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyR' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startFireSpinner(state);
+            startFireSpinner(gameState);
         }
-        if (e.code === 'KeyY' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            startFirestorm(state);
+            startFirestorm(gameState);
         }
-        if (e.code === 'KeyU' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyU' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
-            if (state.isMageSpinnerActive) {
-                castFireball(state);
+            if (gameState.isMageSpinnerActive) {
+                castFireball(gameState);
             } else {
-                startMageSpinner(state);
+                startMageSpinner(gameState);
             }
         }
 
         // Cheat code for max energy
         if (e.ctrlKey && e.altKey && e.code === 'KeyE') {
-            if (state.gameRunning && !state.isPaused) {
+            if (gameState.gameRunning && !gameState.isPaused) {
                 e.preventDefault();
-                state.playerEnergy = state.maxPlayerEnergy;
+                setPlayerEnergy(gameState.maxPlayerEnergy);
                 console.log("-> CHEAT: Max energy granted!");
             }
         }
 
         // Debug hotkey for environmental effects
-        if (e.code === 'KeyQ' && state.gameRunning && !state.isPaused) {
+        if (e.code === 'KeyQ' && gameState.gameRunning && !gameState.isPaused) {
             e.preventDefault();
             console.log("-> DEBUG: 'Q' key pressed, calling startThemeEffect...");
             startThemeEffect();
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     gameCanvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        if (!state.gameRunning || state.isPaused) return;
+        if (!gameState.gameRunning || gameState.isPaused) return;
 
         touchStartTime = new Date().getTime();
         touchStartX = e.touches[0].clientX;
@@ -374,25 +374,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Multi-finger taps
         if (e.touches.length === 5) {
-            startShockwave(state);
+            startShockwave(gameState);
             return;
         }
         if (e.touches.length === 4) {
-            startCartoonScramble(state);
+            startCartoonScramble(gameState);
             return;
         }
         if (e.touches.length === 3) {
-            startHoudini(state);
+            startHoudini(gameState);
             return;
         }
         if (e.touches.length === 2) {
-            startDive(state);
+            startDive(gameState);
             return;
         }
 
         // Long press timer
         longPressTimer = setTimeout(() => {
-            startHover(state);
+            startHover(gameState);
         }, 500); // 500ms for long press
 
     }, { passive: false });
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     gameCanvas.addEventListener('touchend', (e) => {
         e.preventDefault();
         clearTimeout(longPressTimer); // Cancel long press on touch end
-        if (!state.gameRunning || state.isPaused) return;
+        if (!gameState.gameRunning || gameState.isPaused) return;
 
         const touchEndTime = new Date().getTime();
         const touchEndX = e.changedTouches[0].clientX;
@@ -419,15 +419,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (touchDuration < 500 && (Math.abs(deltaX) > 30 || Math.abs(deltaY) > 30)) {
             if (Math.abs(deltaX) > Math.abs(deltaY)) { // Horizontal swipe
                 if (deltaX > 0) {
-                    startBackflip(state); // Swipe Right
+                    startBackflip(gameState); // Swipe Right
                 } else {
-                    startMoonwalk(state); // Swipe Left
+                    startMoonwalk(gameState); // Swipe Left
                 }
             } else { // Vertical swipe
                 if (deltaY > 0) {
-                    startGroundPound(state); // Swipe Down
+                    startGroundPound(gameState); // Swipe Down
                 } else {
-                    startFrontflip(state); // Swipe Up
+                    startFrontflip(gameState); // Swipe Up
                 }
             }
         } else { // It's a tap
@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 lastTap = 0; // Reset lastTap to prevent triple taps
             } else {
                 // Single tap
-                startManualJump(state);
+                startManualJump(gameState);
             }
             lastTap = currentTime;
         }

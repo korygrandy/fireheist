@@ -1,17 +1,17 @@
 import { armoryItemsContainer } from '../dom-elements.js';
 import { getSkillUnlockProgress, checkSkillUnlockStatus, ARMORY_ITEMS } from '../unlocks.js';
 import { savePlayerStats } from './settings.js';
-import state from '../game-modules/state.js';
+import { gameState, setActiveArmorySkill } from '../game-modules/state-manager.js';
 
 export function handleArmorySkillSelection(skillKey) {
-    state.playerStats.activeArmorySkill = skillKey;
+    setActiveArmorySkill(skillKey);
     savePlayerStats();
     populateArmoryItems(); // Refresh UI
     console.log(`-> Armory: Skill '${skillKey}' selected.`);
 }
 
 export function handleArmorySkillDeselection() {
-    state.playerStats.activeArmorySkill = null;
+    setActiveArmorySkill(null);
     savePlayerStats();
     populateArmoryItems(); // Refresh UI
     console.log("-> Armory: Active skill deselected.");
@@ -22,13 +22,13 @@ export function populateArmoryItems() {
 
     for (const skillKey in ARMORY_ITEMS) {
         const skill = ARMORY_ITEMS[skillKey];
-        const isUnlocked = checkSkillUnlockStatus(skill.unlockCondition, state.playerStats);
+        const isUnlocked = checkSkillUnlockStatus(skill.unlockCondition, gameState.playerStats);
 
         const skillCard = document.createElement('div');
         skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center ${isUnlocked ? 'bg-white unlocked' : 'bg-gray-200 opacity-50 cursor-not-allowed'}`;
         let lockedMessage = '';
         if (!isUnlocked) {
-            const progress = getSkillUnlockProgress(skill.unlockCondition, state.playerStats);
+            const progress = getSkillUnlockProgress(skill.unlockCondition, gameState.playerStats);
             if (progress.target > 0) {
                 lockedMessage = `<p class="text-xs text-red-500 mt-2">Locked: ${skill.unlockText || skill.description}</p>`;
             } else {
@@ -42,9 +42,9 @@ export function populateArmoryItems() {
             <p class="text-sm text-gray-600">${skill.description}</p>
             ${lockedMessage}
             <div class="mt-3">
-                ${isUnlocked && state.playerStats.activeArmorySkill !== skillKey ? 
+                ${isUnlocked && gameState.playerStats.activeArmorySkill !== skillKey ? 
                     `<button class="control-btn primary-btn text-sm py-1 px-2" data-action="select" data-skill-key="${skillKey}">Select</button>` : ''}
-                ${isUnlocked && state.playerStats.activeArmorySkill === skillKey ? 
+                ${isUnlocked && gameState.playerStats.activeArmorySkill === skillKey ? 
                     `<button class="control-btn secondary-btn text-sm py-1 px-2" data-action="unselect">Unselect</button>` : ''}
             </div>
         `;

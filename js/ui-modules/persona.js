@@ -2,7 +2,7 @@
 import { personaSelector, customPersonaControls, personaDetailsContainer, emojiInput, frequencyValueSpan, themeSelector } from '../dom-elements.js';
 import { personas } from '../personas.js';
 import { personaUnlocks } from '../unlocks.js';
-import state from '../game-modules/state.js';
+import { gameState, setSelectedPersona, setStickFigureEmoji, setCurrentSkillLevel, setObstacleFrequencyPercent, setSelectedTheme } from '../game-modules/state-manager.js';
 import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from '../constants.js';
 import { initializeMusicPlayer } from '../audio.js';
 import { saveSettings } from './settings.js';
@@ -10,13 +10,13 @@ import { setTheme } from '../theme.js';
 import { applySkillLevelSettings } from './input-handlers.js';
 
 export function applyPersona(personaKey) {
-    state.selectedPersona = personaKey;
+    setSelectedPersona(personaKey);
     const persona = personas[personaKey];
 
     if (personaKey === 'custom') {
         customPersonaControls.style.display = 'block';
         personaDetailsContainer.classList.add('hidden');
-        const cleanEmoji = state.stickFigureEmoji.replace(/\uFE0F/g, '');
+        const cleanEmoji = gameState.stickFigureEmoji.replace(/\uFE0F/g, '');
         const musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
         initializeMusicPlayer(musicUrl);
     } else {
@@ -45,22 +45,22 @@ export function applyPersona(personaKey) {
         `;
 
         // Apply persona settings
-        state.stickFigureEmoji = persona.emoji;
+        setStickFigureEmoji(persona.emoji);
         emojiInput.value = persona.emoji;
 
-        state.currentSkillLevel = persona.skillLevel;
-        const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${state.currentSkillLevel}"]`);
+        setCurrentSkillLevel(persona.skillLevel);
+        const skillRadio = document.querySelector(`input[name="gameSkillLevel"][value="${gameState.currentSkillLevel}"]`);
         if (skillRadio) skillRadio.checked = true;
-        applySkillLevelSettings(state.currentSkillLevel);
+        applySkillLevelSettings(gameState.currentSkillLevel);
 
 
-        state.obstacleFrequencyPercent = persona.obstacleFrequencyPercent;
-        document.getElementById('obstacleFrequency').value = state.obstacleFrequencyPercent;
-        frequencyValueSpan.textContent = `${state.obstacleFrequencyPercent}%`;
+        setObstacleFrequencyPercent(persona.obstacleFrequencyPercent);
+        document.getElementById('obstacleFrequency').value = gameState.obstacleFrequencyPercent;
+        frequencyValueSpan.textContent = `${gameState.obstacleFrequencyPercent}%`;
 
-        state.selectedTheme = persona.theme;
-        themeSelector.value = state.selectedTheme;
-        setTheme(state.selectedTheme);
+        setSelectedTheme(persona.theme);
+        themeSelector.value = gameState.selectedTheme;
+        setTheme(gameState.selectedTheme);
 
         // Initialize music player with persona's music
         initializeMusicPlayer(persona.music);
@@ -111,7 +111,7 @@ export function populatePersonaSelector() {
         const option = document.createElement('option');
         option.value = key;
 
-        const isUnlocked = isPersonaUnlocked(key, state.playerStats);
+        const isUnlocked = isPersonaUnlocked(key, gameState.playerStats);
 
         // Use innerHTML to structure the content with spans for flexbox styling
         option.innerHTML = `
@@ -131,5 +131,5 @@ export function populatePersonaSelector() {
         personaSelector.appendChild(option);
     }
     // Ensure the currently selected persona is still selected after re-population
-    personaSelector.value = state.selectedPersona;
+    personaSelector.value = gameState.selectedPersona;
 }

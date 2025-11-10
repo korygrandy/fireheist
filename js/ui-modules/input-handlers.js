@@ -1,36 +1,36 @@
 import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer } from '../dom-elements.js';
 import { saveSettings } from './settings.js';
-import state from '../game-modules/state.js';
+import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setEnableRandomPowerUps, setAutoHurdleEnabled, setCurrentSkillLevel, setMaxPlayerEnergy, setPassiveDrainRate, setAcceleratorFrequencyPercent, setIntendedSpeedMultiplier } from '../game-modules/state-manager.js';
 import { DIFFICULTY_SETTINGS, suggestedEmojiList } from '../constants.js';
 
 export function updateEmoji(event) {
     let input = event.target.value.trim();
-    state.stickFigureEmoji = input.length > 0 ? input.slice(0, 2) : '🦹‍♂️';
+    setStickFigureEmoji(input.length > 0 ? input.slice(0, 2) : '🦹‍♂️');
     saveSettings();
 }
 
 export function updateObstacleEmoji(event) {
     let input = event.target.value.trim();
-    state.obstacleEmoji = input.length > 0 ? input.slice(0, 2) : '🐌';
+    setObstacleEmoji(input.length > 0 ? input.slice(0, 2) : '🐌');
     saveSettings();
 }
 
 export function handleFrequencyChange(event) {
     const userSelectedFrequency = parseInt(event.target.value, 10);
     // Reduce the actual frequency by 25% for gameplay balance
-    state.obstacleFrequencyPercent = Math.round(userSelectedFrequency * 0.75);
+    setObstacleFrequencyPercent(Math.round(userSelectedFrequency * 0.75));
     frequencyValueSpan.textContent = `${userSelectedFrequency}%`; // UI shows the user's selection
-    console.log(`-> handleFrequencyChange: User selected ${userSelectedFrequency}%, actual frequency set to ${state.obstacleFrequencyPercent}%`);
+    console.log(`-> handleFrequencyChange: User selected ${userSelectedFrequency}%, actual frequency set to ${gameState.obstacleFrequencyPercent}%`);
     saveSettings();
 }
 
 export function handlePowerUpToggle(event) {
-    state.enableRandomPowerUps = event.target.checked;
+    setEnableRandomPowerUps(event.target.checked);
     saveSettings();
 }
 
 export function handleAutoHurdleToggle(event) {
-    state.isAutoHurdleEnabled = event.target.checked;
+    setAutoHurdleEnabled(event.target.checked);
     saveSettings();
 }
 
@@ -38,10 +38,10 @@ export function applySkillLevelSettings(level) {
     console.log(`-> applySkillLevelSettings: Setting skill level to ${level}.`);
     const settings = DIFFICULTY_SETTINGS[level];
     if (settings) {
-        state.currentSkillLevel = level; // Renamed
-        state.maxPlayerEnergy = settings.maxPlayerEnergy;
-        state.passiveDrainRate = settings.passiveDrainRate;
-        state.acceleratorFrequencyPercent = settings.ACCELERATOR_FREQUENCY_PERCENT; // Set state here
+        setCurrentSkillLevel(level); // Renamed
+        setMaxPlayerEnergy(settings.maxPlayerEnergy);
+        setPassiveDrainRate(settings.passiveDrainRate);
+        setAcceleratorFrequencyPercent(settings.ACCELERATOR_FREQUENCY_PERCENT); // Set state here
         console.log(`-> applySkillLevelSettings: Jump Height: ${settings.manualJumpHeight}, Duration: ${settings.manualJumpDurationMs}ms, Collision Range: ${settings.COLLISION_RANGE_X}, Accelerator Freq: ${settings.ACCELERATOR_FREQUENCY_PERCENT}%`);
     } else {
         console.error(`Unknown skill level: ${level}.`);
@@ -57,7 +57,7 @@ export function handleSkillLevelChange(event) {
 
 export function selectSuggestedEmoji(emoji) {
     emojiInput.value = emoji;
-    state.stickFigureEmoji = emoji;
+    setStickFigureEmoji(emoji);
     saveSettings();
 }
 
@@ -75,7 +75,7 @@ export function setupSuggestedEmojis() {
 
 export function handleSpeedChange(event) {
     if (event.target.name === 'gameSpeed' && event.target.checked) {
-        state.intendedSpeedMultiplier = parseFloat(event.target.value);
+        setIntendedSpeedMultiplier(parseFloat(event.target.value));
         saveSettings();
     }
 }

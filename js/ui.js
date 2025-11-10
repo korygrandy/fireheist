@@ -22,7 +22,7 @@ import {
     personaDetailsContainer,
     armoryItemsContainer
 } from './dom-elements.js';
-import state from './game-modules/state.js'; // Import the state object
+import { gameState } from './game-modules/state-manager.js'; // Import the state object
 
 // New UI Module Imports
 import { initializeUIData, loadCustomData, financialMilestones, raceSegments, customEvents } from './ui-modules/data.js';

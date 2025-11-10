@@ -1,7 +1,7 @@
 import { themeSelector } from '../dom-elements.js';
 import { themes, setTheme } from '../theme.js';
 import { saveSettings } from './settings.js';
-import state from '../game-modules/state.js';
+import { setSelectedTheme } from '../game-modules/state-manager.js';
 
 export function populateThemeSelector() {
     for (const key in themes) {
@@ -14,7 +14,7 @@ export function populateThemeSelector() {
 
 export function handleThemeChange(event) {
     const themeName = event.target.value;
-    state.selectedTheme = themeName;
+    setSelectedTheme(themeName);
     setTheme(themeName);
     saveSettings();
 }
