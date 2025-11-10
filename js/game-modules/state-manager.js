@@ -819,6 +819,71 @@ export function removeIncineratingObstacle(index) {
     state.incineratingObstacles.splice(index, 1);
 }
 
+export function removeIncineratingObstacle(index) {
+    state.incineratingObstacles.splice(index, 1);
+}
+
+export function clearActiveCashBags() { state.activeCashBags = []; }
+export function clearFireTrail() { state.fireTrail = []; }
+export function clearIncineratingObstacles() { state.incineratingObstacles = []; }
+export function clearVanishingObstacles() { state.vanishingObstacles = []; }
+export function clearHoudiniParticles() { state.houdiniParticles = []; }
+export function clearGroundPoundParticles() { state.groundPoundParticles = []; }
+export function clearFlipTrail() { state.flipTrail = []; }
+export function clearMoonwalkParticles() { state.moonwalkParticles = []; }
+export function clearHoverParticles() { state.hoverParticles = []; }
+export function clearScrambleParticles() { state.scrambleParticles = []; }
+export function clearDiveParticles() { state.diveParticles = []; }
+export function clearSwooshParticles() { state.swooshParticles = []; }
+export function clearCorkscrewTrail() { state.corkscrewTrail = []; }
+export function clearShatteredObstacles() { state.shatteredObstacles = []; }
+export function clearIgnitedObstacles() { state.ignitedObstacles = []; }
+export function clearActiveFireballs() { state.activeFireballs = []; }
+
+export function resetJumpState() {
+    state.jumpState = {
+        isJumping: false, progress: 0,
+        isHurdle: false, hurdleDuration: 0,
+        isSpecialMove: false, specialMoveDuration: 0,
+        isPowerStomp: false, powerStompDuration: 0,
+        isDive: false, diveDuration: 0,
+        isCorkscrewSpin: false, corkscrewSpinDuration: 0,
+        isScissorKick: false, scissorKickDuration: 0,
+        isPhaseDash: false, phaseDashDuration: 0,
+        isHover: false, hoverDuration: 0,
+        isGroundPound: false, groundPoundDuration: 0, groundPoundEffectTriggered: false,
+        isCartoonScramble: false, cartoonScrambleDuration: 0,
+        isMoonwalking: false, moonwalkDuration: 0,
+        isShockwave: false, shockwaveDuration: 0,
+        isBackflip: false, backflipDuration: 0,
+        isFrontflip: false, frontflipDuration: 0,
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
+        isFieryHoudini: false, fieryHoudiniDuration: 0
+    };
+}
+
+export function deactivateAllEvents() {
+    state.activeCustomEvents.forEach(event => {
+        if (event) {
+            event.isActive = false;
+        }
+    });
+}
+
+export function resetManualJumpOverride() {
+    state.manualJumpOverride = { isActive: false, startTime: 0, duration: state.manualJumpDurationMs };
+}
+
+export function activateCustomEvent(eventToActivate) {
+    const event = state.activeCustomEvents.find(e => e && e.daysSinceStart === eventToActivate.daysSinceStart);
+    if (event) {
+        event.isActive = true;
+        event.wasTriggered = true;
+    }
+}
+
+// More state management functions will be added here as we refactor.
+
 export function setDailyChallengeActive(isActive) {
     state.isDailyChallengeActive = isActive;
 }
@@ -895,5 +960,4 @@ export function setSelectedPersona(personaKey) {
     state.selectedPersona = personaKey;
 }
 
-// More state management functions will be added here as we refactor.
 

@@ -7,10 +7,10 @@ import {
     STICK_FIGURE_FIXED_X,
     OBSTACLE_WIDTH
 } from '../constants.js';
-import * as drawing from './drawing.js';
 import { playAnimationSound } from '../audio.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
+import { createShatterEffect } from './drawing/effects.js';
 
 export function checkCollision(runnerY, angleRad) {
     if (!gameState.currentObstacle || gameState.currentObstacle.hasBeenHit || gameState.isColliding) return false;
@@ -65,7 +65,7 @@ export function checkCollision(runnerY, angleRad) {
             return false; // No penalty
         }
         if (gameState.jumpState.isGroundPound && gameState.jumpState.progress > 0.5) { // Shatter on the way down
-            drawing.createShatterEffect(gameState.currentObstacle.x, obstacleTopY, gameState.currentObstacle.emoji);
+            createShatterEffect(gameState.currentObstacle.x, obstacleTopY, gameState.currentObstacle.emoji);
             setCurrentObstacle(null);
             playAnimationSound('shatter');
             incrementObstaclesIncinerated();
