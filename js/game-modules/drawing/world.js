@@ -1,7 +1,7 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
-import state, { GRASS_ANIMATION_INTERVAL_MS } from '../state.js';
+import { gameState, GRASS_ANIMATION_INTERVAL_MS } from '../state-manager.js';
 
 export function drawAccelerator(accelerator, angleRad) {
     if (!accelerator) return;
@@ -47,9 +47,9 @@ export function drawProximityEvent(event, angleRad) {
 }
 
 export function initializeClouds() {
-    state.clouds.length = 0;
+    gameState.clouds.length = 0;
     for (let i = 0; i < NUM_CLOUDS; i++) {
-        state.clouds.push({
+        gameState.clouds.push({
             x: Math.random() * canvas.width,
             y: Math.random() * (canvas.height / 3) + 20,
             size: Math.random() * 20 + 30,
@@ -62,8 +62,8 @@ export function initializeClouds() {
 }
 
 export function updateClouds() {
-    state.clouds.forEach(cloud => {
-        cloud.x -= (state.backgroundOffsetSpeed * cloud.speedFactor);
+    gameState.clouds.forEach(cloud => {
+        cloud.x -= (gameState.backgroundOffsetSpeed * cloud.speedFactor);
 
         // Wrap clouds around when they go off-screen
         if (cloud.x + cloud.size * 2 < 0) {
@@ -71,7 +71,7 @@ export function updateClouds() {
             cloud.y = Math.random() * (canvas.height / 3) + 20; // New random height
         }
 
-        if (state.selectedTheme === 'roadway') {
+        if (gameState.selectedTheme === 'roadway') {
             // City Night theme: Fade out as the cloud crosses the midpoint of the screen.
             const screenMidpoint = canvas.width / 2;
             const minOpacity = 0.1;
@@ -99,7 +99,7 @@ export function updateClouds() {
 
 export function drawClouds() {
     ctx.fillStyle = 'white';
-    state.clouds.forEach(cloud => {
+    gameState.clouds.forEach(cloud => {
         const currentX = cloud.x;
         // console.log(`Drawing cloud at x: ${currentX}, y: ${cloud.y}, opacity: ${cloud.opacity}`); // Debug log
 
@@ -118,16 +118,16 @@ export function drawClouds() {
 }
 
 export function generateGrassBlades(angleRad) {
-    state.grassAnimationState.blades = [];
+    gameState.grassAnimationState.blades = [];
     const bladeHeight = 8;
     const bladeDensity = 5; // Lower number means more dense
     for (let x = 0; x < canvas.width; x += bladeDensity) {
         const groundYatX = GROUND_Y - x * Math.tan(angleRad);
         const randomSway = (Math.random() - 0.5) * 5;
         const heightFactor = (0.75 + Math.random() * 0.5);
-        state.grassAnimationState.blades.push({ x: x + randomSway, y: groundYatX, heightFactor: heightFactor });
+        gameState.grassAnimationState.blades.push({ x: x + randomSway, y: groundYatX, heightFactor: heightFactor });
     }
-    state.grassAnimationState.lastUpdateTime = performance.now();
+    gameState.grassAnimationState.lastUpdateTime = performance.now();
 }
 
 export function drawSlantedGround(angleRad) {
@@ -155,13 +155,13 @@ export function drawSlantedGround(angleRad) {
         ctx.lineTo(canvas.width, endY);
 
         // Update grass blades if interval passed or if not yet generated
-        if (performance.now() - state.grassAnimationState.lastUpdateTime > GRASS_ANIMATION_INTERVAL_MS || state.grassAnimationState.blades.length === 0) {
+        if (performance.now() - gameState.grassAnimationState.lastUpdateTime > GRASS_ANIMATION_INTERVAL_MS || gameState.grassAnimationState.blades.length === 0) {
             generateGrassBlades(angleRad);
         }
 
         // Draw grass blade texture
         const bladeHeight = 8;
-        state.grassAnimationState.blades.forEach(blade => {
+        gameState.grassAnimationState.blades.forEach(blade => {
             ctx.moveTo(blade.x, blade.y);
             ctx.lineTo(blade.x, blade.y - bladeHeight * blade.heightFactor);
         });
@@ -177,7 +177,7 @@ export function drawSlantedGround(angleRad) {
         const patternLength = lineLength + gapLength;
         const numLines = canvas.width / patternLength;
         for (let i = 0; i < numLines * 2; i++) {
-            const startX = (i * patternLength - state.backgroundOffset * 0.1) % (canvas.width + patternLength) - patternLength;
+            const startX = (i * patternLength - gameState.backgroundOffset * 0.1) % (canvas.width + patternLength) - patternLength;
             const startY = GROUND_Y - 14 - startX * Math.tan(angleRad);
             const endX = startX + lineLength;
             const endY = GROUND_Y - 14 - endX * Math.tan(angleRad);
@@ -201,8 +201,8 @@ export function drawSlantedGround(angleRad) {
 export function drawHurdle(hurdleData) {
     if (!hurdleData || !hurdleData.isMilestone) return; // Only draw if it's a milestone
 
-    const hurdleDrawX = canvas.width - 100 - state.backgroundOffset;
-    const currentAngleRad = state.raceSegments[state.currentSegmentIndex] ? state.raceSegments[state.currentSegmentIndex].angleRad : 0;
+    const hurdleDrawX = canvas.width - 100 - gameState.backgroundOffset;
+    const currentAngleRad = gameState.raceSegments[gameState.currentSegmentIndex] ? gameState.raceSegments[gameState.currentSegmentIndex].angleRad : 0;
     const groundAtHurdleY = GROUND_Y - hurdleDrawX * Math.tan(currentAngleRad);
 
     if (hurdleDrawX > -34 && hurdleDrawX < canvas.width) {
@@ -281,12 +281,12 @@ export function drawObstacle(obstacle, angleRad) {
 }
 
 export function drawFireSpinner(playerX, playerY) {
-    if (!state.jumpState.isFireSpinner && !state.isMageSpinnerActive) return;
+    if (!gameState.jumpState.isFireSpinner && !gameState.isMageSpinnerActive) return;
 
     const numFireballs = 12;
     const orbitRadius = 50;
     const rotationSpeed = 0.1;
-    const angle = state.frameCount * rotationSpeed;
+    const angle = gameState.frameCount * rotationSpeed;
 
     for (let i = 0; i < numFireballs; i++) {
         const fireballAngle = angle + (i * (Math.PI * 2 / numFireballs));
@@ -294,7 +294,7 @@ export function drawFireSpinner(playerX, playerY) {
         const y = playerY - STICK_FIGURE_TOTAL_HEIGHT / 2 + orbitRadius * Math.sin(fireballAngle);
 
         ctx.save();
-        ctx.globalAlpha = 0.8 + 0.2 * Math.sin(state.frameCount * 0.2 + i);
+        ctx.globalAlpha = 0.8 + 0.2 * Math.sin(gameState.frameCount * 0.2 + i);
         ctx.font = '24px Arial';
         ctx.fillText('🔥', x, y);
         ctx.restore();

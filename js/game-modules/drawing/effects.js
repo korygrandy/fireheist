@@ -1,7 +1,7 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_SIZE, GROUND_Y, STICK_FIGURE_FIXED_X } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
-import state from '../state.js';
+import { gameState } from '../state-manager.js';
 
 function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -19,7 +19,7 @@ export function createGroundPoundEffect(x, y) {
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI; // Upward semi-circle
         const speed = Math.random() * 5 + 2;
-        state.groundPoundParticles.push({
+        gameState.groundPoundParticles.push({
             x: x,
             y: y,
             vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1),
@@ -33,8 +33,8 @@ export function createGroundPoundEffect(x, y) {
 }
 
 export function drawGroundPoundParticles() {
-    for (let i = state.groundPoundParticles.length - 1; i >= 0; i--) {
-        const p = state.groundPoundParticles[i];
+    for (let i = gameState.groundPoundParticles.length - 1; i >= 0; i--) {
+        const p = gameState.groundPoundParticles[i];
 
         p.vy += p.gravity;
         p.x += p.vx;
@@ -42,7 +42,7 @@ export function drawGroundPoundParticles() {
         p.life -= 0.03;
 
         if (p.life <= 0) {
-            state.groundPoundParticles.splice(i, 1);
+            gameState.groundPoundParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -56,7 +56,7 @@ export function drawGroundPoundParticles() {
 }
 
 export function createMoonwalkSparkle(x, y) {
-    state.moonwalkParticles.push({
+    gameState.moonwalkParticles.push({
         x: x,
         y: y,
         size: Math.random() * 2 + 1,
@@ -68,15 +68,15 @@ export function createMoonwalkSparkle(x, y) {
 }
 
 export function drawMoonwalkParticles() {
-    for (let i = state.moonwalkParticles.length - 1; i >= 0; i--) {
-        const p = state.moonwalkParticles[i];
+    for (let i = gameState.moonwalkParticles.length - 1; i >= 0; i--) {
+        const p = gameState.moonwalkParticles[i];
 
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.02; // Fade out slowly
 
         if (p.life <= 0) {
-            state.moonwalkParticles.splice(i, 1);
+            gameState.moonwalkParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -90,7 +90,7 @@ export function drawMoonwalkParticles() {
 }
 
 export function createHoverParticle(x, y) {
-    state.hoverParticles.push({
+    gameState.hoverParticles.push({
         x: x + (Math.random() - 0.5) * 10, // Emerge from under the player
         y: y,
         size: Math.random() * 3 + 2,
@@ -102,15 +102,15 @@ export function createHoverParticle(x, y) {
 }
 
 export function drawHoverParticles() {
-    for (let i = state.hoverParticles.length - 1; i >= 0; i--) {
-        const p = state.hoverParticles[i];
+    for (let i = gameState.hoverParticles.length - 1; i >= 0; i--) {
+        const p = gameState.hoverParticles[i];
 
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.03;
 
         if (p.life <= 0) {
-            state.hoverParticles.splice(i, 1);
+            gameState.hoverParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -124,7 +124,7 @@ export function drawHoverParticles() {
 }
 
 export function createScrambleDust(x, y) {
-    state.scrambleParticles.push({
+    gameState.scrambleParticles.push({
         x: x + (Math.random() - 0.5) * 20, // Spawn around the feet
         y: y,
         size: Math.random() * 8 + 4,
@@ -136,15 +136,15 @@ export function createScrambleDust(x, y) {
 }
 
 export function drawScrambleDust() {
-    for (let i = state.scrambleParticles.length - 1; i >= 0; i--) {
-        const p = state.scrambleParticles[i];
+    for (let i = gameState.scrambleParticles.length - 1; i >= 0; i--) {
+        const p = gameState.scrambleParticles[i];
 
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.05; // Fade out fairly quickly
 
         if (p.life <= 0) {
-            state.scrambleParticles.splice(i, 1);
+            gameState.scrambleParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -158,7 +158,7 @@ export function drawScrambleDust() {
 }
 
 export function createDiveParticle(x, y) {
-    state.diveParticles.push({
+    gameState.diveParticles.push({
         x: x,
         y: y + (Math.random() - 0.5) * 20, // Vary vertical position
         length: Math.random() * 15 + 5,
@@ -169,14 +169,14 @@ export function createDiveParticle(x, y) {
 }
 
 export function drawDiveParticles() {
-    for (let i = state.diveParticles.length - 1; i >= 0; i--) {
-        const p = state.diveParticles[i];
+    for (let i = gameState.diveParticles.length - 1; i >= 0; i--) {
+        const p = gameState.diveParticles[i];
 
         p.x -= p.speed; // Move left
         p.life -= 0.04;
 
         if (p.life <= 0) {
-            state.diveParticles.splice(i, 1);
+            gameState.diveParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -192,7 +192,7 @@ export function drawDiveParticles() {
 }
 
 export function createSwooshParticle(x, y, vx, vy) {
-    state.swooshParticles.push({
+    gameState.swooshParticles.push({
         x: x,
         y: y,
         vx: vx,
@@ -204,15 +204,15 @@ export function createSwooshParticle(x, y, vx, vy) {
 }
 
 export function drawSwooshParticles() {
-    for (let i = state.swooshParticles.length - 1; i >= 0; i--) {
-        const p = state.swooshParticles[i];
+    for (let i = gameState.swooshParticles.length - 1; i >= 0; i--) {
+        const p = gameState.swooshParticles[i];
 
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.08; // Fade out quickly
 
         if (p.life <= 0) {
-            state.swooshParticles.splice(i, 1);
+            gameState.swooshParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -228,7 +228,7 @@ export function drawSwooshParticles() {
 }
 
 export function createFlipTrailParticle(x, y, rotation) {
-    state.flipTrail.push({
+    gameState.flipTrail.push({
         x: x,
         y: y,
         rotation: rotation,
@@ -238,12 +238,12 @@ export function createFlipTrailParticle(x, y, rotation) {
 }
 
 export function drawFlipTrail() {
-    for (let i = state.flipTrail.length - 1; i >= 0; i--) {
-        const p = state.flipTrail[i];
+    for (let i = gameState.flipTrail.length - 1; i >= 0; i--) {
+        const p = gameState.flipTrail[i];
         p.life -= 0.1; // Faster fade for a smoother trail
 
         if (p.life <= 0) {
-            state.flipTrail.splice(i, 1);
+            gameState.flipTrail.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life * 0.5; // Make it semi-transparent
@@ -267,7 +267,7 @@ export function drawFlipTrail() {
 }
 
 export function createCorkscrewParticle(x, y, headScale, bodyScale) {
-    state.corkscrewTrail.push({
+    gameState.corkscrewTrail.push({
         x: x,
         y: y,
         headScale: headScale,
@@ -277,12 +277,12 @@ export function createCorkscrewParticle(x, y, headScale, bodyScale) {
 }
 
 export function drawCorkscrewTrail() {
-    for (let i = state.corkscrewTrail.length - 1; i >= 0; i--) {
-        const p = state.corkscrewTrail[i];
+    for (let i = gameState.corkscrewTrail.length - 1; i >= 0; i--) {
+        const p = gameState.corkscrewTrail[i];
         p.life -= 0.15; // Fade out quickly
 
         if (p.life <= 0) {
-            state.corkscrewTrail.splice(i, 1);
+            gameState.corkscrewTrail.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life * 0.4;
@@ -294,7 +294,7 @@ export function drawCorkscrewTrail() {
             ctx.font = '28px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(state.stickFigureEmoji, 0, -STICK_FIGURE_TOTAL_HEIGHT);
+            ctx.fillText(gameState.stickFigureEmoji, 0, -STICK_FIGURE_TOTAL_HEIGHT);
             ctx.restore();
 
             // Draw ghost body
@@ -320,7 +320,7 @@ export function createHoudiniPoof(x, y) {
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 3 + 1;
-        state.houdiniParticles.push({
+        gameState.houdiniParticles.push({
             x: x,
             y: y,
             vx: Math.cos(angle) * speed,
@@ -340,7 +340,7 @@ export function createFieryHoudiniPoof(x, y) {
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 4 + 2;
-        state.fieryHoudiniParticles.push({
+        gameState.fieryHoudiniParticles.push({
             x: x,
             y: y,
             vx: Math.cos(angle) * speed,
@@ -353,15 +353,15 @@ export function createFieryHoudiniPoof(x, y) {
 }
 
 export function drawHoudiniParticles() {
-    for (let i = state.houdiniParticles.length - 1; i >= 0; i--) {
-        const p = state.houdiniParticles[i];
+    for (let i = gameState.houdiniParticles.length - 1; i >= 0; i--) {
+        const p = gameState.houdiniParticles[i];
 
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.04; // Fade speed
 
         if (p.life <= 0) {
-            state.houdiniParticles.splice(i, 1);
+            gameState.houdiniParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -375,15 +375,15 @@ export function drawHoudiniParticles() {
 }
 
 export function drawFieryHoudiniParticles() {
-    for (let i = state.fieryHoudiniParticles.length - 1; i >= 0; i--) {
-        const p = state.fieryHoudiniParticles[i];
+    for (let i = gameState.fieryHoudiniParticles.length - 1; i >= 0; i--) {
+        const p = gameState.fieryHoudiniParticles[i];
 
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.03; // Slower fade for a more lingering effect
 
         if (p.life <= 0) {
-            state.fieryHoudiniParticles.splice(i, 1);
+            gameState.fieryHoudiniParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -399,13 +399,13 @@ export function drawFieryHoudiniParticles() {
 }
 
 export function drawFireTrail() {
-    for (let i = state.fireTrail.length - 1; i >= 0; i--) {
-        const p = state.fireTrail[i];
+    for (let i = gameState.fireTrail.length - 1; i >= 0; i--) {
+        const p = gameState.fireTrail[i];
         p.life -= 0.05;
         p.size *= 0.95; // Shrink
 
         if (p.life <= 0 || p.size <= 0.5) {
-            state.fireTrail.splice(i, 1);
+            gameState.fireTrail.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -423,7 +423,7 @@ export function createShatterEffect(x, y, emoji) {
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 4 + 1;
-        state.shatteredObstacles.push({
+        gameState.shatteredObstacles.push({
             x: x,
             y: y,
             vx: Math.cos(angle) * speed,
@@ -437,15 +437,15 @@ export function createShatterEffect(x, y, emoji) {
 }
 
 export function drawShatteredObstacles() {
-    for (let i = state.shatteredObstacles.length - 1; i >= 0; i--) {
-        const p = state.shatteredObstacles[i];
+    for (let i = gameState.shatteredObstacles.length - 1; i >= 0; i--) {
+        const p = gameState.shatteredObstacles[i];
         p.vy += p.gravity;
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.02;
 
         if (p.life <= 0) {
-            state.shatteredObstacles.splice(i, 1);
+            gameState.shatteredObstacles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -459,7 +459,7 @@ export function drawShatteredObstacles() {
 }
 
 export function createFirestormFlashes(angleRad) {
-    if (state.firestormParticles.length >= state.MAX_FIRESTORM_PARTICLES) return;
+    if (gameState.firestormParticles.length >= gameState.MAX_FIRESTORM_PARTICLES) return;
     const burstX = Math.random() * canvas.width;
     const burstY = GROUND_Y - burstX * Math.tan(angleRad) - Math.random() * 10;
     const particleCount = 5 + Math.floor(Math.random() * 5); // 5 to 9 particles
@@ -467,7 +467,7 @@ export function createFirestormFlashes(angleRad) {
         const angle = Math.random() * Math.PI * 2; // Random direction
         const speed = Math.random() * 2 + 1;
         const color = Math.random() > 0.3 ? 'rgba(255, 80, 0, 0.7)' : 'rgba(255, 180, 0, 0.7)'; // Orange/Yellow
-        state.firestormParticles.push({
+        gameState.firestormParticles.push({
             x: burstX,
             y: burstY,
             vx: Math.cos(angle) * speed,
@@ -480,14 +480,14 @@ export function createFirestormFlashes(angleRad) {
 }
 
 export function drawFirestormFlashes() {
-    for (let i = state.firestormParticles.length - 1; i >= 0; i--) {
-        const p = state.firestormParticles[i];
+    for (let i = gameState.firestormParticles.length - 1; i >= 0; i--) {
+        const p = gameState.firestormParticles[i];
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.05;
         p.size *= 0.95; // Shrink
         if (p.life <= 0 || p.size <= 0.5) {
-            state.firestormParticles.splice(i, 1);
+            gameState.firestormParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;
@@ -501,10 +501,10 @@ export function drawFirestormFlashes() {
 }
 
 export function createPlayerEmbers(playerY) {
-    if (state.playerEmberParticles.length >= state.MAX_EMBER_PARTICLES) return;
+    if (gameState.playerEmberParticles.length >= gameState.MAX_EMBER_PARTICLES) return;
     const numEmbers = 3 + Math.floor(Math.random() * 3); // Create 3 to 5 embers per call
     for (let i = 0; i < numEmbers; i++) {
-        state.playerEmberParticles.push({
+        gameState.playerEmberParticles.push({
             x: STICK_FIGURE_FIXED_X + (Math.random() - 0.5) * 30, // Wider spread
             y: playerY + Math.random() * STICK_FIGURE_TOTAL_HEIGHT,
             life: 1.2, // Slightly longer lifespan
@@ -520,7 +520,7 @@ export function createFireExplosion(x, y) {
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 7 + 3;
-        state.firestormParticles.push({
+        gameState.firestormParticles.push({
             x: x,
             y: y,
             vx: Math.cos(angle) * speed,
@@ -533,13 +533,13 @@ export function createFireExplosion(x, y) {
 }
 
 export function drawPlayerEmbers() {
-    for (let i = state.playerEmberParticles.length - 1; i >= 0; i--) {
-        const p = state.playerEmberParticles[i];
+    for (let i = gameState.playerEmberParticles.length - 1; i >= 0; i--) {
+        const p = gameState.playerEmberParticles[i];
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.05;
         if (p.life <= 0) {
-            state.playerEmberParticles.splice(i, 1);
+            gameState.playerEmberParticles.splice(i, 1);
         } else {
             ctx.save();
             ctx.globalAlpha = p.life;

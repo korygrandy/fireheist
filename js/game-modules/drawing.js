@@ -1,7 +1,7 @@
 import { canvas, ctx } from '../dom-elements.js';
 import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS, JUMP_HEIGHT_RATIO, STICK_FIGURE_FIXED_X } from '../constants.js';
 import { currentTheme } from '../theme.js';
-import state from './state.js';
+import { gameState } from './state-manager.js';
 
 
 import { drawPausedOverlay, drawTipsOverlay, drawVictoryOverlay, drawMoneyCounter, drawGameCounters, drawDaysCounter, drawCustomEventStatus, drawEnergyBar } from './drawing/overlays.js';
@@ -61,7 +61,7 @@ export function setInitialLoad(value) {
 }
 
 function drawFireballs() {
-    state.activeFireballs.forEach(fireball => {
+    gameState.activeFireballs.forEach(fireball => {
         ctx.save();
         ctx.beginPath();
         ctx.arc(fireball.x, fireball.y, fireball.size / 2, 0, Math.PI * 2, false);
@@ -96,11 +96,11 @@ export function draw() {
     ctx.fillStyle = currentTheme.sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
+    const currentSegment = gameState.raceSegments[Math.min(gameState.currentSegmentIndex, gameState.raceSegments.length - 1)];
     const groundAngleRad = currentSegment ? currentSegment.angleRad : 0;
 
     // Draw cityscape first, behind all other elements
-    if (state.selectedTheme === 'roadway') {
+    if (gameState.selectedTheme === 'roadway') {
         drawCityscape();
     }
 
@@ -108,7 +108,7 @@ export function draw() {
     drawClouds();
 
     // 4. Draw Ground
-    if (state.currentSegmentIndex < state.raceSegments.length || state.isGameOverSequence) {
+    if (gameState.currentSegmentIndex < gameState.raceSegments.length || gameState.isGameOverSequence) {
         drawSlantedGround(groundAngleRad);
     }
 
@@ -131,12 +131,12 @@ export function draw() {
     drawFireballs();
 
     // 6. Draw Game Objects (Player, Obstacles, etc.)
-    if (state.currentSegmentIndex < state.raceSegments.length || state.isGameOverSequence) {
+    if (gameState.currentSegmentIndex < gameState.raceSegments.length || gameState.isGameOverSequence) {
         const stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(groundAngleRad);
 
-        if (!state.isGameOverSequence) {
+        if (!gameState.isGameOverSequence) {
             if (currentSegment.isMilestone) {
-                const hurdleDrawX = canvas.width - 100 - state.backgroundOffset;
+                const hurdleDrawX = canvas.width - 100 - gameState.backgroundOffset;
                 const distanceToHurdle = hurdleDrawX - STICK_FIGURE_FIXED_X;
                 const animationThreshold = 300;
                 const previousState = currentSegment.animationState;
@@ -157,28 +157,28 @@ export function draw() {
             }
             drawHurdle(currentSegment);
 
-            if (state.currentObstacle) drawObstacle(state.currentObstacle, groundAngleRad);
-            if (state.currentAccelerator) drawAccelerator(state.currentAccelerator, groundAngleRad);
-            if (state.onScreenCustomEvent) drawProximityEvent(state.onScreenCustomEvent, groundAngleRad);
+            if (gameState.currentObstacle) drawObstacle(gameState.currentObstacle, groundAngleRad);
+            if (gameState.currentAccelerator) drawAccelerator(gameState.currentAccelerator, groundAngleRad);
+            if (gameState.onScreenCustomEvent) drawProximityEvent(gameState.onScreenCustomEvent, groundAngleRad);
 
-            if (state.isAccelerating && !state.currentAccelerator) {
-                const activeEvent = state.activeCustomEvents.find(e => e.type === 'ACCELERATOR' && e.isActive);
+            if (gameState.isAccelerating && !gameState.currentAccelerator) {
+                const activeEvent = gameState.activeCustomEvents.find(e => e.type === 'ACCELERATOR' && e.isActive);
                 if (activeEvent) { drawCustomEventStatus(activeEvent, groundAngleRad); }
-            } else if (state.isDecelerating) {
-                const activeEvent = state.activeCustomEvents.find(e => e.type === 'DECELERATOR' && e.isActive);
+            } else if (gameState.isDecelerating) {
+                const activeEvent = gameState.activeCustomEvents.find(e => e.type === 'DECELERATOR' && e.isActive);
                 if (activeEvent) { drawCustomEventStatus(activeEvent, groundAngleRad); }
             }
         }
 
         let stickFigureOffsetX = 0;
         let stickFigureOffsetY = 0;
-        if (state.stickFigureBurst.active) {
-            const p = state.stickFigureBurst.progress;
+        if (gameState.stickFigureBurst.active) {
+            const p = gameState.stickFigureBurst.progress;
             let burstDistance = 0;
 
-            if (p < 0.3) burstDistance = state.stickFigureBurst.maxOffset * 0.4 * Math.sin((p / 0.3) * Math.PI);
-            else if (p < 0.6) burstDistance = state.stickFigureBurst.maxOffset * 0.7 * Math.sin(((p - 0.3) / 0.3) * Math.PI);
-            else burstDistance = state.stickFigureBurst.maxOffset * 1.0 * Math.sin(((p - 0.6) / 0.4) * Math.PI);
+            if (p < 0.3) burstDistance = gameState.stickFigureBurst.maxOffset * 0.4 * Math.sin((p / 0.3) * Math.PI);
+            else if (p < 0.6) burstDistance = gameState.stickFigureBurst.maxOffset * 0.7 * Math.sin(((p - 0.3) / 0.3) * Math.PI);
+            else burstDistance = gameState.stickFigureBurst.maxOffset * 1.0 * Math.sin(((p - 0.6) / 0.4) * Math.PI);
 
             const burstAngleRad = 15 * (Math.PI / 180);
             stickFigureOffsetX = burstDistance * Math.cos(burstAngleRad);
@@ -187,22 +187,22 @@ export function draw() {
         const currentX = STICK_FIGURE_FIXED_X + stickFigureOffsetX;
         let currentY = stickFigureGroundY + stickFigureOffsetY;
 
-        if (state.jumpState.isJumping) {
-            const jumpProgress = state.jumpState.progress;
-            const maxJumpHeight = state.manualJumpOverride.isActive ? state.manualJumpHeight : currentSegment.hurdleHeight * JUMP_HEIGHT_RATIO;
+        if (gameState.jumpState.isJumping) {
+            const jumpProgress = gameState.jumpState.progress;
+            const maxJumpHeight = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentSegment.hurdleHeight * JUMP_HEIGHT_RATIO;
             const jumpOffset = -4 * maxJumpHeight * (jumpProgress - jumpProgress * jumpProgress);
             currentY += jumpOffset;
         }
 
-        drawStickFigure(currentX, currentY, state.jumpState, groundAngleRad);
+        drawStickFigure(currentX, currentY, gameState.jumpState, groundAngleRad);
         drawFireSpinner(currentX, currentY);
 
-        if (state.jumpState.isFieryGroundPound && !state.jumpState.groundPoundEffectTriggered) {
+        if (gameState.jumpState.isFieryGroundPound && !gameState.jumpState.groundPoundEffectTriggered) {
             createFireExplosion(currentX, currentY + STICK_FIGURE_TOTAL_HEIGHT / 2);
-            state.jumpState.groundPoundEffectTriggered = true;
+            gameState.jumpState.groundPoundEffectTriggered = true;
         }
 
-        if (state.isFireMageActive) {
+        if (gameState.isFireMageActive) {
             ctx.save();
             ctx.beginPath();
             ctx.arc(currentX, currentY - STICK_FIGURE_TOTAL_HEIGHT / 2, STICK_FIGURE_TOTAL_HEIGHT * 0.8, 0, Math.PI * 2, false);
@@ -213,15 +213,15 @@ export function draw() {
             ctx.restore();
         }
 
-        state.incineratingObstacles.forEach(obstacle => drawIncineration(obstacle, groundAngleRad));
-        state.ignitedObstacles.forEach(obstacle => drawIgnitedObstacle(obstacle, groundAngleRad));
-        state.vanishingObstacles.forEach(obstacle => drawVanishingObstacle(obstacle, groundAngleRad));
+        gameState.incineratingObstacles.forEach(obstacle => drawIncineration(obstacle, groundAngleRad));
+        gameState.ignitedObstacles.forEach(obstacle => drawIgnitedObstacle(obstacle, groundAngleRad));
+        gameState.vanishingObstacles.forEach(obstacle => drawVanishingObstacle(obstacle, groundAngleRad));
 
-        for (let i = state.flippingObstacles.length - 1; i >= 0; i--) {
-            const obstacle = state.flippingObstacles[i];
+        for (let i = gameState.flippingObstacles.length - 1; i >= 0; i--) {
+            const obstacle = gameState.flippingObstacles[i];
             const elapsed = performance.now() - obstacle.startTime;
             obstacle.animationProgress = Math.min(1, elapsed / 1000);
-            if (obstacle.animationProgress >= 1) state.flippingObstacles.splice(i, 1);
+            if (obstacle.animationProgress >= 1) gameState.flippingObstacles.splice(i, 1);
             else drawFlipAndCrumble(obstacle, groundAngleRad);
         }
     }
@@ -230,24 +230,24 @@ export function draw() {
     drawMoneyCounter();
     drawGameCounters();
     drawEnergyBar();
-    if (state.daysCounter) drawDaysCounter();
+    if (gameState.daysCounter) drawDaysCounter();
 
-    if (state.isColliding && state.collisionDuration > 0) {
-        const fadeProgress = state.collisionDuration / COLLISION_DURATION_MS;
+    if (gameState.isColliding && gameState.collisionDuration > 0) {
+        const fadeProgress = gameState.collisionDuration / COLLISION_DURATION_MS;
         ctx.save();
         ctx.fillStyle = `rgba(255, 0, 0, ${fadeProgress * 0.4})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.restore();
     }
 
-    if (state.screenFlash.opacity > 0) {
+    if (gameState.screenFlash.opacity > 0) {
         ctx.save();
-        ctx.fillStyle = `rgba(255, 165, 0, ${state.screenFlash.opacity})`;
+        ctx.fillStyle = `rgba(255, 165, 0, ${gameState.screenFlash.opacity})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.restore();
     }
 
-    if (!state.gameRunning && isInitialLoad) drawTipsOverlay();
-    if (state.isPaused) drawPausedOverlay();
-    if (state.currentSegmentIndex >= state.raceSegments.length && !state.isGameOverSequence) return;
+    if (!gameState.gameRunning && isInitialLoad) drawTipsOverlay();
+    if (gameState.isPaused) drawPausedOverlay();
+    if (gameState.currentSegmentIndex >= gameState.raceSegments.length && !gameState.isGameOverSequence) return;
 }

@@ -1,4 +1,4 @@
-import state from './state.js';
+import { gameState, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, resetStreaks, incrementConsecutiveGroundPounds, incrementTotalGroundPoundCollisions, setCurrentAccelerator, setOnScreenCustomEvent } from './state-manager.js';
 import {
     GROUND_Y,
     STICK_FIGURE_TOTAL_HEIGHT,
@@ -13,9 +13,9 @@ import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
 
 export function checkCollision(runnerY, angleRad) {
-    if (!state.currentObstacle || state.currentObstacle.hasBeenHit || state.isColliding) return false;
+    if (!gameState.currentObstacle || gameState.currentObstacle.hasBeenHit || gameState.isColliding) return false;
 
-    const obstacleX = state.currentObstacle.x;
+    const obstacleX = gameState.currentObstacle.x;
     const runnerX = STICK_FIGURE_FIXED_X;
 
     const groundAtObstacleY = GROUND_Y - obstacleX * Math.tan(angleRad);
@@ -23,60 +23,60 @@ export function checkCollision(runnerY, angleRad) {
     const obstacleTopY = groundAtObstacleY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
     const horizontalDistance = Math.abs(obstacleX - runnerX);
-    if (horizontalDistance > state.COLLISION_RANGE_X) return false;
+    if (horizontalDistance > gameState.COLLISION_RANGE_X) return false;
 
     const minClearanceY = obstacleTopY - STICK_FIGURE_TOTAL_HEIGHT + 5;
 
-    const runnerIsJumpingClear = state.jumpState.isJumping && (runnerY < minClearanceY);
+    const runnerIsJumpingClear = gameState.jumpState.isJumping && (runnerY < minClearanceY);
 
-    if (horizontalDistance < state.COLLISION_RANGE_X) {
+    if (horizontalDistance < gameState.COLLISION_RANGE_X) {
         // Priority 1: Check for active Firestorm first, as it overrides all other collision types.
-        if (state.isFirestormActive) {
-            state.incineratingObstacles.push({
-                ...state.currentObstacle,
+        if (gameState.isFirestormActive) {
+            addIncineratingObstacle({
+                ...gameState.currentObstacle,
                 animationProgress: 0,
                 startTime: performance.now()
             });
-            state.currentObstacle = null;
+            setCurrentObstacle(null);
             playAnimationSound('incinerate');
-            state.playerStats.obstaclesIncinerated++;
-            state.playerStats.consecutiveIncinerations++;
-            state.playerStats.consecutiveGroundPounds = 0; // Reset streak
+            incrementObstaclesIncinerated();
+            incrementConsecutiveIncinerations();
+            resetStreaks(); // Reset streak
             console.log("-> FIRESTORM V2: Obstacle incinerated by collision!");
             return false; // No penalty
         }
 
         // Priority 2: Check for destructive jump moves.
-        if (state.jumpState.isFireSpinner) {
-            state.incineratingObstacles.push({
-                ...state.currentObstacle,
+        if (gameState.jumpState.isFireSpinner) {
+            addIncineratingObstacle({
+                ...gameState.currentObstacle,
                 animationProgress: 0,
                 startTime: performance.now()
             });
-            state.currentObstacle = null;
+            setCurrentObstacle(null);
             playAnimationSound('fireball');
-            state.playerStats.obstaclesIncinerated++;
-            state.playerStats.consecutiveIncinerations++;
-            if (state.playerStats.consecutiveGroundPounds > 0) {
-                console.log(`[DEBUG] Streak RESET by Fire Spinner. Was: ${state.playerStats.consecutiveGroundPounds}`);
-                state.playerStats.consecutiveGroundPounds = 0; // Reset streak
+            incrementObstaclesIncinerated();
+            incrementConsecutiveIncinerations();
+            if (gameState.playerStats.consecutiveGroundPounds > 0) {
+                console.log(`[DEBUG] Streak RESET by Fire Spinner. Was: ${gameState.playerStats.consecutiveGroundPounds}`);
+                resetStreaks(); // Reset streak
             }
             console.log("-> FIRE SPINNER: Obstacle incinerated!");
             return false; // No penalty
         }
-        if (state.jumpState.isGroundPound && state.jumpState.progress > 0.5) { // Shatter on the way down
-            drawing.createShatterEffect(state.currentObstacle.x, obstacleTopY, state.currentObstacle.emoji);
-            state.currentObstacle = null;
+        if (gameState.jumpState.isGroundPound && gameState.jumpState.progress > 0.5) { // Shatter on the way down
+            drawing.createShatterEffect(gameState.currentObstacle.x, obstacleTopY, gameState.currentObstacle.emoji);
+            setCurrentObstacle(null);
             playAnimationSound('shatter');
-            state.playerStats.obstaclesIncinerated++;
-            state.playerStats.consecutiveIncinerations++;
+            incrementObstaclesIncinerated();
+            incrementConsecutiveIncinerations();
             
             // Check for unlocks BEFORE incrementing, so we unlock based on the NEXT count
-            checkForNewUnlocks(state.playerStats); 
+            checkForNewUnlocks(gameState.playerStats); 
             
-            state.playerStats.consecutiveGroundPounds++; // Increment consecutive Ground Pounds
-            state.playerStats.totalGroundPoundCollisions++;
-            console.log(`[DEBUG] Streak INCREMENTED to: ${state.playerStats.consecutiveGroundPounds}`);
+            incrementConsecutiveGroundPounds(); // Increment consecutive Ground Pounds
+            incrementTotalGroundPoundCollisions();
+            console.log(`[DEBUG] Streak INCREMENTED to: ${gameState.playerStats.consecutiveGroundPounds}`);
             savePlayerStats(); // Save stats immediately to persist the streak
             return false; // No penalty
         }
@@ -84,11 +84,11 @@ export function checkCollision(runnerY, angleRad) {
         // Priority 3: If no destructive moves are active, check for a standard collision.
         const collisionTolerance = 5;
         if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
-            if (state.playerStats.consecutiveGroundPounds > 0) {
-                console.log(`[DEBUG] Streak RESET by standard collision. Was: ${state.playerStats.consecutiveGroundPounds}`);
-                state.playerStats.consecutiveGroundPounds = 0; // Reset on standard collision
+            if (gameState.playerStats.consecutiveGroundPounds > 0) {
+                console.log(`[DEBUG] Streak RESET by standard collision. Was: ${gameState.playerStats.consecutiveGroundPounds}`);
+                resetStreaks(); // Reset on standard collision
             }
-            state.playerStats.consecutiveIncinerations = 0; // Reset incineration streak
+            resetStreaks(); // Reset incineration streak
             return true; // This is a standard, damaging hit.
         }
     }
@@ -96,12 +96,12 @@ export function checkCollision(runnerY, angleRad) {
 }
 
 export function checkAcceleratorCollision(runnerY, angleRad) {
-    if (!state.currentAccelerator || state.currentAccelerator.hasBeenCollected || state.isAccelerating) return false;
+    if (!gameState.currentAccelerator || gameState.currentAccelerator.hasBeenCollected || gameState.isAccelerating) return false;
 
-    const accelX = state.currentAccelerator.x;
+    const accelX = gameState.currentAccelerator.x;
     const runnerX = STICK_FIGURE_FIXED_X;
 
-    const COLLECTION_RANGE_X = state.COLLISION_RANGE_X + 10;
+    const COLLECTION_RANGE_X = gameState.COLLISION_RANGE_X + 10;
     const horizontalDistance = Math.abs(accelX - runnerX);
     if (horizontalDistance > COLLECTION_RANGE_X) return false;
 
@@ -111,7 +111,7 @@ export function checkAcceleratorCollision(runnerY, angleRad) {
 
     if (horizontalDistance < COLLECTION_RANGE_X) {
         if (runnerBottomY >= accelTopY) {
-            state.currentAccelerator.hasBeenCollected = true;
+            setCurrentAccelerator({ ...gameState.currentAccelerator, hasBeenCollected: true });
             return true;
         }
     }
@@ -119,12 +119,12 @@ export function checkAcceleratorCollision(runnerY, angleRad) {
 }
 
 export function checkProximityEventCollection(runnerY, angleRad) {
-    if (!state.onScreenCustomEvent || state.onScreenCustomEvent.hasBeenCollected) return false;
+    if (!gameState.onScreenCustomEvent || gameState.onScreenCustomEvent.hasBeenCollected) return false;
 
-    const eventX = state.onScreenCustomEvent.x;
+    const eventX = gameState.onScreenCustomEvent.x;
     const runnerX = STICK_FIGURE_FIXED_X;
 
-    const COLLECTION_RANGE_X = state.COLLISION_RANGE_X + 10;
+    const COLLECTION_RANGE_X = gameState.COLLISION_RANGE_X + 10;
     const horizontalDistance = Math.abs(eventX - runnerX);
     if (horizontalDistance > COLLECTION_RANGE_X) return false;
 
@@ -134,7 +134,7 @@ export function checkProximityEventCollection(runnerY, angleRad) {
 
     if (horizontalDistance < COLLECTION_RANGE_X) {
         if (runnerBottomY >= eventTopY) {
-            state.onScreenCustomEvent.hasBeenCollected = true;
+            setOnScreenCustomEvent({ ...gameState.onScreenCustomEvent, hasBeenCollected: true });
             return true;
         }
     }

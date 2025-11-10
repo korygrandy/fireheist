@@ -58,6 +58,7 @@ import { updateControlPanelState, exitFullScreenIfActive, showSandboxControls } 
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
 import { personas } from '../personas.js';
+import { setPaused, gameState, setGameOverSequence, setVictory, setGameOverSequenceStartTime, setLastTime, setFirestormActive, setFirestormEndTime, setFirestormDrainingEnergy, setFirestormDrainEndTime, setFireSpinnerDrainingEnergy, setFireSpinnerDrainEndTime, setMageSpinnerActive, setMageSpinnerEndTime, setFireMageOnCooldown, setFireMageActive, setFireMageEndTime, setMageSpinnerFireballTimer, incrementMageSpinnerFireballsSpawned, setMageSpinnerOnCooldown, setFieryHoudiniOnCooldown, setManualJumpOverrideActive, setJumpProgress, setJumping, setSegmentProgress, setBackgroundOffset, setDaysElapsedTotal, setOnScreenCustomEvent, setCurrentObstacle, addIgnitedObstacle, removeIgnitedObstacle, addVanishingObstacle, removeVanishingObstacle, addFireball, removeFireball, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, incrementConsecutiveGroundPounds, incrementTotalGroundPoundCollisions, setColliding, setCollisionDuration, setCurrentAccelerator, setAccelerating, setAccelerationDuration, setDecelerating, setDecelerationDuration, setGameSpeedMultiplier, setScreenFlash, setStickFigureBurst, setTurboBoostFrame, setTurboBoostLastFrameTime, addCashBag, removeCashBag, setDaysCounter, setAccumulatedCash, setHurdle, setHurdleDuration, setSpecialMove, setSpecialMoveDuration, setPowerStomp, setPowerStompDuration, setDive, setDiveDuration, setCorkscrewSpin, setCorkscrewSpinDuration, setScissorKick, setScissorKickDuration, setPhaseDash, setPhaseDashDuration, setHover, setHoverDuration, setGroundPound, setGroundPoundDuration, setGroundPoundEffectTriggered, setCartoonScramble, setCartoonScrambleDuration, setMoonwalking, setMoonwalkDuration, setShockwave, setShockwaveDuration, setBackflip, setBackflipDuration, setFrontflip, setFrontflipDuration, setHoudini, setHoudiniDuration, setHoudiniPhase, setFieryHoudini, setFieryHoudiniDuration, setFieryHoudiniPhase, setFireSpinner, setFireSpinnerDuration, setFireSpinnerOnCooldown, incrementFrameCount, setPlayerEnergy, setGameRunning, r... [truncated]
 import state from './state.js';
 import * as drawing from './drawing.js';
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from '../ui-modules/daily-challenge-ui.js';
@@ -70,10 +71,10 @@ import { applySpeedEffect } from './effects.js';
 import { updateHighScore } from './score.js';
 
 export function togglePauseGame() {
-    if (!state.gameRunning) return;
-    state.isPaused = !state.isPaused;
+    if (!gameState.gameRunning) return;
+    setPaused(!gameState.isPaused);
     const startButton = document.getElementById('startButton');
-    if (state.isPaused) {
+    if (gameState.isPaused) {
         Tone.Transport.pause();
         startButton.textContent = "Unpause";
         console.log("-> GAME PAUSED");
@@ -81,31 +82,31 @@ export function togglePauseGame() {
         Tone.Transport.start();
         startButton.textContent = "Pause";
         console.log("-> GAME RESUMED");
-        state.lastTime = performance.now();
+        gameState.lastTime = performance.now();
     }
-    updateControlPanelState(state.gameRunning, state.isPaused);
+    updateControlPanelState(gameState.gameRunning, gameState.isPaused);
     drawing.draw();
 }
 
 export function animate(timestamp) {
-    if (!state.gameRunning && !state.isGameOverSequence) return;
+    if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
 
-    if (state.isPaused) {
+    if (gameState.isPaused) {
         requestAnimationFrame(animate);
         return;
     }
 
-    if (state.currentSegmentIndex >= state.raceSegments.length) {
-        if (!state.isGameOverSequence) {
-            state.isVictory = (state.hitsCounter === 0);
-            if (state.isVictory) {
+    if (gameState.currentSegmentIndex >= gameState.raceSegments.length) {
+        if (!gameState.isGameOverSequence) {
+            setVictory(gameState.hitsCounter === 0);
+            if (gameState.isVictory) {
                 playWinnerSound();
                 // Track flawless run only if not using custom persona
-                if (state.selectedPersona !== 'custom') {
-                    if (!state.playerStats.flawlessRuns) {
-                        state.playerStats.flawlessRuns = {};
+                if (gameState.selectedPersona !== 'custom') {
+                    if (!gameState.playerStats.flawlessRuns) {
+                        gameState.playerStats.flawlessRuns = {};
                     }
-                    state.playerStats.flawlessRuns[state.currentSkillLevel] = true;
+                    gameState.playerStats.flawlessRuns[gameState.currentSkillLevel] = true;
                     savePlayerStats(); // Save stats on flawless victory
                 } else {
                     console.log("-> GAME OVER: Flawless run not recorded for Custom Persona.");
@@ -113,40 +114,40 @@ export function animate(timestamp) {
             } else {
                 playLoserSound();
             }
-            state.isGameOverSequence = true;
-            state.gameOverSequenceStartTime = timestamp;
-            console.log(`-> GAME OVER: Starting sequence. Victory: ${state.isVictory}`);
-            state.gameRunning = false;
+            setGameOverSequence(true);
+            setGameOverSequenceStartTime(timestamp);
+            console.log(`-> GAME OVER: Starting sequence. Victory: ${gameState.isVictory}`);
+            setGameRunning(false);
             updateHighScore();
             savePlayerStats(); // Also save stats on a regular loss
-            checkForNewUnlocks(state.playerStats); // Check for new unlocks
+            checkForNewUnlocks(gameState.playerStats); // Check for new unlocks
         }
 
         drawing.draw();
-        drawing.drawVictoryOverlay(timestamp - state.gameOverSequenceStartTime);
+        drawing.drawVictoryOverlay(timestamp - gameState.gameOverSequenceStartTime);
 
-        if (timestamp - state.gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
+        if (timestamp - gameState.gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
             stopGame(false);
-            state.isGameOverSequence = false;
+            setGameOverSequence(false);
             return;
         }
 
-        state.lastTime = timestamp;
+        setLastTime(timestamp);
         requestAnimationFrame(animate);
         return;
     }
 
-    const currentHurdle = state.raceSegments[state.currentSegmentIndex];
+    const currentHurdle = gameState.raceSegments[gameState.currentSegmentIndex];
     const angleRad = currentHurdle.angleRad;
 
-    if (!state.lastTime) {
-        state.lastTime = timestamp;
-        console.log(`-- ANIME START -- Segment ${state.currentSegmentIndex} initialized.`);
+    if (!gameState.lastTime) {
+        setLastTime(timestamp);
+        console.log(`-- ANIME START -- Segment ${gameState.currentSegmentIndex} initialized.`);
         requestAnimationFrame(animate);
         return;
     }
 
-    let deltaTime = timestamp - state.lastTime;
+    let deltaTime = timestamp - gameState.lastTime;
     if (deltaTime > 100) {
         deltaTime = 100;
     }
@@ -154,131 +155,131 @@ export function animate(timestamp) {
     updateEnvironmentalEffects(deltaTime);
 
     // Handle continuous energy drain for Firestorm and Fire Spinner
-    if (state.isFirestormDrainingEnergy) {
-        const remainingTime = state.firestormDrainEndTime - Date.now();
+    if (gameState.isFirestormDrainingEnergy) {
+        const remainingTime = gameState.firestormDrainEndTime - Date.now();
         if (remainingTime <= 0) {
-            state.playerEnergy = 0;
-            state.isFirestormDrainingEnergy = false;
+            setPlayerEnergy(0);
+            setFirestormDrainingEnergy(false);
         } else {
-            const energyToDrain = state.playerEnergy;
+            const energyToDrain = gameState.playerEnergy;
             const drainRate = energyToDrain / remainingTime;
-            state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
+            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
         }
-    } else if (state.isFireSpinnerDrainingEnergy) {
-        const remainingTime = state.fireSpinnerDrainEndTime - Date.now();
+    } else if (gameState.isFireSpinnerDrainingEnergy) {
+        const remainingTime = gameState.fireSpinnerDrainEndTime - Date.now();
         if (remainingTime <= 0) {
-            state.playerEnergy = 0;
-            state.isFireSpinnerDrainingEnergy = false;
+            setPlayerEnergy(0);
+            setFireSpinnerDrainingEnergy(false);
         } else {
-            const energyToDrain = state.playerEnergy;
+            const energyToDrain = gameState.playerEnergy;
             const drainRate = energyToDrain / remainingTime;
-            state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
+            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
         }
-    } else if (state.isMageSpinnerActive) { // Mage Spinner drains energy over its duration
-        const remainingTime = state.mageSpinnerEndTime - Date.now();
+    } else if (gameState.isMageSpinnerActive) { // Mage Spinner drains energy over its duration
+        const remainingTime = gameState.mageSpinnerEndTime - Date.now();
         if (remainingTime <= 0) {
-            state.playerEnergy = 0; // Ensure energy is fully drained if skill ends
+            setPlayerEnergy(0); // Ensure energy is fully drained if skill ends
         } else {
             // Calculate drain rate to deplete energy over the skill's duration
             const energyToDrain = MAGE_SPINNER_ENERGY_COST; // Total cost of the skill
             const drainRate = energyToDrain / MAGE_SPINNER_DURATION_MS; // Energy per millisecond
-            state.playerEnergy = Math.max(0, state.playerEnergy - (drainRate * deltaTime));
+            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
         }
-    } else if (state.jumpState.isHover) { // Hover drains energy continuously
+    } else if (gameState.jumpState.isHover) { // Hover drains energy continuously
         const energyDrain = (ENERGY_SETTINGS.HOVER_DRAIN_RATE * deltaTime) / 1000;
-        state.playerEnergy = Math.max(0, state.playerEnergy - energyDrain);
+        setPlayerEnergy(Math.max(0, gameState.playerEnergy - energyDrain));
     } else {
         // Passive energy drain based on skill level
-        const energyDrain = (state.passiveDrainRate * deltaTime) / 1000;
-        state.playerEnergy = Math.max(0, state.playerEnergy - energyDrain);
+        const energyDrain = (gameState.passiveDrainRate * deltaTime) / 1000;
+        setPlayerEnergy(Math.max(0, gameState.playerEnergy - energyDrain));
     }
 
     // Check and update Fire Mage mode duration
-    if (state.isFireMageActive && Date.now() > state.fireMageEndTime) {
-        state.isFireMageActive = false;
+    if (gameState.isFireMageActive && Date.now() > gameState.fireMageEndTime) {
+        setFireMageActive(false);
         console.log("-> Fire Mage mode ended.");
     }
 
     // Check and update Fire Mage cooldown
-    if (state.isFireMageOnCooldown) {
+    if (gameState.isFireMageOnCooldown) {
         const now = Date.now();
-        if (now - state.fireMageLastActivationTime > FIRE_MAGE_COOLDOWN_MS) {
-            state.isFireMageOnCooldown = false;
+        if (now - gameState.fireMageLastActivationTime > FIRE_MAGE_COOLDOWN_MS) {
+            setFireMageOnCooldown(false);
             console.log("-> Fire Mage: Cooldown finished. Ready.");
         }
     }
 
     // Check and update Mage Spinner mode duration
-    if (state.isMageSpinnerActive) {
+    if (gameState.isMageSpinnerActive) {
         const now = Date.now();
-        if (now > state.mageSpinnerEndTime) {
-            state.isMageSpinnerActive = false;
+        if (now > gameState.mageSpinnerEndTime) {
+            setMageSpinnerActive(false);
             console.log("-> Mage Spinner mode ended.");
         } else {
             // Handle fireball spawning during Mage Spinner active time
-            state.mageSpinnerFireballTimer -= deltaTime;
-            if (state.mageSpinnerFireballTimer <= 0 && state.mageSpinnerFireballsSpawned < MAGE_SPINNER_FIREBALL_COUNT) {
+            setMageSpinnerFireballTimer(gameState.mageSpinnerFireballTimer - deltaTime);
+            if (gameState.mageSpinnerFireballTimer <= 0 && gameState.mageSpinnerFireballsSpawned < MAGE_SPINNER_FIREBALL_COUNT) {
                 // Find the closest obstacle to target
-                const targetObstacle = state.currentObstacle || state.ignitedObstacles[0] || state.vanishingObstacles[0];
+                const targetObstacle = gameState.currentObstacle || gameState.ignitedObstacles[0] || gameState.vanishingObstacles[0];
                 if (targetObstacle) {
-                    castMageSpinnerFireball(state, targetObstacle); // Pass the target obstacle
-                    state.mageSpinnerFireballsSpawned++;
-                    state.mageSpinnerFireballTimer = MAGE_SPINNER_FIREBALL_INTERVAL_MS; // Reset timer
+                    castMageSpinnerFireball(gameState, targetObstacle); // Pass the target obstacle
+                    incrementMageSpinnerFireballsSpawned();
+                    setMageSpinnerFireballTimer(MAGE_SPINNER_FIREBALL_INTERVAL_MS); // Reset timer
                 }
             }
         }
     }
 
     // Check and update Mage Spinner cooldown
-    if (state.isMageSpinnerOnCooldown) {
+    if (gameState.isMageSpinnerOnCooldown) {
         const now = Date.now();
-        if (now - state.mageSpinnerLastActivationTime > MAGE_SPINNER_COOLDOWN_MS) {
-            state.isMageSpinnerOnCooldown = false;
+        if (now - gameState.mageSpinnerLastActivationTime > MAGE_SPINNER_COOLDOWN_MS) {
+            setMageSpinnerOnCooldown(false);
             console.log("-> Mage Spinner: Cooldown finished. Ready.");
         }
     }
 
     // Check and update Fiery Houdini cooldown
-    if (state.isFieryHoudiniOnCooldown) {
+    if (gameState.isFieryHoudiniOnCooldown) {
         const now = Date.now();
-        if (now - state.fieryHoudiniLastActivationTime > FIERY_HOUDINI_COOLDOWN_MS) {
-            state.isFieryHoudiniOnCooldown = false;
+        if (now - gameState.fieryHoudiniLastActivationTime > FIERY_HOUDINI_COOLDOWN_MS) {
+            setFieryHoudiniOnCooldown(false);
             console.log("-> Fiery Houdini: Cooldown finished. Ready.");
         }
     }
 
-    const targetSegmentDuration = currentHurdle.visualDurationMs / state.intendedSpeedMultiplier;
+    const targetSegmentDuration = currentHurdle.visualDurationMs / gameState.intendedSpeedMultiplier;
 
-    if (state.manualJumpOverride.isActive) {
-        const elapsed = Date.now() - state.manualJumpOverride.startTime;
-        state.jumpState.progress = elapsed / state.manualJumpOverride.duration;
+    if (gameState.manualJumpOverride.isActive) {
+        const elapsed = Date.now() - gameState.manualJumpOverride.startTime;
+        setJumpProgress(elapsed / gameState.manualJumpOverride.duration);
 
-        if (state.jumpState.progress >= 1) {
-            state.jumpState.isJumping = false;
-            state.manualJumpOverride.isActive = false;
-            state.jumpState.progress = 0;
+        if (gameState.jumpState.progress >= 1) {
+            setJumping(false);
+            setManualJumpOverrideActive(false);
+            setJumpProgress(0);
         }
     } else {
-        if (state.isAutoHurdleEnabled && state.segmentProgress >= AUTO_JUMP_START_PROGRESS && state.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
-            state.jumpState.isJumping = true;
-            state.jumpState.progress = (state.segmentProgress - AUTO_JUMP_START_PROGRESS) / AUTO_JUMP_DURATION;
+        if (gameState.isAutoHurdleEnabled && gameState.segmentProgress >= AUTO_JUMP_START_PROGRESS && gameState.segmentProgress <= AUTO_JUMP_START_PROGRESS + AUTO_JUMP_DURATION) {
+            setJumping(true);
+            setJumpProgress((gameState.segmentProgress - AUTO_JUMP_START_PROGRESS) / AUTO_JUMP_DURATION);
         } else {
-            state.jumpState.isJumping = false;
-            state.jumpState.progress = 0;
+            setJumping(false);
+            setJumpProgress(0);
         }
     }
 
-    state.segmentProgress += deltaTime / targetSegmentDuration;
-    state.backgroundOffset = (HURDLE_FIXED_START_DISTANCE) * state.segmentProgress;
+    setSegmentProgress(gameState.segmentProgress + (deltaTime / targetSegmentDuration));
+    setBackgroundOffset((HURDLE_FIXED_START_DISTANCE) * gameState.segmentProgress);
 
     const totalDaysForCurrentSegment = currentHurdle.durationDays;
-    const progressInDays = totalDaysForCurrentSegment * Math.min(1, state.segmentProgress);
-    state.daysElapsedTotal = state.daysAccumulatedAtSegmentStart + progressInDays;
+    const progressInDays = totalDaysForCurrentSegment * Math.min(1, gameState.segmentProgress);
+    setDaysElapsedTotal(gameState.daysAccumulatedAtSegmentStart + progressInDays);
 
-    const daysCheck = state.daysElapsedTotal;
+    const daysCheck = gameState.daysElapsedTotal;
 
-    if (!state.onScreenCustomEvent) {
-        const nextEventToTrigger = state.activeCustomEvents.find(event => !event.wasTriggered && !event.wasSpawned);
+    if (!gameState.onScreenCustomEvent) {
+        const nextEventToTrigger = gameState.activeCustomEvents.find(event => !event.wasTriggered && !event.wasSpawned);
         if (nextEventToTrigger) {
             const daysPerCanvas = totalDaysForCurrentSegment;
             const proximityDays = daysPerCanvas * (EVENT_PROXIMITY_VISUAL_STEPS * (MIN_VISUAL_DURATION_MS / MAX_VISUAL_DURATION_MS));
@@ -289,9 +290,9 @@ export function animate(timestamp) {
         }
     }
 
-    state.activeCustomEvents.forEach(event => {
+    gameState.activeCustomEvents.forEach(event => {
         if (!event.wasTriggered && daysCheck >= event.daysSinceStart) {
-            if (!state.onScreenCustomEvent || state.onScreenCustomEvent.daysSinceStart !== event.daysSinceStart) {
+            if (!gameState.onScreenCustomEvent || gameState.onScreenCustomEvent.daysSinceStart !== event.daysSinceStart) {
                 console.info(`-> CUSTOM EVENT AUTO-TRIGGERED: Date: ${event.date}. Object missed or spawned late. Applying effect directly.`);
                 event.wasTriggered = true;
                 event.isActive = true;
@@ -303,25 +304,25 @@ export function animate(timestamp) {
     const stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentHurdle.angleRad);
     let runnerY = stickFigureGroundY - STICK_FIGURE_TOTAL_HEIGHT;
 
-    if (state.jumpState.isJumping) {
-        let maxJumpHeightForSegment = state.manualJumpOverride.isActive ? state.manualJumpHeight : currentHurdle.hurdleHeight * JUMP_HEIGHT_RATIO;
-        const jumpProgress = state.jumpState.progress;
+    if (gameState.jumpState.isJumping) {
+        let maxJumpHeightForSegment = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentHurdle.hurdleHeight * JUMP_HEIGHT_RATIO;
+        const jumpProgress = gameState.jumpState.progress;
         const jumpOffset = -4 * maxJumpHeightForSegment * (jumpProgress - jumpProgress * jumpProgress);
         runnerY += jumpOffset;
     }
 
     // Update positions of all moving objects first
-    const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * state.gameSpeedMultiplier;
-    if (state.currentObstacle) state.currentObstacle.x -= objectMovementDelta;
-    if (state.currentAccelerator) state.currentAccelerator.x -= objectMovementDelta;
-    if (state.onScreenCustomEvent) state.onScreenCustomEvent.x -= objectMovementDelta;
-    state.ignitedObstacles.forEach(ob => {
+    const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * gameState.gameSpeedMultiplier;
+    if (gameState.currentObstacle) setCurrentObstacle({ ...gameState.currentObstacle, x: gameState.currentObstacle.x - objectMovementDelta });
+    if (gameState.currentAccelerator) setCurrentAccelerator({ ...gameState.currentAccelerator, x: gameState.currentAccelerator.x - objectMovementDelta });
+    if (gameState.onScreenCustomEvent) setOnScreenCustomEvent({ ...gameState.onScreenCustomEvent, x: gameState.onScreenCustomEvent.x - objectMovementDelta });
+    gameState.ignitedObstacles.forEach(ob => {
         ob.x -= objectMovementDelta * (ob.speedMultiplier || 1);
     });
 
     // Update and check active fireballs
-    for (let i = state.activeFireballs.length - 1; i >= 0; i--) {
-        const fireball = state.activeFireballs[i];
+    for (let i = gameState.activeFireballs.length - 1; i >= 0; i--) {
+        const fireball = gameState.activeFireballs[i];
         if (fireball.isMageSpinnerFireball) {
             fireball.x += fireball.velocityX * deltaTime;
             fireball.y += fireball.velocityY * deltaTime;
@@ -330,8 +331,8 @@ export function animate(timestamp) {
         }
 
         // Check for collision with current obstacle
-        if (state.currentObstacle && !state.currentObstacle.hasBeenHit) {
-            const obstacleX = state.currentObstacle.x;
+        if (gameState.currentObstacle && !gameState.currentObstacle.hasBeenHit) {
+            const obstacleX = gameState.currentObstacle.x;
             const obstacleY = GROUND_Y - obstacleX * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
 
             // Simple AABB collision detection
@@ -344,62 +345,62 @@ export function animate(timestamp) {
                 const destructionType = Math.floor(Math.random() * 3);
                 switch (destructionType) {
                     case 0: // Incinerate
-                        state.incineratingObstacles.push({
-                            ...state.currentObstacle,
+                        addIncineratingObstacle({
+                            ...gameState.currentObstacle,
                             animationProgress: 0,
                             startTime: performance.now()
                         });
                         playAnimationSound('fireball');
                         break;
                     case 1: // Shatter
-                        drawing.createShatterEffect(state.currentObstacle.x, obstacleY, state.currentObstacle.emoji);
+                        drawing.createShatterEffect(gameState.currentObstacle.x, obstacleY, gameState.currentObstacle.emoji);
                         playAnimationSound('shatter');
                         break;
                     case 2: // Vanish (Poof)
-                        state.vanishingObstacles.push({
-                            ...state.currentObstacle,
+                        addVanishingObstacle({
+                            ...gameState.currentObstacle,
                             animationProgress: 0,
                             startTime: performance.now()
                         });
-                        drawing.createHoudiniPoof(state.currentObstacle.x, obstacleY);
+                        drawing.createHoudiniPoof(gameState.currentObstacle.x, obstacleY);
                         playAnimationSound('houdini');
                         break;
                 }
 
-                state.currentObstacle = null; // Remove the obstacle from the main track
-                state.playerStats.obstaclesIncinerated++; // Increment stat
-                state.playerStats.consecutiveIncinerations++;
-                state.playerStats.consecutiveGroundPounds = 0; // Reset streak
+                setCurrentObstacle(null); // Remove the obstacle from the main track
+                incrementObstaclesIncinerated(); // Increment stat
+                incrementConsecutiveIncinerations();
+                resetStreaks(); // Reset streak
                 console.log(`-> FIRE MAGE: Obstacle destroyed with type ${destructionType}!`);
-                state.activeFireballs.splice(i, 1); // Remove the fireball
+                removeFireball(i); // Remove the fireball
                 continue; // Move to the next fireball
             }
         }
 
         // Remove fireball if it goes off-screen
         if (fireball.x > canvas.width + fireball.size || fireball.y > canvas.height + fireball.size) {
-            state.activeFireballs.splice(i, 1);
+            removeFireball(i);
         }
     }
 
     // Handle new Firestorm V2
-    if (state.isFirestormActive) {
-        if (Date.now() > state.firestormEndTime) {
-            state.isFirestormActive = false;
+    if (gameState.isFirestormActive) {
+        if (Date.now() > gameState.firestormEndTime) {
+            setFirestormActive(false);
         } else {
             // Robust catch-all: If there's a current obstacle and it's not already ignited, ignite it.
-            if (state.currentObstacle && !state.ignitedObstacles.some(o => o.x === state.currentObstacle.x)) {
+            if (gameState.currentObstacle && !gameState.ignitedObstacles.some(o => o.x === gameState.currentObstacle.x)) {
                 const burnoutDuration = 500 + Math.random() * 1000; // Quicker burnout: 0.5 to 1.5 seconds
-                state.ignitedObstacles.push({
-                    ...state.currentObstacle,
+                addIgnitedObstacle({
+                    ...gameState.currentObstacle,
                     burnoutTime: Date.now() + burnoutDuration,
                     speedMultiplier: 1.2 // 20% faster
                 });
-                state.currentObstacle = null; // Remove from main track
+                setCurrentObstacle(null); // Remove from main track
                 console.log("-> Firestorm: Robust catch-all ignited a stray obstacle.");
             }
 
-            if (state.frameCount % 8 === 0) { // Reduced particle density for performance
+            if (gameState.frameCount % 8 === 0) { // Reduced particle density for performance
                 drawing.createFirestormFlashes(angleRad);
                 drawing.createPlayerEmbers(runnerY);
             }
@@ -407,178 +408,171 @@ export function animate(timestamp) {
     }
 
     // Update and check ignited obstacles
-    for (let i = state.ignitedObstacles.length - 1; i >= 0; i--) {
-        const obstacle = state.ignitedObstacles[i];
+    for (let i = gameState.ignitedObstacles.length - 1; i >= 0; i--) {
+        const obstacle = gameState.ignitedObstacles[i];
         // Phase 2: Incinerate when burnout time is reached
         if (Date.now() > obstacle.burnoutTime) {
-            state.incineratingObstacles.push({
+            addIncineratingObstacle({
                 ...obstacle,
                 animationProgress: 0,
                 startTime: performance.now()
             });
             playAnimationSound('incinerate');
-            state.playerStats.obstaclesIncinerated++; // Increment stat here
-            state.playerStats.consecutiveIncinerations++;
-            state.ignitedObstacles.splice(i, 1);
+            incrementObstaclesIncinerated(); // Increment stat here
+            incrementConsecutiveIncinerations();
+            removeIgnitedObstacle(i);
         } else if (obstacle.x < -OBSTACLE_WIDTH) {
-            state.ignitedObstacles.splice(i, 1);
+            removeIgnitedObstacle(i);
         }
     }
 
-    if (state.frameCount % 60 === 0) { // Check every 60 frames
+    if (gameState.frameCount % 60 === 0) { // Check every 60 frames
         // Independent check for obstacle spawn
-        if (!state.currentObstacle && Math.random() * 100 < state.obstacleFrequencyPercent) {
+        if (!gameState.currentObstacle && Math.random() * 100 < gameState.obstacleFrequencyPercent) {
             spawnObstacle();
         }
 
         // Independent check for accelerator spawn
-        if (state.enableRandomPowerUps && !state.currentAccelerator && Math.random() * 100 < state.acceleratorFrequencyPercent) {
+        if (gameState.enableRandomPowerUps && !gameState.currentAccelerator && Math.random() * 100 < gameState.acceleratorFrequencyPercent) {
             spawnAccelerator();
         }
     }
 
-    if (state.currentObstacle) {
+    if (gameState.currentObstacle) {
         if (checkCollision(runnerY, angleRad)) {
-            if (!state.isColliding) {
-                state.hitsCounter++;
-                state.isColliding = true;
-                state.collisionDuration = COLLISION_DURATION_MS;
+            if (!gameState.isColliding) {
+                incrementHits();
+                setColliding(true);
+                setCollisionDuration(COLLISION_DURATION_MS);
                 playCollisionSound();
                 playQuackSound();
-                state.playerEnergy *= 0.5; // Deplete energy by 50% of current level
-                console.warn(`-> COLLISION: Hit obstacle! Total hits: ${state.hitsCounter}. Speed penalty applied.`);
+                setPlayerEnergy(gameState.playerEnergy * 0.5); // Deplete energy by 50% of current level
+                console.warn(`-> COLLISION: Hit obstacle! Total hits: ${gameState.hitsCounter}. Speed penalty applied.`);
             }
-            state.currentObstacle.hasBeenHit = true;
-            state.isAccelerating = false;
-            state.accelerationDuration = 0;
-            state.isDecelerating = false;
-            state.decelerationDuration = 0;
-            state.activeCustomEvents.forEach(e => e.isActive = false);
+            setCurrentObstacle({ ...gameState.currentObstacle, hasBeenHit: true });
+            setAccelerating(false);
+            setAccelerationDuration(0);
+            setDecelerating(false);
+            setDecelerationDuration(0);
+            gameState.activeCustomEvents.forEach(e => e.isActive = false);
         }
-        if (state.currentObstacle && state.currentObstacle.x < -OBSTACLE_WIDTH) {
-            state.playerStats.consecutiveGroundPounds = 0; // Reset if obstacle is missed
-            state.playerStats.consecutiveIncinerations = 0;
+        if (gameState.currentObstacle && gameState.currentObstacle.x < -OBSTACLE_WIDTH) {
+            resetStreaks(); // Reset if obstacle is missed
             console.log("-> STREAK RESET: Obstacle missed.");
-            state.currentObstacle = null;
+            setCurrentObstacle(null);
         }
     }
 
-    if (state.currentAccelerator) {
+    if (gameState.currentAccelerator) {
         if (checkAcceleratorCollision(runnerY, angleRad)) {
-            if (!state.isAccelerating && !state.isDecelerating) {
-                state.stickFigureBurst = {...state.stickFigureBurst, active: true, startTime: timestamp, progress: 0};
+            if (!gameState.isAccelerating && !gameState.isDecelerating) {
+                setStickFigureBurst(true, timestamp, 0);
                 applySpeedEffect('ACCELERATOR');
                 playPowerUpSound();
-                if (!state.isFirestormActive && !state.jumpState.isFireSpinner) {
-                    state.playerEnergy = Math.min(state.maxPlayerEnergy, state.playerEnergy + (ENERGY_GAIN_ACCELERATOR * 0.5 * state.energyRegenMultiplier));
+                if (!gameState.isFirestormActive && !gameState.jumpState.isFireSpinner) {
+                    setPlayerEnergy(Math.min(gameState.maxPlayerEnergy, gameState.playerEnergy + (ENERGY_GAIN_ACCELERATOR * 0.5 * gameState.energyRegenMultiplier)));
                 }
             }
         }
-        if (state.currentAccelerator.x < -OBSTACLE_WIDTH) {
-            state.currentAccelerator = null;
+        if (gameState.currentAccelerator.x < -OBSTACLE_WIDTH) {
+            setCurrentAccelerator(null);
         }
     }
 
-    if (state.onScreenCustomEvent) {
+    if (gameState.onScreenCustomEvent) {
         if (checkProximityEventCollection(runnerY, angleRad)) {
-            if (!state.isAccelerating && !state.isDecelerating) {
-                if (state.onScreenCustomEvent.type === 'ACCELERATOR') {
-                    state.stickFigureBurst = {
-                        ...state.stickFigureBurst,
-                        active: true,
-                        startTime: timestamp,
-                        progress: 0
-                    };
-                    state.playerEnergy = Math.min(state.maxPlayerEnergy, state.playerEnergy + (state.maxPlayerEnergy * 0.10));
+            if (!gameState.isAccelerating && !gameState.isDecelerating) {
+                if (gameState.onScreenCustomEvent.type === 'ACCELERATOR') {
+                    setStickFigureBurst(true, timestamp, 0);
+                    setPlayerEnergy(Math.min(gameState.maxPlayerEnergy, gameState.playerEnergy + (gameState.maxPlayerEnergy * 0.10)));
                 }
-                applySpeedEffect(state.onScreenCustomEvent.type);
+                applySpeedEffect(gameState.onScreenCustomEvent.type);
             }
-            const originalEvent = state.activeCustomEvents.find(e => e.daysSinceStart === state.onScreenCustomEvent.daysSinceStart);
+            const originalEvent = gameState.activeCustomEvents.find(e => e.daysSinceStart === gameState.onScreenCustomEvent.daysSinceStart);
             if (originalEvent) {
                 originalEvent.wasTriggered = true;
                 originalEvent.isActive = true;
             }
         }
-        if (state.onScreenCustomEvent.x < -OBSTACLE_WIDTH) {
-            state.onScreenCustomEvent = null;
+        if (gameState.onScreenCustomEvent.x < -OBSTACLE_WIDTH) {
+            setOnScreenCustomEvent(null);
         }
     }
 
     // Update screen flash
-    if (state.screenFlash.opacity > 0) {
-        const elapsed = timestamp - state.screenFlash.startTime;
-        if (elapsed > state.screenFlash.duration) {
-            state.screenFlash.opacity = 0;
+    if (gameState.screenFlash.opacity > 0) {
+        const elapsed = timestamp - gameState.screenFlash.startTime;
+        if (elapsed > gameState.screenFlash.duration) {
+            setScreenFlash(0, gameState.screenFlash.duration, gameState.screenFlash.startTime);
         } else {
-            state.screenFlash.opacity = (1 - elapsed / state.screenFlash.duration) * 0.7;
+            setScreenFlash((1 - elapsed / gameState.screenFlash.duration) * 0.7, gameState.screenFlash.duration, gameState.screenFlash.startTime);
         }
     }
 
     // Update stick figure burst animation
-    if (state.stickFigureBurst.active) {
-        const elapsed = timestamp - state.stickFigureBurst.startTime;
-        if (elapsed >= state.stickFigureBurst.duration) {
-            state.stickFigureBurst.active = false;
-            state.stickFigureBurst.progress = 0;
+    if (gameState.stickFigureBurst.active) {
+        const elapsed = timestamp - gameState.stickFigureBurst.startTime;
+        if (elapsed >= gameState.stickFigureBurst.duration) {
+            setStickFigureBurst(false, gameState.stickFigureBurst.startTime, 0);
         } else {
-            state.stickFigureBurst.progress = elapsed / state.stickFigureBurst.duration;
+            setStickFigureBurst(true, gameState.stickFigureBurst.startTime, elapsed / gameState.stickFigureBurst.duration);
         }
     }
 
     // Update turbo boost animation
     const turboBoostEl = document.getElementById('turbo-boost-animation');
-    if (state.isAccelerating) {
+    if (gameState.isAccelerating) {
         const frames = ['> ', '>>', ' >', '  '];
         const frameDuration = 100; // ms per frame
-        if (timestamp - state.turboBoost.lastFrameTime > frameDuration) {
-            state.turboBoost.frame = (state.turboBoost.frame + 1) % frames.length;
-            state.turboBoost.lastFrameTime = timestamp;
+        if (timestamp - gameState.turboBoost.lastFrameTime > frameDuration) {
+            setTurboBoostFrame((gameState.turboBoost.frame + 1) % frames.length);
+            setTurboBoostLastFrameTime(timestamp);
         }
-        turboBoostEl.textContent = frames[state.turboBoost.frame];
+        turboBoostEl.textContent = frames[gameState.turboBoost.frame];
         turboBoostEl.style.opacity = '1';
     } else {
         turboBoostEl.style.opacity = '0';
     }
 
-    if (state.isColliding) {
-        state.collisionDuration -= deltaTime;
-        if (state.collisionDuration <= 0) {
-            state.isColliding = false;
-            state.collisionDuration = 0;
-            state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
+    if (gameState.isColliding) {
+        setCollisionDuration(gameState.collisionDuration - deltaTime);
+        if (gameState.collisionDuration <= 0) {
+            setColliding(false);
+            setCollisionDuration(0);
+            setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
             console.info("-> COLLISION: Penalty ended. Speed restored.");
         } else {
-            state.gameSpeedMultiplier = state.intendedSpeedMultiplier * 0.1;
+            setGameSpeedMultiplier(gameState.intendedSpeedMultiplier * 0.1);
         }
     } else {
         // If not in a burst (or burst just ended), check for regular acceleration/deceleration
-        if (!state.stickFigureBurst.active) {
-            if (state.isDecelerating) {
-                state.decelerationDuration -= deltaTime;
-                state.gameSpeedMultiplier = state.intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF;
-                if (state.decelerationDuration <= 0) {
-                    state.isDecelerating = false;
-                    state.decelerationDuration = 0;
-                    state.activeCustomEvents.forEach(e => {
+        if (!gameState.stickFigureBurst.active) {
+            if (gameState.isDecelerating) {
+                setDecelerationDuration(gameState.decelerationDuration - deltaTime);
+                setGameSpeedMultiplier(gameState.intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF);
+                if (gameState.decelerationDuration <= 0) {
+                    setDecelerating(false);
+                    setDecelerationDuration(0);
+                    gameState.activeCustomEvents.forEach(e => {
                         if (e.type === 'DECELERATOR') e.isActive = false;
                     });
-                    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
+                    setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
                     console.info("-> DECELERATOR: Debuff ended. Speed restored.");
                 }
-            } else if (state.isAccelerating) {
-                state.accelerationDuration -= deltaTime;
-                state.gameSpeedMultiplier = state.intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST;
-                if (state.accelerationDuration <= 0) {
-                    state.isAccelerating = false;
-                    state.accelerationDuration = 0;
-                    state.activeCustomEvents.forEach(e => {
+            } else if (gameState.isAccelerating) {
+                setAccelerationDuration(gameState.accelerationDuration - deltaTime);
+                setGameSpeedMultiplier(gameState.intendedSpeedMultiplier * ACCELERATOR_BASE_SPEED_BOOST);
+                if (gameState.accelerationDuration <= 0) {
+                    setAccelerating(false);
+                    setAccelerationDuration(0);
+                    gameState.activeCustomEvents.forEach(e => {
                         if (e.type === 'ACCELERATOR') e.isActive = false;
                     });
-                    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
+                    setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
                     console.info("-> ACCELERATOR: Boost ended. Speed restored.");
                 }
             } else {
-                state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
+                setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
             }
         }
     }
@@ -586,10 +580,10 @@ export function animate(timestamp) {
     const stickFigureGroundYForBags = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentHurdle.angleRad);
     const collectionY = stickFigureGroundYForBags;
 
-    for (let i = state.activeCashBags.length - 1; i >= 0; i--) {
-        const bag = state.activeCashBags[i];
+    for (let i = gameState.activeCashBags.length - 1; i >= 0; i--) {
+        const bag = gameState.activeCashBags[i];
         if (bag.isDone) {
-            state.activeCashBags.splice(i, 1);
+            removeCashBag(i);
             continue;
         }
         bag.progress += deltaTime / CASH_BAG_ANIMATION_DURATION;
@@ -614,19 +608,15 @@ export function animate(timestamp) {
         }
     }
 
-    if (state.segmentProgress >= 1) {
-        const completedSegment = state.raceSegments[state.currentSegmentIndex];
-        console.log(`-> SEGMENT COMPLETE: Reached Milestone ${state.currentSegmentIndex}. Value: $${completedSegment.milestoneValue.toLocaleString()}`);
+    if (gameState.segmentProgress >= 1) {
+        const completedSegment = gameState.raceSegments[gameState.currentSegmentIndex];
+        console.log(`-> SEGMENT COMPLETE: Reached Milestone ${gameState.currentSegmentIndex}. Value: $${completedSegment.milestoneValue.toLocaleString()}`);
 
-        state.daysCounter = {
-            days: completedSegment.durationDays,
-            delta: completedSegment.durationDelta,
-            frame: 0
-        };
+        setDaysCounter(completedSegment.durationDays, completedSegment.durationDelta, 0);
 
-        if (state.currentSegmentIndex > 0) {
-            state.accumulatedCash = completedSegment.milestoneValue;
-            state.activeCashBags.push({
+        if (gameState.currentSegmentIndex > 0) {
+            setAccumulatedCash(completedSegment.milestoneValue);
+            addCashBag({
                 x: STICK_FIGURE_FIXED_X,
                 y: collectionY,
                 currentX: STICK_FIGURE_FIXED_X,
@@ -638,197 +628,197 @@ export function animate(timestamp) {
             playChaChing();
         }
 
-        state.daysAccumulatedAtSegmentStart += completedSegment.durationDays;
+        gameState.daysAccumulatedAtSegmentStart += completedSegment.durationDays;
 
-        state.currentSegmentIndex++;
-        state.segmentProgress = 0;
-        state.backgroundOffset = 0;
+        gameState.currentSegmentIndex++;
+        setSegmentProgress(0);
+        setBackgroundOffset(0);
 
-        state.isAccelerating = false;
-        state.accelerationDuration = 0;
-        state.isColliding = false;
-        state.collisionDuration = 0;
-        state.isDecelerating = false;
-        state.decelerationDuration = 0;
-        state.activeCustomEvents.forEach(e => e.isActive = false);
-        state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
+        setAccelerating(false);
+        setAccelerationDuration(0);
+        setColliding(false);
+        setCollisionDuration(0);
+        setDecelerating(false);
+        setDecelerationDuration(0);
+        gameState.activeCustomEvents.forEach(e => e.isActive = false);
+        setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
 
-        state.currentObstacle = null;
-        state.currentAccelerator = null;
-        state.onScreenCustomEvent = null;
+        setCurrentObstacle(null);
+        setCurrentAccelerator(null);
+        setOnScreenCustomEvent(null);
 
-        if (state.currentSegmentIndex === state.raceSegments.length - 1) {
+        if (gameState.currentSegmentIndex === gameState.raceSegments.length - 1) {
             preloadEndgameSounds();
         }
 
-        if (state.currentSegmentIndex < state.raceSegments.length) {
-            console.log(`-> NEW SEGMENT START: Index ${state.currentSegmentIndex}. Visual Duration: ${state.raceSegments[state.currentSegmentIndex].visualDurationMs.toFixed(0)}ms`);
+        if (gameState.currentSegmentIndex < gameState.raceSegments.length) {
+            console.log(`-> NEW SEGMENT START: Index ${gameState.currentSegmentIndex}. Visual Duration: ${gameState.raceSegments[gameState.currentSegmentIndex].visualDurationMs.toFixed(0)}ms`);
         }
     }
 
-    if (state.jumpState.isHurdle) {
-        state.jumpState.hurdleDuration -= deltaTime;
-        if (state.jumpState.hurdleDuration <= 0) {
-            state.jumpState.isHurdle = false;
+    if (gameState.jumpState.isHurdle) {
+        setHurdleDuration(gameState.jumpState.hurdleDuration - deltaTime);
+        if (gameState.jumpState.hurdleDuration <= 0) {
+            setHurdle(false);
         }
     }
 
-    if (state.jumpState.isSpecialMove) {
-        state.jumpState.specialMoveDuration -= deltaTime;
-        if (state.jumpState.specialMoveDuration <= 0) {
-            state.jumpState.isSpecialMove = false;
+    if (gameState.jumpState.isSpecialMove) {
+        setSpecialMoveDuration(gameState.jumpState.specialMoveDuration - deltaTime);
+        if (gameState.jumpState.specialMoveDuration <= 0) {
+            setSpecialMove(false);
         }
     }
-    if (state.jumpState.isPowerStomp) {
-        state.jumpState.powerStompDuration -= deltaTime;
-        if (state.jumpState.powerStompDuration <= 0) {
-            state.jumpState.isPowerStomp = false;
+    if (gameState.jumpState.isPowerStomp) {
+        setPowerStompDuration(gameState.jumpState.powerStompDuration - deltaTime);
+        if (gameState.jumpState.powerStompDuration <= 0) {
+            setPowerStomp(false);
         }
     }
-    if (state.jumpState.isDive) {
-        state.jumpState.diveDuration -= deltaTime;
-        if (state.jumpState.diveDuration <= 0) {
-            state.jumpState.isDive = false;
+    if (gameState.jumpState.isDive) {
+        setDiveDuration(gameState.jumpState.diveDuration - deltaTime);
+        if (gameState.jumpState.diveDuration <= 0) {
+            setDive(false);
         }
     }
-    if (state.jumpState.isCorkscrewSpin) {
-        state.jumpState.corkscrewSpinDuration -= deltaTime;
-        if (state.jumpState.corkscrewSpinDuration <= 0) {
-            state.jumpState.isCorkscrewSpin = false;
+    if (gameState.jumpState.isCorkscrewSpin) {
+        setCorkscrewSpinDuration(gameState.jumpState.corkscrewSpinDuration - deltaTime);
+        if (gameState.jumpState.corkscrewSpinDuration <= 0) {
+            setCorkscrewSpin(false);
         }
     }
-    if (state.jumpState.isScissorKick) {
-        state.jumpState.scissorKickDuration -= deltaTime;
-        if (state.jumpState.scissorKickDuration <= 0) {
-            state.jumpState.isScissorKick = false;
+    if (gameState.jumpState.isScissorKick) {
+        setScissorKickDuration(gameState.jumpState.scissorKickDuration - deltaTime);
+        if (gameState.jumpState.scissorKickDuration <= 0) {
+            setScissorKick(false);
         }
     }
-    if (state.jumpState.isPhaseDash) {
-        state.jumpState.phaseDashDuration -= deltaTime;
-        if (state.jumpState.phaseDashDuration <= 0) {
-            state.jumpState.isPhaseDash = false;
+    if (gameState.jumpState.isPhaseDash) {
+        setPhaseDashDuration(gameState.jumpState.phaseDashDuration - deltaTime);
+        if (gameState.jumpState.phaseDashDuration <= 0) {
+            setPhaseDash(false);
         }
     }
-    if (state.jumpState.isHover) {
-        state.jumpState.hoverDuration -= deltaTime;
-        if (state.jumpState.hoverDuration <= 0) {
-            state.jumpState.isHover = false;
+    if (gameState.jumpState.isHover) {
+        setHoverDuration(gameState.jumpState.hoverDuration - deltaTime);
+        if (gameState.jumpState.hoverDuration <= 0) {
+            setHover(false);
         }
     }
-    if (state.jumpState.isGroundPound) {
-        state.jumpState.groundPoundDuration -= deltaTime;
+    if (gameState.jumpState.isGroundPound) {
+        setGroundPoundDuration(gameState.jumpState.groundPoundDuration - deltaTime);
         // Check if the pound is about to hit the ground and the effect hasn't been triggered yet
-        if (state.jumpState.groundPoundDuration < 100 && !state.jumpState.groundPoundEffectTriggered) {
-            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(state.raceSegments[state.currentSegmentIndex].angleRad);
+        if (gameState.jumpState.groundPoundDuration < 100 && !gameState.jumpState.groundPoundEffectTriggered) {
+            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(gameState.raceSegments[gameState.currentSegmentIndex].angleRad);
             drawing.createGroundPoundEffect(STICK_FIGURE_FIXED_X, groundY);
-            state.jumpState.groundPoundEffectTriggered = true;
+            setGroundPoundEffectTriggered(true);
         }
-        if (state.jumpState.groundPoundDuration <= 0) {
-            state.jumpState.isGroundPound = false;
-        }
-    }
-    if (state.jumpState.isCartoonScramble) {
-        state.jumpState.cartoonScrambleDuration -= deltaTime;
-        if (state.jumpState.cartoonScrambleDuration <= 0) {
-            state.jumpState.isCartoonScramble = false;
+        if (gameState.jumpState.groundPoundDuration <= 0) {
+            setGroundPound(false);
         }
     }
-    if (state.jumpState.isMoonwalking) {
-        state.jumpState.moonwalkDuration -= deltaTime;
-        if (state.jumpState.moonwalkDuration <= 0) {
-            state.jumpState.isMoonwalking = false;
+    if (gameState.jumpState.isCartoonScramble) {
+        setCartoonScrambleDuration(gameState.jumpState.cartoonScrambleDuration - deltaTime);
+        if (gameState.jumpState.cartoonScrambleDuration <= 0) {
+            setCartoonScramble(false);
         }
     }
-    if (state.jumpState.isShockwave) {
-        state.jumpState.shockwaveDuration -= deltaTime;
-        if (state.jumpState.shockwaveDuration <= 0) {
-            state.jumpState.isShockwave = false;
+    if (gameState.jumpState.isMoonwalking) {
+        setMoonwalkDuration(gameState.jumpState.moonwalkDuration - deltaTime);
+        if (gameState.jumpState.moonwalkDuration <= 0) {
+            setMoonwalking(false);
         }
     }
-    if (state.jumpState.isBackflip) {
-        state.jumpState.backflipDuration -= deltaTime;
-        if (state.jumpState.backflipDuration <= 0) {
-            state.jumpState.isBackflip = false;
+    if (gameState.jumpState.isShockwave) {
+        setShockwaveDuration(gameState.jumpState.shockwaveDuration - deltaTime);
+        if (gameState.jumpState.shockwaveDuration <= 0) {
+            setShockwave(false);
         }
     }
-    if (state.jumpState.isFrontflip) {
-        state.jumpState.frontflipDuration -= deltaTime;
-        if (state.jumpState.frontflipDuration <= 0) {
-            state.jumpState.isFrontflip = false;
+    if (gameState.jumpState.isBackflip) {
+        setBackflipDuration(gameState.jumpState.backflipDuration - deltaTime);
+        if (gameState.jumpState.backflipDuration <= 0) {
+            setBackflip(false);
         }
     }
-    if (state.jumpState.isHoudini) {
-        const previousPhase = state.jumpState.houdiniPhase;
-        state.jumpState.houdiniDuration -= deltaTime;
+    if (gameState.jumpState.isFrontflip) {
+        setFrontflipDuration(gameState.jumpState.frontflipDuration - deltaTime);
+        if (gameState.jumpState.frontflipDuration <= 0) {
+            setFrontflip(false);
+        }
+    }
+    if (gameState.jumpState.isHoudini) {
+        const previousPhase = gameState.jumpState.houdiniPhase;
+        setHoudiniDuration(gameState.jumpState.houdiniDuration - deltaTime);
 
-        if (state.jumpState.houdiniDuration <= 400) {
-            state.jumpState.houdiniPhase = 'reappearing';
+        if (gameState.jumpState.houdiniDuration <= 400) {
+            setHoudiniPhase('reappearing');
             if (previousPhase === 'disappearing') {
                 // Trigger the reappearing poof once
-                const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
+                const playerY = GROUND_Y - gameState.jumpState.progress * 200; // Approximate player Y
                 drawing.createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
             }
         }
-        if (state.jumpState.houdiniDuration <= 0) {
-            state.jumpState.isHoudini = false;
+        if (gameState.jumpState.houdiniDuration <= 0) {
+            setHoudini(false);
         }
     }
 
-    if (state.jumpState.isFieryHoudini) {
-        const previousPhase = state.jumpState.fieryHoudiniPhase;
-        state.jumpState.fieryHoudiniDuration -= deltaTime;
+    if (gameState.jumpState.isFieryHoudini) {
+        const previousPhase = gameState.jumpState.fieryHoudiniPhase;
+        setFieryHoudiniDuration(gameState.jumpState.fieryHoudiniDuration - deltaTime);
 
-        if (state.jumpState.fieryHoudiniDuration <= FIERY_HOUDINI_DURATION_MS / 2) {
-            state.jumpState.fieryHoudiniPhase = 'reappearing';
+        if (gameState.jumpState.fieryHoudiniDuration <= FIERY_HOUDINI_DURATION_MS / 2) {
+            setFieryHoudiniPhase('reappearing');
             if (previousPhase === 'disappearing') {
-                const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
+                const playerY = GROUND_Y - gameState.jumpState.progress * 200; // Approximate player Y
                 drawing.createFieryHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
             }
         }
-        if (state.jumpState.fieryHoudiniDuration <= 0) {
-            state.jumpState.isFieryHoudini = false;
+        if (gameState.jumpState.fieryHoudiniDuration <= 0) {
+            setFieryHoudini(false);
         }
     }
 
-    if (state.jumpState.isFireSpinner) {
-        state.jumpState.fireSpinnerDuration -= deltaTime;
-        if (state.jumpState.fireSpinnerDuration <= 0) {
-            state.jumpState.isFireSpinner = false;
+    if (gameState.jumpState.isFireSpinner) {
+        setFireSpinnerDuration(gameState.jumpState.fireSpinnerDuration - deltaTime);
+        if (gameState.jumpState.fireSpinnerDuration <= 0) {
+            setFireSpinner(false);
         }
     }
 
     // Check and update Fire Spinner cooldown
-    if (state.isFireSpinnerOnCooldown) {
+    if (gameState.isFireSpinnerOnCooldown) {
         const now = Date.now();
-        if (now - state.fireSpinnerLastActivationTime > state.fireSpinnerCooldown) {
-            state.isFireSpinnerOnCooldown = false;
+        if (now - gameState.fireSpinnerLastActivationTime > gameState.fireSpinnerCooldown) {
+            setFireSpinnerOnCooldown(false);
             console.log("-> FIRE SPINNER: Cooldown finished. Ready.");
         }
     }
 
     // Update incinerating obstacles
-    for (let i = state.incineratingObstacles.length - 1; i >= 0; i--) {
-        const obstacle = state.incineratingObstacles[i];
+    for (let i = gameState.incineratingObstacles.length - 1; i >= 0; i--) {
+        const obstacle = gameState.incineratingObstacles[i];
         const elapsed = performance.now() - obstacle.startTime;
         obstacle.animationProgress = Math.min(1, elapsed / 1000); // 1-second animation
 
         if (obstacle.animationProgress >= 1) {
-            state.incineratingObstacles.splice(i, 1); // Remove after animation
+            removeIncineratingObstacle(i);
         }
     }
 
     // Update vanishing obstacles
-    for (let i = state.vanishingObstacles.length - 1; i >= 0; i--) {
-        const obstacle = state.vanishingObstacles[i];
+    for (let i = gameState.vanishingObstacles.length - 1; i >= 0; i--) {
+        const obstacle = gameState.vanishingObstacles[i];
         const elapsed = performance.now() - obstacle.startTime;
         if (elapsed > 300) { // Corresponds to VANISH_DURATION in drawing.js
-            state.vanishingObstacles.splice(i, 1);
+            removeVanishingObstacle(i);
         }
     }
 
-    state.frameCount++;
+    incrementFrameCount();
 
-    state.lastTime = timestamp;
+    setLastTime(timestamp);
     drawing.updateClouds(); // Update clouds before drawing
     drawing.draw();
     requestAnimationFrame(animate);

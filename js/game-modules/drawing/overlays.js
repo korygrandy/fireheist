@@ -1,6 +1,6 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { FADE_DURATION, STICK_FIGURE_FIXED_X, STICK_FIGURE_TOTAL_HEIGHT, GROUND_Y } from '../../constants.js';
-import state from '../state.js';
+import { gameState } from '../state-manager.js';
 
 export function drawPausedOverlay() {
     ctx.save();
@@ -52,12 +52,12 @@ export function drawTipsOverlay() {
 }
 
 export function drawDaysCounter() {
-    if (!state.daysCounter) return;
+    if (!gameState.daysCounter) return;
 
-    const { days, delta, frame } = state.daysCounter;
+    const { days, delta, frame } = gameState.daysCounter;
     const opacity = 1 - (frame / FADE_DURATION);
     if (opacity <= 0) {
-        state.daysCounter = null;
+        gameState.daysCounter = null;
         return;
     }
 
@@ -96,7 +96,7 @@ export function drawDaysCounter() {
     }
 
     ctx.restore();
-    state.daysCounter.frame++;
+    gameState.daysCounter.frame++;
 }
 
 export function drawVictoryOverlay(elapsedTime) {
@@ -105,13 +105,13 @@ export function drawVictoryOverlay(elapsedTime) {
     const SUCCESS_COLOR = '#00FF88';
     const FAILURE_COLOR = '#FF0044';
 
-    if (state.hitsCounter === 0) {
+    if (gameState.hitsCounter === 0) {
         mainText = '🎉 Congratulations!';
         subText = 'You reached financial independence!';
         mainColor = SUCCESS_COLOR;
     } else {
         mainText = 'FIRE Failed!';
-        subText = `You encountered ${state.hitsCounter} obstacles`;
+        subText = `You encountered ${gameState.hitsCounter} obstacles`;
         mainColor = FAILURE_COLOR;
     }
 
@@ -138,7 +138,7 @@ export function drawVictoryOverlay(elapsedTime) {
 }
 
 export function drawMoneyCounter() {
-    const formattedCash = Math.round(state.accumulatedCash).toLocaleString();
+    const formattedCash = Math.round(gameState.accumulatedCash).toLocaleString();
     const displayString = `Total Haul: $${formattedCash}`;
     const boxHeight = 40;
     const boxX = 10;
@@ -170,8 +170,8 @@ export function drawMoneyCounter() {
 }
 
 export function drawGameCounters() {
-    const daysString = `Days Elapsed: ${Math.round(state.daysElapsedTotal).toLocaleString()}`;
-    const hitsString = `Hits: ${state.hitsCounter} (${state.currentSkillLevel} Skill)`;
+    const daysString = `Days Elapsed: ${Math.round(gameState.daysElapsedTotal).toLocaleString()}`;
+    const hitsString = `Hits: ${gameState.hitsCounter} (${gameState.currentSkillLevel} Skill)`;
 
     const PADDING = 10;
     const LINE_HEIGHT = 20;
@@ -180,15 +180,15 @@ export function drawGameCounters() {
     const BOX_Y = 10;
     let BOX_HEIGHT = 50;
 
-    let speedText = `Speed: ${state.gameSpeedMultiplier.toFixed(1)}x`;
+    let speedText = `Speed: ${gameState.gameSpeedMultiplier.toFixed(1)}x`;
 
-    if (state.isDecelerating) {
+    if (gameState.isDecelerating) {
         speedText += ` (📉)`;
         BOX_HEIGHT = 70;
-    } else if (state.isAccelerating) {
+    } else if (gameState.isAccelerating) {
         speedText += ` (🔥)`;
         BOX_HEIGHT = 70;
-    } else if (state.isColliding) {
+    } else if (gameState.isColliding) {
         speedText += ` (🐌)`;
         BOX_HEIGHT = 70;
     }
@@ -206,14 +206,14 @@ export function drawGameCounters() {
 
     ctx.fillText(daysString, BOX_X + PADDING, BOX_Y + PADDING);
 
-    ctx.fillStyle = state.hitsCounter > 0 ? '#dc3545' : '#28a745';
+    ctx.fillStyle = gameState.hitsCounter > 0 ? '#dc3545' : '#28a745';
     ctx.font = 'bold 14px Inter, sans-serif';
     ctx.fillText(hitsString, BOX_X + PADDING, BOX_Y + PADDING + LINE_HEIGHT);
 
-    if (state.isAccelerating || state.isColliding || state.isDecelerating) {
+    if (gameState.isAccelerating || gameState.isColliding || gameState.isDecelerating) {
         let speedTextColor = '#000000';
-        if (state.isAccelerating) speedTextColor = '#ffaa00';
-        if (state.isColliding || state.isDecelerating) speedTextColor = '#dc3545';
+        if (gameState.isAccelerating) speedTextColor = '#ffaa00';
+        if (gameState.isColliding || gameState.isDecelerating) speedTextColor = '#dc3545';
 
         ctx.fillStyle = speedTextColor;
         ctx.font = 'bold 12px Inter, sans-serif';
@@ -235,9 +235,9 @@ export function drawCustomEventStatus(event, angleRad) {
     ctx.textBaseline = 'middle';
 
     let opacity = 1.0;
-    if (event.type === 'ACCELERATOR' && state.isAccelerating) {
+    if (event.type === 'ACCELERATOR' && gameState.isAccelerating) {
         opacity = 0.5 + 0.5 * Math.sin(Date.now() / 100);
-    } else if (event.type === 'DECELERATOR' && state.isDecelerating) {
+    } else if (event.type === 'DECELERATOR' && gameState.isDecelerating) {
         opacity = 0.5 + 0.5 * Math.sin(Date.now() / 100);
     }
 
@@ -257,7 +257,7 @@ export function drawEnergyBar() {
     const barHeight = 20;
     const x = (canvas.width - barWidth) / 2;
     const y = 10;
-    const energyPercentage = state.playerEnergy / state.maxPlayerEnergy;
+    const energyPercentage = gameState.playerEnergy / gameState.maxPlayerEnergy;
 
     ctx.save();
 

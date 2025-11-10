@@ -1,0 +1,815 @@
+import state from './state.js';
+
+export const GRASS_ANIMATION_INTERVAL_MS = 100;
+
+/**
+ * The single source of truth for all state reads.
+ * Components should import this to get the current state.
+ */
+export const gameState = state;
+
+/**
+ * =================================================================
+ * STATE MUTATION FUNCTIONS
+ * =================================================================
+ * All functions that change the game state should be centralized here.
+ */
+
+/**
+ * Sets the game's running status.
+ * @param {boolean} isRunning
+ */
+export function setGameRunning(isRunning) {
+    state.gameRunning = isRunning;
+}
+
+/**
+ * Sets the game's paused status.
+ * @param {boolean} isPaused
+ */
+export function setPaused(isPaused) {
+    state.isPaused = isPaused;
+}
+
+/**
+ * Increments the hits counter.
+ */
+export function incrementHits() {
+    state.hitsCounter++;
+}
+
+/**
+ * Resets the consecutive ground pound and incineration streaks.
+ */
+export function resetStreaks() {
+    if (state.playerStats.consecutiveGroundPounds > 0) {
+        console.log(`[DEBUG] Streak RESET. Was: ${state.playerStats.consecutiveGroundPounds}`);
+        state.playerStats.consecutiveGroundPounds = 0;
+    }
+    if (state.playerStats.consecutiveIncinerations > 0) {
+        state.playerStats.consecutiveIncinerations = 0;
+    }
+}
+
+/**
+ * Updates the player's energy, ensuring it stays within bounds.
+ * @param {number} newEnergy
+ */
+export function setPlayerEnergy(newEnergy) {
+    state.playerEnergy = Math.max(0, Math.min(state.maxPlayerEnergy, newEnergy));
+}
+
+/**
+ * Sets the game over sequence status.
+ * @param {boolean} isGameOver
+ */
+export function setGameOverSequence(isGameOver) {
+    state.isGameOverSequence = isGameOver;
+}
+
+/**
+ * Sets the victory status of the game.
+ * @param {boolean} isVictory
+ */
+export function setVictory(isVictory) {
+    state.isVictory = isVictory;
+}
+
+/**
+ * Sets the start time of the game over sequence.
+ * @param {number} time
+ */
+export function setGameOverSequenceStartTime(time) {
+    state.gameOverSequenceStartTime = time;
+}
+
+/**
+ * Sets the last recorded timestamp for the animation frame.
+ * @param {number} time
+ */
+export function setLastTime(time) {
+    state.lastTime = time;
+}
+
+/**
+ * Sets the active status of Firestorm.
+ * @param {boolean} isActive
+ */
+export function setFirestormActive(isActive) {
+    state.isFirestormActive = isActive;
+}
+
+/**
+ * Sets the end time for Firestorm.
+ * @param {number} time
+ */
+export function setFirestormEndTime(time) {
+    state.firestormEndTime = time;
+}
+
+/**
+ * Sets the energy draining status for Firestorm.
+ * @param {boolean} isDraining
+ */
+export function setFirestormDrainingEnergy(isDraining) {
+    state.isFirestormDrainingEnergy = isDraining;
+}
+
+/**
+ * Sets the end time for Firestorm energy drain.
+ * @param {number} time
+ */
+export function setFirestormDrainEndTime(time) {
+    state.firestormDrainEndTime = time;
+}
+
+/**
+ * Sets the energy draining status for Fire Spinner.
+ * @param {boolean} isDraining
+ */
+export function setFireSpinnerDrainingEnergy(isDraining) {
+    state.isFireSpinnerDrainingEnergy = isDraining;
+}
+
+/**
+ * Sets the end time for Fire Spinner energy drain.
+ * @param {number} time
+ */
+export function setFireSpinnerDrainEndTime(time) {
+    state.fireSpinnerDrainEndTime = time;
+}
+
+/**
+ * Sets the active status of Mage Spinner.
+ * @param {boolean} isActive
+ */
+export function setMageSpinnerActive(isActive) {
+    state.isMageSpinnerActive = isActive;
+}
+
+/**
+ * Sets the end time for Mage Spinner.
+ * @param {number} time
+ */
+export function setMageSpinnerEndTime(time) {
+    state.mageSpinnerEndTime = time;
+}
+
+/**
+ * Sets the cooldown status of Fire Mage.
+ * @param {boolean} isOnCooldown
+ */
+export function setFireMageOnCooldown(isOnCooldown) {
+    state.isFireMageOnCooldown = isOnCooldown;
+}
+
+/**
+ * Sets the active status of Fire Mage.
+ * @param {boolean} isActive
+ */
+export function setFireMageActive(isActive) {
+    state.isFireMageActive = isActive;
+}
+
+/**
+ * Sets the end time for Fire Mage.
+ * @param {number} time
+ */
+export function setFireMageEndTime(time) {
+    state.fireMageEndTime = time;
+}
+
+/**
+ * Sets the Mage Spinner fireball timer.
+ * @param {number} time
+ */
+export function setMageSpinnerFireballTimer(time) {
+    state.mageSpinnerFireballTimer = time;
+}
+
+/**
+ * Increments the count of fireballs spawned by Mage Spinner.
+ */
+export function incrementMageSpinnerFireballsSpawned() {
+    state.mageSpinnerFireballsSpawned++;
+}
+
+/**
+ * Sets the cooldown status of Mage Spinner.
+ * @param {boolean} isOnCooldown
+ */
+export function setMageSpinnerOnCooldown(isOnCooldown) {
+    state.isMageSpinnerOnCooldown = isOnCooldown;
+}
+
+/**
+ * Sets the cooldown status of Fiery Houdini.
+ * @param {boolean} isOnCooldown
+ */
+export function setFieryHoudiniOnCooldown(isOnCooldown) {
+    state.isFieryHoudiniOnCooldown = isOnCooldown;
+}
+
+/**
+ * Sets the active status of manual jump override.
+ * @param {boolean} isActive
+ */
+export function setManualJumpOverrideActive(isActive) {
+    state.manualJumpOverride.isActive = isActive;
+}
+
+/**
+ * Sets the progress of the current jump.
+ * @param {number} progress
+ */
+export function setJumpProgress(progress) {
+    state.jumpState.progress = progress;
+}
+
+/**
+ * Sets the jumping status of the stick figure.
+ * @param {boolean} isJumping
+ */
+export function setJumping(isJumping) {
+    state.jumpState.isJumping = isJumping;
+}
+
+/**
+ * Sets the segment progress.
+ * @param {number} progress
+ */
+export function setSegmentProgress(progress) {
+    state.segmentProgress = progress;
+}
+
+/**
+ * Sets the background offset.
+ * @param {number} offset
+ */
+export function setBackgroundOffset(offset) {
+    state.backgroundOffset = offset;
+}
+
+/**
+ * Sets the total days elapsed.
+ * @param {number} days
+ */
+export function setDaysElapsedTotal(days) {
+    state.daysElapsedTotal = days;
+}
+
+/**
+ * Sets the on-screen custom event.
+ * @param {object|null} event
+ */
+export function setOnScreenCustomEvent(event) {
+    state.onScreenCustomEvent = event;
+}
+
+/**
+ * Sets the current obstacle.
+ * @param {object|null} obstacle
+ */
+export function setCurrentObstacle(obstacle) {
+    state.currentObstacle = obstacle;
+}
+
+/**
+ * Adds an ignited obstacle.
+ * @param {object} obstacle
+ */
+export function addIgnitedObstacle(obstacle) {
+    state.ignitedObstacles.push(obstacle);
+}
+
+/**
+ * Removes an ignited obstacle by index.
+ * @param {number} index
+ */
+export function removeIgnitedObstacle(index) {
+    state.ignitedObstacles.splice(index, 1);
+}
+
+/**
+ * Adds a vanishing obstacle.
+ * @param {object} obstacle
+ */
+export function addVanishingObstacle(obstacle) {
+    state.vanishingObstacles.push(obstacle);
+}
+
+/**
+ * Removes a vanishing obstacle by index.
+ * @param {number} index
+ */
+export function removeVanishingObstacle(index) {
+    state.vanishingObstacles.splice(index, 1);
+}
+
+/**
+ * Adds an active fireball.
+ * @param {object} fireball
+ */
+export function addFireball(fireball) {
+    state.activeFireballs.push(fireball);
+}
+
+/**
+ * Removes an active fireball by index.
+ * @param {number} index
+ */
+export function removeFireball(index) {
+    state.activeFireballs.splice(index, 1);
+}
+
+/**
+ * Increments the obstacles incinerated count.
+ */
+export function incrementObstaclesIncinerated() {
+    state.playerStats.obstaclesIncinerated++;
+}
+
+/**
+ * Increments the consecutive incinerations count.
+ */
+export function incrementConsecutiveIncinerations() {
+    state.playerStats.consecutiveIncinerations++;
+}
+
+/**
+ * Increments the consecutive ground pounds count.
+ */
+export function incrementConsecutiveGroundPounds() {
+    state.playerStats.consecutiveGroundPounds++;
+}
+
+/**
+ * Increments the total ground pound collisions count.
+ */
+export function incrementTotalGroundPoundCollisions() {
+    state.playerStats.totalGroundPoundCollisions++;
+}
+
+/**
+ * Sets the colliding status.
+ * @param {boolean} isColliding
+ */
+export function setColliding(isColliding) {
+    state.isColliding = isColliding;
+}
+
+/**
+ * Sets the collision duration.
+ * @param {number} duration
+ */
+export function setCollisionDuration(duration) {
+    state.collisionDuration = duration;
+}
+
+/**
+ * Sets the current accelerator.
+ * @param {object|null} accelerator
+ */
+export function setCurrentAccelerator(accelerator) {
+    state.currentAccelerator = accelerator;
+}
+
+/**
+ * Sets the accelerating status.
+ * @param {boolean} isAccelerating
+ */
+export function setAccelerating(isAccelerating) {
+    state.isAccelerating = isAccelerating;
+}
+
+/**
+ * Sets the acceleration duration.
+ * @param {number} duration
+ */
+export function setAccelerationDuration(duration) {
+    state.accelerationDuration = duration;
+}
+
+/**
+ * Sets the decelerating status.
+ * @param {boolean} isDecelerating
+ */
+export function setDecelerating(isDecelerating) {
+    state.isDecelerating = isDecelerating;
+}
+
+/**
+ * Sets the deceleration duration.
+ * @param {number} duration
+ */
+export function setDecelerationDuration(duration) {
+    state.decelerationDuration = duration;
+}
+
+/**
+ * Sets the game speed multiplier.
+ * @param {number} multiplier
+ */
+export function setGameSpeedMultiplier(multiplier) {
+    state.gameSpeedMultiplier = multiplier;
+}
+
+/**
+ * Sets the screen flash properties.
+ * @param {number} opacity
+ * @param {number} duration
+ * @param {number} startTime
+ */
+export function setScreenFlash(opacity, duration, startTime) {
+    state.screenFlash = { opacity, duration, startTime };
+}
+
+/**
+ * Sets the stick figure burst properties.
+ * @param {boolean} active
+ * @param {number} startTime
+ * @param {number} progress
+ */
+export function setStickFigureBurst(active, startTime, progress) {
+    state.stickFigureBurst = { ...state.stickFigureBurst, active, startTime, progress };
+}
+
+/**
+ * Sets the turbo boost frame.
+ * @param {number} frame
+ */
+export function setTurboBoostFrame(frame) {
+    state.turboBoost.frame = frame;
+}
+
+/**
+ * Sets the turbo boost last frame time.
+ * @param {number} time
+ */
+export function setTurboBoostLastFrameTime(time) {
+    state.turboBoost.lastFrameTime = time;
+}
+
+/**
+ * Adds a cash bag.
+ * @param {object} bag
+ */
+export function addCashBag(bag) {
+    state.activeCashBags.push(bag);
+}
+
+/**
+ * Removes a cash bag by index.
+ * @param {number} index
+ */
+export function removeCashBag(index) {
+    state.activeCashBags.splice(index, 1);
+}
+
+/**
+ * Sets the days counter.
+ * @param {number} days
+ * @param {number} delta
+ * @param {number} frame
+ */
+export function setDaysCounter(days, delta, frame) {
+    state.daysCounter = { days, delta, frame };
+}
+
+/**
+ * Sets the accumulated cash.
+ * @param {number} cash
+ */
+export function setAccumulatedCash(cash) {
+    state.accumulatedCash = cash;
+}
+
+/**
+ * Sets the hurdle status.
+ * @param {boolean} isHurdle
+ */
+export function setHurdle(isHurdle) {
+    state.jumpState.isHurdle = isHurdle;
+}
+
+/**
+ * Sets the hurdle duration.
+ * @param {number} duration
+ */
+export function setHurdleDuration(duration) {
+    state.jumpState.hurdleDuration = duration;
+}
+
+/**
+ * Sets the special move status.
+ * @param {boolean} isSpecialMove
+ */
+export function setSpecialMove(isSpecialMove) {
+    state.jumpState.isSpecialMove = isSpecialMove;
+}
+
+/**
+ * Sets the special move duration.
+ * @param {number} duration
+ */
+export function setSpecialMoveDuration(duration) {
+    state.jumpState.specialMoveDuration = duration;
+}
+
+/**
+ * Sets the power stomp status.
+ * @param {boolean} isPowerStomp
+ */
+export function setPowerStomp(isPowerStomp) {
+    state.jumpState.isPowerStomp = isPowerStomp;
+}
+
+/**
+ * Sets the power stomp duration.
+ * @param {number} duration
+ */
+export function setPowerStompDuration(duration) {
+    state.jumpState.powerStompDuration = duration;
+}
+
+/**
+ * Sets the dive status.
+ * @param {boolean} isDive
+ */
+export function setDive(isDive) {
+    state.jumpState.isDive = isDive;
+}
+
+/**
+ * Sets the dive duration.
+ * @param {number} duration
+ */
+export function setDiveDuration(duration) {
+    state.jumpState.diveDuration = duration;
+}
+
+/**
+ * Sets the corkscrew spin status.
+ * @param {boolean} isCorkscrewSpin
+ */
+export function setCorkscrewSpin(isCorkscrewSpin) {
+    state.jumpState.isCorkscrewSpin = isCorkscrewSpin;
+}
+
+/**
+ * Sets the corkscrew spin duration.
+ * @param {number} duration
+ */
+export function setCorkscrewSpinDuration(duration) {
+    state.jumpState.corkscrewSpinDuration = duration;
+}
+
+/**
+ * Sets the scissor kick status.
+ * @param {boolean} isScissorKick
+ */
+export function setScissorKick(isScissorKick) {
+    state.jumpState.isScissorKick = isScissorKick;
+}
+
+/**
+ * Sets the scissor kick duration.
+ * @param {number} duration
+ */
+export function setScissorKickDuration(duration) {
+    state.jumpState.scissorKickDuration = duration;
+}
+
+/**
+ * Sets the phase dash status.
+ * @param {boolean} isPhaseDash
+ */
+export function setPhaseDash(isPhaseDash) {
+    state.jumpState.isPhaseDash = isPhaseDash;
+}
+
+/**
+ * Sets the phase dash duration.
+ * @param {number} duration
+ */
+export function setPhaseDashDuration(duration) {
+    state.jumpState.phaseDashDuration = duration;
+}
+
+/**
+ * Sets the hover status.
+ * @param {boolean} isHover
+ */
+export function setHover(isHover) {
+    state.jumpState.isHover = isHover;
+}
+
+/**
+ * Sets the hover duration.
+ * @param {number} duration
+ */
+export function setHoverDuration(duration) {
+    state.jumpState.hoverDuration = duration;
+}
+
+/**
+ * Sets the ground pound status.
+ * @param {boolean} isGroundPound
+ */
+export function setGroundPound(isGroundPound) {
+    state.jumpState.isGroundPound = isGroundPound;
+}
+
+/**
+ * Sets the ground pound duration.
+ * @param {number} duration
+ */
+export function setGroundPoundDuration(duration) {
+    state.jumpState.groundPoundDuration = duration;
+}
+
+/**
+ * Sets the ground pound effect triggered status.
+ * @param {boolean} isTriggered
+ */
+export function setGroundPoundEffectTriggered(isTriggered) {
+    state.jumpState.groundPoundEffectTriggered = isTriggered;
+}
+
+/**
+ * Sets the cartoon scramble status.
+ * @param {boolean} isCartoonScramble
+ */
+export function setCartoonScramble(isCartoonScramble) {
+    state.jumpState.isCartoonScramble = isCartoonScramble;
+}
+
+/**
+ * Sets the cartoon scramble duration.
+ * @param {number} duration
+ */
+export function setCartoonScrambleDuration(duration) {
+    state.jumpState.cartoonScrambleDuration = duration;
+}
+
+/**
+ * Sets the moonwalking status.
+ * @param {boolean} isMoonwalking
+ */
+export function setMoonwalking(isMoonwalking) {
+    state.jumpState.isMoonwalking = isMoonwalking;
+}
+
+/**
+ * Sets the moonwalk duration.
+ * @param {number} duration
+ */
+export function setMoonwalkDuration(duration) {
+    state.jumpState.moonwalkDuration = duration;
+}
+
+/**
+ * Sets the shockwave status.
+ * @param {boolean} isShockwave
+ */
+export function setShockwave(isShockwave) {
+    state.jumpState.isShockwave = isShockwave;
+}
+
+/**
+ * Sets the shockwave duration.
+ * @param {number} duration
+ */
+export function setShockwaveDuration(duration) {
+    state.jumpState.shockwaveDuration = duration;
+}
+
+/**
+ * Sets the backflip status.
+ * @param {boolean} isBackflip
+ */
+export function setBackflip(isBackflip) {
+    state.jumpState.isBackflip = isBackflip;
+}
+
+/**
+ * Sets the backflip duration.
+ * @param {number} duration
+ */
+export function setBackflipDuration(duration) {
+    state.jumpState.backflipDuration = duration;
+}
+
+/**
+ * Sets the frontflip status.
+ * @param {boolean} isFrontflip
+ */
+export function setFrontflip(isFrontflip) {
+    state.jumpState.isFrontflip = isFrontflip;
+}
+
+/**
+ * Sets the frontflip duration.
+ * @param {number} duration
+ */
+export function setFrontflipDuration(duration) {
+    state.jumpState.frontflipDuration = duration;
+}
+
+/**
+ * Sets the houdini status.
+ * @param {boolean} isHoudini
+ */
+export function setHoudini(isHoudini) {
+    state.jumpState.isHoudini = isHoudini;
+}
+
+/**
+ * Sets the houdini duration.
+ * @param {number} duration
+ */
+export function setHoudiniDuration(duration) {
+    state.jumpState.houdiniDuration = duration;
+}
+
+/**
+ * Sets the houdini phase.
+ * @param {string} phase
+ */
+export function setHoudiniPhase(phase) {
+    state.jumpState.houdiniPhase = phase;
+}
+
+/**
+ * Sets the fiery houdini status.
+ * @param {boolean} isFieryHoudini
+ */
+export function setFieryHoudini(isFieryHoudini) {
+    state.jumpState.isFieryHoudini = isFieryHoudini;
+}
+
+/**
+ * Sets the fiery houdini duration.
+ * @param {number} duration
+ */
+export function setFieryHoudiniDuration(duration) {
+    state.jumpState.fieryHoudiniDuration = duration;
+}
+
+/**
+ * Sets the fiery houdini phase.
+ * @param {string} phase
+ */
+export function setFieryHoudiniPhase(phase) {
+    state.jumpState.fieryHoudiniPhase = phase;
+}
+
+/**
+ * Sets the fire spinner status.
+ * @param {boolean} isFireSpinner
+ */
+export function setFireSpinner(isFireSpinner) {
+    state.jumpState.isFireSpinner = isFireSpinner;
+}
+
+/**
+ * Sets the fire spinner duration.
+ * @param {number} duration
+ */
+export function setFireSpinnerDuration(duration) {
+    state.jumpState.fireSpinnerDuration = duration;
+}
+
+/**
+ * Sets the fire spinner cooldown status.
+ * @param {boolean} isOnCooldown
+ */
+export function setFireSpinnerOnCooldown(isOnCooldown) {
+    state.isFireSpinnerOnCooldown = isOnCooldown;
+}
+
+/**
+ * Increments the frame count.
+ */
+export function incrementFrameCount() {
+    state.frameCount++;
+}
+
+/**
+ * Adds an obstacle to the incinerating list.
+ * @param {object} obstacle
+ */
+export function addIncineratingObstacle(obstacle) {
+    state.incineratingObstacles.push(obstacle);
+}
+
+/**
+ * Removes an incinerating obstacle by index.
+ * @param {number} index
+ */
+export function removeIncineratingObstacle(index) {
+    state.incineratingObstacles.splice(index, 1);
+}
+
+// More state management functions will be added here as we refactor.
+
