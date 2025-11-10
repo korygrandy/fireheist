@@ -819,10 +819,6 @@ export function removeIncineratingObstacle(index) {
     state.incineratingObstacles.splice(index, 1);
 }
 
-export function removeIncineratingObstacle(index) {
-    state.incineratingObstacles.splice(index, 1);
-}
-
 export function clearActiveCashBags() { state.activeCashBags = []; }
 export function clearFireTrail() { state.fireTrail = []; }
 export function clearIncineratingObstacles() { state.incineratingObstacles = []; }

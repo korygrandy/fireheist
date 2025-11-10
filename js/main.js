@@ -22,6 +22,7 @@ import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscr
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
+import { initGamepad } from './game-modules/gamepad.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -456,6 +457,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initial draw to show tips overlay
     draw();
+
+    // Initialize the dedicated gamepad polling loop
+    initGamepad();
 
     console.log("-> DOMContentLoaded: Initialization complete. Ready to start.");
 });
