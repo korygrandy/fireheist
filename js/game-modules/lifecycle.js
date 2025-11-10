@@ -58,13 +58,135 @@ import { updateControlPanelState, exitFullScreenIfActive, showSandboxControls } 
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
 import { personas } from '../personas.js';
-import { setPaused, gameState, setGameOverSequence, setVictory, setGameOverSequenceStartTime, setLastTime, setFirestormActive, setFirestormEndTime, setFirestormDrainingEnergy, setFirestormDrainEndTime, setFireSpinnerDrainingEnergy, setFireSpinnerDrainEndTime, setMageSpinnerActive, setMageSpinnerEndTime, setFireMageOnCooldown, setFireMageActive, setFireMageEndTime, setMageSpinnerFireballTimer, incrementMageSpinnerFireballsSpawned, setMageSpinnerOnCooldown, setFieryHoudiniOnCooldown, setManualJumpOverrideActive, setJumpProgress, setJumping, setSegmentProgress, setBackgroundOffset, setDaysElapsedTotal, setOnScreenCustomEvent, setCurrentObstacle, addIgnitedObstacle, removeIgnitedObstacle, addVanishingObstacle, removeVanishingObstacle, addFireball, removeFireball, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, incrementConsecutiveGroundPounds, incrementTotalGroundPoundCollisions, setColliding, setCollisionDuration, setCurrentAccelerator, setAccelerating, setAccelerationDuration, setDecelerating, setDecelerationDuration, setGameSpeedMultiplier, setScreenFlash, setStickFigureBurst, setTurboBoostFrame, setTurboBoostLastFrameTime, addCashBag, removeCashBag, setDaysCounter, setAccumulatedCash, setHurdle, setHurdleDuration, setSpecialMove, setSpecialMoveDuration, setPowerStomp, setPowerStompDuration, setDive, setDiveDuration, setCorkscrewSpin, setCorkscrewSpinDuration, setScissorKick, setScissorKickDuration, setPhaseDash, setPhaseDashDuration, setHover, setHoverDuration, setGroundPound, setGroundPoundDuration, setGroundPoundEffectTriggered, setCartoonScramble, setCartoonScrambleDuration, setMoonwalking, setMoonwalkDuration, setShockwave, setShockwaveDuration, setBackflip, setBackflipDuration, setFrontflip, setFrontflipDuration, setHoudini, setHoudiniDuration, setHoudiniPhase, setFieryHoudini, setFieryHoudiniDuration, setFieryHoudiniPhase, setFireSpinner, setFireSpinnerDuration, setFireSpinnerOnCooldown, incrementFrameCount, setPlayerEnergy, setGameRunning, r... [truncated]
-import state from './state.js';
+import {
+    setPaused,
+    gameState,
+    setGameOverSequence,
+    setVictory,
+    setGameOverSequenceStartTime,
+    setLastTime,
+    setFirestormActive,
+    setFirestormEndTime,
+    setFirestormDrainingEnergy,
+    setFirestormDrainEndTime,
+    setFireSpinnerDrainingEnergy,
+    setFireSpinnerDrainEndTime,
+    setMageSpinnerActive,
+    setMageSpinnerEndTime,
+    setFireMageOnCooldown,
+    setFireMageActive,
+    setFireMageEndTime,
+    setMageSpinnerFireballTimer,
+    incrementMageSpinnerFireballsSpawned,
+    setMageSpinnerOnCooldown,
+    setFieryHoudiniOnCooldown,
+    setManualJumpOverrideActive,
+    setJumpProgress,
+    setJumping,
+    setSegmentProgress,
+    setBackgroundOffset,
+    setDaysElapsedTotal,
+    setOnScreenCustomEvent,
+    setCurrentObstacle,
+    addIgnitedObstacle,
+    removeIgnitedObstacle,
+    addVanishingObstacle,
+    removeVanishingObstacle,
+    addFireball,
+    removeFireball,
+    incrementObstaclesIncinerated,
+    incrementConsecutiveIncinerations,
+    incrementConsecutiveGroundPounds,
+    incrementTotalGroundPoundCollisions,
+    setColliding,
+    setCollisionDuration,
+    setCurrentAccelerator,
+    setAccelerating,
+    setAccelerationDuration,
+    setDecelerating,
+    setDecelerationDuration,
+    setGameSpeedMultiplier,
+    setScreenFlash,
+    setStickFigureBurst,
+    setTurboBoostFrame,
+    setTurboBoostLastFrameTime,
+    addCashBag,
+    removeCashBag,
+    setDaysCounter,
+    setAccumulatedCash,
+    setHurdle,
+    setHurdleDuration,
+    setSpecialMove,
+    setSpecialMoveDuration,
+    setPowerStomp,
+    setPowerStompDuration,
+    setDive,
+    setDiveDuration,
+    setCorkscrewSpin,
+    setCorkscrewSpinDuration,
+    setScissorKick,
+    setScissorKickDuration,
+    setPhaseDash,
+    setPhaseDashDuration,
+    setHover,
+    setHoverDuration,
+    setGroundPound,
+    setGroundPoundDuration,
+    setGroundPoundEffectTriggered,
+    setCartoonScramble,
+    setCartoonScrambleDuration,
+    setMoonwalking,
+    setMoonwalkDuration,
+    setShockwave,
+    setShockwaveDuration,
+    setBackflip,
+    setBackflipDuration,
+    setFrontflip,
+    setFrontflipDuration,
+    setHoudini,
+    setHoudiniDuration,
+    setHoudiniPhase,
+    setFieryHoudini,
+    setFieryHoudiniDuration,
+    setFieryHoudiniPhase,
+    setFireSpinner,
+    setFireSpinnerDuration,
+    setFireSpinnerOnCooldown,
+    incrementFrameCount,
+    setPlayerEnergy,
+    setGameRunning,
+    incrementHits,
+    addIncineratingObstacle,
+    removeIncineratingObstacle,
+    resetStreaks,
+    deactivateAllEvents,
+    resetManualJumpOverride,
+    activateCustomEvent,
+    clearActiveCashBags,
+    clearFireTrail,
+    clearIncineratingObstacles,
+    clearVanishingObstacles,
+    clearHoudiniParticles,
+    clearGroundPoundParticles,
+    clearFlipTrail,
+    clearMoonwalkParticles,
+    clearHoverParticles,
+    clearScrambleParticles,
+    clearDiveParticles,
+    clearSwooshParticles,
+    clearCorkscrewTrail,
+    clearShatteredObstacles,
+    clearIgnitedObstacles,
+    clearActiveFireballs,
+    resetJumpState
+} from './state-manager.js';
+import { initializeClouds, generateGrassBlades, updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from '../ui-modules/daily-challenge-ui.js';
 import { markDailyChallengeAsPlayed, updateDailyChallengeWinStreak } from '../daily-challenge.js';
 import { castMageSpinnerFireball } from './actions.js';
 import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
+import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFieryHoudiniPoof } from './drawing/effects.js';
 import { checkCollision, checkAcceleratorCollision, checkProximityEventCollection } from './collision.js';
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
@@ -291,11 +413,10 @@ export function animate(timestamp) {
     }
 
     gameState.activeCustomEvents.forEach(event => {
-        if (!event.wasTriggered && daysCheck >= event.daysSinceStart) {
+        if (event && !event.wasTriggered && daysCheck >= event.daysSinceStart) {
             if (!gameState.onScreenCustomEvent || gameState.onScreenCustomEvent.daysSinceStart !== event.daysSinceStart) {
                 console.info(`-> CUSTOM EVENT AUTO-TRIGGERED: Date: ${event.date}. Object missed or spawned late. Applying effect directly.`);
-                event.wasTriggered = true;
-                event.isActive = true;
+                activateCustomEvent(event);
                 applySpeedEffect(event.type);
             }
         }
@@ -353,7 +474,7 @@ export function animate(timestamp) {
                         playAnimationSound('fireball');
                         break;
                     case 1: // Shatter
-                        drawing.createShatterEffect(gameState.currentObstacle.x, obstacleY, gameState.currentObstacle.emoji);
+                        createShatterEffect(gameState.currentObstacle.x, obstacleY, gameState.currentObstacle.emoji);
                         playAnimationSound('shatter');
                         break;
                     case 2: // Vanish (Poof)
@@ -362,7 +483,7 @@ export function animate(timestamp) {
                             animationProgress: 0,
                             startTime: performance.now()
                         });
-                        drawing.createHoudiniPoof(gameState.currentObstacle.x, obstacleY);
+                        createHoudiniPoof(gameState.currentObstacle.x, obstacleY);
                         playAnimationSound('houdini');
                         break;
                 }
@@ -401,8 +522,8 @@ export function animate(timestamp) {
             }
 
             if (gameState.frameCount % 8 === 0) { // Reduced particle density for performance
-                drawing.createFirestormFlashes(angleRad);
-                drawing.createPlayerEmbers(runnerY);
+                createFirestormFlashes(angleRad);
+                createPlayerEmbers(runnerY);
             }
         }
     }
@@ -454,7 +575,7 @@ export function animate(timestamp) {
             setAccelerationDuration(0);
             setDecelerating(false);
             setDecelerationDuration(0);
-            gameState.activeCustomEvents.forEach(e => e.isActive = false);
+            deactivateAllEvents();
         }
         if (gameState.currentObstacle && gameState.currentObstacle.x < -OBSTACLE_WIDTH) {
             resetStreaks(); // Reset if obstacle is missed
@@ -553,9 +674,7 @@ export function animate(timestamp) {
                 if (gameState.decelerationDuration <= 0) {
                     setDecelerating(false);
                     setDecelerationDuration(0);
-                    gameState.activeCustomEvents.forEach(e => {
-                        if (e.type === 'DECELERATOR') e.isActive = false;
-                    });
+                    deactivateAllEvents();
                     setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
                     console.info("-> DECELERATOR: Debuff ended. Speed restored.");
                 }
@@ -565,9 +684,7 @@ export function animate(timestamp) {
                 if (gameState.accelerationDuration <= 0) {
                     setAccelerating(false);
                     setAccelerationDuration(0);
-                    gameState.activeCustomEvents.forEach(e => {
-                        if (e.type === 'ACCELERATOR') e.isActive = false;
-                    });
+                    deactivateAllEvents();
                     setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
                     console.info("-> ACCELERATOR: Boost ended. Speed restored.");
                 }
@@ -640,7 +757,7 @@ export function animate(timestamp) {
         setCollisionDuration(0);
         setDecelerating(false);
         setDecelerationDuration(0);
-        gameState.activeCustomEvents.forEach(e => e.isActive = false);
+        deactivateAllEvents();
         setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
 
         setCurrentObstacle(null);
@@ -710,7 +827,7 @@ export function animate(timestamp) {
         // Check if the pound is about to hit the ground and the effect hasn't been triggered yet
         if (gameState.jumpState.groundPoundDuration < 100 && !gameState.jumpState.groundPoundEffectTriggered) {
             const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(gameState.raceSegments[gameState.currentSegmentIndex].angleRad);
-            drawing.createGroundPoundEffect(STICK_FIGURE_FIXED_X, groundY);
+            createGroundPoundEffect(STICK_FIGURE_FIXED_X, groundY);
             setGroundPoundEffectTriggered(true);
         }
         if (gameState.jumpState.groundPoundDuration <= 0) {
@@ -756,7 +873,7 @@ export function animate(timestamp) {
             if (previousPhase === 'disappearing') {
                 // Trigger the reappearing poof once
                 const playerY = GROUND_Y - gameState.jumpState.progress * 200; // Approximate player Y
-                drawing.createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
+                createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
             }
         }
         if (gameState.jumpState.houdiniDuration <= 0) {
@@ -772,7 +889,7 @@ export function animate(timestamp) {
             setFieryHoudiniPhase('reappearing');
             if (previousPhase === 'disappearing') {
                 const playerY = GROUND_Y - gameState.jumpState.progress * 200; // Approximate player Y
-                drawing.createFieryHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
+                createFieryHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
             }
         }
         if (gameState.jumpState.fieryHoudiniDuration <= 0) {
@@ -819,152 +936,99 @@ export function animate(timestamp) {
     incrementFrameCount();
 
     setLastTime(timestamp);
-    drawing.updateClouds(); // Update clouds before drawing
+    updateClouds(); // Update clouds before drawing
     drawing.draw();
     requestAnimationFrame(animate);
 }
 
 export function resetGameState() {
     console.log("-> RESET GAME: Initiated.");
-    state.gameRunning = false;
-    state.isPaused = false;
-    state.currentSegmentIndex = 0;
-    state.segmentProgress = 0;
-    state.lastTime = 0;
-    state.backgroundOffset = 0;
-    state.frameCount = 0;
-    state.accumulatedCash = state.raceSegments.length > 0 ? state.raceSegments[0].milestoneValue : 0;
-    state.activeCashBags.length = 0;
-    state.fireTrail = [];
-    state.incineratingObstacles = [];
-    state.vanishingObstacles = [];
-    state.houdiniParticles = [];
-    state.groundPoundParticles = [];
-    state.flipTrail = [];
-    state.moonwalkParticles = [];
-    state.hoverParticles = [];
-    state.scrambleParticles = [];
-    state.diveParticles = [];
-    state.swooshParticles = [];
-    state.flipTrail = [];
-    state.corkscrewTrail = [];
-    state.shatteredObstacles.length = 0;
-    state.ignitedObstacles = [];
+    setGameRunning(false);
+    setPaused(false);
+    gameState.currentSegmentIndex = 0;
+    setSegmentProgress(0);
+    setLastTime(0);
+    setBackgroundOffset(0);
+    // incrementFrameCount(0) - No, let's use a dedicated setter
+    gameState.frameCount = 0; // Assuming direct reset is ok if no setter
+    setAccumulatedCash(gameState.raceSegments.length > 0 ? gameState.raceSegments[0].milestoneValue : 0);
 
-    // Reset environmental effects
-    state.environmentalEffects.raindrops = [];
-    state.environmentalEffects.rocks = [];
-    state.environmentalEffects.headlights = [];
-    state.environmentalEffects.fogPatches = [];
-    state.environmentalEffects.snowflakes = [];
-    state.environmentalEffects.windGusts = [];
-    state.environmentalEffects.kickedUpSnow = [];
-    state.environmentalEffects.heatHaze = [];
-    state.environmentalEffects.tumbleweeds = [];
-    state.environmentalEffects.sandGrains = [];
-    state.environmentalEffects.tornadoes = [];
-    state.environmentalEffects.asteroids = [];
-    state.environmentalEffects.shootingStars = [];
-    state.environmentalEffects.nebulaClouds = [];
-    state.environmentalEffects.shootingStarBursts = [];
-    state.environmentalEffects.shootingStarTrails = [];
-    state.environmentalEffects.nebulaCloudState = { active: false, startTime: 0, opacity: 0 };
-    state.environmentalEffects.fireflies = [];
-    state.environmentalEffects.moonGlow = { active: false, opacity: 0, rays: [] };
-    state.environmentalEffects.volcanoSmoke = [];
-    state.environmentalEffects.embers = [];
-    state.environmentalEffects.ash = [];
-    state.environmentalEffects.steamVents = [];
-    state.environmentalEffects.heatShimmer = { active: false, waveY: 0 };
-    state.environmentalEffects.cityscape = { buildings: [] };
+    // Clear all arrays
+    clearActiveCashBags();
+    clearFireTrail();
+    clearIncineratingObstacles();
+    clearVanishingObstacles();
+    clearHoudiniParticles();
+    clearGroundPoundParticles();
+    clearFlipTrail();
+    clearMoonwalkParticles();
+    clearHoverParticles();
+    clearScrambleParticles();
+    clearDiveParticles();
+    clearSwooshParticles();
+    clearCorkscrewTrail();
+    clearShatteredObstacles();
+    clearIgnitedObstacles();
+    clearActiveFireballs();
 
-    state.isFirestormActive = false;
-    state.firestormEndTime = 0;
-    state.firestormParticles = [];
-    state.playerEmberParticles = [];
-    state.ignitedObstacles = [];
-    state.isFirestormDrainingEnergy = false;
-    state.firestormDrainEndTime = 0;
-    state.isFireSpinnerDrainingEnergy = false;
-    state.fireSpinnerDrainEndTime = 0;
-    state.isMageSpinnerActive = false;
-    state.mageSpinnerEndTime = 0;
-    state.isMageSpinnerOnCooldown = false;
-    state.mageSpinnerLastActivationTime = 0;
-    state.mageSpinnerFireballTimer = 0;
-    state.mageSpinnerFireballsSpawned = 0;
-    state.playerEnergy = state.maxPlayerEnergy; // Initialize to max energy
+    // Reset complex objects
+    resetJumpState();
+    resetManualJumpOverride();
 
-    state.jumpState = {
-        isJumping: false, progress: 0,
-        isHurdle: false, hurdleDuration: 0,
-        isSpecialMove: false, specialMoveDuration: 0,
-        isPowerStomp: false, powerStompDuration: 0,
-        isDive: false, diveDuration: 0,
-        isCorkscrewSpin: false, corkscrewSpinDuration: 0,
-        isScissorKick: false, scissorKickDuration: 0,
-        isPhaseDash: false, phaseDashDuration: 0,
-        isHover: false, hoverDuration: 0,
-        isGroundPound: false, groundPoundDuration: 0, groundPoundEffectTriggered: false,
-        isCartoonScramble: false, cartoonScrambleDuration: 0,
-        isMoonwalking: false, moonwalkDuration: 0,
-        isShockwave: false, shockwaveDuration: 0,
-        isBackflip: false, backflipDuration: 0,
-        isFrontflip: false, frontflipDuration: 0,
-        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
-        isFieryHoudini: false, fieryHoudiniDuration: 0
-    };
-    state.currentObstacle = null;
-    state.isColliding = false;
-    state.collisionDuration = 0;
-    state.currentAccelerator = null;
-    state.isAccelerating = false;
-    state.accelerationDuration = 0;
-    state.isDecelerating = false;
-    state.decelerationDuration = 0;
-    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
+    // Reset simple state properties
+    setFirestormActive(false);
+    setFirestormEndTime(0);
+    setFirestormDrainingEnergy(false);
+    setFirestormDrainEndTime(0);
+    setFireSpinnerDrainingEnergy(false);
+    setFireSpinnerDrainEndTime(0);
+    setMageSpinnerActive(false);
+    setMageSpinnerEndTime(0);
+    setMageSpinnerOnCooldown(false);
+    setMageSpinnerFireballTimer(0);
+    gameState.mageSpinnerFireballsSpawned = 0; // Assuming direct reset
+    setPlayerEnergy(gameState.maxPlayerEnergy);
+    setCurrentObstacle(null);
+    setColliding(false);
+    setCollisionDuration(0);
+    setCurrentAccelerator(null);
+    setAccelerating(false);
+    setAccelerationDuration(0);
+    setDecelerating(false);
+    setDecelerationDuration(0);
+    setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
+    setFireSpinnerOnCooldown(false);
+    setFireMageActive(false);
+    setFireMageEndTime(0);
+    setFireMageOnCooldown(false);
+    resetStreaks();
 
-    state.isFireSpinnerOnCooldown = false;
-    state.fireSpinnerLastActivationTime = 0;
-    state.isFireMageActive = false;
-    state.fireMageEndTime = 0;
-    state.isFireMageOnCooldown = false;
-    state.fireMageLastActivationTime = 0;
-    state.activeFireballs = [];
-    state.playerStats.consecutiveGroundPounds = 0; // Reset consecutive Ground Pounds
-    state.playerStats.totalGroundPoundCollisions = 0;
-    state.playerStats.consecutiveIncinerations = 0;
-
-    state.activeCustomEvents = Object.values(state.customEvents).flat().map(event => ({
-        ...event,
-        wasTriggered: false,
-        isActive: false,
-        wasSpawned: false
+    // Reset custom events
+    gameState.activeCustomEvents = Object.values(gameState.customEvents).flat().map(event => ({
+        ...event, wasTriggered: false, isActive: false, wasSpawned: false
     })).sort((a, b) => a.daysSinceStart - b.daysSinceStart);
-    console.log(`-> RESET GAME: Prepared ${state.activeCustomEvents.length} custom events.`);
-    state.onScreenCustomEvent = null;
+    setOnScreenCustomEvent(null);
 
     // Reset hurdle animation states
-    state.raceSegments.forEach(segment => {
+    gameState.raceSegments.forEach(segment => {
         if (segment.isMilestone) {
             segment.animationState = 'idle';
             segment.animationProgress = 0;
         }
     });
 
-    state.hitsCounter = 0;
-    state.daysElapsedTotal = 0;
-    state.daysAccumulatedAtSegmentStart = 0;
-
-    state.isVictory = false;
-    state.isGameOverSequence = false;
-    state.gameOverSequenceStartTime = 0;
+    gameState.hitsCounter = 0;
+    setDaysElapsedTotal(0);
+    gameState.daysAccumulatedAtSegmentStart = 0;
+    setVictory(false);
+    setGameOverSequence(false);
+    setGameOverSequenceStartTime(0);
 
     Tone.Transport.stop();
     Tone.Transport.cancel();
 
-    drawing.initializeClouds();
-    drawing.generateGrassBlades(0); // Initialize grass blades on reset
+    initializeClouds();
+    generateGrassBlades(0);
 
     hideResultsScreen();
     updateControlPanelState(false, false);
@@ -973,116 +1037,31 @@ export function resetGameState() {
 }
 
 export function startGame() {
-    if (state.raceSegments.length < 2) {
-        // dataMessage.textContent = "Error: Cannot start. Load valid data with at least two milestones."; // Handled in UI
-        // dataMessage.style.color = 'red';
+    if (gameState.raceSegments.length < 2) {
         console.error("-> START GAME FAILED: Insufficient milestones.");
         return;
     }
-    if (state.gameRunning) return;
-
-    state.raceSegments = state.raceSegments; // Initialize raceSegments in the state
+    if (gameState.gameRunning) return;
 
     console.log("-> START GAME: Initiating game start sequence.");
 
-    // Reset all game state variables to their defaults
-    state.currentSegmentIndex = 0;
-    state.segmentProgress = 0;
-    state.lastTime = 0;
-    state.backgroundOffset = 0;
-    state.frameCount = 0;
-    state.accumulatedCash = state.raceSegments[0].milestoneValue;
-    state.activeCashBags.length = 0;
-    state.fireTrail = [];
-    state.incineratingObstacles = [];
-    state.vanishingObstacles = [];
-    state.houdiniParticles = [];
-    state.groundPoundParticles = [];
-    state.moonwalkParticles = [];
-    state.hoverParticles = [];
-    state.scrambleParticles = [];
-    state.diveParticles = [];
-    state.swooshParticles = [];
-    state.flipTrail = [];
-    state.corkscrewTrail = [];
-    state.shatteredObstacles.length = 0;
-    state.ignitedObstacles = [];
-    state.isFirestormActive = false;
-    state.firestormEndTime = 0;
-    state.firestormParticles = [];
-    state.playerEmberParticles = [];
-    state.ignitedObstacles = [];
-    state.isFirestormDrainingEnergy = false;
-    state.firestormDrainEndTime = 0;
-    state.isFireSpinnerDrainingEnergy = false;
-    state.fireSpinnerDrainEndTime = 0;
-    state.isMageSpinnerActive = false;
-    state.mageSpinnerEndTime = 0;
-    state.isMageSpinnerOnCooldown = false;
-    state.mageSpinnerLastActivationTime = 0;
-    state.mageSpinnerFireballTimer = 0;
-    state.mageSpinnerFireballsSpawned = 0;
-    state.playerEnergy = state.maxPlayerEnergy; // Start energy at max
-    state.jumpState = {
-        isJumping: false, progress: 0,
-        isHurdle: false, hurdleDuration: 0,
-        isSpecialMove: false, specialMoveDuration: 0,
-        isPowerStomp: false, powerStompDuration: 0,
-        isDive: false, diveDuration: 0,
-        isCorkscrewSpin: false, corkscrewSpinDuration: 0,
-        isScissorKick: false, scissorKickDuration: 0,
-        isPhaseDash: false, phaseDashDuration: 0,
-        isHover: false, hoverDuration: 0,
-        isGroundPound: false, groundPoundDuration: 0, groundPoundEffectTriggered: false,
-        isCartoonScramble: false, cartoonScrambleDuration: 0,
-        isMoonwalking: false, moonwalkDuration: 0,
-        isShockwave: false, shockwaveDuration: 0,
-        isBackflip: false, backflipDuration: 0,
-        isFrontflip: false, frontflipDuration: 0,
-        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
-        isFieryHoudini: false, fieryHoudiniDuration: 0
-    };
-    state.manualJumpOverride = {isActive: false, startTime: 0, duration: state.manualJumpDurationMs};
-    state.isColliding = false;
-    state.collisionDuration = 0;
-    state.currentObstacle = null;
-    state.currentAccelerator = null;
-    state.isAccelerating = false;
-    state.accelerationDuration = 0;
-    state.isDecelerating = false;
-    state.decelerationDuration = 0;
-    state.onScreenCustomEvent = null;
-    state.isFireSpinnerOnCooldown = false;
-    state.fireSpinnerLastActivationTime = 0;
-    state.isFireMageActive = false;
-    state.fireMageEndTime = 0;
-    state.isFireMageOnCooldown = false;
-    state.fireMageLastActivationTime = 0;
-    state.activeFireballs = [];
-    state.hitsCounter = 0;
-    state.daysElapsedTotal = 0;
-    state.daysAccumulatedAtSegmentStart = 0;
-    state.isVictory = false;
-    state.isGameOverSequence = false;
-    state.gameOverSequenceStartTime = 0;
-    state.isPaused = false;
+    // Reset all game state variables to their defaults by calling the dedicated function
+    resetGameState();
 
+    // Now, set the specific states for starting a new game
+    setGameRunning(true);
     drawing.setInitialLoad(false);
-
-    applySkillLevelSettings(state.currentSkillLevel);
-
-    state.gameSpeedMultiplier = state.intendedSpeedMultiplier;
+    applySkillLevelSettings(gameState.currentSkillLevel);
+    setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
 
     let musicUrl = DEFAULT_MUSIC_URL;
-    if (state.selectedPersona && state.selectedPersona !== 'custom' && personas[state.selectedPersona]) {
-        musicUrl = personas[state.selectedPersona].music;
+    if (gameState.selectedPersona && gameState.selectedPersona !== 'custom' && personas[gameState.selectedPersona]) {
+        musicUrl = personas[gameState.selectedPersona].music;
     } else {
-        const cleanEmoji = state.stickFigureEmoji.replace(/\uFE0F/g, '');
+        const cleanEmoji = gameState.stickFigureEmoji.replace(/\uFE0F/g, '');
         musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
     }
     initializeMusicPlayer(musicUrl);
-
-    hideResultsScreen();
 
     if (Tone.context.state !== 'running') {
         Tone.start();
@@ -1097,19 +1076,6 @@ export function startGame() {
         });
     }
 
-    state.activeCustomEvents = Object.values(state.customEvents).flat().map(event => ({
-        ...event,
-        wasTriggered: false,
-        isActive: false,
-        wasSpawned: false
-    })).sort((a, b) => a.daysSinceStart - b.daysSinceStart);
-    console.log(`-> START GAME: ${state.activeCustomEvents.length} custom events enabled.`);
-
-    drawing.initializeClouds();
-    drawing.generateGrassBlades(0); // Initialize grass blades on game start
-
-    state.gameRunning = true;
-
     updateControlPanelState(true, false);
 
     const mobileBreakpoint = 768;
@@ -1117,14 +1083,13 @@ export function startGame() {
         document.getElementById('gameCanvas').scrollIntoView({behavior: 'smooth', block: 'start'});
     }
 
-    // If starting in fullscreen, apply the immersive class and hide controls
     if (document.fullscreenElement) {
         document.body.classList.add('game-active-fullscreen');
         header.classList.add('hidden');
         controlPanel.classList.add('hidden');
         document.getElementById('actionButtons').classList.add('hidden');
         mainElement.classList.remove('grid', 'lg:grid-cols-3', 'gap-8');
-        document.body.style.backgroundColor = '#000'; // Force black background
+        document.body.style.backgroundColor = '#000';
     }
 
     requestAnimationFrame(animate);
@@ -1132,11 +1097,12 @@ export function startGame() {
 }
 
 export function stopGame(shouldReset = true) {
-    if (!state.gameRunning && !shouldReset && !state.isGameOverSequence) return;
+    // If we're not resetting, and the game isn't running or in a game over sequence, then there's nothing to do.
+    if (!shouldReset && !gameState.gameRunning && !gameState.isGameOverSequence) return;
 
     console.log("-> STOP GAME: Game execution halted.");
-    state.gameRunning = false;
-    state.isPaused = false;
+    setGameRunning(false);
+    setPaused(false);
 
     // Always restore UI visibility on game stop
     header.classList.remove('hidden');
@@ -1149,19 +1115,19 @@ export function stopGame(shouldReset = true) {
 
     Tone.Transport.stop();
 
-    if (state.isDailyChallengeActive) {
+    if (gameState.isDailyChallengeActive) {
         if (shouldReset) {
             console.log("-> STOP GAME: Resetting Daily Challenge.");
             resetGameState();
             displayDailyChallenge(); // Re-display the start button
             showSandboxControls(); // Ensure controls are visible
-            state.isDailyChallengeActive = false; // Reset the flag
+            gameState.isDailyChallengeActive = false; // Reset the flag
         } else {
             console.log("-> STOP GAME: Daily Challenge ended, displaying results.");
-            const newWinStreak = updateDailyChallengeWinStreak(state.isVictory);
+            const newWinStreak = updateDailyChallengeWinStreak(gameState.isVictory);
             const stats = {
-                days: Math.round(state.daysElapsedTotal),
-                hits: state.hitsCounter
+                days: Math.round(gameState.daysElapsedTotal),
+                hits: gameState.hitsCounter
             };
             const results = {...stats, winStreak: newWinStreak};
 
@@ -1169,7 +1135,7 @@ export function stopGame(shouldReset = true) {
             displayDailyChallengeCompletedScreen(results);
 
             showSandboxControls();
-            state.isDailyChallengeActive = false; // Reset the flag
+            gameState.isDailyChallengeActive = false; // Reset the flag
             document.getElementById('startButton').textContent = "Start the Heist!";
             const stopButton = document.getElementById('stopButton');
             if (stopButton) {
@@ -1181,7 +1147,7 @@ export function stopGame(shouldReset = true) {
         resetGameState();
         drawing.draw();
     } else {
-        showResultsScreen(state.financialMilestones, state.raceSegments);
+        showResultsScreen(gameState.financialMilestones, gameState.raceSegments);
         updateControlPanelState(false, false);
         document.getElementById('startButton').textContent = "Restart Heist!";
         console.log("-> STOP GAME: Game ended, displaying results.");
