@@ -10,9 +10,10 @@ import {
     personaSelector
 } from '../dom-elements.js';
 import { defaultDataString, defaultEventDataString } from '../constants.js';
+import { parseData, parseEventData, prepareRaceData } from '../utils.js';
 import { setTheme } from '../theme.js';
 import { applyPersona } from './persona.js'; // This will be created later
-import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setCurrentSkillLevel, setIntendedSpeedMultiplier, setEnableRandomPowerUps, setAutoHurdleEnabled, setSelectedTheme, setSelectedPersona, setPlayerStats } from '../game-modules/state-manager.js';
+import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setCurrentSkillLevel, setIntendedSpeedMultiplier, setEnableRandomPowerUps, setAutoHurdleEnabled, setSelectedTheme, setSelectedPersona, setPlayerStats, setFinancialMilestones, setRaceSegments, setCustomEvents } from '../game-modules/state-manager.js';
 import { PLAYER_STATS_KEY } from '../game-modules/state.js';
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
@@ -74,6 +75,17 @@ export function loadSettings() {
         // Load saved data into text areas, falling back to default if not present
         dataInput.value = settings.milestoneData || defaultDataString.trim();
         eventDataInput.value = settings.eventData || defaultEventDataString.trim();
+
+        // Also parse and apply the loaded data to the game state
+        const financialMilestones = parseData(dataInput.value);
+        setFinancialMilestones(financialMilestones);
+        if (financialMilestones && Object.keys(financialMilestones).length >= 2) {
+            const raceSegments = prepareRaceData(financialMilestones);
+            setRaceSegments(raceSegments);
+            const firstMilestoneDate = Object.keys(financialMilestones)[0];
+            const customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
+            setCustomEvents(customEvents);
+        }
 
         applyPersona(gameState.selectedPersona); // Apply persona settings and UI changes
         personaSelector.value = gameState.selectedPersona; // Set selector value AFTER applying persona

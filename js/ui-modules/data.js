@@ -17,46 +17,51 @@ export let customEvents = {};
 
 export function loadCustomData() {
     console.log("-> loadCustomData: Attempting to load custom data.");
+    let isDataValid = true;
 
-    // 1. Load Milestone Data
+    // 1. Load and Validate Milestone Data
     const customMilestoneData = parseData(dataInput.value);
     if (!customMilestoneData || Object.keys(customMilestoneData).length < 2) {
-        const errorMsg = "Error: Please check Milestone Data format. Need at least two valid 'MM/DD/YYYY: VALUE' pairs. Data load failed.";
+        const errorMsg = "Error: Milestone Data is invalid. Please provide at least two 'MM/DD/YYYY: VALUE' pairs.";
         dataMessage.textContent = errorMsg;
         dataMessage.style.color = 'red';
         console.error("-> loadCustomData: Milestone Data loading failed.", errorMsg);
-        // Clear out events to prevent mismatch
+
+        // Clear game state on error
+        setFinancialMilestones({});
+        setRaceSegments([]);
         setCustomEvents({});
-        return;
+        isDataValid = false;
+    } else {
+        setFinancialMilestones(customMilestoneData);
+        const raceSegments = prepareRaceData(gameState.financialMilestones);
+        setRaceSegments(raceSegments);
+        const firstMilestoneDate = Object.keys(gameState.financialMilestones)[0];
+
+        // 2. Load and Validate Custom Event Data
+        const customEventData = parseEventData(eventDataInput.value, firstMilestoneDate);
+        if (customEventData === null) {
+            const errorMsg = "Warning: Custom Event Data is invalid. Events will be ignored.";
+            dataMessage.textContent = errorMsg;
+            dataMessage.style.color = 'orange'; // Use orange for a warning
+            console.warn("-> loadCustomData: Custom Event Data loading failed.", errorMsg);
+            setCustomEvents({}); // Clear events but proceed with valid milestones
+        } else {
+            setCustomEvents(customEventData);
+            console.log(`-> loadCustomData: ${Object.values(gameState.customEvents).flat().length} Custom Events loaded.`);
+        }
     }
 
-    setFinancialMilestones(customMilestoneData);
-    const raceSegments = prepareRaceData(gameState.financialMilestones);
-    const firstMilestoneDate = Object.keys(financialMilestones)[0];
-
-    // 2. Load Custom Event Data (Only if milestones loaded successfully)
-    const customEventData = parseEventData(eventDataInput.value, firstMilestoneDate);
-
-    if (customEventData === null) {
-        const errorMsg = "Error: Please check Custom Event Data format/dates. Events load failed.";
-        dataMessage.textContent = errorMsg;
-        dataMessage.style.color = 'red';
-        console.error("-> loadCustomData: Custom Event Data loading failed.", errorMsg);
-        // Continue with just milestone data, but warn user.
-        setCustomEvents({});
-        return;
+    // 3. Update UI Message and Save Settings
+    if (isDataValid) {
+        dataMessage.textContent = `Data successfully loaded! ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} custom events ready.`;
+        dataMessage.style.color = 'green';
+        console.log("-> loadCustomData: Data loaded and game reset for new segments.");
     }
 
-    setRaceSegments(raceSegments);
-    setCustomEvents(customEventData);
-    console.log(`-> loadCustomData: ${Object.values(gameState.customEvents).flat().length} Custom Events loaded.`);
-
-    dataMessage.textContent = `Data successfully loaded! ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} custom events ready.`;
-    dataMessage.style.color = 'green';
-    console.log("-> loadCustomData: Data loaded and game reset for new segments.");
-    saveSettings(); // Save the newly loaded custom data
-    document.body.classList.remove('game-active-fullscreen'); // Remove immersive class
-    exitFullScreenIfActive(); // Exit fullscreen when new data is loaded
+    saveSettings(); // ALWAYS save the current state of the inputs
+    document.body.classList.remove('game-active-fullscreen');
+    exitFullScreenIfActive();
 }
 
 export async function initializeUIData() {
@@ -103,25 +108,25 @@ export async function initializeUIData() {
             dataInput.value = defaultDataString.trim();
             eventDataInput.value = defaultEventDataString.trim();
         }
-    }
 
-    // Directly parse and prepare the initial data
-    const financialMilestones = parseData(dataInput.value);
-    setFinancialMilestones(financialMilestones);
-    if (gameState.financialMilestones && Object.keys(gameState.financialMilestones).length >= 2) {
-        const raceSegments = prepareRaceData(gameState.financialMilestones);
-        setRaceSegments(raceSegments);
-        const firstMilestoneDate = Object.keys(gameState.financialMilestones)[0];
-        const customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
-        setCustomEvents(customEvents);
-        dataMessage.textContent = `Default data loaded. ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} events ready.`;
-        dataMessage.style.color = 'green';
-    } else {
-        dataMessage.textContent = "Error: Default data is invalid. Please check 'milestones.json' or provide valid custom data.";
-        dataMessage.style.color = 'red';
-        setFinancialMilestones({});
-        setRaceSegments([]);
-        setCustomEvents({});
+        // Directly parse and prepare the initial data if no settings were loaded
+        const financialMilestones = parseData(dataInput.value);
+        setFinancialMilestones(financialMilestones);
+        if (gameState.financialMilestones && Object.keys(gameState.financialMilestones).length >= 2) {
+            const raceSegments = prepareRaceData(gameState.financialMilestones);
+            setRaceSegments(raceSegments);
+            const firstMilestoneDate = Object.keys(gameState.financialMilestones)[0];
+            const customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
+            setCustomEvents(customEvents);
+            dataMessage.textContent = `Default data loaded. ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} events ready.`;
+            dataMessage.style.color = 'green';
+        } else {
+            dataMessage.textContent = "Error: Default data is invalid. Please check 'milestones.json' or provide valid custom data.";
+            dataMessage.style.color = 'red';
+            setFinancialMilestones({});
+            setRaceSegments([]);
+            setCustomEvents({});
+        }
     }
 
     displayHighScores(); // Display high scores on startup
