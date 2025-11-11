@@ -36,3 +36,9 @@ export const fullscreenToggleButton = document.getElementById('fullscreenToggleB
 export const header = document.querySelector('header');
 export const controlPanel = document.querySelector('.lg\\:col-span-1');
 export const mainElement = document.querySelector('main');
+
+// Skill Upgrade Modal Elements
+export const skillUpgradeModal = document.getElementById('skillUpgradeModal');
+export const skillModalTitle = document.getElementById('skillModalTitle');
+export const skillModalContent = document.getElementById('skillModalContent');
+export const closeSkillModalBtn = document.getElementById('closeSkillModalBtn');

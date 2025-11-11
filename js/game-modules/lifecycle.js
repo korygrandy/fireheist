@@ -192,6 +192,7 @@ import { checkCollision, checkAcceleratorCollision, checkProximityEventCollectio
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
 import { updateHighScore } from './score.js';
+import { drawVictoryOverlay } from './drawing/overlays.js';
 
 export function togglePauseGame() {
     if (!gameState.gameRunning) return;
@@ -247,7 +248,7 @@ export function animate(timestamp) {
         }
 
         drawing.draw();
-        drawing.drawVictoryOverlay(timestamp - gameState.gameOverSequenceStartTime);
+        drawVictoryOverlay(timestamp - gameState.gameOverSequenceStartTime);
 
         if (timestamp - gameState.gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
             stopGame(false);

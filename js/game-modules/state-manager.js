@@ -484,20 +484,16 @@ export function setDaysCounter(days, delta, frame) {
     state.daysCounter = { days, delta, frame };
 }
 
-/**
- * Sets the accumulated cash.
- * @param {number} cash
- */
-export function setAccumulatedCash(cash) {
-    state.accumulatedCash = cash;
+export function setAccumulatedCash(value) {
+    gameState.playerStats.totalAccumulatedCash += value;
 }
 
-/**
- * Sets the hurdle status.
- * @param {boolean} isHurdle
- */
-export function setHurdle(isHurdle) {
-    state.jumpState.isHurdle = isHurdle;
+export function setTotalAccumulatedCash(value) {
+    gameState.playerStats.totalAccumulatedCash = value;
+}
+
+export function setHurdle(value) {
+    gameState.jumpState.isHurdle = value;
 }
 
 /**

@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function initializeDebugPanel() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('debug') === 'true') {
+            window.gameState = gameState; // Expose gameState for console debugging
             const debugPanel = document.getElementById('debug-panel');
             if (debugPanel) {
                 debugPanel.classList.remove('hidden');

@@ -9,7 +9,7 @@ import { populatePersonaSelector } from './persona.js';
 import { handleAutoHurdleToggle } from './input-handlers.js';
 import { ARMORY_ITEMS } from '../unlocks.js';
 import { checkSkillUnlockStatus } from '../unlocks.js';
-import { gameState, setFinancialMilestones, setRaceSegments, setCustomEvents, setActiveArmorySkill } from '../game-modules/state-manager.js';
+import { gameState, setFinancialMilestones, setRaceSegments, setCustomEvents, setActiveArmorySkill, setTotalAccumulatedCash } from '../game-modules/state-manager.js';
 
 export let financialMilestones = {};
 export let raceSegments = [];
@@ -72,6 +72,11 @@ export async function initializeUIData() {
     // Then, load the saved settings
     const settingsLoaded = loadSettings();
     loadPlayerStats(); // Load player stats here
+    
+    // Ensure the game state's cash reflects the total saved stats for the upgrade system
+    if (gameState.playerStats.totalAccumulatedCash !== undefined) {
+        setTotalAccumulatedCash(gameState.playerStats.totalAccumulatedCash);
+    }
 
     // Sanity check: If an active skill is somehow no longer unlocked, deselect it.
     const activeSkill = gameState.playerStats.activeArmorySkill;
