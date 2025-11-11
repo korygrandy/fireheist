@@ -13,6 +13,7 @@ import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
 import { createShatterEffect } from './drawing/effects.js';
 
 export function checkCollision(runnerY, angleRad) {
+    if (gameState.isInvincible) return false;
     if (!gameState.currentObstacle || gameState.currentObstacle.hasBeenHit || gameState.isColliding) return false;
 
     const obstacleX = gameState.currentObstacle.x;
@@ -43,6 +44,20 @@ export function checkCollision(runnerY, angleRad) {
             incrementConsecutiveIncinerations();
             resetStreaks(); // Reset streak
             console.log("-> FIRESTORM V2: Obstacle incinerated by collision!");
+            return false; // No penalty
+        }
+
+        // Priority 1.5: Check for active Fire Shield.
+        if (gameState.isFireShieldActive) {
+            addIncineratingObstacle({
+                ...gameState.currentObstacle,
+                animationProgress: 0,
+                startTime: performance.now()
+            });
+            setCurrentObstacle(null);
+            playAnimationSound('incinerate');
+            gameState.isFireShieldActive = false; // Shield is consumed on impact
+            console.log("-> FIRE SHIELD: Obstacle incinerated!");
             return false; // No penalty
         }
 

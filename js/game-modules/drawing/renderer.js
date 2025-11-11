@@ -4,7 +4,7 @@ import { drawCityscape } from './environmental-effects.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawFireSpinner, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawFieryHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFireExplosion } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
-import { drawStickFigure } from './player.js';
+import { drawStickFigure, drawFireShield } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay } from './overlays.js';
 
 export function clearCanvas(skyColor) {
@@ -113,6 +113,9 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad) {
     }
 
     drawStickFigure(currentX, currentY, gameState.jumpState, groundAngleRad);
+    if (gameState.isFireShieldActive) {
+        drawFireShield(currentX, currentY);
+    }
     drawFireSpinner(currentX, currentY);
 
     if (gameState.jumpState.isFieryGroundPound && !gameState.jumpState.groundPoundEffectTriggered) {

@@ -133,6 +133,8 @@ import {
     setHoverDuration,
     setGroundPound,
     setGroundPoundDuration,
+    setFieryGroundPound,
+    setFieryGroundPoundDuration,
     setGroundPoundEffectTriggered,
     setCartoonScramble,
     setCartoonScrambleDuration,
@@ -187,7 +189,7 @@ import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from '../
 import { markDailyChallengeAsPlayed, updateDailyChallengeWinStreak } from '../daily-challenge.js';
 import { castMageSpinnerFireball } from './actions.js';
 import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
-import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFieryHoudiniPoof } from './drawing/effects.js';
+import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFieryHoudiniPoof, createFireTrail } from './drawing/effects.js';
 import { checkCollision, checkAcceleratorCollision, checkProximityEventCollection } from './collision.js';
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
@@ -218,6 +220,10 @@ export function animate(timestamp) {
     if (gameState.isPaused) {
         requestAnimationFrame(animate);
         return;
+    }
+
+    if (gameState.isInvincible && timestamp > gameState.invincibilityEndTime) {
+        gameState.isInvincible = false;
     }
 
     if (gameState.currentSegmentIndex >= gameState.raceSegments.length) {
@@ -511,6 +517,19 @@ export function animate(timestamp) {
         if (Date.now() > gameState.firestormEndTime) {
             setFirestormActive(false);
         } else {
+            const skillLevel = gameState.playerStats.skillLevels.firestorm || 1;
+            if (skillLevel >= 5 && !gameState.isFireShieldActive) {
+                if (!gameState.fireShieldSpawnTimer) {
+                    gameState.fireShieldSpawnTimer = 3000; // Spawn every 3 seconds
+                }
+                gameState.fireShieldSpawnTimer -= deltaTime;
+                if (gameState.fireShieldSpawnTimer <= 0) {
+                    gameState.isFireShieldActive = true;
+                    gameState.fireShieldEndTime = Date.now() + 2000; // Shield lasts 2 seconds
+                    gameState.fireShieldSpawnTimer = 3000; // Reset timer
+                }
+            }
+
             // Robust catch-all: If there's a current obstacle and it's not already ignited, ignite it.
             if (gameState.currentObstacle && !gameState.ignitedObstacles.some(o => o.x === gameState.currentObstacle.x)) {
                 const burnoutDuration = 500 + Math.random() * 1000; // Quicker burnout: 0.5 to 1.5 seconds
@@ -528,6 +547,10 @@ export function animate(timestamp) {
                 createPlayerEmbers(runnerY);
             }
         }
+    }
+
+    if (gameState.isFireShieldActive && Date.now() > gameState.fireShieldEndTime) {
+        gameState.isFireShieldActive = false;
     }
 
     // Update and check ignited obstacles
@@ -834,6 +857,21 @@ export function animate(timestamp) {
         }
         if (gameState.jumpState.groundPoundDuration <= 0) {
             setGroundPound(false);
+        }
+    }
+    if (gameState.jumpState.isFieryGroundPound) {
+        setFieryGroundPoundDuration(gameState.jumpState.fieryGroundPoundDuration - deltaTime);
+        if (gameState.jumpState.fieryGroundPoundDuration < 100 && !gameState.jumpState.groundPoundEffectTriggered) {
+            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(gameState.raceSegments[gameState.currentSegmentIndex].angleRad);
+            const skillLevel = gameState.playerStats.skillLevels.fieryGroundPound || 1;
+            createGroundPoundEffect(STICK_FIGURE_FIXED_X, groundY, skillLevel);
+            if (skillLevel === 5) {
+                createFireTrail(STICK_FIGURE_FIXED_X, groundY);
+            }
+            setGroundPoundEffectTriggered(true);
+        }
+        if (gameState.jumpState.fieryGroundPoundDuration <= 0) {
+            setFieryGroundPound(false);
         }
     }
     if (gameState.jumpState.isCartoonScramble) {

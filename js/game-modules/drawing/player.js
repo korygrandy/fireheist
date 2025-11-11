@@ -408,7 +408,32 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX2, armMovementY2);
     ctx.stroke();
 
-    ctx.restore();
+        ctx.restore();
 
-    ctx.restore();
-}
+    
+
+        ctx.restore();
+
+    }
+
+    
+
+    export function drawFireShield(x, y) {
+
+        const shieldRadius = 40 + 5 * Math.sin(gameState.frameCount * 0.2); // Pulsating radius
+
+        const shieldOpacity = 0.5 + 0.2 * Math.sin(gameState.frameCount * 0.2); // Pulsating opacity
+
+    
+
+        ctx.beginPath();
+
+        ctx.arc(x, y - STICK_FIGURE_TOTAL_HEIGHT / 2, shieldRadius, 0, Math.PI * 2);
+
+        ctx.fillStyle = `rgba(255, 165, 0, ${shieldOpacity})`;
+
+        ctx.fill();
+
+    }
+
+    

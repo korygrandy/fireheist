@@ -647,6 +647,14 @@ export function setGroundPoundEffectTriggered(isTriggered) {
     state.jumpState.groundPoundEffectTriggered = isTriggered;
 }
 
+export function setFieryGroundPound(isFieryGroundPound) {
+    state.jumpState.isFieryGroundPound = isFieryGroundPound;
+}
+
+export function setFieryGroundPoundDuration(duration) {
+    state.jumpState.fieryGroundPoundDuration = duration;
+}
+
 /**
  * Sets the cartoon scramble status.
  * @param {boolean} isCartoonScramble

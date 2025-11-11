@@ -12,13 +12,18 @@ function hexToRgb(hex) {
     } : null;
 }
 
-export function createGroundPoundEffect(x, y) {
-    const particleCount = 40;
+export function createGroundPoundEffect(x, y, skillLevel = 1) {
+    let particleCount = 40;
+    let speed = 5;
+
+    if (skillLevel > 1) {
+        particleCount += 10 * (skillLevel - 1);
+        speed += 1 * (skillLevel - 1);
+    }
     const groundColorRgb = hexToRgb(currentTheme.ground);
 
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI; // Upward semi-circle
-        const speed = Math.random() * 5 + 2;
         gameState.groundPoundParticles.push({
             x: x,
             y: y,
@@ -398,6 +403,23 @@ export function drawFieryHoudiniParticles() {
     }
 }
 
+export function createFireTrail(x, y) {
+    const particleCount = 50;
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 3 + 1;
+        gameState.fireTrail.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: Math.random() * 4 + 2,
+            life: 1,
+            color: `rgba(255, ${Math.floor(Math.random() * 100)}, 0, ${Math.random() * 0.5 + 0.5})`
+        });
+    }
+}
+
 export function drawFireTrail() {
     for (let i = gameState.fireTrail.length - 1; i >= 0; i--) {
         const p = gameState.fireTrail[i];
@@ -460,7 +482,11 @@ export function drawShatteredObstacles() {
 
 export function createFirestormFlashes(angleRad) {
     if (gameState.firestormParticles.length >= gameState.MAX_FIRESTORM_PARTICLES) return;
-    const burstX = Math.random() * canvas.width;
+
+    const skillLevel = gameState.playerStats.skillLevels.firestorm || 1;
+    const widerArea = skillLevel >= 4;
+    const burstX = Math.random() * (widerArea ? canvas.width * 1.5 : canvas.width);
+
     const burstY = GROUND_Y - burstX * Math.tan(angleRad) - Math.random() * 10;
     const particleCount = 5 + Math.floor(Math.random() * 5); // 5 to 9 particles
     for (let i = 0; i < particleCount; i++) {
@@ -549,5 +575,28 @@ export function drawPlayerEmbers() {
             ctx.fill();
             ctx.restore();
         }
+    }
+}
+
+export function createMeteorStrikeEffect(targetObstacle, skillLevel) {
+    if (!targetObstacle) return;
+
+    const particleCount = 50 + 25 * (skillLevel - 1);
+    const explosionSize = 10 + 5 * (skillLevel - 1);
+
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * explosionSize;
+        const color = Math.random() > 0.3 ? `rgba(255, ${Math.floor(Math.random() * 150)}, 0, 0.8)` : `rgba(100, 100, 100, 0.6)`; // Fire and smoke
+
+        gameState.firestormParticles.push({ // Re-using firestorm particles for the explosion
+            x: targetObstacle.x,
+            y: GROUND_Y - targetObstacle.x * Math.tan(gameState.raceSegments[gameState.currentSegmentIndex].angleRad),
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1.5, // Longer life for a bigger boom
+            size: Math.random() * 8 + 4,
+            color: color
+        });
     }
 }
