@@ -135,11 +135,12 @@ export function loadPlayerStats() {
             consecutiveGroundPounds: loadedStats.consecutiveGroundPounds || 0,
             totalGroundPoundCollisions: loadedStats.totalGroundPoundCollisions || 0,
             consecutiveIncinerations: loadedStats.consecutiveIncinerations || 0,
-            totalAccumulatedCash: loadedStats.totalAccumulatedCash || 0
+            totalAccumulatedCash: loadedStats.totalAccumulatedCash || 0,
+            skillLevels: loadedStats.skillLevels || {}
         });
         console.log("-> loadPlayerStats: Player stats loaded and assigned to state.");
     } else {
-        setPlayerStats({ flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null, consecutiveGroundPounds: 0, totalGroundPoundCollisions: 0, consecutiveIncinerations: 0, totalAccumulatedCash: 0 });
+        setPlayerStats({ flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null, consecutiveGroundPounds: 0, totalGroundPoundCollisions: 0, consecutiveIncinerations: 0, totalAccumulatedCash: 0, skillLevels: {} });
         console.log("-> loadPlayerStats: No player stats found. Initializing defaults.");
     }
 }

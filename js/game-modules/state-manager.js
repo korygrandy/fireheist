@@ -492,6 +492,13 @@ export function setTotalAccumulatedCash(value) {
     gameState.playerStats.totalAccumulatedCash = value;
 }
 
+export function setPlayerSkillLevel(skillKey, level) {
+    if (!gameState.playerStats.skillLevels) {
+        gameState.playerStats.skillLevels = {};
+    }
+    gameState.playerStats.skillLevels[skillKey] = level;
+}
+
 export function setHurdle(value) {
     gameState.jumpState.isHurdle = value;
 }

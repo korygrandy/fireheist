@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const debugCycleThemeBtn = document.getElementById('debugCycleThemeBtn');
                 const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
                 const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
+                const addCashBtn = document.getElementById('debugAddCashBtn');
 
                 function debugSetIncinerationCount(count) {
                     setObstaclesIncinerated(count);
@@ -114,6 +115,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                         } else {
                             alert('Please enter a valid number.');
                         }
+                    });
+                }
+                if (addCashBtn) {
+                    addCashBtn.addEventListener('click', () => {
+                        const command = 'window.gameState.playerStats.totalAccumulatedCash = 1000000000;';
+                        navigator.clipboard.writeText(command).then(() => {
+                            const originalText = addCashBtn.textContent;
+                            addCashBtn.textContent = 'Copied!';
+                            setTimeout(() => {
+                                addCashBtn.textContent = originalText;
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                        });
                     });
                 }
             }
