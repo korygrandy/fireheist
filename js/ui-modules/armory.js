@@ -50,7 +50,7 @@ export function populateArmoryItems() {
         if (!isUnlocked) {
             const progress = getSkillUnlockProgress(skill.unlockCondition, gameState.playerStats);
             if (progress.target > 0) {
-                lockedMessage = `<p class="text-xs text-red-500 mt-2">Locked: ${skill.unlockText} (${progress.current}/${progress.target})</p>`;
+                lockedMessage = `<p class="text-xs text-red-500 mt-2">Locked: ${skill.unlockText || skill.description} (${progress.current}/${progress.target})</p>`;
             } else {
                 lockedMessage = `<p class="text-xs text-red-500 mt-2">Locked: ${skill.unlockText || skill.description}</p>`;
             }
