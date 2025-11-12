@@ -245,6 +245,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // --- PAUSE GAME ON TAB UNFOCUSED ---
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && gameState.gameRunning && !gameState.isPaused) {
+            togglePauseGame();
+        }
+    });
+
     // --- JUMP & PAUSE CONTROLS ---
 
     const skillActionMap = {

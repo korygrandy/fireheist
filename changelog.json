@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.5.04",
+        "date": "2025-11-11",
+        "changes": [
+            "feat(gameplay): Implemented a feature to automatically pause the game and its audio when the browser tab loses focus or is minimized.",
+            "feat(privacy): Enhanced user privacy by preventing the game from running in the background, which could potentially capture audio or screen information without the user's knowledge.",
+            "fix(ux): Improved the user experience by preventing the game from continuing to play audio when the user has switched to another tab or locked their screen."
+        ]
+    },
+    {
         "version": "1.5.02",
         "date": "2025-11-09",
         "changes": [
@@ -77,16 +86,6 @@
         "date": "2025-11-07",
         "changes": [
             "fix: Resolved a wrapping issue with the Heist Control Panel tabs by adding `flex-wrap` to their container, ensuring they wrap correctly on smaller screens."
-        ]
-    },
-    {
-        "version": "1.4.45",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Implemented the \"Destroy 3 obstacles in a row using only the Ground Pound move\" achievement for the Fire Spinner skill.",
-            "Added logic to track `consecutiveGroundPounds` in `state.playerStats`, incrementing on successful Ground Pound destruction and resetting on other collisions, missed obstacles, or other destructive moves.",
-            "Ensured `consecutiveGroundPounds` is correctly saved, loaded, and reset with the game state.",
-            "Added a console notification when an Armory achievement is met."
         ]
     }
 ]
