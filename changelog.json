@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.5.06",
+        "date": "2025-11-11",
+        "changes": [
+            "feat(ui): The in-game info panel now dynamically displays gamepad controls when a controller is connected, and reverts to keyboard/mobile controls when disconnected.",
+            "feat(gamepad): The info icon is now a focusable element, allowing gamepad users to open and close the info panel.",
+            "feat(gamepad): Remapped the gamepad controls to feature more impressive skills: `X` button triggers Meteor Strike, `Y` button triggers Firestorm, Left Trigger triggers Houdini, and Right Trigger triggers Fiery Ground Pound.",
+            "docs(ui): Updated the in-game info panel to reflect the new, dynamic gamepad control scheme and updated button assignments."
+        ]
+    },
+    {
         "version": "1.5.05",
         "date": "2025-11-11",
         "changes": [
@@ -71,21 +81,6 @@
         "date": "2025-11-07",
         "changes": [
             "feat: Greyed out the emoji and name of locked Personas in the selector to make their unavailability more apparent."
-        ]
-    },
-    {
-        "version": "1.4.48",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Right-justified the lock/unlock icon for Personas in the selector.",
-            "feat: The lock/unlock icon is now only displayed for Personas that have unlock conditions."
-        ]
-    },
-    {
-        "version": "1.4.47",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Updated Persona selector labels to use lock (🔒) and unlock (🔓) emojis to clearly indicate the status of each persona."
         ]
     }
 ]

@@ -16,7 +16,8 @@ import {
     startFireStomper, startMageSpinner, startFieryHoudini, 
     castFireball, startFireMage, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
-    startCartoonScramble, startShockwave, startHurdle, startDive 
+    startCartoonScramble, startShockwave, startHurdle, startDive,
+    startMeteorStrike, startHoudini
 } from './actions.js';
 
 let activeGamepad = null;
@@ -55,11 +56,27 @@ function handleSpecialMove() {
 
 // --- Gamepad Connection Handling ---
 
+function updateInfoPanelForGamepad(isConnected) {
+    const keyboardControls = document.getElementById('keyboard-controls');
+    const gamepadControls = document.getElementById('gamepad-controls');
+
+    if (keyboardControls && gamepadControls) {
+        if (isConnected) {
+            keyboardControls.classList.add('hidden');
+            gamepadControls.classList.remove('hidden');
+        } else {
+            keyboardControls.classList.remove('hidden');
+            gamepadControls.classList.add('hidden');
+        }
+    }
+}
+
 window.addEventListener('gamepadconnected', (event) => {
     console.log('-> GAMEPAD CONNECTED:', event.gamepad.id);
     activeGamepad = event.gamepad;
     gamepadConnected = true;
     updateGamepadIndicator();
+    updateInfoPanelForGamepad(true);
     if (!gameState.gameRunning) {
         enterUINavigationMode();
     }
@@ -70,6 +87,7 @@ window.addEventListener('gamepaddisconnected', (event) => {
     activeGamepad = null;
     gamepadConnected = false;
     updateGamepadIndicator();
+    updateInfoPanelForGamepad(false);
     exitUINavigationMode();
 });
 
@@ -83,7 +101,7 @@ function updateGamepadIndicator() {
 // --- UI Navigation Logic ---
 
 function updateFocusableElements() {
-    const selector = 'button, select, input[type="range"], input[type="radio"], input[type="checkbox"]';
+    const selector = 'button, select, input[type="range"], input[type="radio"], input[type="checkbox"], #info-icon';
     focusableElements = Array.from(document.querySelectorAll(selector)).filter(el => {
         return el.offsetParent !== null && !el.disabled;
     });
@@ -211,12 +229,12 @@ function updateGamepadState() {
         const buttonMap = {
             0: { action: startManualJump, name: 'A_BUTTON_GAME', requiresState: true },
             1: { action: handleSpecialMove, name: 'B_BUTTON_GAME', requiresState: true },
-            2: { action: startHurdle, name: 'X_BUTTON_GAME', requiresState: true },
-            3: { action: startDive, name: 'Y_BUTTON_GAME', requiresState: true },
+            2: { action: startMeteorStrike, name: 'X_BUTTON_GAME', requiresState: true },
+            3: { action: startFirestorm, name: 'Y_BUTTON_GAME', requiresState: true },
             4: { action: startBackflip, name: 'LB_BUTTON_GAME', requiresState: true },
             5: { action: startFrontflip, name: 'RB_BUTTON_GAME', requiresState: true },
-            6: { action: startMoonwalk, name: 'LT_BUTTON_GAME', requiresState: true },
-            7: { action: startFireSpinner, name: 'RT_BUTTON_GAME', requiresState: true },
+            6: { action: startHoudini, name: 'LT_BUTTON_GAME', requiresState: true },
+            7: { action: startFieryGroundPound, name: 'RT_BUTTON_GAME', requiresState: true },
             8: { action: handleExitOrReset, name: 'BACK_BUTTON', requiresState: false },
             9: { action: togglePauseGame, name: 'START_BUTTON_GAME', requiresState: false },
             10: { action: startCartoonScramble, name: 'LSTICK_CLICK_GAME', requiresState: true },
@@ -254,9 +272,18 @@ export function initGamepad() {
     // Check for already-connected gamepads on startup
     setTimeout(() => {
         const gamepads = navigator.getGamepads();
-        if (Array.from(gamepads).some(g => g)) {
-            console.log("-> Gamepad detected on startup, entering UI Navigation Mode.");
-            enterUINavigationMode();
+        const isConnected = Array.from(gamepads).some(g => g);
+        if (isConnected) {
+            console.log("-> Gamepad detected on startup.");
+            activeGamepad = Array.from(gamepads).find(g => g);
+            gamepadConnected = true;
+            updateGamepadIndicator();
+            updateInfoPanelForGamepad(true);
+            if (!gameState.gameRunning) {
+                enterUINavigationMode();
+            }
+        } else {
+            updateInfoPanelForGamepad(false);
         }
     }, 500);
 
