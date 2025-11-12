@@ -67,7 +67,12 @@
                                 <li><strong>Moonwalk:</strong> 'M' key</li>
                                 <li><strong>Shockwave:</strong> 'N' key</li>
                                 <li><strong>Fire Spinner:</strong> 'R' key</li>
+                                <li><strong>Firestorm:</strong> 'Y' key</li>
+                                <li><strong>Mage Spinner / Cast Fireball:</strong> 'U' key</li>
                                 <li><strong>Pause:</strong> 'P' key</li>
+                                <li><strong>Exit/Reset Game:</strong> 'Escape' key</li>
+                                <li><strong>CHEAT: Max Energy:</strong> 'Ctrl + Alt + E'</li>
+                                <li><strong>DEBUG: Theme Effect:</strong> 'Q' key</li>
                             </ul>
                         </div>
                         <div>
@@ -82,7 +87,6 @@
                                 <li><strong>Moonwalk:</strong> Swipe Left</li>
                                 <li><strong>Special Move:</strong> Double Tap</li>
                                 <li><strong>Hover:</strong> Long Press</li>
-                                <li><strong>Ground Pound:</strong> 2-Finger Tap</li>
                                 <li><strong>Cartoon Scramble:</strong> 4-Finger Tap</li>
                                 <li><strong>Shockwave:</strong> 5-Finger Tap</li>
                             </ul>
@@ -111,12 +115,12 @@
                     <div>
                         <label for="personaSelector" class="block text-sm font-medium text-gray-700">Choose your Persona</label>
                         <select id="personaSelector" class="mt-1 blocthek w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                            <!-- Options will be populated by JavaScript -->
+                            <!-- JavaScript will populate options -->
                         </select>
                     </div>
 
                     <div id="personaDetailsContainer" class="hidden bg-gray-50 p-3 rounded-lg text-sm space-y-1">
-                        <!-- Persona details will be populated by JavaScript -->
+                        <!-- JavaScript will populate persona details -->
                     </div>
 
                     <div id="custom-persona-controls" class="space-y-4">
@@ -204,14 +208,14 @@
                 <div id="dataTab" class="tab-content space-y-4 hidden">
                     <div class="mt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Milestone Data (MM/DD/YYYY: Value)</h3>
-                        <textarea id="dataInput" rows="10" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                        <label for="dataInput"></label><textarea id="dataInput" rows="10" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
                         <button id="loadButton" class="control-btn secondary-btn mt-2 w-full">Load Custom Data</button>
                         <p id="dataMessage" class="mt-2 text-sm h-5"></p>
                     </div>
 
                     <div class="mt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Custom Event Data (MM/DD/YYYY: Emoji : TYPE)</h3>
-                        <textarea id="eventDataInput" rows="5" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                        <label for="eventDataInput"></label><textarea id="eventDataInput" rows="5" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
                         <p class="text-xs text-gray-500 mt-1">TYPE must be: **ACCELERATOR** or **DECELERATOR**</p>
                     </div>
 
