@@ -31,7 +31,6 @@ function initializeDailyChallengeUI() {
     } else {
         displayDailyChallenge();
     }
-    // Event listener is now handled by delegation in DOMContentLoaded
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

@@ -1,19 +1,18 @@
-// =================================================================
-// DAILY CHALLENGE - UI
-// =================================================================
+import { getDailyChallengeConfig } from '../dailyChallengeService.js';
+import { getDailyChallengeWinStreak } from '../daily-challenge.js';
+import { themes } from '../theme.js';
 
-import { getDailyChallengeData, getDailyChallengeWinStreak } from '../daily-challenge.js';
-
-export function updateDailyChallengeUI(challengeData) {
+function createChallengeHTML(config, results = null) {
     const container = document.getElementById('daily-challenge-placeholder');
     if (!container) {
-        console.error("-> Daily Challenge UI: Could not find the container element.");
+        console.error("-> createChallengeHTML: CRITICAL - Could not find the container element '#daily-challenge-placeholder'.");
         return;
     }
 
-    const winStreak = getDailyChallengeWinStreak();
+    const winStreak = results ? results.winStreak : getDailyChallengeWinStreak();
+    const theme = themes[config.theme];
 
-    const dailyChallengeHTML = `
+    const frontContent = `
         <div class="text-center p-4 border-2 border-dashed border-gray-300 rounded-lg">
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-xl font-bold text-gray-800">Daily Challenge</h3>
@@ -21,64 +20,83 @@ export function updateDailyChallengeUI(challengeData) {
                     🔥 Current Win Streak: ${winStreak}
                 </div>
             </div>
-            <p class="text-sm text-gray-600 mb-4">A unique, randomly generated challenge every day. Good luck!</p>
+            <p class="text-sm text-gray-600 mb-4">A unique, deterministic challenge every day. Good luck!</p>
             <div class="flex justify-center items-center space-x-4 mb-4">
                 <div>
-                    <span class="text-3xl" title="Daily Theme">${challengeData.themeEmoji}</span>
+                    <span class="text-3xl" title="Daily Theme">${theme ? theme.name.split(' ')[0] : '❓'}</span>
                     <p class="text-xs text-gray-500">Theme</p>
                 </div>
                 <div>
-                    <span class="text-3xl" title="Your Character">${challengeData.playerEmoji}</span>
+                    <span class="text-3xl" title="Your Character">${config.playerEmoji}</span>
                     <p class="text-xs text-gray-500">Runner</p>
                 </div>
                 <div>
-                    <span class="text-3xl" title="Daily Obstacle">${challengeData.obstacleEmoji}</span>
-                    <p class="text-xs text-gray-500">Obstacle</p>
+                    <span class="text-3xl" title="Skill Level">${config.skillLevel}</span>
+                    <p class="text-xs text-gray-500">Skill</p>
                 </div>
             </div>
             <button id="startDailyChallengeBtn" class="control-btn primary-btn w-full">Start Daily Challenge</button>
         </div>
     `;
 
-    container.innerHTML = dailyChallengeHTML;
-    container.className = ''; // Remove old classes
-}
-
-export function displayDailyChallenge() {
-    const challengeData = getDailyChallengeData();
-    updateDailyChallengeUI(challengeData);
-}
-
-export function displayDailyChallengeCompletedScreen(results) {
-    const container = document.getElementById('daily-challenge-placeholder');
-    if (!container) {
-        console.error("-> Daily Challenge UI: Could not find the container element for the completed screen.");
-        return;
-    }
-
-    const resultsHTML = `
+    const backContent = `
         <div class="text-center p-4 border-2 border-solid border-green-400 rounded-lg bg-green-50">
             <div class="flex justify-between items-center mb-2">
-                <h3 class="text-sm font-bold text-green-600">🎉  Challenge Complete! 🎉</h3>
+                <h3 class="text-sm font-bold text-green-600">🎉 Challenge Complete! 🎉</h3>
                 <div class="text-sm font-semibold text-orange-500">
-                    🔥 Win Streak: ${results.winStreak}
+                    🔥 Win Streak: ${results ? results.winStreak : ''}
                 </div>
             </div>
             <p class="text-sm text-gray-600 mb-4">Here's how you did today. Come back tomorrow for a new challenge!</p>
             <div class="flex justify-around items-center space-x-4 mb-4">
                 <div>
-                    <p class="text-3xl font-bold text-gray-800">${results.days.toLocaleString()}</p>
+                    <p class="text-3xl font-bold text-gray-800">${results ? results.days.toLocaleString() : ''}</p>
                     <p class="text-xs text-gray-500">Days Survived</p>
                 </div>
                 <div>
-                    <p class="text-3xl font-bold text-gray-800">${results.hits}</p>
+                    <p class="text-3xl font-bold text-gray-800">${results ? results.hits : ''}</p>
                     <p class="text-xs text-gray-500">Obstacles Hit</p>
                 </div>
             </div>
         </div>
     `;
 
-    container.innerHTML = resultsHTML;
+    const flipperClass = results ? 'flipper flipped' : 'flipper';
+    const finalHTML = `
+        <div class="daily-challenge-container">
+            <div class="flip-container">
+                <div class="${flipperClass}">
+                    <div class="front">
+                        ${frontContent}
+                    </div>
+                    <div class="back">
+                        ${results ? backContent : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = finalHTML;
+
+    setTimeout(() => {
+        const challengeContainer = container.querySelector('.daily-challenge-container');
+        if (challengeContainer) {
+            challengeContainer.classList.add('expanded');
+        } else {
+            console.error("-> createChallengeHTML: Could not find '.daily-challenge-container' to expand.");
+        }
+    }, 10);
+}
+
+export function displayDailyChallenge() {
+    const config = getDailyChallengeConfig();
+    createChallengeHTML(config);
+}
+
+export function displayDailyChallengeCompletedScreen(results) {
+    const config = getDailyChallengeConfig();
+    createChallengeHTML(config, results);
 }
 
 export function showCountdown(button, callback) {
@@ -98,6 +116,5 @@ export function showCountdown(button, callback) {
         }
     }, 1000);
 }
-
 
 console.log("-> daily-challenge-ui.js loaded");

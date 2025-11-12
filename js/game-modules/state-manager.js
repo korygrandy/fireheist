@@ -967,4 +967,12 @@ export function setSelectedPersona(personaKey) {
     state.selectedPersona = personaKey;
 }
 
+export function setObstacleFrequency(frequency) {
+    state.obstacleFrequencyPercent = frequency;
+}
+
+export function setSkillLevel(level) {
+    state.currentSkillLevel = level;
+}
+
 

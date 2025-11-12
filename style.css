@@ -178,3 +178,40 @@ body.game-active-fullscreen:fullscreen #mainGrid {
     color: #a0aec0; /* Tailwind's gray-500 */
 }
 
+/* --- Daily Challenge Animations --- */
+.daily-challenge-container {
+    transition: max-height 0.7s ease-out, opacity 0.7s ease-out;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.daily-challenge-container.expanded {
+    max-height: 500px; /* Adjust based on content height */
+    opacity: 1;
+}
+
+.flip-container {
+    perspective: 1000px;
+}
+
+.flipper {
+    position: relative;
+    display: grid; /* Use Grid to stack children */
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.flipper.flipped {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    grid-area: 1 / 1; /* Place both front and back in the same grid cell */
+    backface-visibility: hidden;
+    /* No longer need absolute positioning, which caused the height collapse */
+}
+
+.back {
+    transform: rotateY(180deg);
+}

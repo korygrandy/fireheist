@@ -12,7 +12,8 @@ export const themes = {
         hurdle: {
             fill: 'white',
             stroke: '#cccccc'
-        }
+        },
+        obstacleEmojis: ['🌳', '🍄', '🪵', '🌲']
     },
     'mountains': {
         name: '⛰️ Mt. Brown',
@@ -23,9 +24,10 @@ export const themes = {
         hurdle: {
             fill: '#654321',
             stroke: '#D2B48C'
-        }
+        },
+        obstacleEmojis: ['🏔️', '🌲', '🪨']
     },
-        'roadway': {
+    'roadway': {
         name: '🌃 City Night',
         sky: '#A9B7C6',
         ground: '#36454F',
@@ -35,7 +37,8 @@ export const themes = {
         hurdle: {
             fill: '#808080',
             stroke: '#FFFF00'
-        }
+        },
+        obstacleEmojis: ['-1', '🚧', '🚗', '🚲']
     },
     'snow': {
         name: '🗻 White Snowpeaks',
@@ -46,7 +49,8 @@ export const themes = {
         hurdle: {
             fill: '#A9A9A9',
             stroke: '#FFFFFF'
-        }
+        },
+        obstacleEmojis: ['🏔️', '🌲', '🥶', '⛄']
     },
     'desert': {
         name: '🏜️ Desert Dunes',
@@ -57,9 +61,9 @@ export const themes = {
         hurdle: {
             fill: '#556B2F',
             stroke: '#F0E68C'
-        }
+        },
+        obstacleEmojis: ['🌵', '🏜️', '🐍', '🦂']
     },
-
     'volcano': {
         name: '🌋 Island Volcano',
         sky: 'royalblue',
@@ -69,33 +73,35 @@ export const themes = {
         hurdle: {
             fill: 'white',
             stroke: 'white'
-        }
-            },
-    
-        'outerspace': {
-            name: '🌑 Outer Space',
-            sky: '#000000',
-            ground: '#2C003E',
-            grassBlades: '#9E7BB5',
-            roadLines: null,
-            curb: null,
-            hurdle: {
-                fill: '#A020F0',
-                stroke: '#FFFFFF'
-            }
         },
-        'night': {
-            name: '🌙 Deep Night',
-            sky: '#1A1A2E',
-            ground: '#0F0F1A',
-            grassBlades: '#33334D',
-            roadLines: null,
-            hurdle: {
-                fill: '#4A4A6A',
-                stroke: '#BBBBBB'
-            }
-        }
-    };
+        obstacleEmojis: ['🌋', '🔥', '💣', '💥']
+    },
+    'outerspace': {
+        name: '🌑 Outer Space',
+        sky: '#000000',
+        ground: '#2C003E',
+        grassBlades: '#9E7BB5',
+        roadLines: null,
+        curb: null,
+        hurdle: {
+            fill: '#A020F0',
+            stroke: '#FFFFFF'
+        },
+        obstacleEmojis: ['☄️', '🪐', '🛰️', '👽']
+    },
+    'night': {
+        name: '🌙 Deep Night',
+        sky: '#1A1A2E',
+        ground: '#0F0F1A',
+        grassBlades: '#33334D',
+        roadLines: null,
+        hurdle: {
+            fill: '#4A4A6A',
+            stroke: '#BBBBBB'
+        },
+        obstacleEmojis: ['🦉', '🦇', '👻']
+    }
+};
 
 export let currentTheme = themes.grass; // Default theme
 

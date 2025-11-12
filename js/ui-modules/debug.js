@@ -1,8 +1,8 @@
 import { gameState, setPlayerStats, setHitsCounter, setVictory } from '../game-modules/state-manager.js';
 import { populateArmoryItems } from './armory.js';
 import { populatePersonaSelector } from './persona.js';
-import { themePacks } from '../daily-challenge.js';
-import { updateDailyChallengeUI } from './daily-challenge-ui.js';
+import { themes } from '../theme.js';
+import { displayDailyChallenge } from './daily-challenge-ui.js';
 import { stopGame } from '../game-modules/lifecycle.js';
 import { personaUnlocks, ARMORY_ITEMS } from '../unlocks.js';
 import { savePlayerStats } from './settings.js';
@@ -50,18 +50,14 @@ export function debugEndGame(didWin) {
 }
 
 export function debugCycleDailyTheme() {
-    const themeKeys = Object.keys(themePacks);
+    const themeKeys = Object.keys(themes);
     const themeKey = themeKeys[currentThemeIndex];
-    const themePack = themePacks[themeKey];
+    const theme = themes[themeKey];
 
-    const mockChallengeData = {
-        themeEmoji: themePack.themeEmoji,
-        playerEmoji: themePack.playerEmojis[0],
-        obstacleEmoji: themePack.obstacleEmojis[0]
-    };
-
-    updateDailyChallengeUI(mockChallengeData);
-    alert(`Displaying theme: ${themePack.name}`);
+    // Note: This now re-renders the entire component, which is the intended behavior
+    // with the new architecture. We can't just update parts of it anymore.
+    displayDailyChallenge();
+    alert(`Cycling to next theme. The displayed theme is now based on the current date.`);
 
     currentThemeIndex = (currentThemeIndex + 1) % themeKeys.length;
 }

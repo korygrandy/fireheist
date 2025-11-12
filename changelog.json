@@ -1,5 +1,18 @@
 [
     {
+        "version": "1.5.08",
+        "date": "2025-11-12",
+        "changes": [
+            "fix(style): Refactored the daily challenge animation CSS to use CSS Grid, fixing a bug that caused the UI to be invisible.",
+            "fix(style): Removed duplicate CSS rules for daily challenge animations to prevent conflicts and ensure correct styling.",
+            "fix(ui): Replaced the <p> tag for the daily challenge placeholder with a <div> to ensure correct HTML structure and rendering.",
+            "fix(ui): Corrected the rendering logic for the daily challenge UI to ensure it is always displayed.",
+            "fix(debug): Fixed a SyntaxError in debug.js by updating it to use the new displayDailyChallenge function.",
+            "fix(build): Added a cache-busting query parameter to the main script import to prevent stale code from being loaded by the browser.",
+            "fix(daily-challenge): Resolved a SyntaxError caused by a missing export for the showCountdown function."
+        ]
+    },
+    {
         "version": "1.5.07",
         "date": "2025-11-11",
         "changes": [
