@@ -1,4 +1,4 @@
-import { armoryItemsContainer, skillUpgradeModal, skillModalTitle, skillModalContent, closeSkillModalBtn } from '../dom-elements.js';
+import { armoryItemsContainer, skillUpgradeModal, skillModalTitle, skillModalContent, closeSkillModalBtn, totalCashDisplay } from '../dom-elements.js';
 import { getSkillUnlockProgress, checkSkillUnlockStatus, ARMORY_ITEMS } from '../unlocks.js';
 import { savePlayerStats } from './settings.js';
 import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash } from '../game-modules/state-manager.js';
@@ -36,6 +36,10 @@ export function handleArmorySkillDeselection() {
  */
 export function populateArmoryItems() {
     armoryItemsContainer.innerHTML = ''; // Clear existing items
+
+    if (totalCashDisplay) {
+        totalCashDisplay.textContent = `$${gameState.playerStats.totalAccumulatedCash.toLocaleString()}`;
+    }
 
     for (const skillKey in ARMORY_ITEMS) {
         const skill = ARMORY_ITEMS[skillKey];

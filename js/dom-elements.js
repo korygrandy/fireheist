@@ -42,3 +42,4 @@ export const skillUpgradeModal = document.getElementById('skillUpgradeModal');
 export const skillModalTitle = document.getElementById('skillModalTitle');
 export const skillModalContent = document.getElementById('skillModalContent');
 export const closeSkillModalBtn = document.getElementById('closeSkillModalBtn');
+export const totalCashDisplay = document.getElementById('totalCashDisplay');

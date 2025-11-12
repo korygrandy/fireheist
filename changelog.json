@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.5.07",
+        "date": "2025-11-11",
+        "changes": [
+            "feat(ui): Displayed `totalAccumulatedCash` at the top of the Armory panel for better visibility of funds available for skill upgrades.",
+            "feat(ui): Added a new `div` with ID `totalCashDisplay` in `index.html` to house the cash value.",
+            "refactor(armory): Updated `js/ui-modules/armory.js` and `js/dom-elements.js` to correctly populate and export the `totalCashDisplay` element."
+        ]
+    },
+    {
         "version": "1.5.06",
         "date": "2025-11-11",
         "changes": [
@@ -59,28 +68,6 @@
         "date": "2025-11-08",
         "changes": [
             "Feature: Enhanced the debug panel's \"Unlock all\" functionality. The button now unlocks all Armory skills in addition to all Personas, providing a more comprehensive testing tool."
-        ]
-    },
-    {
-        "version": "1.4.51",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Added a placeholder for the 'Fire Dash' skill in the Armory, making it visible but not yet unlockable."
-        ]
-    },
-    {
-        "version": "1.4.50",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Mapped the double-tap gesture to the general 'Special Move' action, allowing it to trigger any selected Armory skill.",
-            "refactor: Centralized special move logic into a `handleSpecialMove` function in `js/main.js` to streamline keyboard and gesture controls."
-        ]
-    },
-    {
-        "version": "1.4.49",
-        "date": "2025-11-07",
-        "changes": [
-            "feat: Greyed out the emoji and name of locked Personas in the selector to make their unavailability more apparent."
         ]
     }
 ]
