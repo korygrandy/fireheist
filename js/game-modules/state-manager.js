@@ -485,11 +485,11 @@ export function setDaysCounter(days, delta, frame) {
 }
 
 export function setAccumulatedCash(value) {
-    gameState.playerStats.totalAccumulatedCash += value;
+    state.accumulatedCash = value;
 }
 
 export function setTotalAccumulatedCash(value) {
-    gameState.playerStats.totalAccumulatedCash = value;
+    state.playerStats.totalAccumulatedCash = value;
 }
 
 export function setPlayerSkillLevel(skillKey, level) {

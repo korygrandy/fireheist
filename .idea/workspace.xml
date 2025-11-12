@@ -6,17 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="4c2442ad-b93e-4220-8c85-cfb81c5b6378" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/daily-challenge.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/daily-challenge.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/environmental-effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/environmental-effects.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/score.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/score.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/spawning.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/spawning.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/state-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state-manager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/theme.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/daily-challenge-ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/daily-challenge-ui.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/debug.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/debug.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +22,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "feature/daily-challenge-enhancements",
+    "git-widget-placeholder": "feature/total-haul-player-ui-broken",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>

@@ -5,7 +5,7 @@ import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProxi
 import { drawGroundPoundParticles, drawHoudiniParticles, drawFieryHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFireExplosion } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure, drawFireShield } from './player.js';
-import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay } from './overlays.js';
+import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags } from './overlays.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -146,6 +146,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad) {
 }
 
 export function drawUIOverlaysAndEffects(gameState, isInitialLoad, collisionDurationMs) {
+    drawCashBags(); // Draw the animating cash bags
     drawMoneyCounter();
     drawGameCounters();
     drawEnergyBar();

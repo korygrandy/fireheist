@@ -138,7 +138,7 @@ export function drawVictoryOverlay(elapsedTime) {
 }
 
 export function drawMoneyCounter() {
-    const formattedCash = Math.round(gameState.accumulatedCash).toLocaleString();
+    const formattedCash = Math.round(gameState.displayCash).toLocaleString();
     const displayString = `Total Haul: $${formattedCash}`;
     const boxHeight = 40;
     const boxX = 10;
@@ -281,4 +281,16 @@ export function drawEnergyBar() {
     ctx.fillText(`ENERGY`, x + barWidth / 2, y + barHeight / 2);
 
     ctx.restore();
+}
+
+export function drawCashBags() {
+    gameState.activeCashBags.forEach(bag => {
+        ctx.save();
+        ctx.globalAlpha = bag.opacity;
+        ctx.font = '36px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('💰', bag.currentX, bag.currentY);
+        ctx.restore();
+    });
 }

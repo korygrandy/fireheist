@@ -194,6 +194,7 @@ import { checkCollision, checkAcceleratorCollision, checkProximityEventCollectio
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
 import { updateHighScore } from './score.js';
+import { animateValue } from './animations.js';
 import { drawVictoryOverlay } from './drawing/overlays.js';
 
 export function togglePauseGame() {
@@ -756,8 +757,17 @@ export function animate(timestamp) {
 
         setDaysCounter(completedSegment.durationDays, completedSegment.durationDelta, 0);
 
+        // Add the value of the milestone we just passed.
+        // The check for currentSegmentIndex > 0 is to avoid adding the initial starting value again.
         if (gameState.currentSegmentIndex > 0) {
-            setAccumulatedCash(completedSegment.milestoneValue);
+            setTimeout(() => {
+                const startValue = gameState.displayCash;
+                const endValue = completedSegment.milestoneValue;
+                animateValue(startValue, endValue, 500, (currentValue) => {
+                    gameState.displayCash = currentValue;
+                });
+                setAccumulatedCash(completedSegment.milestoneValue);
+            }, CASH_BAG_ANIMATION_DURATION);
             addCashBag({
                 x: STICK_FIGURE_FIXED_X,
                 y: collectionY,
@@ -991,7 +1001,7 @@ export function resetGameState() {
     setBackgroundOffset(0);
     // incrementFrameCount(0) - No, let's use a dedicated setter
     gameState.frameCount = 0; // Assuming direct reset is ok if no setter
-    setAccumulatedCash(gameState.raceSegments.length > 0 ? gameState.raceSegments[0].milestoneValue : 0);
+    setAccumulatedCash(0);
 
     // Clear all arrays
     clearActiveCashBags();

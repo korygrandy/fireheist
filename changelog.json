@@ -1,5 +1,18 @@
 [
     {
+        "version": "1.5.09",
+        "date": "2025-11-11",
+        "changes": [
+            "feat(ui): The cash bag animation now appears to go behind the 'Total Haul' box, creating a sense of depth.",
+            "feat(ui): The 'Total Haul' value now animates with a 'rolling' number effect when a milestone is passed.",
+            "feat(ui): The 'Total Haul' value is now updated when the cash bag animation completes, creating a more satisfying visual effect.",
+            "fix(gameplay): Corrected a critical regression where the in-game 'Total Haul' was not updating to reflect the value of the most recently passed milestone.",
+            "fix(ui): Re-implemented the missing cash bag animation, ensuring it plays when a milestone is passed.",
+            "fix(armory): Fixed a `SyntaxError` caused by a missing state management function (`setTotalAccumulatedCash`) that prevented the armory from loading.",
+            "refactor(state): Consolidated state management functions to prevent future naming collisions."
+        ]
+    },
+    {
         "version": "1.5.08",
         "date": "2025-11-12",
         "changes": [
@@ -80,7 +93,7 @@
         "version": "1.4.52",
         "date": "2025-11-08",
         "changes": [
-            "Feature: Enhanced the debug panel's \"Unlock all\" functionality. The button now unlocks all Armory skills in addition to all Personas, providing a more comprehensive testing tool."
+            "Feature: Enhanced the debug panel's "Unlock all" functionality. The button now unlocks all Armory skills in addition to all Personas, providing a more comprehensive testing tool."
         ]
     }
 ]

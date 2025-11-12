@@ -14,6 +14,7 @@ const state = {
     backgroundOffset: 0,
     frameCount: 0,
     accumulatedCash: 0,
+    displayCash: 0,
     daysCounter: null,
     gameSpeedMultiplier: 1.0,
     COLLISION_RANGE_X: DIFFICULTY_SETTINGS.Rookie.COLLISION_RANGE_X,
