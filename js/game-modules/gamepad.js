@@ -9,7 +9,7 @@
 
 import { gameState, setPlayerEnergy } from './state-manager.js';
 import { startManualJump } from './actions.js';
-import { togglePauseGame, handleExitOrReset } from './lifecycle.js';
+import { togglePauseGame, handleExitOrReset } from './game-controller.js';
 import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { 
     startFirestorm, startFireSpinner, startFieryGroundPound, 

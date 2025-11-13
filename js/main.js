@@ -17,7 +17,7 @@ import { startDailyChallengeGame, getDailyChallengeResults } from './daily-chall
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './ui-modules/daily-challenge-ui.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
-import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/lifecycle.js';
+import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';

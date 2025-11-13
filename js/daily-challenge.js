@@ -1,5 +1,5 @@
 import { setDailyChallengeActive, setSelectedTheme, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequency, setSkillLevel } from './game-modules/state-manager.js';
-import { startGame } from './game-modules/lifecycle.js';
+import { startGame } from './game-modules/game-controller.js';
 import { setTheme } from './theme.js';
 import { getDailyChallengeConfig } from './dailyChallengeService.js';
 import { hideSandboxControls } from './ui-modules/ui-helpers.js';
