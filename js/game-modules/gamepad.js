@@ -17,7 +17,8 @@ import {
     castFireball, startFireMage, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
     startCartoonScramble, startShockwave, startHurdle, startDive,
-    startMeteorStrike, startHoudini
+    startMeteorStrike, startHoudini, startBlinkStrike, startJetstreamDash,
+    startEchoSlam, startFireballRoll
 } from './actions.js';
 
 let activeGamepad = null;
@@ -37,7 +38,11 @@ const skillActionMap = {
     fieryGroundPound: startFieryGroundPound,
     fireStomper: startFireStomper,
     mageSpinner: startMageSpinner,
-    fieryHoudini: startFieryHoudini
+    fieryHoudini: startFieryHoudini,
+    blinkStrike: startBlinkStrike,
+    jetstreamDash: startJetstreamDash,
+    echoSlam: startEchoSlam,
+    fireballRoll: startFireballRoll
 };
 
 function handleSpecialMove() {

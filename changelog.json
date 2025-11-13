@@ -1,5 +1,23 @@
 [
     {
+        "version": "1.5.12",
+        "date": "2025-11-12",
+        "changes": [
+            "feat(gameplay): Implemented four new special moves: \"Blink Strike,\" \"Jetstream Dash,\" \"Echo Slam,\" and \"Fireball Roll.\"",
+            "feat(gameplay): Enhanced Echo Slam's secondary shockwave to be destructive, clearing a second nearby obstacle.",
+            "feat(visuals): Created a new, high-speed particle effect for Jetstream Dash, replacing the generic hover particles.",
+            "feat(visuals): Added a brief screen flash upon Blink Strike's reappearance for increased visual impact.",
+            "feat(visuals): Added flaking ember particles to the Fireball Roll animation for a more dynamic and fiery appearance.",
+            "feat(gameplay): Modified Fireball Roll to prevent automatic jumping, allowing the player to roll along the ground unless a jump is manually triggered.",
+            "feat(gameplay): Implemented precise collision detection for the Fireball Roll, requiring a direct overlap with obstacles for incineration, and fixed a bug where invincibility was preventing collision.",
+            "feat(visuals): Implemented a new \"ash blow\" particle effect for Fireball Roll incineration, triggered when the fireball is centered on the obstacle.",
+            "feat(ui): Replaced the emoji for Fiery Houdini with custom locked and unlocked image paths.",
+            "perf(visuals): Slowed down the spinning animation of the Fireball Roll for improved visual appeal (applied twice).",
+            "fix(code): Corrected a `ReferenceError` in `actions.js` by importing the `setScreenFlash` function.",
+            "fix(code): Corrected a `SyntaxError` in `actions.js` by adding a missing closing brace."
+        ]
+    },
+    {
         "version": "1.5.09",
         "date": "2025-11-11",
         "changes": [
@@ -93,7 +111,7 @@
         "version": "1.4.52",
         "date": "2025-11-08",
         "changes": [
-            "Feature: Enhanced the debug panel's "Unlock all" functionality. The button now unlocks all Armory skills in addition to all Personas, providing a more comprehensive testing tool."
+            "Feature: Enhanced the debug panel's \"Unlock all\" functionality. The button now unlocks all Armory skills in addition to all Personas, providing a more comprehensive testing tool."
         ]
     }
 ]

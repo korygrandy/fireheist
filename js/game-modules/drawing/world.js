@@ -2,6 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import { gameState, GRASS_ANIMATION_INTERVAL_MS } from '../state-manager.js';
+import { createAshParticle } from './effects.js';
 
 export function drawAccelerator(accelerator, angleRad) {
     if (!accelerator) return;
@@ -302,46 +303,61 @@ export function drawFireSpinner(playerX, playerY) {
 }
 
 export function drawIncineration(obstacle, angleRad) {
-    const { x, emoji, animationProgress } = obstacle;
-    const groundY = GROUND_Y - x * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET;
+    const INCINERATION_DURATION = 500;
+    const elapsed = performance.now() - obstacle.startTime;
+    const progress = Math.min(1, elapsed / INCINERATION_DURATION);
 
-    ctx.save();
-    ctx.translate(x, groundY);
-    ctx.rotate(-angleRad);
+    if (progress >= 1) return;
 
-    if (animationProgress < 0.9) { // Burning phase extended to 90% of the animation
-        const scale = 1 + animationProgress * 0.5; // Expands slightly
-        const opacity = 1 - (animationProgress / 0.9); // Fade out over the new duration
-        ctx.globalAlpha = opacity;
-        ctx.font = `${OBSTACLE_EMOJI_SIZE * scale}px Arial`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(emoji, 0, 0);
-
-        // Fire effect
-        for (let i = 0; i < 5; i++) {
-            const fireX = (Math.random() - 0.5) * 20;
-            const fireY = (Math.random() - 0.5) * 20;
-            ctx.fillText('🔥', fireX, fireY);
+    if (obstacle.animationType === 'incinerate-ash-blow') {
+        if (!obstacle.ashCreated) {
+            const obstacleCenterY = GROUND_Y - obstacle.x * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET - (OBSTACLE_HEIGHT / 2);
+            createAshParticle(obstacle.x, obstacleCenterY);
+            obstacle.ashCreated = true;
         }
-    } else { // Ash phase shortened to the last 10%
-        // Assign random offset only once when the ash phase begins
-        if (obstacle.ashOffsetX === undefined) {
-            obstacle.ashOffsetX = (Math.random() - 0.5) * 20;
-            obstacle.ashOffsetY = (Math.random() - 0.5) * 10;
+        // Don't draw the obstacle itself, just let the ash particles animate.
+    } else {
+        const { x, emoji, animationProgress } = obstacle;
+        const groundY = GROUND_Y - x * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET;
+
+        ctx.save();
+        ctx.translate(x, groundY);
+        ctx.rotate(-angleRad);
+
+        if (animationProgress < 0.9) { // Burning phase extended to 90% of the animation
+            const scale = 1 + animationProgress * 0.5; // Expands slightly
+            const opacity = 1 - (animationProgress / 0.9); // Fade out over the new duration
+            ctx.globalAlpha = opacity;
+            ctx.font = `${OBSTACLE_EMOJI_SIZE * scale}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, 0, 0);
+
+            // Fire effect
+            for (let i = 0; i < 5; i++) {
+                const fireX = (Math.random() - 0.5) * 20;
+                const fireY = (Math.random() - 0.5) * 20;
+                ctx.fillText('🔥', fireX, fireY);
+            }
+        } else { // Ash phase shortened to the last 10%
+            // Assign random offset only once when the ash phase begins
+            if (obstacle.ashOffsetX === undefined) {
+                obstacle.ashOffsetX = (Math.random() - 0.5) * 20;
+                obstacle.ashOffsetY = (Math.random() - 0.5) * 10;
+            }
+
+            const ashProgress = (animationProgress - 0.9) / 0.1;
+            const opacity = 1 - ashProgress;
+            const yOffset = 10 * ashProgress; // Sinks into the ground
+
+            ctx.globalAlpha = opacity;
+            ctx.font = '24px Arial';
+            ctx.fillStyle = '#555';
+            ctx.fillText('💨', obstacle.ashOffsetX, yOffset + obstacle.ashOffsetY); // Ash pile with random offset
         }
 
-        const ashProgress = (animationProgress - 0.9) / 0.1;
-        const opacity = 1 - ashProgress;
-        const yOffset = 10 * ashProgress; // Sinks into the ground
-
-        ctx.globalAlpha = opacity;
-        ctx.font = '24px Arial';
-        ctx.fillStyle = '#555';
-        ctx.fillText('💨', obstacle.ashOffsetX, yOffset + obstacle.ashOffsetY); // Ash pile with random offset
+        ctx.restore();
     }
-
-    ctx.restore();
 }
 
 export function drawFlipAndCrumble(obstacle, angleRad) {

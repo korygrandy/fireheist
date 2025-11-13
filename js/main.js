@@ -18,7 +18,7 @@ import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './u
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
@@ -259,7 +259,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         fieryGroundPound: startFieryGroundPound,
         fireStomper: startFireStomper,
         mageSpinner: startMageSpinner,
-        fieryHoudini: startFieryHoudini
+        fieryHoudini: startFieryHoudini,
+        blinkStrike: startBlinkStrike,
+        jetstreamDash: startJetstreamDash,
+        echoSlam: startEchoSlam,
+        fireballRoll: startFireballRoll
         // Add other skills here as they are implemented
     };
 
@@ -361,6 +365,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 startMageSpinner(gameState);
             }
+        }
+        if (e.code === 'KeyX' && gameState.gameRunning && !gameState.isPaused) {
+            e.preventDefault();
+            startBlinkStrike(gameState);
+        }
+        if (e.code === 'KeyL' && gameState.gameRunning && !gameState.isPaused) {
+            e.preventDefault();
+            startJetstreamDash(gameState);
+        }
+        if (e.code === 'KeyO' && gameState.gameRunning && !gameState.isPaused) {
+            e.preventDefault();
+            startEchoSlam(gameState);
+        }
+        if (e.code === 'KeyW' && gameState.gameRunning && !gameState.isPaused) {
+            e.preventDefault();
+            startFireballRoll(gameState);
         }
 
         // Cheat code for max energy

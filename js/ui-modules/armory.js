@@ -71,8 +71,16 @@ export function populateArmoryItems() {
             }
         }
 
+        let iconHTML;
+        if (skill.imageLocked && skill.imageUnlocked) {
+            const imageSrc = isUnlocked ? skill.imageUnlocked : skill.imageLocked;
+            iconHTML = `<img src="${imageSrc}" alt="${skill.name}" class="w-12 h-12 mx-auto armory-item-icon ${isUnlocked ? 'unlocked' : ''}">`;
+        } else {
+            iconHTML = `<span class="text-4xl armory-item-icon ${isUnlocked ? 'unlocked' : ''}">${skill.emoji || '❓'}</span>`;
+        }
+
         skillCard.innerHTML = `
-            <span class="text-4xl armory-item-icon ${isUnlocked ? 'unlocked' : ''}">${skill.emoji || '❓'}</span>
+            ${iconHTML}
             <h4 class="font-semibold text-gray-800 mt-2">${skill.name} (Level ${currentLevel})</h4>
             <p class="text-sm text-gray-600">${skill.description}</p>
             ${lockedMessage}

@@ -13,11 +13,36 @@ import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
 import { createShatterEffect } from './drawing/effects.js';
 
 export function checkCollision(runnerY, angleRad) {
-    if (gameState.isInvincible) return false;
     if (!gameState.currentObstacle || gameState.currentObstacle.hasBeenHit || gameState.isColliding) return false;
 
     const obstacleX = gameState.currentObstacle.x;
     const runnerX = STICK_FIGURE_FIXED_X;
+
+    // Special collision logic for Fireball Roll (must run BEFORE invincibility check)
+    if (gameState.jumpState.isFireballRolling) {
+        const obstacleCenterX = obstacleX + OBSTACLE_WIDTH / 2;
+        const collisionWindow = 25; // Increased window for more reliable collision
+
+        // Check if the center of the fireball is within the collision window of the obstacle's center
+        if (Math.abs(runnerX - obstacleCenterX) < collisionWindow) {
+            addIncineratingObstacle({
+                ...gameState.currentObstacle,
+                animationProgress: 0,
+                startTime: performance.now(),
+                animationType: 'incinerate-ash-blow'
+            });
+            setCurrentObstacle(null);
+            playAnimationSound('incinerate');
+            incrementObstaclesIncinerated();
+            incrementConsecutiveIncinerations();
+            resetStreaks();
+            console.log("-> FIREBALL ROLL: Obstacle incinerated by centered collision!");
+            return false; // No penalty
+        }
+        return false; // No collision
+    }
+
+    if (gameState.isInvincible) return false;
 
     const groundAtObstacleY = GROUND_Y - obstacleX * Math.tan(angleRad);
     const runnerBottomY = runnerY + STICK_FIGURE_TOTAL_HEIGHT;

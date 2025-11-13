@@ -76,6 +76,10 @@ export const FIERY_HOUDINI_ENERGY_COST = 60;
 export const FIERY_HOUDINI_DURATION_MS = 800;
 export const FIERY_HOUDINI_COOLDOWN_MS = 12000; // 12 seconds cooldown
 export const FIERY_HOUDINI_RANGE = 300; // The range of the destructive poof in pixels
+export const BLINK_STRIKE_DURATION_MS = 300;
+export const JETSTREAM_DASH_DURATION_MS = 5000;
+export const ECHO_SLAM_DURATION_MS = 600;
+export const FIREBALL_ROLL_DURATION_MS = 8000;
 
 export const ENERGY_SETTINGS = {
     REGEN_RATE: 0.1, // Energy points per frame
@@ -103,7 +107,11 @@ export const ENERGY_SETTINGS = {
         fireballCast: 10,
         fireSpinner: 0, // No initial cost, drains over time
         mageSpinner: MAGE_SPINNER_ENERGY_COST,
-        fieryHoudini: FIERY_HOUDINI_ENERGY_COST
+        fieryHoudini: FIERY_HOUDINI_ENERGY_COST,
+        blinkStrike: 40,
+        jetstreamDash: 0, // Drains over time
+        echoSlam: 30,
+        fireballRoll: 0 // Drains over time
     }
 };
 
@@ -180,7 +188,11 @@ export const ANIMATION_SOUND_MAP = {
     houdini: 'fx/houdini.mp3',
     fieryHoudini: 'fx/fiery-houdini.mp3',
     'cartoon-running': 'fx/cartoon-running.mp3',
-    groundPound: 'fx/bomb.mp3'
+    groundPound: 'fx/bomb.mp3',
+    blinkStrike: 'fx/houdini.mp3',
+    jetstreamDash: 'fx/firestorm.mp3',
+    echoSlam: 'fx/bomb.mp3',
+    fireballRoll: 'fx/fireball.mp3'
     // Other animations will be added here
 };
 

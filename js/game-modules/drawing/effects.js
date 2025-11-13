@@ -196,6 +196,40 @@ export function drawDiveParticles() {
     }
 }
 
+export function createJetstreamParticle(x, y) {
+    gameState.jetstreamParticles.push({
+        x: x,
+        y: y + (Math.random() - 0.5) * 15, // Vary vertical position
+        length: Math.random() * 20 + 10, // Longer particles
+        life: 1,
+        speed: Math.random() * 3 + 2, // Faster movement
+        color: `rgba(180, 220, 255, ${Math.random() * 0.4 + 0.2})` // Light blueish-white, more transparent
+    });
+}
+
+export function drawJetstreamParticles() {
+    for (let i = gameState.jetstreamParticles.length - 1; i >= 0; i--) {
+        const p = gameState.jetstreamParticles[i];
+
+        p.x -= p.speed; // Move left
+        p.life -= 0.05;
+
+        if (p.life <= 0) {
+            gameState.jetstreamParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x - p.length, p.y);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+}
+
 export function createSwooshParticle(x, y, vx, vy) {
     gameState.swooshParticles.push({
         x: x,
@@ -570,6 +604,42 @@ export function drawPlayerEmbers() {
             ctx.save();
             ctx.globalAlpha = p.life;
             ctx.fillStyle = `rgba(255, ${Math.random() * 200}, 0, ${p.life})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+export function createAshParticle(x, y) {
+    const particleCount = 25;
+    for (let i = 0; i < particleCount; i++) {
+        gameState.ashParticles.push({
+            x: x + (Math.random() - 0.5) * 20,
+            y: y + (Math.random() - 0.5) * 20,
+            vx: (Math.random() - 0.2) * 1.2, // Move mostly right and slightly up/down
+            vy: (Math.random() - 0.7) * 1, // Move mostly up
+            size: Math.random() * 3 + 1,
+            life: 1,
+            color: `rgba(80, 80, 80, ${Math.random() * 0.5 + 0.3})`
+        });
+    }
+}
+
+export function drawAshParticles() {
+    for (let i = gameState.ashParticles.length - 1; i >= 0; i--) {
+        const p = gameState.ashParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.03;
+
+        if (p.life <= 0) {
+            gameState.ashParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();

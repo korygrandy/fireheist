@@ -31,6 +31,8 @@ import {
     FIERY_HOUDINI_COOLDOWN_MS,
     FIERY_HOUDINI_DURATION_MS,
     ACCELERATOR_BASE_SPEED_BOOST,
+    JETSTREAM_DASH_DURATION_MS,
+    FIREBALL_ROLL_DURATION_MS,
 } from '../constants.js';
 import {
     playWinnerSound,
@@ -137,6 +139,18 @@ import {
     setFireSpinner,
     setFireSpinnerDuration,
     setFireSpinnerOnCooldown,
+    setBlinkStrike,
+    setBlinkStrikeDuration,
+    setPlayerIsInvisible,
+    setStickFigureFixedX,
+    setStickFigureY,
+    setJetstreamDashing,
+    setJetstreamDashDuration,
+    setEchoSlam,
+    setEchoSlamDuration,
+    setEchoSlamSecondaryTriggered,
+    setFireballRolling,
+    setFireballRollDuration,
     incrementFrameCount,
     setPlayerEnergy,
     setGameRunning,
@@ -151,7 +165,7 @@ import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
 import { castMageSpinnerFireball } from './actions.js';
 import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
-import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFieryHoudiniPoof, createFireTrail } from './drawing/effects.js';
+import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFieryHoudiniPoof, createFireTrail, createHoverParticle, createJetstreamParticle } from './drawing/effects.js';
 import { checkCollision, checkAcceleratorCollision, checkProximityEventCollection } from './collision.js';
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
@@ -256,6 +270,24 @@ export function animate(timestamp) {
         } else {
             const energyToDrain = MAGE_SPINNER_ENERGY_COST; 
             const drainRate = energyToDrain / MAGE_SPINNER_DURATION_MS; 
+            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
+        }
+    } else if (gameState.jumpState.isJetstreamDashing) {
+        const remainingTime = gameState.jetstreamDashDrainEndTime - Date.now();
+        if (remainingTime <= 0) {
+            setPlayerEnergy(0);
+        } else {
+            const energyToDrain = ENERGY_SETTINGS.ENERGY_COSTS.jetstreamDash; // Assuming a per-second drain rate
+            const drainRate = energyToDrain / (JETSTREAM_DASH_DURATION_MS / 1000); // Convert to per-ms drain
+            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
+        }
+    } else if (gameState.jumpState.isFireballRolling) {
+        const remainingTime = gameState.fireballRollDrainEndTime - Date.now();
+        if (remainingTime <= 0) {
+            setPlayerEnergy(0);
+        } else {
+            const energyToDrain = ENERGY_SETTINGS.ENERGY_COSTS.fireballRoll; // Assuming a per-second drain rate
+            const drainRate = energyToDrain / (FIREBALL_ROLL_DURATION_MS / 1000); // Convert to per-ms drain
             setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
         }
     } else if (gameState.jumpState.isHover) { 
@@ -854,6 +886,46 @@ export function animate(timestamp) {
         }
         if (gameState.jumpState.fieryHoudiniDuration <= 0) {
             setFieryHoudini(false);
+        }
+    }
+
+    if (gameState.jumpState.isBlinkStrike) {
+        setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);
+        if (gameState.jumpState.blinkStrikeDuration <= 0) {
+            setBlinkStrike(false);
+            setPlayerIsInvisible(false); // Ensure player is visible after Blink Strike
+            setStickFigureFixedX(STICK_FIGURE_FIXED_X); // Reset player X position
+            setStickFigureY(undefined); // Reset player Y position
+        }
+    }
+
+    if (gameState.jumpState.isJetstreamDashing) {
+        setJetstreamDashDuration(gameState.jumpState.jetstreamDashDuration - deltaTime);
+        if (gameState.jumpState.jetstreamDashDuration <= 0) {
+            setJetstreamDashing(false);
+            gameState.isInvincible = false; // End invincibility
+        } else {
+            // Emit jetstream particles
+            createJetstreamParticle(gameState.stickFigureFixedX - 20, runnerY + STICK_FIGURE_TOTAL_HEIGHT / 2);
+        }
+    }
+
+    if (gameState.jumpState.isEchoSlam) {
+        setEchoSlamDuration(gameState.jumpState.echoSlamDuration - deltaTime);
+        if (gameState.jumpState.echoSlamDuration <= 0) {
+            setEchoSlam(false);
+            setEchoSlamSecondaryTriggered(false); // Reset secondary trigger
+        }
+    }
+
+    if (gameState.jumpState.isFireballRolling) {
+        setFireballRollDuration(gameState.jumpState.fireballRollDuration - deltaTime);
+        if (gameState.jumpState.fireballRollDuration <= 0) {
+            setFireballRolling(false);
+            gameState.isInvincible = false; // End invincibility
+        } else {
+            // Emit fire particles (re-using fire trail particles for now)
+            createFireTrail(gameState.stickFigureFixedX, runnerY + STICK_FIGURE_TOTAL_HEIGHT / 2);
         }
     }
 

@@ -45,7 +45,11 @@ const state = {
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
-        isFieryHoudini: false, fieryHoudiniDuration: 0, fieryHoudiniPhase: 'disappearing'
+        isFieryHoudini: false, fieryHoudiniDuration: 0, fieryHoudiniPhase: 'disappearing',
+        isBlinkStrike: false, blinkStrikeDuration: 0,
+        isJetstreamDashing: false, jetstreamDashDuration: 0,
+        isEchoSlam: false, echoSlamDuration: 0, echoSlamSecondaryTriggered: false,
+        isFireballRolling: false, fireballRollDuration: 0
     },
     fireSpinnerCooldown: 30000, // 30 seconds
     isFireSpinnerOnCooldown: false,
@@ -66,6 +70,13 @@ const state = {
     fieryHoudiniEndTime: 0,
     isFieryHoudiniOnCooldown: false,
     fieryHoudiniLastActivationTime: 0,
+
+    // New Special Move States
+    playerIsInvisible: false, // For Blink Strike
+    stickFigureFixedX: 150, // Override for player X position (e.g., for Blink Strike teleport)
+    stickFigureY: undefined, // Override for player Y position
+    jetstreamDashDrainEndTime: 0, // For Jetstream Dash energy drain
+    fireballRollDrainEndTime: 0, // For Fireball Roll energy drain
 
     activeFireballs: [], // Array to track on-screen fireballs
     vanishingObstacles: [], // Array for obstacles that "poof" on hit
@@ -102,9 +113,11 @@ const state = {
     scrambleParticles: [],
     diveParticles: [],
     swooshParticles: [],
+    jetstreamParticles: [],
     flipTrail: [],
     corkscrewTrail: [],
     shatteredObstacles: [],
+    ashParticles: [],
     isFirestormActive: false,
     isFireShieldActive: false,
     fireShieldEndTime: 0,

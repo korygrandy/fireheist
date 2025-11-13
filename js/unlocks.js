@@ -63,7 +63,8 @@ export const ARMORY_ITEMS = {
     fieryHoudini: {
         name: 'Fiery Houdini',
         description: 'Teleport with a burst of fire, incinerating nearby obstacles.',
-        emoji: '🔥💨',
+        imageLocked: 'images/fiery-houdini-locked.png',
+        imageUnlocked: 'images/fiery-houdini-unlocked.png',
         unlockCondition: {
             type: 'incinerateCount',
             count: 50,
@@ -104,7 +105,8 @@ export const ARMORY_ITEMS = {
     fireballRoll: {
         name: 'Fireball Roll',
         description: 'Transform into a rolling fireball of accelerating power. Incinerate the next obstacle in your path, leaving only a trail of ash.',
-        emoji: '🔥',
+        imageLocked: 'images/fireball-roll-locked.png',
+        imageUnlocked: 'images/fireball-roll-unlocked.png',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'fireballRoll'

@@ -784,6 +784,118 @@ export function setFieryHoudiniPhase(phase) {
 }
 
 /**
+ * Sets the blink strike status.
+ * @param {boolean} isBlinkStrike
+ */
+export function setBlinkStrike(isBlinkStrike) {
+    state.jumpState.isBlinkStrike = isBlinkStrike;
+}
+
+/**
+ * Sets the blink strike duration.
+ * @param {number} duration
+ */
+export function setBlinkStrikeDuration(duration) {
+    state.jumpState.blinkStrikeDuration = duration;
+}
+
+/**
+ * Sets the jetstream dashing status.
+ * @param {boolean} isJetstreamDashing
+ */
+export function setJetstreamDashing(isJetstreamDashing) {
+    state.jumpState.isJetstreamDashing = isJetstreamDashing;
+}
+
+/**
+ * Sets the jetstream dash duration.
+ * @param {number} duration
+ */
+export function setJetstreamDashDuration(duration) {
+    state.jumpState.jetstreamDashDuration = duration;
+}
+
+/**
+ * Sets the jetstream dash drain end time.
+ * @param {number} time
+ */
+export function setJetstreamDashDrainEndTime(time) {
+    state.jetstreamDashDrainEndTime = time;
+}
+
+/**
+ * Sets the echo slam status.
+ * @param {boolean} isEchoSlam
+ */
+export function setEchoSlam(isEchoSlam) {
+    state.jumpState.isEchoSlam = isEchoSlam;
+}
+
+/**
+ * Sets the echo slam duration.
+ * @param {number} duration
+ */
+export function setEchoSlamDuration(duration) {
+    state.jumpState.echoSlamDuration = duration;
+}
+
+/**
+ * Sets the echo slam secondary triggered status.
+ * @param {boolean} isTriggered
+ */
+export function setEchoSlamSecondaryTriggered(isTriggered) {
+    state.jumpState.echoSlamSecondaryTriggered = isTriggered;
+}
+
+/**
+ * Sets the fireball rolling status.
+ * @param {boolean} isFireballRolling
+ */
+export function setFireballRolling(isFireballRolling) {
+    state.jumpState.isFireballRolling = isFireballRolling;
+}
+
+/**
+ * Sets the fireball roll duration.
+ * @param {number} duration
+ */
+export function setFireballRollDuration(duration) {
+    state.jumpState.fireballRollDuration = duration;
+}
+
+/**
+ * Sets the fireball roll drain end time.
+ * @param {number} time
+ */
+export function setFireballRollDrainEndTime(time) {
+    state.fireballRollDrainEndTime = time;
+}
+
+/**
+ * Sets the player's invisibility status.
+ * @param {boolean} isInvisible
+ */
+export function setPlayerIsInvisible(isInvisible) {
+    state.playerIsInvisible = isInvisible;
+}
+
+/**
+ * Sets the stick figure's fixed X position.
+ * @param {number} x
+ */
+export function setStickFigureFixedX(x) {
+    state.stickFigureFixedX = x;
+}
+
+/**
+ * Sets the stick figure's Y position.
+ * @param {number} y
+ */
+export function setStickFigureY(y) {
+    state.stickFigureY = y;
+}
+
+/**
  * Sets the fire spinner status.
  * @param {boolean} isFireSpinner
  */
@@ -865,7 +977,12 @@ export function resetJumpState() {
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
-        isFieryHoudini: false, fieryHoudiniDuration: 0
+        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
+        isFieryHoudini: false, fieryHoudiniDuration: 0,
+        isBlinkStrike: false, blinkStrikeDuration: 0,
+        isJetstreamDashing: false, jetstreamDashDuration: 0,
+        isEchoSlam: false, echoSlamDuration: 0, echoSlamSecondaryTriggered: false,
+        isFireballRolling: false, fireballRollDuration: 0
     };
 }
 

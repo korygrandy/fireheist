@@ -5,6 +5,11 @@ import { gameState } from '../state-manager.js';
 import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle, createPlayerEmbers } from './effects.js';
 
 export function drawStickFigure(x, y, jumpState, angleRad) {
+    if (gameState.playerIsInvisible) {
+        ctx.restore(); // Ensure any previous transforms are restored
+        return; // Don't draw the player if invisible
+    }``
+
     if (gameState.isColliding) {
         console.log(`[DEBUG] Drawing player in collision state.
           isColliding: ${gameState.isColliding},
@@ -373,6 +378,34 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         if (gameState.frameCount % 3 === 0) {
             createPlayerEmbers(y);
         }
+    } else if (jumpState.isFireballRolling) {
+        // Draw player as a rolling fireball
+        ctx.shadowColor = 'orange';
+        ctx.shadowBlur = 25;
+
+        // Add flaking embers
+        if (gameState.frameCount % 2 === 0) {
+            createPlayerEmbers(y);
+        }
+
+        ctx.save();
+        ctx.translate(0, -STICK_FIGURE_TOTAL_HEIGHT / 2); // Center the fireball vertically
+        ctx.rotate(gameState.frameCount * 0.02); // Rolling animation (even slower spin)
+
+        ctx.beginPath();
+        ctx.arc(0, 0, STICK_FIGURE_TOTAL_HEIGHT / 1.5, 0, Math.PI * 2); // Fiery ball
+        ctx.fillStyle = `rgba(255, ${100 + Math.floor(Math.random() * 100)}, 0, 0.9)`;
+        ctx.fill();
+
+        ctx.strokeStyle = `rgba(255, ${150 + Math.floor(Math.random() * 100)}, 0, 1)`;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.restore();
+
+        // Prevent default drawing
+        ctx.restore(); // from the main translate/rotate
+        return;
     }
 
     // Reset shadow properties if they were set by a special move

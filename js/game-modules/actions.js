@@ -1,7 +1,8 @@
-import { createHoudiniPoof, createFieryHoudiniPoof, createMeteorStrikeEffect } from './drawing/effects.js';
+import { createHoudiniPoof, createFieryHoudiniPoof, createMeteorStrikeEffect, createGroundPoundEffect, createShatterEffect } from './drawing/effects.js';
 import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 import { SKILL_UPGRADE_PATHS } from './skill-upgrades.js';
+import { setScreenFlash } from './state-manager.js';
 
 const JUMP_DURATIONS = {
     hurdle: 500,
@@ -586,6 +587,9 @@ export function startBlinkStrike(state) {
         state.stickFigureFixedX = STICK_FIGURE_FIXED_X; // Reset player X
         state.stickFigureY = undefined; // Reset player Y
 
+        // Add a screen flash for impact
+        setScreenFlash(0.7, 200, performance.now());
+
     }, JUMP_DURATIONS.blinkStrike / 2); // Halfway through the jump duration
 
     console.log("-> startBlinkStrike: Blink Strike initiated.");
@@ -652,12 +656,22 @@ export function startEchoSlam(state) {
     // Trigger secondary shockwave after a delay
     setTimeout(() => {
         if (state.gameRunning && !state.isPaused) {
-            // Create a secondary, smaller ground pound effect
             const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
             const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentSegment.angleRad);
-            createGroundPoundEffect(STICK_FIGURE_FIXED_X + 50, groundY, 0.5); // Smaller effect, slightly ahead
+            const echoX = STICK_FIGURE_FIXED_X + 150; // Position of the echo slam
+
+            // Create a secondary, smaller ground pound effect
+            createGroundPoundEffect(echoX, groundY, 0.5); // Smaller effect, slightly ahead
             playAnimationSound('shockwave'); // Secondary shockwave sound
             state.jumpState.echoSlamSecondaryTriggered = true;
+
+            // Check for obstacle collision with the echo
+            if (state.currentObstacle && Math.abs(state.currentObstacle.x - echoX) < 50) {
+                state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now(), animationType: 'shatter' });
+                state.currentObstacle = null;
+                state.playerStats.obstaclesIncinerated++;
+                playAnimationSound('shatter');
+            }
         }
     }, JUMP_DURATIONS.echoSlam / 2); // Halfway through the primary effect
 
@@ -665,7 +679,7 @@ export function startEchoSlam(state) {
 }
 
 export function startFireballRoll(state) {
-    if (!state.gameRunning || state.isPaused || state.jumpState.isJumping || state.isFireballRolling) return;
+    if (!state.gameRunning || state.isPaused || state.isFireballRolling) return;
 
     // No initial energy cost, but will drain over time
     if (state.playerEnergy <= 0) {
@@ -679,14 +693,6 @@ export function startFireballRoll(state) {
     state.invincibilityEndTime = Date.now() + JUMP_DURATIONS.fireballRoll;
     state.fireballRollDrainEndTime = Date.now() + JUMP_DURATIONS.fireballRoll; // Energy drains for the duration
 
-    initiateJump(state, JUMP_DURATIONS.fireballRoll);
     playAnimationSound('fireballRoll'); // Play sound for Fireball Roll
     console.log("-> startFireballRoll: Fireball Roll initiated.");
-
-    // Incinerate the current obstacle if present
-    if (state.currentObstacle) {
-        state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now(), animationType: 'incinerate-ash-blow' });
-        state.currentObstacle = null;
-        state.playerStats.obstaclesIncinerated++;
-    }
 }
