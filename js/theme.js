@@ -2,6 +2,8 @@
 // THEME LOGIC
 // =================================================================
 
+import { playAmbientSound } from './audio.js';
+
 export const themes = {
     'grass': {
         name: '🌻 Grassy Knolls',
@@ -108,6 +110,7 @@ export let currentTheme = themes.grass; // Default theme
 export function setTheme(themeName) {
     if (themes[themeName]) {
         currentTheme = themes[themeName];
+        playAmbientSound(themeName);
         console.log(`-> setTheme: Theme changed to ${themeName}`);
     } else {
         console.error(`-> setTheme: Unknown theme '${themeName}'.`);

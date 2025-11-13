@@ -2,19 +2,20 @@
 // AUDIO FUNCTIONS
 // =================================================================
 
-import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL, ANIMATION_SOUND_MAP } from './constants.js';
+import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL, ANIMATION_SOUND_MAP, THEME_AMBIENT_SOUND_MAP } from './constants.js';
 import { soundToggleButton, disableSaveSettings } from "./dom-elements.js";
+
+const MUTE_STORAGE_KEY = 'fireHeistMuteSetting';
 
 export let isMuted = false;
 export let backgroundMusic = null;
+export let ambientMusic = null;
 export const animationPlayers = {}; // Object to hold Tone.Player instances for animations
 
 export const playerActionsBus = new Tone.Channel(-10).toDestination();
 export const uiBus = new Tone.Channel(-10).toDestination();
 export const musicBus = new Tone.Channel(-18).toDestination();
 export const ambientBus = new Tone.Channel(-25).toDestination();
-
-const MUTE_STORAGE_KEY = 'fireHeistMuteSetting';
 
 export function loadMuteSetting() {
     if (disableSaveSettings.checked) {
@@ -36,6 +37,7 @@ export function loadMuteSetting() {
         loserSound.mute = true;
         gameStartSound.mute = true;
         pauseGameSound.mute = true;
+        if (ambientMusic) { ambientMusic.mute = true; }
         for (const key in animationPlayers) {
             animationPlayers[key].mute = true;
         }
@@ -211,6 +213,32 @@ export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
     }).connect(musicBus);
 }
 
+export function playAmbientSound(themeName) {
+    if (ambientMusic) {
+        if (ambientMusic.state === 'started') { ambientMusic.stop(); }
+        ambientMusic.dispose();
+    }
+
+    const ambientUrl = THEME_AMBIENT_SOUND_MAP[themeName];
+    if (ambientUrl) {
+        ambientMusic = new Tone.Player({
+            url: ambientUrl,
+            loop: true,
+            volume: isMuted ? -Infinity : -25,
+            onload: () => console.log(`-> AUDIO: Ambient sound for ${themeName} loaded.`),
+            onerror: (e) => console.error(`-> AUDIO: Error loading ambient sound for ${themeName}:`, e)
+        }).connect(ambientBus);
+
+        if (!isMuted) {
+            Tone.loaded().then(() => {
+                ambientMusic.sync().start(0);
+            });
+        }
+    } else {
+        ambientMusic = null; // No ambient sound for this theme
+    }
+}
+
 export function playChaChing() {
     if (isMuted) { return; }
     chaChingSynth.triggerAttackRelease(4000, "16n", Tone.now());
@@ -266,6 +294,7 @@ export function toggleSound(soundToggleButton) {
         loserSound.mute = true;
         gameStartSound.mute = true;
         pauseGameSound.mute = true;
+        if (ambientMusic) { ambientMusic.mute = true; }
         for (const key in animationPlayers) {
             animationPlayers[key].mute = true;
         }
@@ -280,6 +309,12 @@ export function toggleSound(soundToggleButton) {
         loserSound.mute = false;
         gameStartSound.mute = false;
         pauseGameSound.mute = false;
+        if (ambientMusic) {
+            ambientMusic.mute = false;
+            if (ambientMusic.state === 'stopped') {
+                ambientMusic.start();
+            }
+        }
         for (const key in animationPlayers) {
             animationPlayers[key].mute = false;
         }

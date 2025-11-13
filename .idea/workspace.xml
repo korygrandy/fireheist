@@ -7,7 +7,10 @@
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/audio.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/audio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/theme.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +68,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1763064864972</updated>
-      <workItem from="1763064867591" duration="5212000" />
+      <workItem from="1763064867591" duration="7872000" />
     </task>
     <servers />
   </component>

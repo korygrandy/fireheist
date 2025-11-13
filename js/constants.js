@@ -173,6 +173,17 @@ export const THEME_MUSIC_MAP = {
     'snow': 'fx/shatter.mp3',
 };
 
+export const THEME_AMBIENT_SOUND_MAP = {
+    'grass': 'fx/quack.mp3', // Placeholder, ideally a subtle nature sound
+    'mountains': 'fx/wind.mp3', // New sound: subtle wind
+    'roadway': 'fx/city-hum.mp3', // New sound: city ambience
+    'snow': 'fx/wind.mp3', // Re-use wind sound
+    'desert': 'fx/lion.mp3', // Placeholder, ideally desert wind/crickets
+    'volcano': 'fx/firestorm.mp3', // Placeholder, ideally lava bubbling/rumbling
+    'outerspace': 'fx/ufo-hover.mp3', // Placeholder, ideally space hum
+    'night': 'fx/zombie.mp3', // Placeholder, ideally crickets/night owl
+};
+
 
 export const suggestedEmojiList = ['🧟', '🥷', '🦁', '💃', '🐶', '🚀','👽'];
 

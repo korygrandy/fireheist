@@ -206,9 +206,9 @@ export function startGame() {
     let musicUrl = DEFAULT_MUSIC_URL;
     if (gameState.selectedPersona && gameState.selectedPersona !== 'custom' && personas[gameState.selectedPersona]) {
         musicUrl = personas[gameState.selectedPersona].music;
-    } else if (gameState.currentTheme && THEME_MUSIC_MAP[gameState.currentTheme]) {
-        musicUrl = THEME_MUSIC_MAP[gameState.currentTheme];
-    } else {
+    } else if (gameState.currentTheme && THEME_MUSIC_MAP[gameState.currentTheme.name]) {
+        musicUrl = THEME_MUSIC_MAP[gameState.currentTheme.name];
+    } else if (gameState.selectedPersona === 'custom') {
         const cleanEmoji = gameState.stickFigureEmoji.replace(/\uFE0F/g, '');
         musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
     }
