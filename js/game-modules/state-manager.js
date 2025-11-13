@@ -1028,6 +1028,10 @@ export function setActiveArmorySkill(skillKey) {
     state.playerStats.activeArmorySkill = skillKey;
 }
 
+export function setHasSeenNewArmoryIndicator(hasSeen) {
+    state.playerStats.hasSeenNewArmoryIndicator = hasSeen;
+}
+
 export function setFinancialMilestones(milestones) {
     state.financialMilestones = milestones;
 }

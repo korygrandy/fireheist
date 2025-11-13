@@ -36,6 +36,7 @@ export const fullscreenToggleButton = document.getElementById('fullscreenToggleB
 export const header = document.querySelector('header');
 export const controlPanel = document.querySelector('.lg\\:col-span-1');
 export const mainElement = document.querySelector('main');
+export const armoryNewIndicator = document.getElementById('armory-new-indicator');
 
 // Skill Upgrade Modal Elements
 export const skillUpgradeModal = document.getElementById('skillUpgradeModal');

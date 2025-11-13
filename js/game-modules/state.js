@@ -174,7 +174,8 @@ const state = {
         activeArmorySkill: null, // New: To store the key of the currently active armory skill
         consecutiveGroundPounds: 0, // New: To track consecutive ground pounds for an achievement
         totalGroundPoundCollisions: 0,
-        consecutiveIncinerations: 0
+        consecutiveIncinerations: 0,
+        hasSeenNewArmoryIndicator: false // New: To track if the user has seen the new armory indicator
     }
 };
 

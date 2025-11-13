@@ -2,7 +2,7 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement, armoryItemsContainer } from './dom-elements.js';
+import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement, armoryItemsContainer, armoryNewIndicator } from './dom-elements.js';
 
 import { initializeUIData, loadCustomData } from './ui-modules/data.js';
 import { switchTab, toggleFullScreen, updateControlPanelState } from './ui-modules/ui-helpers.js';
@@ -206,6 +206,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     preloadAnimationSounds(); // Preload all animation sounds
     initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
     initializeDailyChallengeUI(); // Initialize the Daily Challenge UI after all other UI is ready
+
+    // Show "NEW" indicator on Armory tab if not seen yet
+    if (!gameState.playerStats.hasSeenNewArmoryIndicator) {
+        armoryNewIndicator.classList.remove('hidden');
+    }
 
     // 3. Set up main buttons and controls
     if (startButton) {

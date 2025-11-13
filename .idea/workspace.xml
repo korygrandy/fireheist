@@ -6,19 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="version commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/collision.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/collision.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/player.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/world.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/world.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/dom-elements.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/dom-elements.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/state-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state-manager.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/armory.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/armory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/unlocks.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/unlocks.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/ui-modules/ui-helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/ui-helpers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +23,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "feature/plan-special-move-variations",
+    "git-widget-placeholder": "feature/new-move-indicator",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>

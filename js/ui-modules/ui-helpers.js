@@ -1,6 +1,7 @@
-import { chartContainer, tableContainer, armoryItemsContainer, emojiInput, obstacleEmojiInput, skillLevelSelector, dataMessage } from '../dom-elements.js';
+import { chartContainer, tableContainer, armoryItemsContainer, emojiInput, obstacleEmojiInput, skillLevelSelector, dataMessage, armoryNewIndicator } from '../dom-elements.js';
 import { populateArmoryItems } from './armory.js';
-import { gameState } from '../game-modules/state-manager.js';
+import { gameState, setHasSeenNewArmoryIndicator } from '../game-modules/state-manager.js';
+import { savePlayerStats } from './settings.js';
 
 export function switchTab(tabId) {
     const tabs = document.querySelectorAll('.tab-content');
@@ -29,6 +30,12 @@ export function switchTab(tabId) {
     // If the Armory tab is activated, populate it with items
     if (tabId === 'armory') {
         populateArmoryItems();
+        // Hide the "NEW" indicator if it hasn't been seen yet
+        if (!gameState.playerStats.hasSeenNewArmoryIndicator) {
+            armoryNewIndicator.classList.add('hidden');
+            setHasSeenNewArmoryIndicator(true);
+            savePlayerStats(); // Save the change to local storage
+        }
     }
 }
 
