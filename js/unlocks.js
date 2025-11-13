@@ -70,6 +70,46 @@ export const ARMORY_ITEMS = {
             skillKey: 'fieryHoudini'
         },
         unlockText: 'Incinerate 50 obstacles'
+    },
+    blinkStrike: {
+        name: 'Blink Strike',
+        description: 'Instantly teleport through the next obstacle, shattering it on arrival. A high-precision tool for the agile.',
+        emoji: '💨',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'blinkStrike'
+        },
+        unlockText: 'Unlock condition not yet determined.'
+    },
+    jetstreamDash: {
+        name: 'Jetstream Dash',
+        description: 'Propel forward in a sustained, invincible dash. Perfect for navigating dense obstacle fields when a jump won\'t cut it.',
+        emoji: '🌊',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'jetstreamDash'
+        },
+        unlockText: 'Unlock condition not yet determined.'
+    },
+    echoSlam: {
+        name: 'Echo Slam',
+        description: 'Slam the ground with such force that it sends a secondary, weaker shockwave forward, clearing staggered obstacles.',
+        emoji: '💥',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'echoSlam'
+        },
+        unlockText: 'Unlock condition not yet determined.'
+    },
+    fireballRoll: {
+        name: 'Fireball Roll',
+        description: 'Transform into a rolling fireball of accelerating power. Incinerate the next obstacle in your path, leaving only a trail of ash.',
+        emoji: '🔥',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'fireballRoll'
+        },
+        unlockText: 'Unlock condition not yet determined.'
     }
 };
 
