@@ -715,10 +715,6 @@ export function animate(timestamp) {
         setCurrentAccelerator(null);
         setOnScreenCustomEvent(null);
 
-        if (gameState.currentSegmentIndex === gameState.raceSegments.length - 1) {
-            preloadEndgameSounds();
-        }
-
         if (gameState.currentSegmentIndex < gameState.raceSegments.length) {
             console.log(`-> NEW SEGMENT START: Index ${gameState.currentSegmentIndex}. Visual Duration: ${gameState.raceSegments[gameState.currentSegmentIndex].visualDurationMs.toFixed(0)}ms`);
         }

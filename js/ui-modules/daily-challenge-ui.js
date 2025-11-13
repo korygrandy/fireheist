@@ -58,6 +58,7 @@ function createChallengeHTML(config, results = null) {
                     <p class="text-xs text-gray-500">Obstacles Hit</p>
                 </div>
             </div>
+            <div id="next-challenge-countdown" class="text-sm"></div>
         </div>
     `;
 
@@ -97,6 +98,32 @@ export function displayDailyChallenge() {
 export function displayDailyChallengeCompletedScreen(results) {
     const config = getDailyChallengeConfig();
     createChallengeHTML(config, results);
+    startNextChallengeCountdown();
+}
+
+function startNextChallengeCountdown() {
+    const countdownElement = document.getElementById('next-challenge-countdown');
+    if (!countdownElement) return;
+
+    const interval = setInterval(() => {
+        const now = new Date();
+        const tomorrow = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
+        tomorrow.setUTCHours(0, 0, 0, 0);
+
+        const diff = tomorrow.getTime() - now.getTime();
+
+        if (diff <= 0) {
+            countdownElement.textContent = "A new challenge is available!";
+            clearInterval(interval);
+            return;
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        countdownElement.innerHTML = `Next challenge in: <span class="font-semibold text-gray-700">${hours}h ${mins}m ${secs}s</span>`;
+    }, 1000);
 }
 
 export function showCountdown(button, callback) {
