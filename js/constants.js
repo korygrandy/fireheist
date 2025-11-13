@@ -192,7 +192,16 @@ export const ANIMATION_SOUND_MAP = {
     blinkStrike: 'fx/houdini.mp3',
     jetstreamDash: 'fx/firestorm.mp3',
     echoSlam: 'fx/bomb.mp3',
-    fireballRoll: 'fx/fireball.mp3'
+    fireballRoll: 'fx/fireball.mp3',
+    'skill-unlock': 'fx/skill-unlock.mp3',
+    'armory-tab': 'fx/armory-tab.mp3',
+    'final-skill-unlock': 'fx/final-skill-level-unlock.mp3',
+    'select-sound': 'fx/vault-unlock.mp3',
+    'unselect-sound': 'fx/vault-unlock.mp3',
+    'beep': 'fx/beep.mp3',
+    'start-daily-challenge': 'fx/start-daily-challenge.mp3',
+    'hof-tab': 'fx/hof-tab.mp3',
+    'upgrade-skill': 'fx/upgrade-skill.mp3'
     // Other animations will be added here
 };
 

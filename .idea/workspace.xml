@@ -6,12 +6,30 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="version commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/alien.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/alien.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/ballerina.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/ballerina.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/dog.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/dog.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/fireball.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/fireball.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/firestorm.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/firestorm.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/funk.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/funk.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/incinerate.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/incinerate.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/lion.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/lion.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/loser.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/loser.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/moonwalk.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/moonwalk.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/ninja.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/ninja.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/power-up.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/power-up.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/quack.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/quack.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/rocket.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/rocket.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/vine-boom.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/vine-boom.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/winner.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/winner.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/zombie.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/zombie.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/dom-elements.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/dom-elements.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/state-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state-manager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/ui-modules/armory.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/armory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/ui-modules/ui-helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/ui-helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/unlocks.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/unlocks.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +41,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "feature/new-move-indicator",
+    "git-widget-placeholder": "feature/armory-ui-polish",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>

@@ -1,8 +1,9 @@
 import { armoryItemsContainer, skillUpgradeModal, skillModalTitle, skillModalContent, closeSkillModalBtn, totalCashDisplay } from '../dom-elements.js';
 import { getSkillUnlockProgress, checkSkillUnlockStatus, ARMORY_ITEMS } from '../unlocks.js';
 import { savePlayerStats } from './settings.js';
-import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash } from '../game-modules/state-manager.js';
+import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash, setScreenFlash } from '../game-modules/state-manager.js';
 import { SKILL_UPGRADE_PATHS } from '../game-modules/skill-upgrades.js';
+import { playAnimationSound } from '../audio.js';
 
 // =================================================================
 // ARMORY UI MANAGEMENT
@@ -15,8 +16,9 @@ import { SKILL_UPGRADE_PATHS } from '../game-modules/skill-upgrades.js';
 export function handleArmorySkillSelection(skillKey) {
     setActiveArmorySkill(skillKey);
     savePlayerStats();
-    populateArmoryItems(); // Refresh UI
-    console.log(`-> Armory: Skill '${skillKey}' selected.`);
+    populateArmoryItems(); // Re-render to show active skill
+    playAnimationSound('select-sound'); // Play select sound on selection
+    console.log(`-> Armory: Skill '${ARMORY_ITEMS[skillKey].name}' selected.`);
 }
 
 /**
@@ -25,8 +27,9 @@ export function handleArmorySkillSelection(skillKey) {
 export function handleArmorySkillDeselection() {
     setActiveArmorySkill(null);
     savePlayerStats();
-    populateArmoryItems(); // Refresh UI
-    console.log("-> Armory: Active skill deselected.");
+    populateArmoryItems(); // Re-render to show no active skill
+    playAnimationSound('unselect-sound'); // Play unselect sound
+    console.log(`-> Armory: Active skill unselected.`);
 }
 
 /**
@@ -48,7 +51,13 @@ export function populateArmoryItems() {
         const upgradePath = SKILL_UPGRADE_PATHS[skillKey];
 
         const skillCard = document.createElement('div');
-        skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center ${isUnlocked ? 'bg-white unlocked' : 'bg-gray-200 opacity-50 cursor-not-allowed'}`;
+        const tierClass = skill.tier ? `tier-${skill.tier.toLowerCase()}` : 'tier-common';
+        skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center ${isUnlocked ? 'bg-white unlocked' : 'bg-gray-200 opacity-50 cursor-not-allowed'} ${tierClass}`;
+
+        let tierLabel = '';
+        if (skill.tier) {
+            tierLabel = `<p class="text-xs font-bold tier-label tier-label-${skill.tier.toLowerCase()}">${skill.tier} Tier</p>`;
+        }
 
         let lockedMessage = '';
         if (!isUnlocked) {
@@ -80,6 +89,7 @@ export function populateArmoryItems() {
         }
 
         skillCard.innerHTML = `
+            ${tierLabel}
             ${iconHTML}
             <h4 class="font-semibold text-gray-800 mt-2">${skill.name} (Level ${currentLevel})</h4>
             <p class="text-sm text-gray-600">${skill.description}</p>
@@ -106,6 +116,7 @@ export function populateArmoryItems() {
     });
     armoryItemsContainer.querySelectorAll('button[data-action="open-upgrade-modal"]').forEach(button => {
         button.addEventListener('click', (event) => {
+            playAnimationSound('upgrade-skill');
             openSkillUpgradeModal(event.target.dataset.skillKey);
         });
     });
@@ -145,6 +156,8 @@ export function checkForArmoryUnlocks(stats) {
         const skill = ARMORY_ITEMS[key];
         if (checkSkillUnlockStatus(skill.unlockCondition, stats) && !stats.notifiedArmoryUnlocks.includes(key)) {
             displayArmoryUnlockNotification(skill.name);
+            playAnimationSound('power-up'); // Play sound on unlock
+            setScreenFlash(0.8, 200, performance.now(), 'gold'); // Gold flash for new skill
             stats.notifiedArmoryUnlocks.push(key);
             stats.unlockedArmoryItems.push(key); // Add to unlocked items
             stats.skillLevels[key] = 1; // Initialize skill to level 1 upon unlock
@@ -250,6 +263,15 @@ function handleUpgradeSkill() {
     setTotalAccumulatedCash(gameState.playerStats.totalAccumulatedCash - nextLevelData.cost);
     setPlayerSkillLevel(skillKey, nextLevel);
     savePlayerStats();
+
+    // Play the appropriate sound effect
+    if (nextLevel === upgradePath.maxLevel) {
+        playAnimationSound('final-skill-unlock');
+    } else {
+        playAnimationSound('skill-unlock');
+    }
+    
+    setScreenFlash(0.8, 200, performance.now(), 'orange'); // Orange flash for upgrade
 
     console.log(`-> Skill Upgrade: '${ARMORY_ITEMS[skillKey].name}' upgraded to Level ${nextLevel}. Remaining cash: $${gameState.playerStats.totalAccumulatedCash.toLocaleString()}`);
 

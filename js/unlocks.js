@@ -20,6 +20,7 @@ export const ARMORY_ITEMS = {
         name: 'Firestorm',
         description: 'Unleash a continuous barrage of fire, incinerating all obstacles.',
         emoji: '🌪️',
+        tier: 'Legendary',
         unlockCondition: {
             type: 'incinerateCount',
             count: 100,
@@ -31,6 +32,7 @@ export const ARMORY_ITEMS = {
         name: 'Fire Spinner',
         description: 'A fiery spinning jump that incinerates obstacles.',
         emoji: '🔥',
+        tier: 'Adept',
         unlockCondition: {
             type: 'consecutiveGroundPounds',
             count: 3,
@@ -42,6 +44,7 @@ export const ARMORY_ITEMS = {
         name: 'Fiery Ground Pound',
         description: 'A powerful ground pound that creates a fiery explosion, incinerating all on-screen obstacles.',
         emoji: '💥',
+        tier: 'Master',
         unlockCondition: {
             type: 'consecutiveGroundPounds',
             count: 2,
@@ -53,6 +56,7 @@ export const ARMORY_ITEMS = {
         name: 'Fire Stomper',
         description: 'A massive stomp that flips all on-screen obstacles upside down before turning them to rubble.',
         emoji: '👣',
+        tier: 'Master',
         unlockCondition: {
             type: 'fieryGroundPoundCount',
             count: 50,
@@ -65,6 +69,7 @@ export const ARMORY_ITEMS = {
         description: 'Teleport with a burst of fire, incinerating nearby obstacles.',
         imageLocked: 'images/fiery-houdini-locked.png',
         imageUnlocked: 'images/fiery-houdini-unlocked.png',
+        tier: 'Master',
         unlockCondition: {
             type: 'incinerateCount',
             count: 50,
@@ -76,6 +81,7 @@ export const ARMORY_ITEMS = {
         name: 'Blink Strike',
         description: 'Instantly teleport through the next obstacle, shattering it on arrival. A high-precision tool for the agile.',
         emoji: '💨',
+        tier: 'Adept',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'blinkStrike'
@@ -86,6 +92,7 @@ export const ARMORY_ITEMS = {
         name: 'Jetstream Dash',
         description: 'Propel forward in a sustained, invincible dash. Perfect for navigating dense obstacle fields when a jump won\'t cut it.',
         emoji: '🌊',
+        tier: 'Adept',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'jetstreamDash'
@@ -96,6 +103,7 @@ export const ARMORY_ITEMS = {
         name: 'Echo Slam',
         description: 'Slam the ground with such force that it sends a secondary, weaker shockwave forward, clearing staggered obstacles.',
         emoji: '💥',
+        tier: 'Adept',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'echoSlam'
@@ -107,6 +115,7 @@ export const ARMORY_ITEMS = {
         description: 'Transform into a rolling fireball of accelerating power. Incinerate the next obstacle in your path, leaving only a trail of ash.',
         imageLocked: 'images/fireball-roll-locked.png',
         imageUnlocked: 'images/fireball-roll-unlocked.png',
+        tier: 'Master',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'fireballRoll'

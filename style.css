@@ -215,3 +215,44 @@ body.game-active-fullscreen:fullscreen #mainGrid {
 .back {
     transform: rotateY(180deg);
 }
+
+/* --- Armory Tier Styles --- */
+.armory-item {
+    border-width: 2px; /* Make borders thicker to be more visible */
+}
+
+.tier-adept {
+    border-color: #60a5fa; /* blue-400 */
+}
+
+.tier-master {
+    border-color: #a855f7; /* purple-500 */
+}
+
+.tier-legendary {
+    border-color: #f59e0b; /* amber-500 */
+}
+
+.tier-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: white;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+.tier-label-adept {
+    background-color: #60a5fa; /* blue-400 */
+}
+
+.tier-label-master {
+    background-color: #a855f7; /* purple-500 */
+}
+
+.tier-label-legendary {
+    background-color: #f59e0b; /* amber-500 */
+}

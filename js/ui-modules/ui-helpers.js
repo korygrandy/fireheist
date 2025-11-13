@@ -2,6 +2,7 @@ import { chartContainer, tableContainer, armoryItemsContainer, emojiInput, obsta
 import { populateArmoryItems } from './armory.js';
 import { gameState, setHasSeenNewArmoryIndicator } from '../game-modules/state-manager.js';
 import { savePlayerStats } from './settings.js';
+import { playAnimationSound } from '../audio.js';
 
 export function switchTab(tabId) {
     const tabs = document.querySelectorAll('.tab-content');
@@ -30,12 +31,17 @@ export function switchTab(tabId) {
     // If the Armory tab is activated, populate it with items
     if (tabId === 'armory') {
         populateArmoryItems();
+        playAnimationSound('armory-tab'); // Play sound when armory tab is clicked
         // Hide the "NEW" indicator if it hasn't been seen yet
         if (!gameState.playerStats.hasSeenNewArmoryIndicator) {
             armoryNewIndicator.classList.add('hidden');
             setHasSeenNewArmoryIndicator(true);
             savePlayerStats(); // Save the change to local storage
         }
+    } else if (tabId === 'hallOfFame') {
+        playAnimationSound('hof-tab'); // Play sound when Hall of Fame tab is clicked
+    } else if (['player', 'gameplay', 'data'].includes(tabId)) {
+        playAnimationSound('beep'); // Play beep sound for other tabs
     }
 }
 

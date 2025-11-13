@@ -21,7 +21,7 @@ import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
-import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds } from './audio.js';
+import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound } from './audio.js';
 import { initGamepad } from './game-modules/gamepad.js';
 
 function initializeDailyChallengeUI() {
@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (controlPanelContainer) {
         controlPanelContainer.addEventListener('click', (event) => {
             if (event.target.id === 'startDailyChallengeBtn') {
+                playAnimationSound('start-daily-challenge'); // Play sound on daily challenge start
                 startDailyChallengeGame();
             }
         });
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (infoIcon && infoPanel) {
         infoIcon.addEventListener('click', () => {
             infoPanel.classList.toggle('hidden');
+            playAnimationSound('beep'); // Play beep sound on info icon click
         });
     }
 
