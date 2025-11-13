@@ -11,6 +11,7 @@ import {
     collisionSynth,
     debuffSynth,
     initializeMusicPlayer,
+    playPauseGameSound,
 } from '../audio.js';
 import { applySkillLevelSettings } from '../ui-modules/input-handlers.js';
 import { showResultsScreen, hideResultsScreen } from '../ui-modules/results.js';
@@ -82,6 +83,7 @@ import { animate } from './lifecycle.js';
 export function togglePauseGame() {
     if (!gameState.gameRunning) return;
     setPaused(!gameState.isPaused);
+    playPauseGameSound();
     const startButton = document.getElementById('startButton');
     if (gameState.isPaused) {
         Tone.Transport.pause();

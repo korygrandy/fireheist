@@ -30,6 +30,7 @@ export function loadMuteSetting() {
         winnerSound.mute = true;
         loserSound.mute = true;
         gameStartSound.mute = true;
+        pauseGameSound.mute = true;
         for (const key in animationPlayers) {
             animationPlayers[key].mute = true;
         }
@@ -43,6 +44,7 @@ export function loadMuteSetting() {
         winnerSound.mute = false;
         loserSound.mute = false;
         gameStartSound.mute = false;
+        pauseGameSound.mute = false;
         for (const key in animationPlayers) {
             animationPlayers[key].mute = false;
         }
@@ -112,6 +114,14 @@ export const gameStartSound = new Tone.Player({
 }).toDestination();
 gameStartSound.mute = isMuted;
 
+export const pauseGameSound = new Tone.Player({
+    url: './fx/pause-game.mp3',
+    volume: -10,
+    onload: () => console.log("-> AUDIO: Pause game sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading pause game sound:", e)
+}).toDestination();
+pauseGameSound.mute = isMuted;
+
 export function preloadEndgameSounds() {
     winnerSound.buffer;
     loserSound.buffer;
@@ -147,6 +157,13 @@ export function playGameStartSound() {
     if (isMuted) { return; }
     if (gameStartSound.state === 'stopped') {
         gameStartSound.start();
+    }
+}
+
+export function playPauseGameSound() {
+    if (isMuted) { return; }
+    if (pauseGameSound.state === 'stopped') {
+        pauseGameSound.start();
     }
 }
 
@@ -228,6 +245,7 @@ export function toggleSound(soundToggleButton) {
         winnerSound.mute = true;
         loserSound.mute = true;
         gameStartSound.mute = true;
+        pauseGameSound.mute = true;
         for (const key in animationPlayers) {
             animationPlayers[key].mute = true;
         }
@@ -241,6 +259,7 @@ export function toggleSound(soundToggleButton) {
         winnerSound.mute = false;
         loserSound.mute = false;
         gameStartSound.mute = false;
+        pauseGameSound.mute = false;
         for (const key in animationPlayers) {
             animationPlayers[key].mute = false;
         }
