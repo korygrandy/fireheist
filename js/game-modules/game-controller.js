@@ -8,7 +8,6 @@ import {
     isMuted,
     backgroundMusic,
     chaChingSynth,
-    collisionSynth,
     debuffSynth,
     initializeMusicPlayer,
     playPauseGameSound,
@@ -220,7 +219,6 @@ export function startGame() {
     }
     if (!isMuted) {
         chaChingSynth.mute = false;
-        collisionSynth.mute = false;
         debuffSynth.mute = false;
         Tone.loaded().then(() => {
             backgroundMusic.sync().start(0);

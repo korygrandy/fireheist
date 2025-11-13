@@ -9,6 +9,11 @@ export let isMuted = false;
 export let backgroundMusic = null;
 export const animationPlayers = {}; // Object to hold Tone.Player instances for animations
 
+export const playerActionsBus = new Tone.Channel(-10).toDestination();
+export const uiBus = new Tone.Channel(-10).toDestination();
+export const musicBus = new Tone.Channel(-18).toDestination();
+export const ambientBus = new Tone.Channel(-25).toDestination();
+
 const MUTE_STORAGE_KEY = 'fireHeistMuteSetting';
 
 export function loadMuteSetting() {
@@ -23,7 +28,7 @@ export function loadMuteSetting() {
     if (isMuted) {
         if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
         chaChingSynth.mute = true;
-        collisionSynth.mute = true;
+        collisionSounds.forEach(sound => sound.mute = true);
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
@@ -37,7 +42,7 @@ export function loadMuteSetting() {
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
-        collisionSynth.mute = false;
+        collisionSounds.forEach(sound => sound.mute = false);
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;
@@ -57,21 +62,31 @@ export function loadMuteSetting() {
 export const chaChingSynth = new Tone.MetalSynth({
     frequency: 200, envelope: { attack: 0.001, decay: 0.2, release: 0.1 },
     harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5
-}).toDestination();
+}).connect(uiBus);
 chaChingSynth.mute = isMuted;
 
-export const collisionSynth = new Tone.NoiseSynth({
-    noise: { type: 'pink' },
-    envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }
-}).toDestination();
-collisionSynth.volume.value = -10;
-collisionSynth.mute = isMuted;
+export const collisionSounds = [
+    new Tone.NoiseSynth({
+        noise: { type: 'pink' },
+        envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }
+    }).toDestination(),
+    new Tone.Player({ url: './fx/bomb.mp3' }).toDestination(),
+    new Tone.Player({ url: './fx/shatter.mp3' }).toDestination()
+];
+collisionSounds.forEach(sound => {
+    if (sound instanceof Tone.Player) {
+        sound.volume.value = -10;
+    }
+    sound.connect(playerActionsBus);
+    sound.mute = isMuted;
+});
 
 export const debuffSynth = new Tone.MembraneSynth({
     envelope: { attack: 0.005, decay: 0.4, sustain: 0.01, release: 0.5 },
     octaves: 10, pitchDecay: 0.1
 }).toDestination();
 debuffSynth.volume.value = -10;
+debuffSynth.connect(playerActionsBus);
 debuffSynth.mute = isMuted;
 
 export const quackSound = new Tone.Player({
@@ -79,7 +94,7 @@ export const quackSound = new Tone.Player({
     volume: -10,
     onload: () => console.log("-> AUDIO: Quack sound loaded."),
     onerror: (e) => console.error("-> AUDIO: Error loading quack sound:", e)
-}).toDestination();
+}).connect(uiBus);
 quackSound.mute = isMuted;
 
 export const powerUpSound = new Tone.Player({
@@ -87,7 +102,7 @@ export const powerUpSound = new Tone.Player({
     volume: -10,
     onload: () => console.log("-> AUDIO: Power-up sound loaded."),
     onerror: (e) => console.error("-> AUDIO: Error loading power-up sound:", e)
-}).toDestination();
+}).connect(uiBus);
 powerUpSound.mute = isMuted;
 
 export const winnerSound = new Tone.Player({
@@ -95,7 +110,7 @@ export const winnerSound = new Tone.Player({
     volume: -5,
     onload: () => console.log("-> AUDIO: Winner sound loaded."),
     onerror: (e) => console.error("-> AUDIO: Error loading winner sound:", e)
-}).toDestination();
+}).connect(uiBus);
 winnerSound.mute = isMuted;
 
 export const loserSound = new Tone.Player({
@@ -103,7 +118,7 @@ export const loserSound = new Tone.Player({
     volume: -10,
     onload: () => console.log("-> AUDIO: Loser sound loaded."),
     onerror: (e) => console.error("-> AUDIO: Error loading loser sound:", e)
-}).toDestination();
+}).connect(uiBus);
 loserSound.mute = isMuted;
 
 export const gameStartSound = new Tone.Player({
@@ -111,7 +126,7 @@ export const gameStartSound = new Tone.Player({
     volume: -10,
     onload: () => console.log("-> AUDIO: Game start sound loaded."),
     onerror: (e) => console.error("-> AUDIO: Error loading game start sound:", e)
-}).toDestination();
+}).connect(uiBus);
 gameStartSound.mute = isMuted;
 
 export const pauseGameSound = new Tone.Player({
@@ -119,7 +134,7 @@ export const pauseGameSound = new Tone.Player({
     volume: -10,
     onload: () => console.log("-> AUDIO: Pause game sound loaded."),
     onerror: (e) => console.error("-> AUDIO: Error loading pause game sound:", e)
-}).toDestination();
+}).connect(uiBus);
 pauseGameSound.mute = isMuted;
 
 export function preloadEndgameSounds() {
@@ -139,7 +154,7 @@ export function preloadAnimationSounds() {
             volume: -10,
             onload: () => console.log(`-> AUDIO: ${animationName} sound loaded.`),
             onerror: (e) => console.error(`-> AUDIO: Error loading ${animationName} sound:`, e)
-        }).toDestination();
+        }).connect(playerActionsBus);
         animationPlayers[animationName].mute = isMuted;
         animationPlayers[animationName].buffer; // Preload the buffer
     }
@@ -193,7 +208,7 @@ export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
         url: musicUrl,
         loop: true,
         volume: isMuted ? -Infinity : -18
-    }).toDestination();
+    }).connect(musicBus);
 }
 
 export function playChaChing() {
@@ -204,7 +219,12 @@ export function playChaChing() {
 
 export function playCollisionSound() {
     if (isMuted) { return; }
-    collisionSynth.triggerAttackRelease("8n");
+    const sound = collisionSounds[Math.floor(Math.random() * collisionSounds.length)];
+    if (sound instanceof Tone.NoiseSynth) {
+        sound.triggerAttackRelease("8n");
+    } else if (sound instanceof Tone.Player && sound.state === 'stopped') {
+        sound.start();
+    }
 }
 
 export function playDebuffSound() {
@@ -238,7 +258,7 @@ export function toggleSound(soundToggleButton) {
     if (isMuted) {
         if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
         chaChingSynth.mute = true;
-        collisionSynth.mute = true;
+        collisionSounds.forEach(sound => sound.mute = true);
         debuffSynth.mute = true;
         quackSound.mute = true;
         powerUpSound.mute = true;
@@ -252,7 +272,7 @@ export function toggleSound(soundToggleButton) {
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
         chaChingSynth.mute = false;
-        collisionSynth.mute = false;
+        collisionSounds.forEach(sound => sound.mute = false);
         debuffSynth.mute = false;
         quackSound.mute = false;
         powerUpSound.mute = false;

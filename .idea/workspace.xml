@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/upgrade-skill.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/upgrade-skill.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/audio.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/audio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/version.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +46,7 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -66,7 +65,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1763064864972</updated>
-      <workItem from="1763064867591" duration="2955000" />
+      <workItem from="1763064867591" duration="5212000" />
     </task>
     <servers />
   </component>
