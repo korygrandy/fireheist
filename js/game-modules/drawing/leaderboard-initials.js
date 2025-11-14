@@ -6,6 +6,7 @@ import { saveLeaderboardScore } from '../../ui-modules/leaderboard.js';
 import { displayDailyChallengeCompletedScreen } from '../../ui-modules/daily-challenge-ui.js';
 import { updateDailyChallengeWinStreak } from '../../daily-challenge.js';
 import { stopGame } from '../game-controller.js';
+import { playAnimationSound } from '../../audio.js';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const BOX_SIZE = 60;
@@ -33,6 +34,7 @@ export function cycleInitialLetter(direction) {
     } else if (direction === 'down') {
         initials[selectedIndex] = getNextLetter(initials[selectedIndex]);
     }
+    playAnimationSound('keypress');
 }
 
 export function changeInitialSlot(direction) {
@@ -63,6 +65,7 @@ export function confirmInitialSelection() {
         const newWinStreak = updateDailyChallengeWinStreak(gameState.isVictory);
         const results = { ...scoreData, winStreak: newWinStreak };
         displayDailyChallengeCompletedScreen(results);
+        playAnimationSound('submit-chime');
 
         gameState.leaderboardInitials.isActive = false;
         stopGame(false);

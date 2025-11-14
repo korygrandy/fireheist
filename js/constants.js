@@ -216,7 +216,9 @@ export const ANIMATION_SOUND_MAP = {
     'gamepad-connected': 'fx/gamepad-connected.mp3',
     'gamepad-disconnected': 'fx/gamepad-disconnected.mp3',
     'vault-upgrade': 'fx/vault-upgrade.mp3',
-    'vine-boom': 'fx/vine-boom.mp3'
+    'vine-boom': 'fx/vine-boom.mp3',
+    'keypress': 'fx/keypress.mp3',
+    'submit-chime': 'fx/submit-chime.mp3'
     // Other animations will be added here
 };
 
