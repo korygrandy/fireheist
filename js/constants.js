@@ -212,7 +212,11 @@ export const ANIMATION_SOUND_MAP = {
     'beep': 'fx/beep.mp3',
     'start-daily-challenge': 'fx/start-daily-challenge.mp3',
     'hof-tab': 'fx/hof-tab.mp3',
-    'upgrade-skill': 'fx/upgrade-skill.mp3'
+    'upgrade-skill': 'fx/upgrade-skill.mp3',
+    'gamepad-connected': 'fx/gamepad-connected.mp3',
+    'gamepad-disconnected': 'fx/gamepad-disconnected.mp3',
+    'vault-upgrade': 'fx/vault-upgrade.mp3',
+    'vine-boom': 'fx/vine-boom.mp3'
     // Other animations will be added here
 };
 

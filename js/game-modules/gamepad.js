@@ -11,6 +11,7 @@ import { gameState, setPlayerEnergy } from './state-manager.js';
 import { startManualJump } from './actions.js';
 import { togglePauseGame, handleExitOrReset } from './game-controller.js';
 import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
+import { playAnimationSound } from '../audio.js';
 import { 
     startFirestorm, startFireSpinner, startFieryGroundPound, 
     startFireStomper, startMageSpinner, startFieryHoudini, 
@@ -78,6 +79,7 @@ function updateInfoPanelForGamepad(isConnected) {
 
 window.addEventListener('gamepadconnected', (event) => {
     console.log('-> GAMEPAD CONNECTED:', event.gamepad.id);
+    playAnimationSound('gamepad-connected');
     activeGamepad = event.gamepad;
     gamepadConnected = true;
     updateGamepadIndicator();
@@ -89,6 +91,7 @@ window.addEventListener('gamepadconnected', (event) => {
 
 window.addEventListener('gamepaddisconnected', (event) => {
     console.log('-> GAMEPAD DISCONNECTED:', event.gamepad.id);
+    playAnimationSound('gamepad-disconnected');
     activeGamepad = null;
     gamepadConnected = false;
     updateGamepadIndicator();
