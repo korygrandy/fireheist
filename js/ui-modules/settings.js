@@ -1,4 +1,3 @@
-
 import {
     disableSaveSettings,
     dataInput,
@@ -13,7 +12,7 @@ import { defaultDataString, defaultEventDataString } from '../constants.js';
 import { parseData, parseEventData, prepareRaceData } from '../utils.js';
 import { setTheme } from '../theme.js';
 import { applyPersona } from './persona.js'; // This will be created later
-import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setCurrentSkillLevel, setIntendedSpeedMultiplier, setEnableRandomPowerUps, setAutoHurdleEnabled, setSelectedTheme, setSelectedPersona, setPlayerStats, setFinancialMilestones, setRaceSegments, setCustomEvents } from '../game-modules/state-manager.js';
+import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setCurrentSkillLevel, setIntendedSpeedMultiplier, setEnableRandomPowerUps, setAutoHurdleEnabled, setSelectedTheme, setSelectedPersona, setPlayerStats, setFinancialMilestones, setRaceSegments, setCustomEvents } from '../game-modules/state-manager.js';
 import { PLAYER_STATS_KEY } from '../game-modules/state.js';
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
@@ -25,7 +24,7 @@ export function saveSettings() {
     const settings = {
         stickFigureEmoji: gameState.stickFigureEmoji,
         obstacleEmoji: gameState.obstacleEmoji,
-        obstacleFrequencyPercent: gameState.obstacleFrequencyPercent,
+        userObstacleFrequencyPercent: gameState.userObstacleFrequencyPercent, // Save the user's selection
         currentSkillLevel:
         gameState.currentSkillLevel,
         intendedSpeedMultiplier: gameState.intendedSpeedMultiplier,
@@ -47,7 +46,9 @@ export function loadSettings() {
         const settings = JSON.parse(savedSettings);
         setStickFigureEmoji(settings.stickFigureEmoji || '🦹‍♂️');
         setObstacleEmoji(settings.obstacleEmoji || '🐌');
-        setObstacleFrequencyPercent(settings.obstacleFrequencyPercent || 20);
+        const userFrequency = parseInt(settings.userObstacleFrequencyPercent, 10) || 20;
+        setUserObstacleFrequencyPercent(userFrequency); // Set the user's preference
+        setObstacleFrequencyPercent(Math.round(userFrequency * 0.75)); // Recalculate the gameplay value
         setCurrentSkillLevel(settings.currentSkillLevel || 'Rookie');
         setIntendedSpeedMultiplier(parseFloat(settings.intendedSpeedMultiplier) || 1.0);
         setEnableRandomPowerUps(typeof settings.enableRandomPowerUps === 'boolean' ? settings.enableRandomPowerUps : true);
@@ -57,8 +58,8 @@ export function loadSettings() {
 
         emojiInput.value = gameState.stickFigureEmoji;
         obstacleEmojiInput.value = gameState.obstacleEmoji;
-        document.getElementById('obstacleFrequency').value = gameState.obstacleFrequencyPercent;
-        frequencyValueSpan.textContent = `${gameState.obstacleFrequencyPercent}%`;
+        document.getElementById('obstacleFrequency').value = gameState.userObstacleFrequencyPercent; // UI shows user's value
+        frequencyValueSpan.textContent = `${gameState.userObstacleFrequencyPercent}%`; // UI shows user's value
         document.getElementById('enablePowerUps').checked = gameState.enableRandomPowerUps;
         document.getElementById('enableAutoHurdle').checked = gameState.isAutoHurdleEnabled;
         themeSelector.value = gameState.selectedTheme;
@@ -98,7 +99,8 @@ export function loadSettings() {
         // Explicitly set defaults on the state object
         setStickFigureEmoji('🦹‍♂️');
         setObstacleEmoji('🐌');
-        setObstacleFrequencyPercent(20);
+        setUserObstacleFrequencyPercent(20); // Set user's default
+        setObstacleFrequencyPercent(Math.round(20 * 0.75)); // Set gameplay default
         setCurrentSkillLevel('Rookie');
         setIntendedSpeedMultiplier(1.0);
         setEnableRandomPowerUps(true);

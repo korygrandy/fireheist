@@ -1,4 +1,4 @@
-import { header, controlPanel, mainElement } from '../dom-elements.js';
+import { header, controlPanel, mainElement, startButton, canvas } from '../dom-elements.js';
 import {
     DEFAULT_MUSIC_URL,
     EMOJI_MUSIC_MAP,
@@ -253,6 +253,7 @@ export function startGame() {
     }
 
     requestAnimationFrame(animate);
+    gameCanvas.focus(); // Set focus to the canvas when the game starts
     console.log("-> START GAME: Animation loop started.");
 }
 
@@ -262,6 +263,11 @@ export function stopGame(shouldReset = true) {
     console.log("-> STOP GAME: Game execution halted.");
     setGameRunning(false);
     setPaused(false);
+
+    // Disable the start button immediately to prevent accidental re-starts
+    if (startButton) {
+        startButton.disabled = true;
+    }
 
     header.classList.remove('hidden');
     controlPanel.classList.remove('hidden');
@@ -306,6 +312,14 @@ export function stopGame(shouldReset = true) {
         document.getElementById('startButton').textContent = "Restart Heist!";
         console.log("-> STOP GAME: Game ended, displaying results.");
     }
+
+    // Re-enable start button and set focus after a short delay to allow UI to settle
+    setTimeout(() => {
+        if (startButton) {
+            startButton.disabled = false;
+        }
+        gameCanvas.focus(); // Ensure canvas has focus after game stops
+    }, 500); // 500ms delay
 }
 
 export function handleExitOrReset() {

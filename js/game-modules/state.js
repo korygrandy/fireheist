@@ -20,6 +20,8 @@ const state = {
     COLLISION_RANGE_X: DIFFICULTY_SETTINGS.Rookie.COLLISION_RANGE_X,
     manualJumpDurationMs: DIFFICULTY_SETTINGS.Rookie.manualJumpDurationMs,
     manualJumpHeight: DIFFICULTY_SETTINGS.Rookie.manualJumpHeight,
+    obstacleFrequencyPercent: DIFFICULTY_SETTINGS.Rookie.OBSTACLE_FREQUENCY_PERCENT,
+    userObstacleFrequencyPercent: DIFFICULTY_SETTINGS.Rookie.OBSTACLE_FREQUENCY_PERCENT,
     acceleratorFrequencyPercent: DIFFICULTY_SETTINGS.Rookie.ACCELERATOR_FREQUENCY_PERCENT,
     energyRegenMultiplier: DIFFICULTY_SETTINGS.Rookie.energyRegenMultiplier,
     passiveDrainRate: DIFFICULTY_SETTINGS.Rookie.passiveDrainRate,

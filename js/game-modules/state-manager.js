@@ -1056,6 +1056,10 @@ export function setObstacleFrequencyPercent(percent) {
     state.obstacleFrequencyPercent = percent;
 }
 
+export function setUserObstacleFrequencyPercent(percent) {
+    state.userObstacleFrequencyPercent = percent;
+}
+
 export function setEnableRandomPowerUps(enabled) {
     state.enableRandomPowerUps = enabled;
 }

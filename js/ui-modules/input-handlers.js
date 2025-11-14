@@ -1,6 +1,6 @@
 import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer } from '../dom-elements.js';
 import { saveSettings } from './settings.js';
-import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setEnableRandomPowerUps, setAutoHurdleEnabled, setCurrentSkillLevel, setMaxPlayerEnergy, setPassiveDrainRate, setAcceleratorFrequencyPercent, setIntendedSpeedMultiplier } from '../game-modules/state-manager.js';
+import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setEnableRandomPowerUps, setAutoHurdleEnabled, setCurrentSkillLevel, setMaxPlayerEnergy, setPassiveDrainRate, setAcceleratorFrequencyPercent, setIntendedSpeedMultiplier } from '../game-modules/state-manager.js';
 import { DIFFICULTY_SETTINGS, suggestedEmojiList } from '../constants.js';
 
 export function updateEmoji(event) {
@@ -17,6 +17,7 @@ export function updateObstacleEmoji(event) {
 
 export function handleFrequencyChange(event) {
     const userSelectedFrequency = parseInt(event.target.value, 10);
+    setUserObstacleFrequencyPercent(userSelectedFrequency); // Save the user's actual selection
     // Reduce the actual frequency by 25% for gameplay balance
     setObstacleFrequencyPercent(Math.round(userSelectedFrequency * 0.75));
     frequencyValueSpan.textContent = `${userSelectedFrequency}%`; // UI shows the user's selection

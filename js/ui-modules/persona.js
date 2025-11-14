@@ -2,7 +2,7 @@
 import { personaSelector, customPersonaControls, personaDetailsContainer, emojiInput, frequencyValueSpan, themeSelector } from '../dom-elements.js';
 import { personas } from '../personas.js';
 import { personaUnlocks } from '../unlocks.js';
-import { gameState, setSelectedPersona, setStickFigureEmoji, setCurrentSkillLevel, setObstacleFrequencyPercent, setSelectedTheme } from '../game-modules/state-manager.js';
+import { gameState, setSelectedPersona, setStickFigureEmoji, setCurrentSkillLevel, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setSelectedTheme } from '../game-modules/state-manager.js';
 import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from '../constants.js';
 import { initializeMusicPlayer } from '../audio.js';
 import { saveSettings } from './settings.js';
@@ -54,9 +54,10 @@ export function applyPersona(personaKey) {
         applySkillLevelSettings(gameState.currentSkillLevel);
 
 
-        setObstacleFrequencyPercent(persona.obstacleFrequencyPercent);
-        document.getElementById('obstacleFrequency').value = gameState.obstacleFrequencyPercent;
-        frequencyValueSpan.textContent = `${gameState.obstacleFrequencyPercent}%`;
+        setUserObstacleFrequencyPercent(persona.obstacleFrequencyPercent);
+        setObstacleFrequencyPercent(Math.round(persona.obstacleFrequencyPercent * 0.75));
+        document.getElementById('obstacleFrequency').value = gameState.userObstacleFrequencyPercent;
+        frequencyValueSpan.textContent = `${gameState.userObstacleFrequencyPercent}%`;
 
         setSelectedTheme(persona.theme);
         themeSelector.value = gameState.selectedTheme;
