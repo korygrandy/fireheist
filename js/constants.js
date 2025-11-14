@@ -168,20 +168,20 @@ export const THEME_MUSIC_MAP = {
     'desert': 'fx/lion.mp3',
     'ocean': 'fx/dog.mp3',
     'space': 'fx/alien.mp3',
-    'city': 'fx/rocket.mp3',
-    'volcano': 'fx/firestorm.mp3',
+    'city': 'fx/zombie.mp3',
+    'volcano': 'fx/rocket.mp3',
     'snow': 'fx/shatter.mp3',
 };
 
 export const THEME_AMBIENT_SOUND_MAP = {
     'grass': 'fx/quack.mp3', // Placeholder, ideally a subtle nature sound
     'mountains': 'fx/wind.mp3', // New sound: subtle wind
-    'roadway': 'fx/city-hum.mp3', // New sound: city ambience
+    'roadway': 'fx/roadway-theme.mp3', // New sound: city ambience
     'snow': 'fx/wind.mp3', // Re-use wind sound
     'desert': 'fx/lion.mp3', // Placeholder, ideally desert wind/crickets
     'volcano': 'fx/firestorm.mp3', // Placeholder, ideally lava bubbling/rumbling
     'outerspace': 'fx/ufo-hover.mp3', // Placeholder, ideally space hum
-    'night': 'fx/zombie.mp3', // Placeholder, ideally crickets/night owl
+    'night': 'fx/city-night.mp3', // Placeholder, ideally crickets/night owl
 };
 
 

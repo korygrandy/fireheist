@@ -6,9 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/keypress.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/keypress.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/audio.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/audio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/leaderboard-initials.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/leaderboard-initials.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/daily-challenge.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/daily-challenge.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/theme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/ui-modules/leaderboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/leaderboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/ui-modules/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/settings.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +47,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/leader-board-initials-ui",
+    "git-widget-placeholder": "feature/custom-event-data-localStorage-persist-fails",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",

@@ -36,6 +36,7 @@ export function saveSettings() {
         milestoneData: dataInput.value,
         eventData: eventDataInput.value
     };
+    console.log("-> saveSettings: Saving settings object:", settings); // DEBUG
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settings));
     console.log("-> saveSettings: Settings saved to localStorage.");
 }

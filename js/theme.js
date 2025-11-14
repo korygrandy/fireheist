@@ -3,6 +3,7 @@
 // =================================================================
 
 import { playAmbientSound } from './audio.js';
+import { setSelectedTheme as setGlobalSelectedTheme } from './game-modules/state-manager.js';
 
 export const themes = {
     'grass': {
@@ -110,6 +111,7 @@ export let currentTheme = themes.grass; // Default theme
 export function setTheme(themeName) {
     if (themes[themeName]) {
         currentTheme = themes[themeName];
+        setGlobalSelectedTheme(themeName); // Update global state with the theme NAME
         playAmbientSound(themeName);
         console.log(`-> setTheme: Theme changed to ${themeName}`);
     } else {

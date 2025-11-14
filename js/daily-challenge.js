@@ -73,6 +73,9 @@ export function startDailyChallengeGame() {
     showCountdown(startButton, () => {
         const config = getDailyChallengeConfig();
 
+        // Apply theme FIRST so it's available in the game state for music selection
+        setTheme(config.theme);
+
         // Update global state with daily challenge parameters
         setDailyChallengeActive(true);
         setSelectedTheme(config.theme);
@@ -80,9 +83,6 @@ export function startDailyChallengeGame() {
         setObstacleEmoji(config.obstacleEmoji);
         setObstacleFrequency(config.obstacleFrequency);
         setSkillLevel(config.skillLevel);
-
-        // Apply theme
-        setTheme(config.theme);
 
         // Hide sandbox controls
         hideSandboxControls();

@@ -201,6 +201,10 @@ export function playLoserSound() {
 }
 
 export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
+    // Stop the transport and cancel any scheduled events to prevent overlaps
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+
     if (backgroundMusic) {
         if (backgroundMusic.state === 'started') { backgroundMusic.stop(); }
         backgroundMusic.dispose();
@@ -209,7 +213,7 @@ export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
     backgroundMusic = new Tone.Player({
         url: musicUrl,
         loop: true,
-        volume: isMuted ? -Infinity : -18
+        volume: isMuted ? -Infinity : -12
     }).connect(musicBus);
 }
 

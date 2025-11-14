@@ -204,14 +204,24 @@ export function startGame() {
     setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
 
     let musicUrl = DEFAULT_MUSIC_URL;
-    if (gameState.selectedPersona && gameState.selectedPersona !== 'custom' && personas[gameState.selectedPersona]) {
+    const cleanEmoji = gameState.stickFigureEmoji.replace(/\uFE0F/g, '');
+    const isDefaultEmoji = cleanEmoji === '🦹‍♂️';
+
+    if (gameState.isDailyChallengeActive && gameState.selectedTheme && THEME_MUSIC_MAP[gameState.selectedTheme]) {
+        // 1. Daily Challenge music has top priority, overriding everything else.
+        musicUrl = THEME_MUSIC_MAP[gameState.selectedTheme];
+    } else if (gameState.selectedPersona && gameState.selectedPersona !== 'custom' && personas[gameState.selectedPersona]) {
+        // 2. Persona-specific music (when not in a daily challenge)
         musicUrl = personas[gameState.selectedPersona].music;
-    } else if (gameState.currentTheme && THEME_MUSIC_MAP[gameState.currentTheme.name]) {
-        musicUrl = THEME_MUSIC_MAP[gameState.currentTheme.name];
-    } else if (gameState.selectedPersona === 'custom') {
-        const cleanEmoji = gameState.stickFigureEmoji.replace(/\uFE0F/g, '');
-        musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
+    } else if (isDefaultEmoji && gameState.selectedTheme && THEME_MUSIC_MAP[gameState.selectedTheme]) {
+        // 3. Theme-specific music for the default emoji in sandbox mode
+        musicUrl = THEME_MUSIC_MAP[gameState.selectedTheme];
+    } else if (EMOJI_MUSIC_MAP[cleanEmoji]) {
+        // 4. Emoji-specific music for any non-default emoji (in sandbox mode)
+        musicUrl = EMOJI_MUSIC_MAP[cleanEmoji];
     }
+    // 5. Fallback to DEFAULT_MUSIC_URL is handled by the initial declaration
+
     initializeMusicPlayer(musicUrl);
 
     if (Tone.context.state !== 'running') {
