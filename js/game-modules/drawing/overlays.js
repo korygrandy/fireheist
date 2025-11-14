@@ -1,6 +1,7 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { FADE_DURATION, STICK_FIGURE_FIXED_X, STICK_FIGURE_TOTAL_HEIGHT, GROUND_Y } from '../../constants.js';
 import { gameState } from '../state-manager.js';
+import { drawLeaderboardInitials } from './leaderboard-initials.js';
 
 export function drawPausedOverlay() {
     ctx.save();
@@ -134,6 +135,11 @@ export function drawVictoryOverlay(elapsedTime) {
     ctx.font = `${dynamicFontSize * 0.6}px Impact, monospace`;
     let subY = canvas.height / 2 + (dynamicFontSize * 0.6 / 2) + 15;
     ctx.fillText(subText, canvas.width / 2, subY);
+
+    if (gameState.isDailyChallengeActive) {
+        drawLeaderboardInitials();
+    }
+
     ctx.restore();
 }
 

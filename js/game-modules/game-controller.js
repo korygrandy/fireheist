@@ -271,19 +271,15 @@ export function stopGame(shouldReset = true) {
             showSandboxControls(); 
             gameState.isDailyChallengeActive = false; 
         } else {
-            console.log("-> STOP GAME: Daily Challenge ended, displaying results.");
-            const newWinStreak = updateDailyChallengeWinStreak(gameState.isVictory);
-            const stats = {
-                days: Math.round(gameState.daysElapsedTotal),
-                hits: gameState.hitsCounter
-            };
-            const results = {...stats, winStreak: newWinStreak};
-
-            markDailyChallengeAsPlayed(stats, newWinStreak);
-            displayDailyChallengeCompletedScreen(results);
-
+            console.log("-> STOP GAME: Daily Challenge finished, cleaning up.");
+            
+            // The score has already been saved and the HTML overlay displayed from leaderboard-initials.js
+            // This block is now just for final state cleanup.
+            
             showSandboxControls();
-            gameState.isDailyChallengeActive = false; 
+            setGameOverSequence(false); // End the game over sequence
+            gameState.isDailyChallengeActive = false; // Fully deactivate daily challenge mode
+            
             document.getElementById('startButton').textContent = "Start the Heist!";
             const stopButton = document.getElementById('stopButton');
             if (stopButton) {

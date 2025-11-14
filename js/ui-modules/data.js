@@ -3,7 +3,7 @@ import { parseData, parseEventData, prepareRaceData } from '../utils.js';
 import { defaultDataString, defaultEventDataString } from '../constants.js';
 import { loadSettings, loadPlayerStats, savePlayerStats, saveSettings } from './settings.js';
 import { exitFullScreenIfActive } from './ui-helpers.js';
-import { displayHighScores } from "./high-scores.js";
+import { displayLeaderboard } from "./leaderboard.js";
 import { populateThemeSelector } from './theme.js';
 import { populatePersonaSelector } from './persona.js';
 import { handleAutoHurdleToggle } from './input-handlers.js';
@@ -129,5 +129,5 @@ export async function initializeUIData() {
         }
     }
 
-    displayHighScores(); // Display high scores on startup
+    displayLeaderboard(); // Display leaderboard on startup
 }

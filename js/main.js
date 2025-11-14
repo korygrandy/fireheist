@@ -15,11 +15,13 @@ import { populatePersonaSelector, handlePersonaChange } from './ui-modules/perso
 import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmoryItems } from './ui-modules/armory.js';
 import { startDailyChallengeGame, getDailyChallengeResults } from './daily-challenge.js';
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './ui-modules/daily-challenge-ui.js';
+import { displayLeaderboard } from './ui-modules/leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
+import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound } from './audio.js';
 import { initGamepad } from './game-modules/gamepad.js';
@@ -247,17 +249,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const tabButtons = document.querySelectorAll('.tab-button');
 
-    tabButtons.forEach(button => {
+        tabButtons.forEach(button => {
 
-        button.addEventListener('click', () => {
+            button.addEventListener('click', () => {
 
-            const tab = button.getAttribute('data-tab');
+                const tab = button.getAttribute('data-tab');
 
-            switchTab(tab);
+                if (tab === 'hallOfFame') {
+
+                    displayLeaderboard();
+
+                }
+
+                switchTab(tab);
+
+            });
 
         });
-
-    });
 
 
 
@@ -549,13 +557,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', (e) => {
 
-        if (e.code === 'Space' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
 
-            startManualJump(gameState);
+            if (gameState.leaderboardInitials.isActive) {
+
+
+
+                handleLeaderboardInitialsInput(e.code);
+
+
+
+                return; // Prevent other game actions while entering initials
+
+
+
+            }
+
+
+
+    
+
+
+
+            if (e.code === 'Space' && gameState.gameRunning && !gameState.isPaused) {
+
+
+
+                e.preventDefault();
+
+
+
+                startManualJump(gameState);
 
         }
 

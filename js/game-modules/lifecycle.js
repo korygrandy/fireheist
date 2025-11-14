@@ -216,9 +216,17 @@ export function animate(timestamp) {
         drawVictoryOverlay(timestamp - gameState.gameOverSequenceStartTime);
 
         if (timestamp - gameState.gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
-            stopGame(false);
-            setGameOverSequence(false);
-            return;
+            if (gameState.isDailyChallengeActive) {
+                // For daily challenges, activate the initials UI instead of stopping the game
+                if (!gameState.leaderboardInitials.isActive) {
+                    gameState.leaderboardInitials.isActive = true;
+                }
+            } else {
+                // For sandbox mode, stop the game as before
+                stopGame(false);
+                setGameOverSequence(false);
+                return;
+            }
         }
 
         setLastTime(timestamp);

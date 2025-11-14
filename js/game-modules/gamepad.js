@@ -21,6 +21,11 @@ import {
     startMeteorStrike, startHoudini, startBlinkStrike, startJetstreamDash,
     startEchoSlam, startFireballRoll
 } from './actions.js';
+import { 
+    cycleInitialLetter, 
+    changeInitialSlot, 
+    confirmInitialSelection 
+} from './drawing/leaderboard-initials.js';
 
 let activeGamepad = null;
 let gamepadConnected = false;
@@ -159,6 +164,37 @@ function updateGamepadState() {
 
     if (!currentGamepad) {
         return;
+    }
+
+    if (gameState.leaderboardInitials.isActive) {
+        const dpadBtn_Up = currentGamepad.buttons[12].pressed;
+        const dpadBtn_Down = currentGamepad.buttons[13].pressed;
+        const dpadBtn_Left = currentGamepad.buttons[14].pressed;
+        const dpadBtn_Right = currentGamepad.buttons[15].pressed;
+        const aButton = currentGamepad.buttons[0].pressed;
+
+        if (dpadBtn_Up && !buttonStates['DPAD_UP_INITIALS']) {
+            cycleInitialLetter('up');
+        }
+        if (dpadBtn_Down && !buttonStates['DPAD_DOWN_INITIALS']) {
+            cycleInitialLetter('down');
+        }
+        if (dpadBtn_Left && !buttonStates['DPAD_LEFT_INITIALS']) {
+            changeInitialSlot('left');
+        }
+        if (dpadBtn_Right && !buttonStates['DPAD_RIGHT_INITIALS']) {
+            changeInitialSlot('right');
+        }
+        if (aButton && !buttonStates['A_BUTTON_INITIALS']) {
+            confirmInitialSelection();
+        }
+
+        buttonStates['DPAD_UP_INITIALS'] = dpadBtn_Up;
+        buttonStates['DPAD_DOWN_INITIALS'] = dpadBtn_Down;
+        buttonStates['DPAD_LEFT_INITIALS'] = dpadBtn_Left;
+        buttonStates['DPAD_RIGHT_INITIALS'] = dpadBtn_Right;
+        buttonStates['A_BUTTON_INITIALS'] = aButton;
+        return; // Prevent other gamepad logic from running
     }
 
     const shouldBeUIMode = !gameState.gameRunning || gameState.isPaused;

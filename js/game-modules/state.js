@@ -166,6 +166,11 @@ const state = {
     firestormDrainEndTime: 0,
     isFireSpinnerDrainingEnergy: false,
     fireSpinnerDrainEndTime: 0,
+    leaderboardInitials: {
+        initials: ['A', 'A', 'A'],
+        selectedIndex: 0,
+        isActive: false
+    },
     playerStats: { // New player stats object
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
         obstaclesIncinerated: 0,
