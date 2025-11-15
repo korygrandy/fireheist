@@ -2,7 +2,7 @@ import { createHoudiniPoof, createFieryHoudiniPoof, createMeteorStrikeEffect, cr
 import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 import { SKILL_UPGRADE_PATHS } from './skill-upgrades.js';
-import { setScreenFlash } from './state-manager.js';
+import { addShotgunParticle, setScreenFlash } from './state-manager.js';
 
 const JUMP_DURATIONS = {
     hurdle: 500,
@@ -709,7 +709,35 @@ export function startFireballRoll(state) {
 
     
 
-        if (!consumeEnergy(state, 'shotgunBlast')) return;
+            if (!consumeEnergy(state, 'shotgunBlast')) return;
+
+    
+
+        
+
+    
+
+            playAnimationSound('shotgun-blast'); // Play shotgun blast sound
+
+    
+
+            state.isShotgunBlastActive = true;
+
+    
+
+            const playerY = state.stickFigureY + STICK_FIGURE_TOTAL_HEIGHT / 2;
+
+    
+
+        const particleCount = 15;
+
+    
+
+        const speed = 5;
+
+    
+
+        const spread = Math.PI / 12; // Reduced spread from PI / 8 to PI / 12
 
     
 
@@ -717,61 +745,109 @@ export function startFireballRoll(state) {
 
     
 
-        state.isShotgunBlastActive = true;
+        // Get the angle of the current ground segment
 
     
 
-        const particleCount = 30;
-
-        const spreadAngle = Math.PI / 4; // 45 degrees
-
-        const playerX = STICK_FIGURE_FIXED_X;
-
-        const playerY = GROUND_Y - STICK_FIGURE_TOTAL_HEIGHT; // Approximate player position
+        const currentSegment = state.raceSegments[state.currentSegmentIndex];
 
     
 
-        for (let i = 0; i < particleCount; i++) {
+        const groundAngle = currentSegment ? currentSegment.angleRad : 0;
 
-            const angle = (Math.random() - 0.5) * spreadAngle;
+    
 
-            const speed = 5 + Math.random() * 5;
+    
 
-            const particle = {
+    
 
-                x: playerX,
+            for (let i = 0; i < particleCount; i++) {
+
+    
+
+    
+
+    
+
+                // Center the spread around the ground angle, negating it to match canvas coordinates
+
+    
+
+    
+
+    
+
+                const angle = -groundAngle + (Math.random() * spread - spread / 2);
+
+    
+
+    
+
+    
+
+                const velocityX = Math.cos(angle) * speed;
+
+    
+
+    
+
+    
+
+                const velocityY = Math.sin(angle) * speed;
+
+    
+
+    
+
+    
+
+            addShotgunParticle({
+
+    
+
+                x: state.stickFigureFixedX + 20,
+
+    
 
                 y: playerY,
 
-                velocityX: Math.cos(angle) * speed,
+    
 
-                velocityY: Math.sin(angle) * speed,
+                velocityX,
 
-                lifespan: 20 + Math.random() * 20, // 20-40 frames
+    
 
-                color: `hsl(${Math.random() * 60}, 100%, 50%)` // Shades of red, orange, yellow
+                velocityY,
 
-            };
+    
 
-            state.shotgunParticles.push(particle);
+                lifespan: 60 // 1 second at 60fps
+
+    
+
+            });
+
+    
 
         }
 
     
 
-        // Deactivate after a short duration
+    
+
+    
 
         setTimeout(() => {
 
+    
+
             state.isShotgunBlastActive = false;
+
+    
 
         }, 500);
 
     
-
-        playAnimationSound('firestorm'); // Placeholder sound
-
-        console.log("-> startShotgunBlast: Shotgun Blast initiated.");
 
     }
 

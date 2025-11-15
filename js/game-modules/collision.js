@@ -180,3 +180,18 @@ export function checkProximityEventCollection(runnerY, angleRad) {
     }
     return false;
 }
+
+export function checkShotgunCollision(particle, obstacle) {
+    if (!obstacle || obstacle.hasBeenHit) return false;
+
+    const particleSize = 5; // Assuming particle size is 5x5
+    const obstacleX = obstacle.x;
+    const obstacleY = GROUND_Y - obstacleX * Math.tan(gameState.raceSegments[gameState.currentSegmentIndex].angleRad) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+
+    // Simple AABB collision detection
+    return particle.x < obstacleX + OBSTACLE_WIDTH &&
+           particle.x + particleSize > obstacleX &&
+           particle.y < obstacleY + OBSTACLE_HEIGHT &&
+           particle.y + particleSize > obstacleY;
+}
+

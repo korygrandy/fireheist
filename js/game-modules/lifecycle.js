@@ -173,6 +173,7 @@ import { updateHighScore } from './score.js';
 import { animateValue } from './animations.js';
 import { drawVictoryOverlay } from './drawing/overlays.js';
 import { stopGame } from './game-controller.js';
+import { checkShotgunCollision } from './collision.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -416,6 +417,7 @@ export function animate(timestamp) {
 
     const stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentHurdle.angleRad);
     let runnerY = stickFigureGroundY - STICK_FIGURE_TOTAL_HEIGHT;
+    setStickFigureY(runnerY); // Update the global state with the new Y position
 
     if (gameState.jumpState.isJumping) {
         let maxJumpHeightForSegment = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentHurdle.hurdleHeight * JUMP_HEIGHT_RATIO;
@@ -985,7 +987,40 @@ export function animate(timestamp) {
         particle.x += particle.velocityX;
         particle.y += particle.velocityY;
         particle.lifespan--;
-        if (particle.lifespan <= 0) {
+
+        let particleRemoved = false;
+        const obstaclesToCheck = [
+            gameState.currentObstacle,
+            ...gameState.ignitedObstacles,
+            ...gameState.vanishingObstacles
+        ].filter(Boolean);
+
+        for (const obstacle of obstaclesToCheck) {
+            if (checkShotgunCollision(particle, obstacle)) {
+                addIncineratingObstacle({
+                    ...obstacle,
+                    animationProgress: 0,
+                    startTime: performance.now(),
+                    animationType: 'incinerate-ash-blow'
+                });
+
+                if (obstacle === gameState.currentObstacle) {
+                    setCurrentObstacle(null);
+                } else {
+                    // Remove from other arrays if needed (optional, depends on game logic)
+                }
+                
+                playAnimationSound('shatter');
+                incrementObstaclesIncinerated();
+                incrementConsecutiveIncinerations();
+
+                gameState.shotgunParticles.splice(i, 1);
+                particleRemoved = true;
+                break; // Particle is gone, no need to check against other obstacles
+            }
+        }
+
+        if (!particleRemoved && particle.lifespan <= 0) {
             gameState.shotgunParticles.splice(i, 1);
         }
     }
