@@ -111,7 +111,8 @@ export const ENERGY_SETTINGS = {
         blinkStrike: 40,
         jetstreamDash: 0, // Drains over time
         echoSlam: 30,
-        fireballRoll: 0 // Drains over time
+        fireballRoll: 0, // Drains over time
+        shotgunBlast: 35
     }
 };
 

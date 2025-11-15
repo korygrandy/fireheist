@@ -121,6 +121,18 @@ export const ARMORY_ITEMS = {
             skillKey: 'fireballRoll'
         },
         unlockText: 'Unlock condition not yet determined.'
+    },
+    shotgunBlast: {
+        name: 'Shotgun Blast',
+        description: 'Unleash a cone of fire particles, destroying nearby obstacles.',
+        imageLocked: 'images/shotgun-locked.png',
+        imageUnlocked: 'images/shotgun-unlocked.png',
+        tier: 'Adept',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'shotgunBlast'
+        },
+        unlockText: 'Unlock condition to be determined.'
     }
 };
 

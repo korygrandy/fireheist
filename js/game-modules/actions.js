@@ -693,6 +693,86 @@ export function startFireballRoll(state) {
     state.invincibilityEndTime = Date.now() + JUMP_DURATIONS.fireballRoll;
     state.fireballRollDrainEndTime = Date.now() + JUMP_DURATIONS.fireballRoll; // Energy drains for the duration
 
-    playAnimationSound('fireballRoll'); // Play sound for Fireball Roll
-    console.log("-> startFireballRoll: Fireball Roll initiated.");
-}
+        playAnimationSound('fireballRoll'); // Play sound for Fireball Roll
+
+        console.log("-> startFireballRoll: Fireball Roll initiated.");
+
+    }
+
+    
+
+    export function startShotgunBlast(state) {
+
+    
+
+        if (!state.gameRunning || state.isPaused || state.isShotgunBlastActive) return;
+
+    
+
+        if (!consumeEnergy(state, 'shotgunBlast')) return;
+
+    
+
+    
+
+    
+
+        state.isShotgunBlastActive = true;
+
+    
+
+        const particleCount = 30;
+
+        const spreadAngle = Math.PI / 4; // 45 degrees
+
+        const playerX = STICK_FIGURE_FIXED_X;
+
+        const playerY = GROUND_Y - STICK_FIGURE_TOTAL_HEIGHT; // Approximate player position
+
+    
+
+        for (let i = 0; i < particleCount; i++) {
+
+            const angle = (Math.random() - 0.5) * spreadAngle;
+
+            const speed = 5 + Math.random() * 5;
+
+            const particle = {
+
+                x: playerX,
+
+                y: playerY,
+
+                velocityX: Math.cos(angle) * speed,
+
+                velocityY: Math.sin(angle) * speed,
+
+                lifespan: 20 + Math.random() * 20, // 20-40 frames
+
+                color: `hsl(${Math.random() * 60}, 100%, 50%)` // Shades of red, orange, yellow
+
+            };
+
+            state.shotgunParticles.push(particle);
+
+        }
+
+    
+
+        // Deactivate after a short duration
+
+        setTimeout(() => {
+
+            state.isShotgunBlastActive = false;
+
+        }, 500);
+
+    
+
+        playAnimationSound('firestorm'); // Placeholder sound
+
+        console.log("-> startShotgunBlast: Shotgun Blast initiated.");
+
+    }
+
+    

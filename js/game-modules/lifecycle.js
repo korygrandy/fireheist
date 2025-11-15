@@ -979,6 +979,17 @@ export function animate(timestamp) {
         }
     }
 
+    // Update shotgun particles
+    for (let i = gameState.shotgunParticles.length - 1; i >= 0; i--) {
+        const particle = gameState.shotgunParticles[i];
+        particle.x += particle.velocityX;
+        particle.y += particle.velocityY;
+        particle.lifespan--;
+        if (particle.lifespan <= 0) {
+            gameState.shotgunParticles.splice(i, 1);
+        }
+    }
+
     incrementFrameCount();
 
     setLastTime(timestamp);

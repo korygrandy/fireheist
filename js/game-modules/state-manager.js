@@ -958,6 +958,15 @@ export function clearCorkscrewTrail() { state.corkscrewTrail = []; }
 export function clearShatteredObstacles() { state.shatteredObstacles = []; }
 export function clearIgnitedObstacles() { state.ignitedObstacles = []; }
 export function clearActiveFireballs() { state.activeFireballs = []; }
+export function clearShotgunParticles() { state.shotgunParticles = []; }
+
+export function setShotgunBlastActive(isActive) {
+    state.isShotgunBlastActive = isActive;
+}
+
+export function addShotgunParticle(particle) {
+    state.shotgunParticles.push(particle);
+}
 
 export function resetJumpState() {
     state.jumpState = {

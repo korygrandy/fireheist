@@ -48,4 +48,11 @@ export function draw() {
 
     // 7. Draw UI Overlays
     drawUIOverlaysAndEffects(gameState, isInitialLoad, COLLISION_DURATION_MS);
+
+    // Draw shotgun particles
+    ctx.fillStyle = 'orange'; // Default color
+    for (const particle of gameState.shotgunParticles) {
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(particle.x, particle.y, 5, 5);
+    }
 }
