@@ -112,6 +112,7 @@ export function setTheme(themeName) {
     if (themes[themeName]) {
         currentTheme = themes[themeName];
         setGlobalSelectedTheme(themeName); // Update global state with the theme NAME
+        console.log(`-> setTheme: About to call playAmbientSound for '${themeName}'.`);
         playAmbientSound(themeName);
         console.log(`-> setTheme: Theme changed to ${themeName}`);
     } else {

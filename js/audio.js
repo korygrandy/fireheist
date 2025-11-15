@@ -15,7 +15,7 @@ export const animationPlayers = {}; // Object to hold Tone.Player instances for 
 export const playerActionsBus = new Tone.Channel(-10).toDestination();
 export const uiBus = new Tone.Channel(-10).toDestination();
 export const musicBus = new Tone.Channel(-18).toDestination();
-export const ambientBus = new Tone.Channel(-25).toDestination();
+export const ambientBus = new Tone.Channel(0).toDestination();
 
 export function loadMuteSetting() {
     if (disableSaveSettings.checked) {
@@ -71,15 +71,14 @@ export const collisionSounds = [
     new Tone.NoiseSynth({
         noise: { type: 'pink' },
         envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }
-    }).toDestination(),
-    new Tone.Player({ url: './fx/bomb.mp3' }).toDestination(),
-    new Tone.Player({ url: './fx/shatter.mp3' }).toDestination()
+    }).connect(playerActionsBus),
+    new Tone.Player({ url: './fx/bomb.mp3' }).connect(playerActionsBus),
+    new Tone.Player({ url: './fx/shatter.mp3' }).connect(playerActionsBus)
 ];
 collisionSounds.forEach(sound => {
     if (sound instanceof Tone.Player) {
         sound.volume.value = -10;
     }
-    sound.connect(playerActionsBus);
     sound.mute = isMuted;
 });
 
@@ -218,28 +217,43 @@ export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
 }
 
 export function playAmbientSound(themeName) {
+    console.log(`-> playAmbientSound: Called with themeName: '${themeName}'.`);
+
     if (ambientMusic) {
-        if (ambientMusic.state === 'started') { ambientMusic.stop(); }
+        if (ambientMusic.state === 'started') {
+            ambientMusic.stop();
+            console.log('-> playAmbientSound: Stopped previous ambient music.');
+        }
         ambientMusic.dispose();
+        console.log('-> playAmbientSound: Disposed of previous ambient music player.');
     }
 
     const ambientUrl = THEME_AMBIENT_SOUND_MAP[themeName];
+    console.log(`-> playAmbientSound: Resolved ambient URL: '${ambientUrl}'.`);
+
     if (ambientUrl) {
         ambientMusic = new Tone.Player({
             url: ambientUrl,
             loop: true,
-            volume: isMuted ? -Infinity : -25,
-            onload: () => console.log(`-> AUDIO: Ambient sound for ${themeName} loaded.`),
-            onerror: (e) => console.error(`-> AUDIO: Error loading ambient sound for ${themeName}:`, e)
+            volume: -25, // Always create with audible volume
+            onload: () => console.log(`-> AUDIO.SUCCESS: Ambient sound for '${themeName}' loaded successfully. Player state: ${ambientMusic.state}`),
+            onerror: (e) => console.error(`-> AUDIO.ERROR: Error loading ambient sound for '${themeName}':`, e)
         }).connect(ambientBus);
+
+        console.log(`-> playAmbientSound: Created new Tone.Player for ambient sound. Initial state: ${ambientMusic.state}, Volume: ${ambientMusic.volume.value}`);
+        console.log(`-> playAmbientSound: Ambient bus volume is currently: ${ambientBus.volume.value}`);
 
         if (!isMuted) {
             Tone.loaded().then(() => {
-                ambientMusic.sync().start(0);
+                ambientMusic.start();
+                console.log(`-> playAmbientSound: Called ambientMusic.start(). Player state is now: ${ambientMusic.state}`);
             });
+        } else {
+            console.log('-> playAmbientSound: Game is muted, so not starting ambient sound automatically.');
         }
     } else {
         ambientMusic = null; // No ambient sound for this theme
+        console.log(`-> playAmbientSound: No ambient sound defined for theme '${themeName}'.`);
     }
 }
 
@@ -319,6 +333,7 @@ export function toggleSound(soundToggleButton) {
                 ambientMusic.start();
             }
         }
+        ambientBus.volume.value = 0; // Restore bus volume to 0 dB
         for (const key in animationPlayers) {
             animationPlayers[key].mute = false;
         }
@@ -330,5 +345,42 @@ export function toggleSound(soundToggleButton) {
         }
         soundToggleButton.textContent = "🔇 Mute";
     }
-    console.log(`-> toggleSound: Mute toggled. isMuted: ${isMuted}`);
-}
+        console.log(`-> toggleSound: Mute toggled. isMuted: ${isMuted}`);
+    }
+    
+    // =================================================================
+    // DEBUGGING FUNCTIONS
+    // =================================================================
+    
+    window.muteThemeMusic = function() {
+        musicBus.volume.value = -Infinity;
+        console.log('-> DEBUG: Theme music muted.');
+    };
+    
+    window.unmuteThemeMusic = function() {
+        musicBus.volume.value = -18;
+        console.log('-> DEBUG: Theme music unmuted.');
+    };
+    
+    window.muteAmbient = function() {
+        ambientBus.volume.value = -Infinity;
+        console.log('-> DEBUG: Ambient sound muted.');
+    };
+    
+    window.unmuteAmbient = function() {
+        ambientBus.volume.value = 0;
+        console.log('-> DEBUG: Ambient sound unmuted.');
+    };
+    
+    window.muteSfx = function() {
+        playerActionsBus.volume.value = -Infinity;
+        uiBus.volume.value = -Infinity;
+        console.log('-> DEBUG: All SFX muted.');
+    };
+    
+    window.unmuteSfx = function() {
+        playerActionsBus.volume.value = -10;
+        uiBus.volume.value = -10;
+        console.log('-> DEBUG: All SFX unmuted.');
+    };
+    

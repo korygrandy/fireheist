@@ -6,14 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/audio.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/audio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/state-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state-manager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/input-handlers.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/input-handlers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/persona.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/persona.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/settings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,19 +39,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/custom-event-data-localStorage-persist-fails",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/custom-event-data-localStorage-persist-fails&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

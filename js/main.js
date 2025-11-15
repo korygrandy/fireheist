@@ -231,6 +231,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 }
 
+                // Debug Audio Controls
+                const debugMuteThemeMusicBtn = document.getElementById('debugMuteThemeMusicBtn');
+                const debugUnmuteThemeMusicBtn = document.getElementById('debugUnmuteThemeMusicBtn');
+                const debugMuteAmbientBtn = document.getElementById('debugMuteAmbientBtn');
+                const debugUnmuteAmbientBtn = document.getElementById('debugUnmuteAmbientBtn');
+                const debugMuteSfxBtn = document.getElementById('debugMuteSfxBtn');
+                const debugUnmuteSfxBtn = document.getElementById('debugUnmuteSfxBtn');
+
+                if (debugMuteThemeMusicBtn) {
+                    debugMuteThemeMusicBtn.addEventListener('click', window.muteThemeMusic);
+                }
+                if (debugUnmuteThemeMusicBtn) {
+                    debugUnmuteThemeMusicBtn.addEventListener('click', window.unmuteThemeMusic);
+                }
+                if (debugMuteAmbientBtn) {
+                    debugMuteAmbientBtn.addEventListener('click', window.muteAmbient);
+                }
+                if (debugUnmuteAmbientBtn) {
+                    debugUnmuteAmbientBtn.addEventListener('click', window.unmuteAmbient);
+                }
+                if (debugMuteSfxBtn) {
+                    debugMuteSfxBtn.addEventListener('click', window.muteSfx);
+                }
+                if (debugUnmuteSfxBtn) {
+                    debugUnmuteSfxBtn.addEventListener('click', window.unmuteSfx);
+                }
+
             }
 
         }
