@@ -11,6 +11,7 @@ import {
     debuffSynth,
     initializeMusicPlayer,
     playPauseGameSound,
+    ambientBus,
 } from '../audio.js';
 import { applySkillLevelSettings } from '../ui-modules/input-handlers.js';
 import { showResultsScreen, hideResultsScreen } from '../ui-modules/results.js';
@@ -86,10 +87,14 @@ export function togglePauseGame() {
     const startButton = document.getElementById('startButton');
     if (gameState.isPaused) {
         Tone.Transport.pause();
+        ambientBus.volume.value = -Infinity; // Mute ambient sound
         startButton.textContent = "Unpause";
         console.log("-> GAME PAUSED");
     } else {
         Tone.Transport.start();
+        if (!isMuted) {
+            ambientBus.volume.value = 0; // Restore ambient sound
+        }
         startButton.textContent = "Pause";
         console.log("-> GAME RESUMED");
         gameState.lastTime = performance.now();

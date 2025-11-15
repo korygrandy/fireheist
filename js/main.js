@@ -23,7 +23,7 @@ import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscr
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
-import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound } from './audio.js';
+import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted } from './audio.js';
 import { initGamepad } from './game-modules/gamepad.js';
 
 function initializeDailyChallengeUI() {
@@ -510,17 +510,63 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // --- PAUSE GAME ON TAB UNFOCUSED ---
+        // --- PAUSE GAME ON TAB UNFOCUSED ---
 
-    document.addEventListener('visibilitychange', () => {
 
-        if (document.hidden && gameState.gameRunning && !gameState.isPaused) {
 
-            togglePauseGame();
+            document.addEventListener('visibilitychange', () => {
 
-        }
 
-    });
+
+                if (document.hidden) {
+
+
+
+                    if (gameState.gameRunning && !gameState.isPaused) {
+
+
+
+                        togglePauseGame();
+
+
+
+                    }
+
+
+
+                    // Mute ambient bus regardless of game state if tab is hidden
+
+
+
+                    ambientBus.volume.value = -Infinity;
+
+
+
+                } else {
+
+
+
+                    // Only unmute if the game is not globally muted AND not paused
+
+
+
+                    if (!isMuted && !gameState.isPaused) {
+
+
+
+                        ambientBus.volume.value = 0;
+
+
+
+                    }
+
+
+
+                }
+
+
+
+            });
 
 
 
