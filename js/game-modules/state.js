@@ -121,6 +121,7 @@ const state = {
     shatteredObstacles: [],
     ashParticles: [],
     shotgunParticles: [],
+    molotovCocktails: [],
     isFirestormActive: false,
     isFireShieldActive: false,
     isShotgunBlastActive: false,

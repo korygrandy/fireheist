@@ -133,6 +133,18 @@ export const ARMORY_ITEMS = {
             skillKey: 'shotgunBlast'
         },
         unlockText: 'Unlock condition to be determined.'
+    },
+    molotovCocktail: {
+        name: 'Molotov Cocktail',
+        description: 'Hurl a fiery projectile that smashes and ignites obstacles on impact.',
+        imageLocked: 'images/molatov-cocktail-locked.png',
+        imageUnlocked: 'images/molatov-cocktail-unlocked.png',
+        tier: 'Adept',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'molotovCocktail'
+        },
+        unlockText: 'Unlock condition to be determined.'
     }
 };
 

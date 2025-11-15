@@ -195,3 +195,17 @@ export function checkShotgunCollision(particle, obstacle) {
            particle.y + particleSize > obstacleY;
 }
 
+export function checkMolotovCollision(cocktail, obstacle) {
+    if (!obstacle || obstacle.hasBeenHit) return false;
+
+    const cocktailSize = 8; // Radius of the cocktail
+    const obstacleX = obstacle.x;
+    const obstacleY = GROUND_Y - obstacleX * Math.tan(gameState.raceSegments[gameState.currentSegmentIndex].angleRad) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+
+    // Simple AABB collision detection
+    return cocktail.x < obstacleX + OBSTACLE_WIDTH &&
+           cocktail.x + cocktailSize > obstacleX &&
+           cocktail.y < obstacleY + OBSTACLE_HEIGHT &&
+           cocktail.y + cocktailSize > obstacleY;
+}
+

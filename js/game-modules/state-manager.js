@@ -959,6 +959,19 @@ export function clearShatteredObstacles() { state.shatteredObstacles = []; }
 export function clearIgnitedObstacles() { state.ignitedObstacles = []; }
 export function clearActiveFireballs() { state.activeFireballs = []; }
 export function clearShotgunParticles() { state.shotgunParticles = []; }
+export function addMolotovCocktail(cocktail) { state.molotovCocktails.push(cocktail); }
+export function removeMolotovCocktail(index) { state.molotovCocktails.splice(index, 1); }
+export function clearMolotovCocktails() { state.molotovCocktails = []; }
+
+export function setObstacleHit(obstacle) {
+    if (state.currentObstacle && state.currentObstacle.spawnTime === obstacle.spawnTime) {
+        state.currentObstacle.hasBeenHit = true;
+    }
+    const ignited = state.ignitedObstacles.find(o => o.spawnTime === obstacle.spawnTime);
+    if (ignited) {
+        ignited.hasBeenHit = true;
+    }
+}
 
 export function setShotgunBlastActive(isActive) {
     state.isShotgunBlastActive = isActive;

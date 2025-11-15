@@ -303,6 +303,11 @@ export function drawFireSpinner(playerX, playerY) {
 }
 
 export function drawIncineration(obstacle, angleRad) {
+    // If the obstacle was hit by a molotov, its own explosion is enough.
+    if (obstacle.animationType === 'molotov') {
+        return;
+    }
+
     const INCINERATION_DURATION = 500;
     const elapsed = performance.now() - obstacle.startTime;
     const progress = Math.min(1, elapsed / INCINERATION_DURATION);

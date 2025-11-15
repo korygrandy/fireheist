@@ -19,7 +19,7 @@ import { displayLeaderboard } from './ui-modules/leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll, startShotgunBlast } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll, startShotgunBlast, startMolotovCocktail } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
@@ -594,13 +594,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         echoSlam: startEchoSlam,
 
-        fireballRoll: startFireballRoll,
+                fireballRoll: startFireballRoll,
 
-        shotgunBlast: startShotgunBlast
+                shotgunBlast: startShotgunBlast,
 
-        // Add other skills here as they are implemented
+                molotovCocktail: startMolotovCocktail
 
-    };
+                // Add other skills here as they are implemented
+
+            };
 
 
 
@@ -740,29 +742,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            startBackflip(gameState);
+                    startBackflip(gameState);
 
-        }
+                }
 
-        if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            startMoonwalk(gameState);
+                    startMoonwalk(gameState);
 
-        }
+                }
 
-        if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            startShockwave(gameState);
+                    startShockwave(gameState);
 
-        }
+                }
+
+                if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
+
+                    e.preventDefault();
+
+                    handleSpecialMove(); // Molotov Cocktail will be handled by activeArmorySkill
+
+                }
 
         if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
 

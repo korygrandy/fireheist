@@ -160,6 +160,10 @@ import {
     resetStreaks,
     deactivateAllEvents,
     activateCustomEvent,
+    addMolotovCocktail,
+    removeMolotovCocktail,
+    clearMolotovCocktails,
+    setObstacleHit,
 } from './state-manager.js';
 import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
@@ -173,7 +177,7 @@ import { updateHighScore } from './score.js';
 import { animateValue } from './animations.js';
 import { drawVictoryOverlay } from './drawing/overlays.js';
 import { stopGame } from './game-controller.js';
-import { checkShotgunCollision } from './collision.js';
+import { checkShotgunCollision, checkMolotovCollision } from './collision.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -417,7 +421,6 @@ export function animate(timestamp) {
 
     const stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentHurdle.angleRad);
     let runnerY = stickFigureGroundY - STICK_FIGURE_TOTAL_HEIGHT;
-    setStickFigureY(runnerY); // Update the global state with the new Y position
 
     if (gameState.jumpState.isJumping) {
         let maxJumpHeightForSegment = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentHurdle.hurdleHeight * JUMP_HEIGHT_RATIO;
@@ -425,6 +428,7 @@ export function animate(timestamp) {
         const jumpOffset = -4 * maxJumpHeightForSegment * (jumpProgress - jumpProgress * jumpProgress);
         runnerY += jumpOffset;
     }
+    setStickFigureY(runnerY); // Update the global state with the new Y position
 
     const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * gameState.gameSpeedMultiplier;
     if (gameState.currentObstacle) setCurrentObstacle({ ...gameState.currentObstacle, x: gameState.currentObstacle.x - objectMovementDelta });
@@ -1022,6 +1026,92 @@ export function animate(timestamp) {
 
         if (!particleRemoved && particle.lifespan <= 0) {
             gameState.shotgunParticles.splice(i, 1);
+        }
+    }
+
+    // Update Molotov Cocktails
+    for (let i = gameState.molotovCocktails.length - 1; i >= 0; i--) {
+        const cocktail = gameState.molotovCocktails[i];
+
+        if (cocktail.isBursting) {
+            // Update burst particles
+            for (let j = cocktail.burstParticles.length - 1; j >= 0; j--) {
+                const p = cocktail.burstParticles[j];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.02;
+                if (p.alpha <= 0) {
+                    cocktail.burstParticles.splice(j, 1);
+                }
+            }
+            // Check for collision during the burst
+            const obstacle = cocktail.targetObstacle;
+            if (obstacle && !obstacle.isDummy && !obstacle.hasBeenHit && Math.abs(obstacle.x - cocktail.x) < 50) {
+                setObstacleHit(obstacle); // Mark as hit to prevent player collision
+                addIncineratingObstacle({ ...obstacle, animationProgress: 0, startTime: performance.now(), animationType: 'molotov' });
+                if (obstacle === gameState.currentObstacle) {
+                    setCurrentObstacle(null);
+                }
+                incrementObstaclesIncinerated();
+            }
+
+            if (cocktail.burstParticles.length === 0) {
+                removeMolotovCocktail(i);
+            }
+            continue;
+        }
+
+        if (cocktail.isSmashing) {
+            cocktail.animationProgress += deltaTime / 200; // 200ms smash animation
+            if (cocktail.animationProgress >= 1) {
+                cocktail.isSmashing = false;
+                cocktail.isBursting = true;
+
+                // Create burst particles
+                for (let k = 0; k < 15; k++) { // Reduced from 30 to 15
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 4 + 1; // Slightly reduced speed
+                    cocktail.burstParticles.push({
+                        x: cocktail.x,
+                        y: cocktail.y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        radius: Math.random() * 3 + 1, // Slightly smaller particles
+                        alpha: 1
+                    });
+                }
+            }
+            continue;
+        }
+
+        cocktail.velocityY += cocktail.gravity;
+        cocktail.x += cocktail.velocityX;
+        cocktail.y += cocktail.velocityY;
+
+        // Check for direct obstacle collision
+        const obstaclesToCheck = [gameState.currentObstacle, ...gameState.ignitedObstacles].filter(Boolean);
+        for (const obstacle of obstaclesToCheck) {
+            if (checkMolotovCollision(cocktail, obstacle)) {
+                cocktail.hasCollided = true;
+                cocktail.isSmashing = true;
+                cocktail.animationProgress = 0;
+                playAnimationSound('engulfed-crackling');
+
+                setObstacleHit(obstacle); // Mark as hit to prevent player collision
+                addIncineratingObstacle({ ...obstacle, animationProgress: 0, startTime: performance.now() });
+                if (obstacle === gameState.currentObstacle) {
+                    setCurrentObstacle(null);
+                }
+                incrementObstaclesIncinerated();
+                break; // Stop checking after first collision
+            }
+        }
+
+        if (cocktail.hasCollided) continue;
+
+        // Remove if it falls off the bottom of the screen (failsafe)
+        if (cocktail.y > canvas.height + 50) {
+            removeMolotovCocktail(i);
         }
     }
 
