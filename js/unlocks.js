@@ -77,6 +77,18 @@ export const ARMORY_ITEMS = {
         },
         unlockText: 'Incinerate 50 obstacles'
     },
+    mageSpinner: {
+        name: 'Mage Spinner',
+        description: 'Automatically cast a volley of fireballs at nearby obstacles.',
+        emoji: '🌀',
+        tier: 'Master',
+        unlockCondition: {
+            type: 'incinerateCount',
+            count: 150,
+            skillKey: 'mageSpinner'
+        },
+        unlockText: 'Incinerate 150 obstacles'
+    },
     blinkStrike: {
         name: 'Blink Strike',
         description: 'Instantly teleport through the next obstacle, shattering it on arrival. A high-precision tool for the agile.',

@@ -169,6 +169,7 @@ import { fireSpinnerSkill } from './skills/fireSpinner.js';
 import { firestormSkill } from './skills/firestorm.js';
 import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
 import { fireMageSkill } from './skills/fireMage.js';
+import { mageSpinnerSkill } from './skills/mageSpinner.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -256,68 +257,11 @@ export function animate(timestamp) {
 
     updateEnvironmentalEffects(deltaTime);
 
-    if (gameState.isMageSpinnerActive) { 
-        const remainingTime = gameState.mageSpinnerEndTime - Date.now();
-        if (remainingTime <= 0) {
-            setPlayerEnergy(0); 
-        } else {
-            const energyToDrain = MAGE_SPINNER_ENERGY_COST; 
-            const drainRate = energyToDrain / MAGE_SPINNER_DURATION_MS; 
-            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
-        }
-    } else if (gameState.jumpState.isJetstreamDashing) {
-        const remainingTime = gameState.jetstreamDashDrainEndTime - Date.now();
-        if (remainingTime <= 0) {
-            setPlayerEnergy(0);
-        } else {
-            const energyToDrain = ENERGY_SETTINGS.ENERGY_COSTS.jetstreamDash; // Assuming a per-second drain rate
-            const drainRate = energyToDrain / (JETSTREAM_DASH_DURATION_MS / 1000); // Convert to per-ms drain
-            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
-        }
-    } else if (gameState.jumpState.isFireballRolling) {
-        const remainingTime = gameState.fireballRollDrainEndTime - Date.now();
-        if (remainingTime <= 0) {
-            setPlayerEnergy(0);
-        } else {
-            const energyToDrain = ENERGY_SETTINGS.ENERGY_COSTS.fireballRoll; // Assuming a per-second drain rate
-            const drainRate = energyToDrain / (FIREBALL_ROLL_DURATION_MS / 1000); // Convert to per-ms drain
-            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
-        }
-    } else if (gameState.jumpState.isHover) { 
-        const energyDrain = (ENERGY_SETTINGS.HOVER_DRAIN_RATE * deltaTime) / 1000;
-        setPlayerEnergy(Math.max(0, gameState.playerEnergy - energyDrain));
-    } else {
-        const energyDrain = (gameState.passiveDrainRate * deltaTime) / 1000;
-        setPlayerEnergy(Math.max(0, gameState.playerEnergy - energyDrain));
-    }
+    
 
+    
 
-
-    if (gameState.isMageSpinnerActive) {
-        const now = Date.now();
-        if (now > gameState.mageSpinnerEndTime) {
-            setMageSpinnerActive(false);
-            console.log("-> Mage Spinner mode ended.");
-        } else {
-            setMageSpinnerFireballTimer(gameState.mageSpinnerFireballTimer - deltaTime);
-            if (gameState.mageSpinnerFireballTimer <= 0 && gameState.mageSpinnerFireballsSpawned < MAGE_SPINNER_FIREBALL_COUNT) {
-                const targetObstacle = gameState.currentObstacle || gameState.ignitedObstacles[0] || gameState.vanishingObstacles[0];
-                if (targetObstacle) {
-                    castMageSpinnerFireball(gameState, targetObstacle); 
-                    incrementMageSpinnerFireballsSpawned();
-                    setMageSpinnerFireballTimer(MAGE_SPINNER_FIREBALL_INTERVAL_MS); 
-                }
-            }
-        }
-    }
-
-    if (gameState.isMageSpinnerOnCooldown) {
-        const now = Date.now();
-        if (now - gameState.mageSpinnerLastActivationTime > MAGE_SPINNER_COOLDOWN_MS) {
-            setMageSpinnerOnCooldown(false);
-            console.log("-> Mage Spinner: Cooldown finished. Ready.");
-        }
-    }
+    
 
 
 
@@ -805,6 +749,7 @@ export function animate(timestamp) {
     firestormSkill.update(gameState, deltaTime);
     fieryGroundPoundSkill.update(gameState, deltaTime);
     fireMageSkill.update(gameState, deltaTime);
+    mageSpinnerSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);

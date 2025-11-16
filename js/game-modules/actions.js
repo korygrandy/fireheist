@@ -37,27 +37,7 @@ export function castFireball(state) {
 
 
 
-export function startMageSpinner(state) {
-    if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive || state.isMageSpinnerOnCooldown) return;
 
-    const now = Date.now();
-    if (now - state.mageSpinnerLastActivationTime < MAGE_SPINNER_COOLDOWN_MS) {
-        console.log("-> startMageSpinner: Mage Spinner is on cooldown.");
-        return;
-    }
-
-    if (!consumeEnergy(state, 'mageSpinner', MAGE_SPINNER_ENERGY_COST)) return;
-
-    state.isMageSpinnerActive = true;
-    state.mageSpinnerEndTime = now + MAGE_SPINNER_DURATION_MS;
-    state.mageSpinnerLastActivationTime = now; // Start cooldown from now
-    state.isMageSpinnerOnCooldown = true; // Cooldown starts immediately
-    state.mageSpinnerFireballTimer = MAGE_SPINNER_FIREBALL_INTERVAL_MS; // Initialize timer for first fireball
-    state.mageSpinnerFireballsSpawned = 0; // Reset fireball counter
-
-    playAnimationSound('firestorm'); // Placeholder sound for activation
-    console.log("-> startMageSpinner: Mage Spinner initiated.");
-}
 
 export function castMageSpinnerFireball(state, targetObstacle) {
     if (!state.gameRunning || state.isPaused || !targetObstacle) return;

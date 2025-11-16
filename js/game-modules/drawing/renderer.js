@@ -10,6 +10,7 @@ import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
 import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
 import { fireMageSkill } from '../skills/fireMage.js';
+import { mageSpinnerSkill } from '../skills/mageSpinner.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -124,6 +125,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
     fireSpinnerSkill.draw(ctx, gameState, currentX, currentY);
     fieryGroundPoundSkill.draw(ctx, gameState, currentX, currentY);
     fireMageSkill.draw(ctx, gameState, currentX, currentY);
+    mageSpinnerSkill.draw(ctx, gameState, currentX, currentY);
 
 
 

@@ -381,11 +381,6 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     } else if (gameState.isFireMageActive) {
         // Add a fiery glow and embers for Fire Mage
 
-    } else if (gameState.isMageSpinnerActive) {
-        // Add a fiery glow and embers for Mage Spinner
-        ctx.shadowColor = 'orange';
-        ctx.shadowBlur = 20;
-
     } else if (jumpState.isFireballRolling) {
         // Draw player as a rolling fireball
         ctx.shadowColor = 'orange';
