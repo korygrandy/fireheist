@@ -179,6 +179,7 @@ import { drawVictoryOverlay } from './drawing/overlays.js';
 import { stopGame } from './game-controller.js';
 import { checkShotgunCollision, checkMolotovCollision } from './collision.js';
 import { molotovSkill } from './skills/molotov.js';
+import { shotgunSkill } from './skills/shotgun.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -983,50 +984,6 @@ export function animate(timestamp) {
         const elapsed = performance.now() - obstacle.startTime;
         if (elapsed > 300) { 
             removeVanishingObstacle(i);
-        }
-    }
-
-    // Update shotgun particles
-    for (let i = gameState.shotgunParticles.length - 1; i >= 0; i--) {
-        const particle = gameState.shotgunParticles[i];
-        particle.x += particle.velocityX;
-        particle.y += particle.velocityY;
-        particle.lifespan--;
-
-        let particleRemoved = false;
-        const obstaclesToCheck = [
-            gameState.currentObstacle,
-            ...gameState.ignitedObstacles,
-            ...gameState.vanishingObstacles
-        ].filter(Boolean);
-
-        for (const obstacle of obstaclesToCheck) {
-            if (checkShotgunCollision(particle, obstacle)) {
-                addIncineratingObstacle({
-                    ...obstacle,
-                    animationProgress: 0,
-                    startTime: performance.now(),
-                    animationType: 'incinerate-ash-blow'
-                });
-
-                if (obstacle === gameState.currentObstacle) {
-                    setCurrentObstacle(null);
-                } else {
-                    // Remove from other arrays if needed (optional, depends on game logic)
-                }
-                
-                playAnimationSound('shatter');
-                incrementObstaclesIncinerated();
-                incrementConsecutiveIncinerations();
-
-                gameState.shotgunParticles.splice(i, 1);
-                particleRemoved = true;
-                break; // Particle is gone, no need to check against other obstacles
-            }
-        }
-
-        if (!particleRemoved && particle.lifespan <= 0) {
-            gameState.shotgunParticles.splice(i, 1);
         }
     }
 

@@ -19,13 +19,14 @@ import { displayLeaderboard } from './ui-modules/leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll, startShotgunBlast } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted } from './audio.js';
 import { initGamepad } from './game-modules/gamepad.js';
 import { molotovSkill } from './game-modules/skills/molotov.js';
+import { shotgunSkill } from './game-modules/skills/shotgun.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -590,7 +591,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     jetstreamDash: startJetstreamDash,
     echoSlam: startEchoSlam,
     fireballRoll: startFireballRoll,
-    shotgunBlast: startShotgunBlast,
+    shotgunBlast: () => shotgunSkill.activate(gameState),
     molotovCocktail: () => molotovSkill.activate(gameState),
 };
 

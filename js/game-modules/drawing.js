@@ -8,6 +8,7 @@ import { createFireExplosion } from './drawing/effects.js'; // Only keep creatio
 import { drawParticlesAndEffects, clearCanvas, drawBackground, drawGameObjects, drawUIOverlaysAndEffects } from './drawing/renderer.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 import { molotovSkill } from './skills/molotov.js';
+import { shotgunSkill } from './skills/shotgun.js';
 
 export let isInitialLoad = true;
 export function setInitialLoad(value) {
@@ -50,15 +51,9 @@ export function draw() {
     // 7. Draw UI Overlays
     drawUIOverlaysAndEffects(gameState, isInitialLoad, COLLISION_DURATION_MS);
 
-    // Draw shotgun particles
-    ctx.fillStyle = 'orange'; // Default color
-    for (const particle of gameState.shotgunParticles) {
-        ctx.fillStyle = particle.color;
-        ctx.fillRect(particle.x, particle.y, 5, 5);
+    // Draw skill effects
+    shotgunSkill.draw(ctx, gameState);
+    for (const cocktail of gameState.molotovCocktails) {
+        molotovSkill.draw(cocktail, ctx);
     }
-
-// Draw Molotov Cocktails
-for (const cocktail of gameState.molotovCocktails) {
-    molotovSkill.draw(cocktail, ctx);
-}
 }
