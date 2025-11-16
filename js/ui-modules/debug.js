@@ -27,6 +27,9 @@ export function debugUnlockAllAchievements() {
     // Directly unlock all armory items by their skillKey
     playerStats.unlockedArmoryItems = Object.keys(ARMORY_ITEMS);
 
+    // Grant max cash for upgrades
+    playerStats.totalAccumulatedCash = 1000000000;
+
     setPlayerStats(playerStats);
     savePlayerStats();
 

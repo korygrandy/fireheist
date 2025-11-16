@@ -2,9 +2,18 @@ import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisCont
 import { saveSettings } from './settings.js';
 import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setEnableRandomPowerUps, setAutoHurdleEnabled, setCurrentSkillLevel, setMaxPlayerEnergy, setPassiveDrainRate, setAcceleratorFrequencyPercent, setIntendedSpeedMultiplier } from '../game-modules/state-manager.js';
 import { DIFFICULTY_SETTINGS, suggestedEmojiList } from '../constants.js';
+import { debugUnlockAllAchievements } from '../ui-modules/debug.js';
+import { populatePersonaSelector } from './persona.js';
+import { populateArmoryItems } from './armory.js';
 
 export function updateEmoji(event) {
     let input = event.target.value.trim();
+    if (input === '🔥') {
+        debugUnlockAllAchievements();
+        populatePersonaSelector(); // Refresh personas
+        populateArmoryItems(); // Refresh armory
+        alert('Cheat Activated: All content unlocked and 1,000,000,000 cash granted!');
+    }
     setStickFigureEmoji(input.length > 0 ? input.slice(0, 2) : '🦹‍♂️');
     saveSettings();
 }

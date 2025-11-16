@@ -46,6 +46,23 @@ function initializeDailyChallengeUI() {
 
 document.addEventListener('DOMContentLoaded', async () => {
 
+    const cheatEmoji = document.getElementById('cheat-emoji');
+    if (cheatEmoji) {
+        cheatEmoji.addEventListener('click', () => {
+            navigator.clipboard.writeText('🔥').then(() => {
+                const originalColor = cheatEmoji.style.color;
+                cheatEmoji.style.color = 'green';
+                cheatEmoji.title = 'Copied!';
+                setTimeout(() => {
+                    cheatEmoji.style.color = originalColor;
+                    cheatEmoji.title = 'Copy Cheat Emoji';
+                }, 1500);
+            }).catch(err => {
+                console.error('Failed to copy cheat emoji: ', err);
+            });
+        });
+    }
+
     console.log("-> DOMContentLoaded: Initializing game components.");
 
     const preloaderOverlay = document.getElementById('preloader-overlay');
