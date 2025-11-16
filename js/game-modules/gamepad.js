@@ -13,7 +13,6 @@ import { togglePauseGame, handleExitOrReset } from './game-controller.js';
 import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
-    startFieryGroundPound, 
     startFireStomper, startMageSpinner, 
     castFireball, startFireMage, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
@@ -29,6 +28,7 @@ import {
 import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './skills/fireSpinner.js';
 import { firestormSkill } from './skills/firestorm.js';
+import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
 
 let activeGamepad = null;
 let gamepadConnected = false;
@@ -44,7 +44,7 @@ let buttonStates = {};
 const skillActionMap = {
     firestorm: () => firestormSkill.activate(gameState),
     fireSpinner: () => fireSpinnerSkill.activate(gameState),
-    fieryGroundPound: startFieryGroundPound,
+    fieryGroundPound: () => fieryGroundPoundSkill.activate(gameState),
     fireStomper: startFireStomper,
     mageSpinner: startMageSpinner,
     fieryHoudini: () => fieryHoudiniSkill.activate(gameState),
@@ -281,7 +281,7 @@ function updateGamepadState() {
             4: { action: startBackflip, name: 'LB_BUTTON_GAME', requiresState: true },
             5: { action: startFrontflip, name: 'RB_BUTTON_GAME', requiresState: true },
             6: { action: startHoudini, name: 'LT_BUTTON_GAME', requiresState: true },
-            7: { action: startFieryGroundPound, name: 'RT_BUTTON_GAME', requiresState: true },
+            7: { action: () => fieryGroundPoundSkill.activate(gameState), name: 'RT_BUTTON_GAME', requiresState: true },
             8: { action: handleExitOrReset, name: 'BACK_BUTTON', requiresState: false },
             9: { action: togglePauseGame, name: 'START_BUTTON_GAME', requiresState: false },
             10: { action: startCartoonScramble, name: 'LSTICK_CLICK_GAME', requiresState: true },

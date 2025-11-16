@@ -8,6 +8,7 @@ import { drawStickFigure, drawFireShield } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags } from './overlays.js';
 import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
+import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -120,11 +121,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
         drawFireShield(currentX, currentY);
     }
     fireSpinnerSkill.draw(ctx, gameState, currentX, currentY);
-
-    if (gameState.jumpState.isFieryGroundPound && !gameState.jumpState.groundPoundEffectTriggered) {
-        createFireExplosion(currentX, currentY + STICK_FIGURE_TOTAL_HEIGHT / 2);
-        gameState.jumpState.groundPoundEffectTriggered = true;
-    }
+    fieryGroundPoundSkill.draw(ctx, gameState, currentX, currentY);
 
     if (gameState.isFireMageActive) {
         ctx.save();

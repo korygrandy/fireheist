@@ -222,6 +222,20 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         legMovementX2 = 0; legMovementY2 = bodyY + 15;
         armMovementX1 = 5; armMovementY1 = headY + 5;
         armMovementX2 = -5; armMovementY2 = headY + 5;
+    } else if (jumpState.isFieryGroundPound) { // Fiery Ground Pound uses same animation as Ground Pound
+        const t = jumpState.fieryGroundPoundDuration / 400; // Assuming same duration for animation timing
+        let poundY = 0;
+        if (t > 0.5) { // Coming down
+            poundY = 40 * Math.sin((t - 0.5) * 2 * Math.PI);
+        } else { // Going up
+            poundY = -40 * Math.sin(t * 2 * Math.PI);
+        }
+        ctx.translate(0, poundY);
+
+        legMovementX1 = 0; legMovementY1 = bodyY + 15;
+        legMovementX2 = 0; legMovementY2 = bodyY + 15;
+        armMovementX1 = 5; armMovementY1 = headY + 5;
+        armMovementX2 = -5; armMovementY2 = headY + 5;
     } else if (jumpState.isCartoonScramble) {
         // Create a dust cloud at the feet
         if (gameState.frameCount % 2 === 0) {
@@ -366,27 +380,16 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX2 = -5; armMovementY2 = headY + 20;
     } else if (gameState.isFireMageActive) {
         // Add a fiery glow and embers for Fire Mage
-        ctx.shadowColor = 'red';
-        ctx.shadowBlur = 25;
-        if (gameState.frameCount % 2 === 0) {
-            createPlayerEmbers(y);
-        }
+
     } else if (gameState.isMageSpinnerActive) {
         // Add a fiery glow and embers for Mage Spinner
         ctx.shadowColor = 'orange';
         ctx.shadowBlur = 20;
-        if (gameState.frameCount % 3 === 0) {
-            createPlayerEmbers(y);
-        }
+
     } else if (jumpState.isFireballRolling) {
         // Draw player as a rolling fireball
         ctx.shadowColor = 'orange';
         ctx.shadowBlur = 25;
-
-        // Add flaking embers
-        if (gameState.frameCount % 2 === 0) {
-            createPlayerEmbers(y);
-        }
 
         ctx.save();
         ctx.translate(0, -STICK_FIGURE_TOTAL_HEIGHT / 2); // Center the fireball vertically

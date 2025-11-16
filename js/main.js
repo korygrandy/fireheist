@@ -19,7 +19,7 @@ import { displayLeaderboard } from './ui-modules/leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFieryGroundPound, startFireStomper, startFireMage, castFireball, startMageSpinner, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireStomper, startFireMage, castFireball, startMageSpinner, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
@@ -30,6 +30,7 @@ import { shotgunSkill } from './game-modules/skills/shotgun.js';
 import { fieryHoudiniSkill } from './game-modules/skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './game-modules/skills/fireSpinner.js';
 import { firestormSkill } from './game-modules/skills/firestorm.js';
+import { fieryGroundPoundSkill } from './game-modules/skills/fieryGroundPound.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -586,7 +587,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const skillActionMap = {
     firestorm: () => firestormSkill.activate(gameState),
     fireSpinner: () => fireSpinnerSkill.activate(gameState),
-    fieryGroundPound: startFieryGroundPound,
+    fieryGroundPound: () => fieryGroundPoundSkill.activate(gameState),
     fireStomper: startFireStomper,
     mageSpinner: startMageSpinner,
     fieryHoudini: () => fieryHoudiniSkill.activate(gameState),
@@ -816,13 +817,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                         }
 
-        if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            startFirestorm(gameState);
+                    handleSpecialMove();
 
-        }
+                }
 
         if (e.code === 'KeyU' && gameState.gameRunning && !gameState.isPaused) {
 

@@ -197,40 +197,7 @@ export function startGroundPound(state) {
     console.log("-> startGroundPound: Ground Pound initiated.");
 }
 
-export function startFieryGroundPound(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'fieryGroundPound')) return; // Use a new energy cost type
 
-    state.jumpState.isFieryGroundPound = true;
-    state.jumpState.fieryGroundPoundDuration = JUMP_DURATIONS.fieryGroundPound;
-    state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
-    initiateJump(state, JUMP_DURATIONS.fieryGroundPound);
-    playAnimationSound('firestorm'); // Use firestorm sound for fiery effect
-
-    // Incinerate all active obstacles
-    let now = performance.now();
-    const timeIncrement = 0.0001; // A tiny increment to ensure unique start times
-
-    if (state.currentObstacle) {
-        state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: now });
-        now += timeIncrement;
-        state.currentObstacle = null;
-        state.playerStats.obstaclesIncinerated++;
-    }
-    state.ignitedObstacles.forEach(ob => {
-        state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: now });
-        now += timeIncrement;
-    });
-    state.ignitedObstacles.length = 0; // Clear ignited obstacles
-
-    state.vanishingObstacles.forEach(ob => {
-        state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: now });
-        now += timeIncrement;
-    });
-    state.vanishingObstacles.length = 0; // Clear vanishing obstacles
-
-    console.log("-> startFieryGroundPound: Fiery Ground Pound initiated. All obstacles incinerated!");
-}
 
 export function startFireStomper(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;

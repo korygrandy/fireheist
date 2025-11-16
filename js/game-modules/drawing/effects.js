@@ -12,7 +12,7 @@ function hexToRgb(hex) {
     } : null;
 }
 
-export function createGroundPoundEffect(x, y, skillLevel = 1) {
+export function createGroundPoundEffect(x, y, skillLevel = 1, colors) {
     let particleCount = 40;
     let speed = 5;
 
@@ -20,10 +20,17 @@ export function createGroundPoundEffect(x, y, skillLevel = 1) {
         particleCount += 10 * (skillLevel - 1);
         speed += 1 * (skillLevel - 1);
     }
-    const groundColorRgb = hexToRgb(currentTheme.ground);
+    const groundColorRgb = !colors ? hexToRgb(currentTheme.ground) : null;
 
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI; // Upward semi-circle
+        let particleColor;
+        if (colors) {
+            particleColor = colors[Math.floor(Math.random() * colors.length)];
+        } else {
+            particleColor = groundColorRgb ? `rgba(${groundColorRgb.r}, ${groundColorRgb.g}, ${groundColorRgb.b}, ${Math.random() * 0.5 + 0.3})` : `rgba(139, 69, 19, ${Math.random() * 0.5 + 0.3})`;
+        }
+
         gameState.groundPoundParticles.push({
             x: x,
             y: y,
@@ -32,7 +39,7 @@ export function createGroundPoundEffect(x, y, skillLevel = 1) {
             size: Math.random() * 4 + 2,
             life: 1,
             gravity: 0.2,
-            color: groundColorRgb ? `rgba(${groundColorRgb.r}, ${groundColorRgb.g}, ${groundColorRgb.b}, ${Math.random() * 0.5 + 0.3})` : `rgba(139, 69, 19, ${Math.random() * 0.5 + 0.3})` // Fallback to brown
+            color: particleColor
         });
     }
 }
@@ -263,6 +270,31 @@ export function drawSwooshParticles() {
             ctx.stroke();
             ctx.restore();
         }
+    }
+}
+
+export function createHurdleJumpSpikes(x, y, sizeMultiplier = 1) {
+    const particleCount = 20;
+    const fireColors = [
+        'rgba(255, 80, 0, 0.9)',   // Bright Orange
+        'rgba(255, 165, 0, 1)',   // Orange
+        'rgba(255, 100, 0, 0.9)',  // Deeper Orange
+    ];
+
+    for (let i = 0; i < particleCount; i++) {
+        const angle = (Math.random() * Math.PI * 2); // Full circle
+        const speed = (Math.random() * 3 + 2) * sizeMultiplier;
+        const length = (Math.random() * 8 + 5) * sizeMultiplier;
+
+        gameState.swooshParticles.push({ // Reusing swooshParticles for line-based particles
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            length: length,
+            life: 0.8, // Shorter life for a quick burst
+            color: fireColors[Math.floor(Math.random() * fireColors.length)]
+        });
     }
 }
 

@@ -56,6 +56,7 @@ import {
     setMageSpinnerFireballTimer,
     incrementMageSpinnerFireballsSpawned,
     setMageSpinnerOnCooldown,
+    setMageSpinnerActive,
     setManualJumpOverrideActive,
     setJumpProgress,
     setJumping,
@@ -166,6 +167,7 @@ import { shotgunSkill } from './skills/shotgun.js';
 import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './skills/fireSpinner.js';
 import { firestormSkill } from './skills/firestorm.js';
+import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -758,21 +760,7 @@ export function animate(timestamp) {
             setGroundPound(false);
         }
     }
-    if (gameState.jumpState.isFieryGroundPound) {
-        setFieryGroundPoundDuration(gameState.jumpState.fieryGroundPoundDuration - deltaTime);
-        if (gameState.jumpState.fieryGroundPoundDuration < 100 && !gameState.jumpState.groundPoundEffectTriggered) {
-            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(gameState.raceSegments[gameState.currentSegmentIndex].angleRad);
-            const skillLevel = gameState.playerStats.skillLevels.fieryGroundPound || 1;
-            createGroundPoundEffect(STICK_FIGURE_FIXED_X, groundY, skillLevel);
-            if (skillLevel === 5) {
-                createFireTrail(STICK_FIGURE_FIXED_X, groundY);
-            }
-            setGroundPoundEffectTriggered(true);
-        }
-        if (gameState.jumpState.fieryGroundPoundDuration <= 0) {
-            setFieryGroundPound(false);
-        }
-    }
+
     if (gameState.jumpState.isCartoonScramble) {
         setCartoonScrambleDuration(gameState.jumpState.cartoonScrambleDuration - deltaTime);
         if (gameState.jumpState.cartoonScrambleDuration <= 0) {
@@ -825,6 +813,7 @@ export function animate(timestamp) {
 
     fireSpinnerSkill.update(gameState, deltaTime);
     firestormSkill.update(gameState, deltaTime);
+    fieryGroundPoundSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);
