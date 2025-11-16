@@ -1,5 +1,12 @@
 [
     {
+        "id": "DF-005",
+        "description": "The shotgun blast particle animation was not rendering due to a combination of errors: the skill's `draw` and `update` functions were not being called by the main game loop, and a state management function was being called with incorrect arguments.",
+        "status": "Resolved",
+        "resolution": "Centralized the skill's `draw` logic into the main renderer, added a call to the skill's `update` function in the main game loop, and corrected the function signature for `addShotgunParticle` in the state manager.",
+        "version": "1.5.17"
+    },
+    {
         "id": "DF-004",
         "description": "The `startManualJump` function was not exported from `js/game.js`, causing a module import error in `js/main.js` and preventing the jump functionality.",
         "status": "Resolved",
