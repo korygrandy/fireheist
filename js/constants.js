@@ -40,6 +40,8 @@ export const OBSTACLE_SPAWN_X = 800 + 150;
 export const OBSTACLE_WIDTH = 32;
 export const OBSTACLE_HEIGHT = 32;
 export const OBSTACLE_BASE_VELOCITY_PX_MS = 0.2;
+export const EASTER_EGG_EMOJI = "🥚";
+export const EASTER_EGG_SPAWN_CHANCE_PERCENT = 5;
 
 // Event Constants
 export const EVENT_PROXIMITY_VISUAL_STEPS = 2;

@@ -442,7 +442,11 @@ export function animate(timestamp) {
 
     if (gameState.currentObstacle) {
         if (checkCollision(runnerY, angleRad)) {
-            if (!gameState.isColliding) {
+            if (gameState.currentObstacle.isEasterEgg) {
+                console.log("🥚 EASTER EGG COLLECTED! Triggering mini-game...");
+                setCurrentObstacle(null); // Remove the egg
+                // Mini-game logic will be added here later
+            } else if (!gameState.isColliding) {
                 incrementHits();
                 setColliding(true);
                 setCollisionDuration(COLLISION_DURATION_MS);
@@ -450,13 +454,13 @@ export function animate(timestamp) {
                 playQuackSound();
                 setPlayerEnergy(gameState.playerEnergy * 0.5); 
                 console.warn(`-> COLLISION: Hit obstacle! Total hits: ${gameState.hitsCounter}. Speed penalty applied.`);
+                setCurrentObstacle({ ...gameState.currentObstacle, hasBeenHit: true });
+                setAccelerating(false);
+                setAccelerationDuration(0);
+                setDecelerating(false);
+                setDecelerationDuration(0);
+                deactivateAllEvents();
             }
-            setCurrentObstacle({ ...gameState.currentObstacle, hasBeenHit: true });
-            setAccelerating(false);
-            setAccelerationDuration(0);
-            setDecelerating(false);
-            setDecelerationDuration(0);
-            deactivateAllEvents();
         }
         if (gameState.currentObstacle && gameState.currentObstacle.x < -OBSTACLE_WIDTH) {
             resetStreaks(); 

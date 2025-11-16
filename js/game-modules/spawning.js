@@ -1,12 +1,14 @@
 import state from './state.js';
-import { OBSTACLE_SPAWN_X, ACCELERATOR_EMOJI } from '../constants.js';
+import { OBSTACLE_SPAWN_X, ACCELERATOR_EMOJI, EASTER_EGG_EMOJI, EASTER_EGG_SPAWN_CHANCE_PERCENT } from '../constants.js';
 
 export function spawnObstacle() {
+    const isEasterEgg = Math.random() * 100 < EASTER_EGG_SPAWN_CHANCE_PERCENT;
     const newObstacle = {
         x: OBSTACLE_SPAWN_X,
-        emoji: state.obstacleEmoji,
+        emoji: isEasterEgg ? EASTER_EGG_EMOJI : state.obstacleEmoji,
         spawnTime: Date.now(),
-        hasBeenHit: false
+        hasBeenHit: false,
+        isEasterEgg: isEasterEgg
     };
 
     if (state.isFirestormActive) {
@@ -17,7 +19,11 @@ export function spawnObstacle() {
         console.log("-> spawnObstacle: New obstacle spawned directly into Firestorm.");
     } else {
         state.currentObstacle = newObstacle;
-        console.log(`-> spawnObstacle: New obstacle spawned.`);
+        if (isEasterEgg) {
+            console.log("-> spawnObstacle: An EASTER EGG has appeared!");
+        } else {
+            console.log(`-> spawnObstacle: New obstacle spawned.`);
+        }
     }
 }
 
