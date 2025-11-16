@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.5.16",
+        "date": "2025-11-16",
+        "changes": [
+            "fix(gamepad): Resolved a series of complex bugs related to the gamepad's interaction with the new audio preloader and fullscreen mode. This includes fixing unresponsive in-game controls, ensuring the pause/unpause and reset functions work reliably in all states (including fullscreen), and preventing the gamepad from losing focus after re-entering fullscreen mode.",
+            "feat(audio): Added a sound effect to the 'Start Game' button on the preloader.",
+            "feat(audio): Added a 'beep' sound effect to the 'Load Custom Data' button and the skill upgrade modal's close button.",
+            "feat(ui): Implemented a favicon for the game."
+        ]
+    },
+    {
         "version": "1.5.15",
         "date": "2025-11-16",
         "changes": [
@@ -91,21 +101,6 @@
             "feat(gameplay): Implemented a feature to automatically pause the game and its audio when the browser tab loses focus or is minimized.",
             "feat(privacy): Enhanced user privacy by preventing the game from running in the background, which could potentially capture audio or screen information without the user's knowledge.",
             "fix(ux): Improved the user experience by preventing the game from continuing to play audio when the user has switched to another tab or locked their screen."
-        ]
-    },
-    {
-        "version": "1.5.02",
-        "date": "2025-11-09",
-        "changes": [
-            "feat(gameplay): Added full gamepad support for gameplay and UI navigation.",
-            "feat(gameplay): Created a new `gamepad.js` module to handle all controller input, running in a separate loop to ensure responsiveness.",
-            "feat(ui): Implemented UI navigation via D-pad, allowing selection of buttons and dropdowns.",
-            "feat(ui): Added a UI indicator to show when a gamepad is connected.",
-            "feat(gameplay): Mapped all core player moves to an intuitive controller layout, including bumpers and triggers.",
-            "feat(gameplay): Added a gamepad cheat code (Left + Right Bumper) to grant maximum energy.",
-            "feat(gameplay): Unified the 'Back' button and 'Escape' key behavior to intelligently exit fullscreen or reset the game.",
-            "fix(gamepad): Resolved multiple cross-browser compatibility issues, ensuring D-pad navigation works in both Chrome and Edge.",
-            "fix(gamepad): Fixed numerous state management bugs that caused the controller to become unresponsive after pausing, resetting, or changing button mappings."
         ]
     }
 ]
