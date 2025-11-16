@@ -1,4 +1,5 @@
 import state from './state.js';
+import { ENERGY_SETTINGS } from '../constants.js';
 
 export const GRASS_ANIMATION_INTERVAL_MS = 100;
 
@@ -7,6 +8,21 @@ export const GRASS_ANIMATION_INTERVAL_MS = 100;
  * Components should import this to get the current state.
  */
 export const gameState = state;
+
+/**
+ * Consumes energy for a skill, if available.
+ * @param {object} state - The current game state.
+ * @param {string} skillName - The name of the skill to consume energy for.
+ * @returns {boolean} - True if energy was consumed, false otherwise.
+ */
+export function consumeEnergy(state, skillName) {
+    const energyCost = ENERGY_SETTINGS.ENERGY_COSTS[skillName];
+    if (state.playerEnergy >= energyCost) {
+        state.playerEnergy -= energyCost;
+        return true;
+    }
+    return false;
+}
 
 /**
  * =================================================================

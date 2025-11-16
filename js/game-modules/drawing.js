@@ -7,6 +7,7 @@ import { drawClouds } from './drawing/world.js';
 import { createFireExplosion } from './drawing/effects.js'; // Only keep creation functions here
 import { drawParticlesAndEffects, clearCanvas, drawBackground, drawGameObjects, drawUIOverlaysAndEffects } from './drawing/renderer.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
+import { molotovSkill } from './skills/molotov.js';
 
 export let isInitialLoad = true;
 export function setInitialLoad(value) {
@@ -56,35 +57,8 @@ export function draw() {
         ctx.fillRect(particle.x, particle.y, 5, 5);
     }
 
-    // Draw Molotov Cocktails
-    for (const cocktail of gameState.molotovCocktails) {
-        if (cocktail.isBursting) {
-            for (const p of cocktail.burstParticles) {
-                ctx.fillStyle = `rgba(255, ${Math.random() * 150}, 0, ${p.alpha})`;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        } else if (cocktail.isSmashing) {
-            // Draw smashing glass particles
-            for (let i = 0; i < 10; i++) {
-                ctx.fillStyle = `rgba(200, 200, 200, ${1 - cocktail.animationProgress})`;
-                ctx.fillRect(
-                    cocktail.x + (Math.random() - 0.5) * 20,
-                    cocktail.y + (Math.random() - 0.5) * 20,
-                    2, 2
-                );
-            }
-        } else { // Still flying
-            ctx.fillStyle = 'red'; // Molotov body
-            ctx.beginPath();
-            ctx.arc(cocktail.x, cocktail.y, 8, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = 'orange'; // Flame
-            ctx.beginPath();
-            ctx.arc(cocktail.x, cocktail.y - 8, 5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
+// Draw Molotov Cocktails
+for (const cocktail of gameState.molotovCocktails) {
+    molotovSkill.draw(cocktail, ctx);
+}
 }

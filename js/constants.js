@@ -197,7 +197,7 @@ export const ANIMATION_SOUND_MAP = {
     'shatter': 'fx/shatter.mp3',
     'incinerate': 'fx/incinerate.mp3',
     'shotgun-blast': 'fx/shotgun-blast.mp3',
-    'molatov-cocktail-hurl': 'fx/molatov-cocktail-hurl.mp3',
+    'molotov-cocktail-hurl': 'fx/molotov-cocktail-hurl.mp3',
     'engulfed-crackling': 'fx/engulfed-crackling.mp3',
     'fireball': 'fx/fireball.mp3',
     'firestorm': 'fx/firestorm.mp3',

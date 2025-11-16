@@ -19,12 +19,13 @@ import { displayLeaderboard } from './ui-modules/leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll, startShotgunBlast, startMolotovCocktail } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll, startShotgunBlast } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted } from './audio.js';
 import { initGamepad } from './game-modules/gamepad.js';
+import { molotovSkill } from './game-modules/skills/molotov.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -570,51 +571,48 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // --- JUMP & PAUSE CONTROLS ---
+        // --- JUMP & PAUSE CONTROLS ---
 
 
 
-    const skillActionMap = {
-
-        firestorm: startFirestorm,
-
-        fireSpinner: startFireSpinner,
-
-        fieryGroundPound: startFieryGroundPound,
-
-        fireStomper: startFireStomper,
-
-        mageSpinner: startMageSpinner,
-
-        fieryHoudini: startFieryHoudini,
-
-        blinkStrike: startBlinkStrike,
-
-        jetstreamDash: startJetstreamDash,
-
-        echoSlam: startEchoSlam,
-
-                fireballRoll: startFireballRoll,
-
-                shotgunBlast: startShotgunBlast,
-
-                molotovCocktail: startMolotovCocktail
-
-                // Add other skills here as they are implemented
-
-            };
+    
 
 
 
-    function handleSpecialMove() {
+        const skillActionMap = {
+    firestorm: startFirestorm,
+    fireSpinner: startFireSpinner,
+    fieryGroundPound: startFieryGroundPound,
+    fireStomper: startFireStomper,
+    mageSpinner: startMageSpinner,
+    fieryHoudini: startFieryHoudini,
+    blinkStrike: startBlinkStrike,
+    jetstreamDash: startJetstreamDash,
+    echoSlam: startEchoSlam,
+    fireballRoll: startFireballRoll,
+    shotgunBlast: startShotgunBlast,
+    molotovCocktail: () => molotovSkill.activate(gameState),
+};
 
-        const activeSkill = gameState.playerStats.activeArmorySkill;
 
-        if (activeSkill && skillActionMap[activeSkill]) {
 
-            skillActionMap[activeSkill](gameState);
+            function handleSpecialMove() {
 
-        } else {
+
+
+                const activeSkill = gameState.playerStats.activeArmorySkill;
+
+
+
+                if (activeSkill && skillActionMap[activeSkill]) {
+
+
+
+                    skillActionMap[activeSkill](gameState);
+
+
+
+                } else {
 
             // Default action if no skill is selected or if the skill is not in the map
 
