@@ -256,17 +256,35 @@ export function animate(timestamp) {
         deltaTime = 100;
     }
 
-    updateEnvironmentalEffects(deltaTime);
+        updateEnvironmentalEffects(deltaTime);
 
     
 
-    
+                // Passive energy drain, only when the game is running and not paused
 
     
 
+                if (gameState.gameRunning && !gameState.isPaused) {
 
+    
 
-    const targetSegmentDuration = currentHurdle.visualDurationMs / gameState.intendedSpeedMultiplier;
+                    const passiveDrain = gameState.passiveDrainRate * gameState.energyRegenMultiplier;
+
+    
+
+                    // console.log(`[DEBUG] animate (Passive Drain): Draining ${passiveDrain}. Current energy: ${gameState.playerEnergy}`);
+
+    
+
+                    setPlayerEnergy(gameState.playerEnergy - passiveDrain);
+
+    
+
+                }
+
+    
+
+        const targetSegmentDuration = currentHurdle.visualDurationMs / gameState.intendedSpeedMultiplier;
 
     if (gameState.manualJumpOverride.isActive) {
         const elapsed = Date.now() - gameState.manualJumpOverride.startTime;

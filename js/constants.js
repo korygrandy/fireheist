@@ -148,7 +148,7 @@ export const DIFFICULTY_SETTINGS = {
         ACCELERATOR_FREQUENCY_PERCENT: 50, // More frequent
         energyRegenMultiplier: 2.0,
         maxPlayerEnergy: 200,
-        passiveDrainRate: 1.0 // Slower drain
+        passiveDrainRate: 0.0125 // Baseline drain
     },
     'Novice': { // Formerly Normal
         COLLISION_RANGE_X: 35,
@@ -157,7 +157,7 @@ export const DIFFICULTY_SETTINGS = {
         ACCELERATOR_FREQUENCY_PERCENT: 25, // Medium frequency
         energyRegenMultiplier: 1.0,
         maxPlayerEnergy: 100,
-        passiveDrainRate: 2.0 // Medium drain
+        passiveDrainRate: 0.02244375 // Additional 10% reduction for Novice
     },
     'Pro': { // Formerly Hard
         COLLISION_RANGE_X: 50,
@@ -166,7 +166,7 @@ export const DIFFICULTY_SETTINGS = {
         ACCELERATOR_FREQUENCY_PERCENT: 10, // Less frequent
         energyRegenMultiplier: 0.5,
         maxPlayerEnergy: 50,
-        passiveDrainRate: 4.0 // Faster drain
+        passiveDrainRate: 0.015 // Half the previous drain for Pro
     }
 };
 

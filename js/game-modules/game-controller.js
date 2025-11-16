@@ -257,6 +257,7 @@ export function startGame() {
         document.body.style.backgroundColor = '#000';
     }
 
+    setPlayerEnergy(gameState.maxPlayerEnergy); // Ensure energy starts at max
     requestAnimationFrame(animate);
     gameCanvas.focus(); // Set focus to the canvas when the game starts
     console.log("-> START GAME: Animation loop started.");
