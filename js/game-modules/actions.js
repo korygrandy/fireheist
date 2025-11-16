@@ -1,31 +1,10 @@
 import { createHoudiniPoof, createFieryHoudiniPoof, createMeteorStrikeEffect, createGroundPoundEffect, createShatterEffect } from './drawing/effects.js';
-import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS, OBSTACLE_WIDTH } from '../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS, OBSTACLE_WIDTH, JUMP_DURATIONS } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, setScreenFlash } from './state-manager.js';
 import { fieryGroundPoundUpgradeEffects, fireSpinnerUpgradeEffects, fieryHoudiniUpgradeEffects, firestormUpgradeEffects } from './skill-upgrades.js';
 
-const JUMP_DURATIONS = {
-    hurdle: 500,
-    specialMove: 500,
-    dive: 500,
-    corkscrewSpin: 500,
-    scissorKick: 500,
-    phaseDash: 600,
-    hover: 1000,
-    groundPound: 600,
-    fieryGroundPound: 600, // Same duration as regular ground pound for now
-    fireStomper: 600,
-    cartoonScramble: 800,
-    moonwalk: 700,
-    shockwave: 400,
-    firestorm: 10000, // 10 seconds active time
-    fireMage: FIRE_MAGE_DURATION_MS, // Duration for Fire Mage mode
-    fieryHoudini: FIERY_HOUDINI_DURATION_MS,
-    blinkStrike: BLINK_STRIKE_DURATION_MS,
-    jetstreamDash: JETSTREAM_DASH_DURATION_MS,
-    echoSlam: ECHO_SLAM_DURATION_MS,
-    fireballRoll: FIREBALL_ROLL_DURATION_MS
-};
+
 
 // Define upgrade effects for Fire Spinner
 
@@ -74,33 +53,7 @@ export function castFireball(state) {
     console.log("-> castFireball: Fireball launched!");
 }
 
-export function startFireSpinner(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFireSpinnerOnCooldown) return;
-    if (state.playerEnergy <= state.maxPlayerEnergy * 0.5) {
-        console.log("-> startFireSpinner: Not enough energy to activate. Requires > 50%.");
-        return;
-    }
 
-    const now = Date.now();
-    if (now - state.fireSpinnerLastActivationTime < state.fireSpinnerCooldown) {
-        console.log("-> startFireSpinner: Fire Spinner is on cooldown.");
-        return;
-    }
-
-    state.jumpState.isFireSpinner = true;
-    state.jumpState.fireSpinnerDuration = JUMP_DURATIONS.firestorm;
-    state.fireSpinnerLastActivationTime = now;
-    state.isFireSpinnerOnCooldown = true; // Cooldown starts immediately
-    state.isFireSpinnerDrainingEnergy = true;
-
-    // Calculate modified drain duration based on skill level
-    const baseDrainDuration = JUMP_DURATIONS.firestorm; // Base duration is 10 seconds
-    state.fireSpinnerDrainEndTime = now + getSkillModifiedValue(baseDrainDuration, 'fireSpinner', fireSpinnerUpgradeEffects, state);
-
-    initiateJump(state, JUMP_DURATIONS.firestorm);
-    playAnimationSound('fireball'); // Placeholder sound
-    console.log("-> startFireSpinner: Fire Spinner initiated.");
-}
 
 export function startMageSpinner(state) {
     if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive || state.isMageSpinnerOnCooldown) return;

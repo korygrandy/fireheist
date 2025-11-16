@@ -281,26 +281,7 @@ export function drawObstacle(obstacle, angleRad) {
     ctx.restore();
 }
 
-export function drawFireSpinner(playerX, playerY) {
-    if (!gameState.jumpState.isFireSpinner && !gameState.isMageSpinnerActive) return;
 
-    const numFireballs = 12;
-    const orbitRadius = 50;
-    const rotationSpeed = 0.1;
-    const angle = gameState.frameCount * rotationSpeed;
-
-    for (let i = 0; i < numFireballs; i++) {
-        const fireballAngle = angle + (i * (Math.PI * 2 / numFireballs));
-        const x = playerX + orbitRadius * Math.cos(fireballAngle);
-        const y = playerY - STICK_FIGURE_TOTAL_HEIGHT / 2 + orbitRadius * Math.sin(fireballAngle);
-
-        ctx.save();
-        ctx.globalAlpha = 0.8 + 0.2 * Math.sin(gameState.frameCount * 0.2 + i);
-        ctx.font = '24px Arial';
-        ctx.fillText('🔥', x, y);
-        ctx.restore();
-    }
-}
 
 export function drawIncineration(obstacle, angleRad) {
     // If the obstacle was hit by a molotov, its own explosion is enough.

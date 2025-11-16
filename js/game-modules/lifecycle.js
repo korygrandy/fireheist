@@ -131,9 +131,6 @@ import {
     setHoudini,
     setHoudiniDuration,
     setHoudiniPhase,
-    setFireSpinner,
-    setFireSpinnerDuration,
-    setFireSpinnerOnCooldown,
     setBlinkStrike,
     setBlinkStrikeDuration,
     setPlayerIsInvisible,
@@ -176,6 +173,7 @@ import { checkShotgunCollision, checkMolotovCollision } from './collision.js';
 import { molotovSkill } from './skills/molotov.js';
 import { shotgunSkill } from './skills/shotgun.js';
 import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
+import { fireSpinnerSkill } from './skills/fireSpinner.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -268,16 +266,6 @@ export function animate(timestamp) {
         if (remainingTime <= 0) {
             setPlayerEnergy(0);
             setFirestormDrainingEnergy(false);
-        } else {
-            const energyToDrain = gameState.playerEnergy;
-            const drainRate = energyToDrain / remainingTime;
-            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
-        }
-    } else if (gameState.isFireSpinnerDrainingEnergy) {
-        const remainingTime = gameState.fireSpinnerDrainEndTime - Date.now();
-        if (remainingTime <= 0) {
-            setPlayerEnergy(0);
-            setFireSpinnerDrainingEnergy(false);
         } else {
             const energyToDrain = gameState.playerEnergy;
             const drainRate = energyToDrain / remainingTime;
@@ -892,6 +880,8 @@ export function animate(timestamp) {
         fieryHoudiniSkill.update(gameState, deltaTime);
     }
 
+    fireSpinnerSkill.update(gameState, deltaTime);
+
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);
         if (gameState.jumpState.blinkStrikeDuration <= 0) {
@@ -932,20 +922,7 @@ export function animate(timestamp) {
         }
     }
 
-    if (gameState.jumpState.isFireSpinner) {
-        setFireSpinnerDuration(gameState.jumpState.fireSpinnerDuration - deltaTime);
-        if (gameState.jumpState.fireSpinnerDuration <= 0) {
-            setFireSpinner(false);
-        }
-    }
 
-    if (gameState.isFireSpinnerOnCooldown) {
-        const now = Date.now();
-        if (now - gameState.fireSpinnerLastActivationTime > gameState.fireSpinnerCooldown) {
-            setFireSpinnerOnCooldown(false);
-            console.log("-> FIRE SPINNER: Cooldown finished. Ready.");
-        }
-    }
 
     for (let i = gameState.incineratingObstacles.length - 1; i >= 0; i--) {
         const obstacle = gameState.incineratingObstacles[i];

@@ -1,11 +1,12 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, OBSTACLE_EMOJI_Y_OFFSET, FIREBALL_SIZE, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS } from '../../constants.js';
 import { drawCityscape } from './environmental-effects.js';
-import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawFireSpinner, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
+import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFireExplosion, drawJetstreamParticles, drawAshParticles } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure, drawFireShield } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags } from './overlays.js';
+import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -118,7 +119,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad) {
     if (gameState.isFireShieldActive) {
         drawFireShield(currentX, currentY);
     }
-    drawFireSpinner(currentX, currentY);
+    fireSpinnerSkill.draw(ctx, gameState, currentX, currentY);
 
     if (gameState.jumpState.isFieryGroundPound && !gameState.jumpState.groundPoundEffectTriggered) {
         createFireExplosion(currentX, currentY + STICK_FIGURE_TOTAL_HEIGHT / 2);

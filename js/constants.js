@@ -81,6 +81,29 @@ export const JETSTREAM_DASH_DURATION_MS = 5000;
 export const ECHO_SLAM_DURATION_MS = 600;
 export const FIREBALL_ROLL_DURATION_MS = 8000;
 
+export const JUMP_DURATIONS = {
+    hurdle: 500,
+    specialMove: 500,
+    dive: 500,
+    corkscrewSpin: 500,
+    scissorKick: 500,
+    phaseDash: 600,
+    hover: 1000,
+    groundPound: 600,
+    fieryGroundPound: 600, // Same duration as regular ground pound for now
+    fireStomper: 600,
+    cartoonScramble: 800,
+    moonwalk: 700,
+    shockwave: 400,
+    firestorm: 10000, // 10 seconds active time
+    fireMage: 5000, // Duration for Fire Mage mode
+    fieryHoudini: 800,
+    blinkStrike: 300,
+    jetstreamDash: 5000,
+    echoSlam: 600,
+    fireballRoll: 8000
+};
+
 export const ENERGY_SETTINGS = {
     REGEN_RATE: 0.1, // Energy points per frame
     HOVER_DRAIN_RATE: 5, // Energy points per second for hover
