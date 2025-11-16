@@ -23,7 +23,7 @@ import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscr
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
-import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted, preloadAllAudio } from './audio.js';
+import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted, preloadCriticalAudio, preloadSecondaryAudio, playAmbientSound, ambientMusic } from './audio.js';
 import { initGamepad } from './game-modules/gamepad.js';
 import { molotovSkill } from './game-modules/skills/molotov.js';
 import { shotgunSkill } from './game-modules/skills/shotgun.js';
@@ -56,19 +56,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show preloader immediately
     preloaderOverlay.classList.remove('hidden');
 
-    // Preload all audio assets
-    await preloadAllAudio();
+    // Preload critical audio assets
+    await preloadCriticalAudio();
 
-    // Once audio is loaded, hide loading message and show start button
+    // Once critical audio is loaded, hide loading message and show start button
     loadingMessage.classList.add('hidden');
     preloaderMessage.classList.remove('hidden');
     preloaderStartButton.classList.remove('hidden');
 
-    preloaderStartButton.addEventListener('click', () => {
+    preloaderStartButton.addEventListener('click', async () => {
         preloaderOverlay.classList.add('hidden');
-        // Start ambient music for the selected theme
+        // Ensure Tone.js context is running before playing audio
+        if (Tone.context.state !== 'running') {
+            await Tone.start();
+            console.log("-> Tone.js audio context started.");
+        }
+
+        // Start ambient music for the selected theme. The function is now smart enough to not restart the preloaded track.
         playAmbientSound(gameState.selectedTheme);
         console.log("-> Preloader: Start Game button clicked. Ambient music started.");
+
+        // Preload secondary audio in the background
+        preloadSecondaryAudio();
     });
 
     // Delegated event listener for the daily challenge start button

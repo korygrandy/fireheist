@@ -10,6 +10,7 @@ const MUTE_STORAGE_KEY = 'fireHeistMuteSetting';
 export let isMuted = false;
 export let backgroundMusic = null;
 export let ambientMusic = null;
+export let currentAmbientTheme = null;
 export const animationPlayers = {}; // Object to hold Tone.Player instances for animations
 
 export const playerActionsBus = new Tone.Channel(-10).toDestination();
@@ -164,25 +165,49 @@ export function preloadAnimationSounds() {
     return Promise.all(loadingPromises);
 }
 
-export function preloadAllAudio() {
-    console.log("-> AUDIO: Starting to preload all audio assets...");
-    const allAudioPromises = [
-        preloadGameStartSound(),
-        preloadAnimationSounds(),
-        // Preload other Tone.Player instances directly
-        quackSound.loaded,
-        powerUpSound.loaded,
+export function preloadSecondaryAudio() {
+    console.log("-> AUDIO: Starting to preload secondary audio assets...");
+    const secondaryPromises = [
+        ...Object.values(animationPlayers).map(player => player.loaded),
         winnerSound.loaded,
         loserSound.loaded,
-        pauseGameSound.loaded,
         ...collisionSounds.map(sound => sound instanceof Tone.Player ? sound.loaded : Promise.resolve())
     ];
 
-    return Promise.all(allAudioPromises).then(() => {
-        console.log("-> AUDIO: All audio assets preloaded successfully.");
+    return Promise.all(secondaryPromises).then(() => {
+        console.log("-> AUDIO: All secondary audio assets preloaded successfully.");
     }).catch(error => {
-        console.error("-> AUDIO.ERROR: Failed to preload all audio assets:", error);
-        throw error; // Re-throw to propagate the error
+        console.error("-> AUDIO.ERROR: Failed to preload secondary audio assets:", error);
+        throw error;
+    });
+}
+
+export function preloadCriticalAudio() {
+    console.log("-> AUDIO: Starting to preload critical audio assets...");
+    const criticalAudioPromises = [
+        gameStartSound.loaded,
+        pauseGameSound.loaded,
+        quackSound.loaded,
+        powerUpSound.loaded
+    ];
+
+    // Preload the default theme's ambient sound
+    const defaultAmbientUrl = THEME_AMBIENT_SOUND_MAP['grass'];
+    if (defaultAmbientUrl) {
+        currentAmbientTheme = 'grass'; // Set the current theme
+        ambientMusic = new Tone.Player({
+            url: defaultAmbientUrl,
+            loop: true,
+            volume: -25
+        }).connect(ambientBus);
+        criticalAudioPromises.push(ambientMusic.loaded);
+    }
+
+    return Promise.all(criticalAudioPromises).then(() => {
+        console.log("-> AUDIO: All critical audio assets preloaded successfully.");
+    }).catch(error => {
+        console.error("-> AUDIO.ERROR: Failed to preload critical audio assets:", error);
+        throw error;
     });
 }
 
@@ -245,40 +270,49 @@ export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
 export function playAmbientSound(themeName) {
     console.log(`-> playAmbientSound: Called with themeName: '${themeName}'.`);
 
+    // If the correct sound is already loaded and ready, just play it.
+    if (currentAmbientTheme === themeName && ambientMusic && ambientMusic.loaded && ambientMusic.state !== 'started') {
+        if (!isMuted) {
+            ambientMusic.start();
+            console.log(`-> playAmbientSound: Starting preloaded ambient sound for '${themeName}'.`);
+        }
+        return;
+    }
+
+    // If the requested theme is already playing, do nothing.
+    if (currentAmbientTheme === themeName && ambientMusic && ambientMusic.state === 'started') {
+        console.log(`-> playAmbientSound: Ambient sound for '${themeName}' is already playing.`);
+        return;
+    }
+
+    // If a different sound is playing, or no sound, dispose of the old one.
     if (ambientMusic) {
         if (ambientMusic.state === 'started') {
             ambientMusic.stop();
-            console.log('-> playAmbientSound: Stopped previous ambient music.');
         }
         ambientMusic.dispose();
-        console.log('-> playAmbientSound: Disposed of previous ambient music player.');
     }
 
     const ambientUrl = THEME_AMBIENT_SOUND_MAP[themeName];
-    console.log(`-> playAmbientSound: Resolved ambient URL: '${ambientUrl}'.`);
+    currentAmbientTheme = themeName; // Set the new theme
 
     if (ambientUrl) {
         ambientMusic = new Tone.Player({
             url: ambientUrl,
             loop: true,
-            volume: -25, // Always create with audible volume
-            onload: () => console.log(`-> AUDIO.SUCCESS: Ambient sound for '${themeName}' loaded successfully. Player state: ${ambientMusic.state}`),
+            volume: -25,
+            onload: () => {
+                console.log(`-> AUDIO.SUCCESS: Ambient sound for '${themeName}' loaded.`);
+                if (!isMuted) {
+                    ambientMusic.start();
+                    console.log(`-> playAmbientSound: Started newly loaded ambient sound for '${themeName}'.`);
+                }
+            },
             onerror: (e) => console.error(`-> AUDIO.ERROR: Error loading ambient sound for '${themeName}':`, e)
         }).connect(ambientBus);
-
-        console.log(`-> playAmbientSound: Created new Tone.Player for ambient sound. Initial state: ${ambientMusic.state}, Volume: ${ambientMusic.volume.value}`);
-        console.log(`-> playAmbientSound: Ambient bus volume is currently: ${ambientBus.volume.value}`);
-
-        if (!isMuted) {
-            Tone.loaded().then(() => {
-                ambientMusic.start();
-                console.log(`-> playAmbientSound: Called ambientMusic.start(). Player state is now: ${ambientMusic.state}`);
-            });
-        } else {
-            console.log('-> playAmbientSound: Game is muted, so not starting ambient sound automatically.');
-        }
     } else {
-        ambientMusic = null; // No ambient sound for this theme
+        ambientMusic = null;
+        currentAmbientTheme = null;
         console.log(`-> playAmbientSound: No ambient sound defined for theme '${themeName}'.`);
     }
 }
