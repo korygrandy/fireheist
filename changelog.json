@@ -1,5 +1,12 @@
 [
     {
+        "version": "1.5.18",
+        "date": "2025-11-16",
+        "changes": [
+            "feat(easter-egg): Implemented an easter egg obstacle (\"🥚\") that has a small chance to spawn instead of a regular obstacle. Colliding with the easter egg triggers a special console log message and prevents normal collision penalties, serving as a placeholder for future mini-game integration."
+        ]
+    },
+    {
         "version": "1.5.17",
         "date": "2025-11-16",
         "changes": [
