@@ -19,7 +19,7 @@ import { displayLeaderboard } from './ui-modules/leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireStomper, startFireMage, castFireball, startMageSpinner, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireStomper, castFireball, startMageSpinner, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
@@ -31,6 +31,7 @@ import { fieryHoudiniSkill } from './game-modules/skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './game-modules/skills/fireSpinner.js';
 import { firestormSkill } from './game-modules/skills/firestorm.js';
 import { fieryGroundPoundSkill } from './game-modules/skills/fieryGroundPound.js';
+import { fireMageSkill } from './game-modules/skills/fireMage.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -619,17 +620,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 } else {
 
-            // Default action if no skill is selected or if the skill is not in the map
+                        // Default action if no skill is selected or if the skill is not in the map
 
-            if (gameState.isFireMageActive) {
+                        if (gameState.isFireMageActive) {
 
-                castFireball(gameState);
+                            castFireball(gameState);
 
-            } else {
+                        } else {
 
-                startFireMage(gameState);
+                            fireMageSkill.activate(gameState);
 
-            }
+                        }
 
         }
 

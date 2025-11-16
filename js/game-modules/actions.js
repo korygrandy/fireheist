@@ -11,25 +11,7 @@ import { fieryGroundPoundUpgradeEffects, fireSpinnerUpgradeEffects, fieryHoudini
 
 
 
-export function startFireMage(state) {
-    if (!state.gameRunning || state.isPaused || state.isFireMageActive || state.isFireMageOnCooldown) return;
 
-    const now = Date.now();
-    if (now - state.fireMageLastActivationTime < FIRE_MAGE_COOLDOWN_MS) {
-        console.log("-> startFireMage: Fire Mage is on cooldown.");
-        return;
-    }
-
-    if (!consumeEnergy(state, 'fireMage', FIRE_MAGE_ENERGY_COST)) return;
-
-    state.isFireMageActive = true;
-    state.fireMageEndTime = now + FIRE_MAGE_DURATION_MS;
-    state.fireMageLastActivationTime = now; // Start cooldown from now
-    state.isFireMageOnCooldown = true; // Cooldown starts immediately
-
-    playAnimationSound('fireball'); // Placeholder sound for activation
-    console.log("-> startFireMage: Fire Mage mode initiated.");
-}
 
 export function castFireball(state) {
     if (!state.gameRunning || state.isPaused || (!state.isFireMageActive && !state.isMageSpinnerActive)) return;

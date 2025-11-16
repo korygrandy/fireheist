@@ -9,6 +9,7 @@ import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBa
 import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
 import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
+import { fireMageSkill } from '../skills/fireMage.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -122,17 +123,9 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
     }
     fireSpinnerSkill.draw(ctx, gameState, currentX, currentY);
     fieryGroundPoundSkill.draw(ctx, gameState, currentX, currentY);
+    fireMageSkill.draw(ctx, gameState, currentX, currentY);
 
-    if (gameState.isFireMageActive) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(currentX, currentY - STICK_FIGURE_TOTAL_HEIGHT / 2, STICK_FIGURE_TOTAL_HEIGHT * 0.8, 0, Math.PI * 2, false);
-        ctx.fillStyle = 'rgba(255, 100, 0, 0.3)';
-        ctx.shadowColor = 'orange';
-        ctx.shadowBlur = 20;
-        ctx.fill();
-        ctx.restore();
-    }
+
 
     gameState.incineratingObstacles.forEach(obstacle => drawIncineration(obstacle, groundAngleRad));
 

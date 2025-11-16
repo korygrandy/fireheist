@@ -168,6 +168,7 @@ import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './skills/fireSpinner.js';
 import { firestormSkill } from './skills/firestorm.js';
 import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
+import { fireMageSkill } from './skills/fireMage.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -290,18 +291,7 @@ export function animate(timestamp) {
         setPlayerEnergy(Math.max(0, gameState.playerEnergy - energyDrain));
     }
 
-    if (gameState.isFireMageActive && Date.now() > gameState.fireMageEndTime) {
-        setFireMageActive(false);
-        console.log("-> Fire Mage mode ended.");
-    }
 
-    if (gameState.isFireMageOnCooldown) {
-        const now = Date.now();
-        if (now - gameState.fireMageLastActivationTime > FIRE_MAGE_COOLDOWN_MS) {
-            setFireMageOnCooldown(false);
-            console.log("-> Fire Mage: Cooldown finished. Ready.");
-        }
-    }
 
     if (gameState.isMageSpinnerActive) {
         const now = Date.now();
@@ -814,6 +804,7 @@ export function animate(timestamp) {
     fireSpinnerSkill.update(gameState, deltaTime);
     firestormSkill.update(gameState, deltaTime);
     fieryGroundPoundSkill.update(gameState, deltaTime);
+    fireMageSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);

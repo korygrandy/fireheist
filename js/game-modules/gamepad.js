@@ -14,7 +14,7 @@ import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
     startFireStomper, startMageSpinner, 
-    castFireball, startFireMage, startMoonwalk, startPhaseDash, 
+    castFireball, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
     startCartoonScramble, startShockwave, startHurdle, startDive,
     startMeteorStrike, startHoudini, startBlinkStrike, startJetstreamDash,
@@ -29,6 +29,7 @@ import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './skills/fireSpinner.js';
 import { firestormSkill } from './skills/firestorm.js';
 import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
+import { fireMageSkill } from './skills/fireMage.js';
 
 let activeGamepad = null;
 let gamepadConnected = false;
@@ -62,7 +63,7 @@ function handleSpecialMove() {
         if (gameState.isFireMageActive) {
             castFireball(gameState);
         } else {
-            startFireMage(gameState);
+            fireMageSkill.activate(gameState);
         }
     }
 }
