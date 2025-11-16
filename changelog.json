@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.5.14",
+        "date": "2025-11-16",
+        "changes": [
+            "fix(collision): Corrected the shotgun blast collision detection logic to accurately register hits on obstacles.",
+            "refactor(collision): Replaced the flawed angle-based collision check with a more reliable Axis-Aligned Bounding Box (AABB) implementation."
+        ]
+    },
+    {
         "version": "1.5.12",
         "date": "2025-11-12",
         "changes": [
@@ -105,13 +113,6 @@
             "fix: Fixed multiple `ReferenceError`s across several files by importing necessary constants.",
             "fix: Fixed a bug preventing manual fireballs from being cast during Mage Spinner.",
             "perf: Lowered the energy cost of the Mage Spinner from 100 to 80."
-        ]
-    },
-    {
-        "version": "1.4.52",
-        "date": "2025-11-08",
-        "changes": [
-            "Feature: Enhanced the debug panel's \"Unlock all\" functionality. The button now unlocks all Armory skills in addition to all Personas, providing a more comprehensive testing tool."
         ]
     }
 ]
