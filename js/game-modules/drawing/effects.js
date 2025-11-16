@@ -379,7 +379,7 @@ export function createFieryHoudiniPoof(x, y) {
     for (let i = 0; i < particleCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 4 + 2;
-        gameState.fieryHoudiniParticles.push({
+        gameState.houdiniParticles.push({
             x: x,
             y: y,
             vx: Math.cos(angle) * speed,
@@ -413,29 +413,7 @@ export function drawHoudiniParticles() {
     }
 }
 
-export function drawFieryHoudiniParticles() {
-    for (let i = gameState.fieryHoudiniParticles.length - 1; i >= 0; i--) {
-        const p = gameState.fieryHoudiniParticles[i];
 
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life -= 0.03; // Slower fade for a more lingering effect
-
-        if (p.life <= 0) {
-            gameState.fieryHoudiniParticles.splice(i, 1);
-        } else {
-            ctx.save();
-            ctx.globalAlpha = p.life;
-            ctx.fillStyle = p.color;
-            ctx.shadowColor = 'orange';
-            ctx.shadowBlur = 10;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-    }
-}
 
 export function createFireTrail(x, y) {
     const particleCount = 50;

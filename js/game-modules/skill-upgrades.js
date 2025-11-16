@@ -79,3 +79,32 @@ export const SKILL_UPGRADE_PATHS = {
     },
     // NOTE: Add other skills here as they become upgradeable
 };
+
+// Define upgrade effects for Fire Spinner
+export const fireSpinnerUpgradeEffects = [
+    { level: 2, type: 'percentage', value: 0.10 }, // 10% energy drain reduction
+    { level: 3, type: 'percentage', value: 0.20 }, // 20% energy drain reduction
+    { level: 4, type: 'additive', value: 1000 }, // 1 second duration increase (in ms)
+    { level: 5, type: 'special', value: 'incinerate' } // Special effect: incinerate nearby obstacles
+];
+
+// Define upgrade effects for Fiery Ground Pound
+export const fieryGroundPoundUpgradeEffects = [
+    { level: 2, type: 'additive', value: 0 }, // Placeholder for radius increase (handled visually)
+    { level: 3, type: 'additive', value: -10 }, // Energy cost reduced by 10
+    { level: 4, type: 'additive', value: 0 }, // Placeholder for radius increase (handled visually)
+    { level: 5, type: 'special', value: 'fireTrail' } // Special effect: leaves a fire trail
+];
+
+export const fieryHoudiniUpgradeEffects = [
+    { level: 2, type: 'additive', value: 50 },    // Increased teleport distance
+    { level: 3, type: 'additive', value: -15 },   // Reduced energy cost
+    { level: 4, type: 'special', value: 'invincibility' } // Brief invincibility after reappearing
+];
+
+export const firestormUpgradeEffects = [
+    { level: 2, type: 'percentage', value: 0.15 }, // 15% energy drain reduction
+    { level: 3, type: 'additive', value: 2000 },   // 2 seconds duration increase
+    { level: 4, type: 'special', value: 'widerArea' }, // Wider area of effect
+    { level: 5, type: 'special', value: 'fireShield' } // Periodically spawns a protective fire shield
+];

@@ -14,7 +14,7 @@ import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
     startFirestorm, startFireSpinner, startFieryGroundPound, 
-    startFireStomper, startMageSpinner, startFieryHoudini, 
+    startFireStomper, startMageSpinner, 
     castFireball, startFireMage, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
     startCartoonScramble, startShockwave, startHurdle, startDive,
@@ -26,6 +26,7 @@ import {
     changeInitialSlot, 
     confirmInitialSelection 
 } from './drawing/leaderboard-initials.js';
+import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 
 let activeGamepad = null;
 let gamepadConnected = false;
@@ -44,7 +45,7 @@ const skillActionMap = {
     fieryGroundPound: startFieryGroundPound,
     fireStomper: startFireStomper,
     mageSpinner: startMageSpinner,
-    fieryHoudini: startFieryHoudini,
+    fieryHoudini: () => fieryHoudiniSkill.activate(gameState),
     blinkStrike: startBlinkStrike,
     jetstreamDash: startJetstreamDash,
     echoSlam: startEchoSlam,

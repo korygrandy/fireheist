@@ -1,5 +1,6 @@
 import state from './state.js';
 import { ENERGY_SETTINGS } from '../constants.js';
+import { SKILL_UPGRADE_PATHS } from './skill-upgrades.js';
 
 export const GRASS_ANIMATION_INTERVAL_MS = 100;
 
@@ -22,6 +23,52 @@ export function consumeEnergy(state, skillName) {
         return true;
     }
     return false;
+}
+
+/**
+ * Calculates a modified value for a skill attribute based on its upgrade level.
+ * @param {number} baseValue - The default value of the attribute.
+ * @param {string} skillKey - The key for the skill (e.g., 'fireSpinner').
+ * @param {Array<object>} upgradeEffects - An array of objects defining the upgrades for each level.
+ * @param {object} state - The global game state.
+ * @returns {number} The modified value after applying upgrades.
+ */
+export function getSkillModifiedValue(baseValue, skillKey, upgradeEffects, state) {
+    const skillLevel = state.playerStats.skillLevels[skillKey] || 1;
+    if (skillLevel === 1) return baseValue;
+
+    const upgradePath = SKILL_UPGRADE_PATHS[skillKey];
+    if (!upgradePath) return baseValue;
+
+    let modifiedValue = baseValue;
+
+    // Apply upgrades cumulatively up to the current level
+    for (let level = 2; level <= skillLevel; level++) {
+        const effect = upgradeEffects.find(e => e.level === level);
+        if (effect) {
+            if (effect.type === 'percentage') {
+                // For energy drain reduction, increase duration. E.g., 10% reduction means duration / (1 - 0.10)
+                modifiedValue /= (1 - effect.value);
+            } else if (effect.type === 'additive') {
+                modifiedValue += effect.value; // e.g., value: 1 for 1 second increase
+            }
+        }
+    }
+
+    return modifiedValue;
+}
+
+/**
+ * Initiates a jump for the stick figure with a specified duration.
+ * @param {object} state - The current game state.
+ * @param {number} duration - The duration of the jump in milliseconds.
+ */
+export function initiateJump(state, duration) {
+    state.manualJumpOverride.duration = duration;
+    state.jumpState.isJumping = true;
+    state.jumpState.progress = 0;
+    state.manualJumpOverride.isActive = true;
+    state.manualJumpOverride.startTime = Date.now();
 }
 
 /**
@@ -893,6 +940,22 @@ export function setFireballRollDrainEndTime(time) {
  */
 export function setPlayerIsInvisible(isInvisible) {
     state.playerIsInvisible = isInvisible;
+}
+
+/**
+ * Sets the player's invincibility status.
+ * @param {boolean} isInvincible
+ */
+export function setInvincible(isInvincible) {
+    state.isInvincible = isInvincible;
+}
+
+/**
+ * Sets the end time for the player's invincibility.
+ * @param {number} time
+ */
+export function setInvincibilityEndTime(time) {
+    state.invincibilityEndTime = time;
 }
 
 /**

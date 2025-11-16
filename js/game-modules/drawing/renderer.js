@@ -2,7 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, OBSTACLE_EMOJI_Y_OFFSET, FIREBALL_SIZE, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS } from '../../constants.js';
 import { drawCityscape } from './environmental-effects.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawFireSpinner, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
-import { drawGroundPoundParticles, drawHoudiniParticles, drawFieryHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFireExplosion, drawJetstreamParticles, drawAshParticles } from './effects.js';
+import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, drawFirestormFlashes, drawPlayerEmbers, createFireExplosion, drawJetstreamParticles, drawAshParticles } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure, drawFireShield } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags } from './overlays.js';
@@ -23,7 +23,7 @@ export function drawParticlesAndEffects(activeFireballs, ignitedObstacles, vanis
     drawEnvironmentalEffects();
     drawGroundPoundParticles();
     drawHoudiniParticles();
-    drawFieryHoudiniParticles();
+
     drawMoonwalkParticles();
     drawHoverParticles();
     drawScrambleDust();

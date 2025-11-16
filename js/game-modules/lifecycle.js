@@ -28,8 +28,6 @@ import {
     MAGE_SPINNER_FIREBALL_INTERVAL_MS,
     MAGE_SPINNER_FIREBALL_COUNT,
     MAGE_SPINNER_ENERGY_COST,
-    FIERY_HOUDINI_COOLDOWN_MS,
-    FIERY_HOUDINI_DURATION_MS,
     ACCELERATOR_BASE_SPEED_BOOST,
     JETSTREAM_DASH_DURATION_MS,
     FIREBALL_ROLL_DURATION_MS,
@@ -133,9 +131,6 @@ import {
     setHoudini,
     setHoudiniDuration,
     setHoudiniPhase,
-    setFieryHoudini,
-    setFieryHoudiniDuration,
-    setFieryHoudiniPhase,
     setFireSpinner,
     setFireSpinnerDuration,
     setFireSpinnerOnCooldown,
@@ -169,7 +164,7 @@ import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
 import { castMageSpinnerFireball } from './actions.js';
 import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
-import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFieryHoudiniPoof, createFireTrail, createHoverParticle, createJetstreamParticle } from './drawing/effects.js';
+import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFireTrail, createHoverParticle, createJetstreamParticle } from './drawing/effects.js';
 import { checkCollision, checkAcceleratorCollision, checkProximityEventCollection } from './collision.js';
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
@@ -180,6 +175,7 @@ import { stopGame } from './game-controller.js';
 import { checkShotgunCollision, checkMolotovCollision } from './collision.js';
 import { molotovSkill } from './skills/molotov.js';
 import { shotgunSkill } from './skills/shotgun.js';
+import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -361,13 +357,7 @@ export function animate(timestamp) {
         }
     }
 
-    if (gameState.isFieryHoudiniOnCooldown) {
-        const now = Date.now();
-        if (now - gameState.fieryHoudiniLastActivationTime > FIERY_HOUDINI_COOLDOWN_MS) {
-            setFieryHoudiniOnCooldown(false);
-            console.log("-> Fiery Houdini: Cooldown finished. Ready.");
-        }
-    }
+
 
     const targetSegmentDuration = currentHurdle.visualDurationMs / gameState.intendedSpeedMultiplier;
 
@@ -899,19 +889,7 @@ export function animate(timestamp) {
     }
 
     if (gameState.jumpState.isFieryHoudini) {
-        const previousPhase = gameState.jumpState.fieryHoudiniPhase;
-        setFieryHoudiniDuration(gameState.jumpState.fieryHoudiniDuration - deltaTime);
-
-        if (gameState.jumpState.fieryHoudiniDuration <= FIERY_HOUDINI_DURATION_MS / 2) {
-            setFieryHoudiniPhase('reappearing');
-            if (previousPhase === 'disappearing') {
-                const playerY = GROUND_Y - gameState.jumpState.progress * 200; 
-                createFieryHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
-            }
-        }
-        if (gameState.jumpState.fieryHoudiniDuration <= 0) {
-            setFieryHoudini(false);
-        }
+        fieryHoudiniSkill.update(gameState, deltaTime);
     }
 
     if (gameState.jumpState.isBlinkStrike) {

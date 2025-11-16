@@ -19,7 +19,7 @@ import { displayLeaderboard } from './ui-modules/leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startFieryHoudini, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireSpinner, startFieryGroundPound, startFireStomper, startFirestorm, startFireMage, castFireball, startMageSpinner, startBlinkStrike, startJetstreamDash, startEchoSlam, startFireballRoll } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
@@ -27,6 +27,7 @@ import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound
 import { initGamepad } from './game-modules/gamepad.js';
 import { molotovSkill } from './game-modules/skills/molotov.js';
 import { shotgunSkill } from './game-modules/skills/shotgun.js';
+import { fieryHoudiniSkill } from './game-modules/skills/fieryHoudini.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -586,7 +587,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     fieryGroundPound: startFieryGroundPound,
     fireStomper: startFireStomper,
     mageSpinner: startMageSpinner,
-    fieryHoudini: startFieryHoudini,
+    fieryHoudini: () => fieryHoudiniSkill.activate(gameState),
     blinkStrike: startBlinkStrike,
     jetstreamDash: startJetstreamDash,
     echoSlam: startEchoSlam,

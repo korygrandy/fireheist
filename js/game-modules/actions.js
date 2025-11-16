@@ -1,8 +1,8 @@
 import { createHoudiniPoof, createFieryHoudiniPoof, createMeteorStrikeEffect, createGroundPoundEffect, createShatterEffect } from './drawing/effects.js';
 import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS, OBSTACLE_WIDTH } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
-import { SKILL_UPGRADE_PATHS } from './skill-upgrades.js';
-import { addMolotovCocktail, addShotgunParticle, setScreenFlash } from './state-manager.js';
+import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, setScreenFlash } from './state-manager.js';
+import { fieryGroundPoundUpgradeEffects, fireSpinnerUpgradeEffects, fieryHoudiniUpgradeEffects, firestormUpgradeEffects } from './skill-upgrades.js';
 
 const JUMP_DURATIONS = {
     hurdle: 500,
@@ -28,83 +28,9 @@ const JUMP_DURATIONS = {
 };
 
 // Define upgrade effects for Fire Spinner
-const fireSpinnerUpgradeEffects = [
-    { level: 2, type: 'percentage', value: 0.10 }, // 10% energy drain reduction
-    { level: 3, type: 'percentage', value: 0.20 }, // 20% energy drain reduction
-    { level: 4, type: 'additive', value: 1000 }, // 1 second duration increase (in ms)
-    { level: 5, type: 'special', value: 'incinerate' } // Special effect: incinerate nearby obstacles
-];
 
-// Define upgrade effects for Fiery Ground Pound
-const fieryGroundPoundUpgradeEffects = [
-    { level: 2, type: 'additive', value: 0 }, // Placeholder for radius increase (handled visually)
-    { level: 3, type: 'additive', value: -10 }, // Energy cost reduced by 10
-    { level: 4, type: 'additive', value: 0 }, // Placeholder for radius increase (handled visually)
-    { level: 5, type: 'special', value: 'fireTrail' } // Special effect: leaves a fire trail
-];
 
-const fieryHoudiniUpgradeEffects = [
-    { level: 2, type: 'additive', value: 50 },    // Increased teleport distance
-    { level: 3, type: 'additive', value: -15 },   // Reduced energy cost
-    { level: 4, type: 'special', value: 'invincibility' } // Brief invincibility after reappearing
-];
 
-/**
- * Calculates a modified value for a skill attribute based on its upgrade level.
- * @param {number} baseValue - The default value of the attribute.
- * @param {string} skillKey - The key for the skill (e.g., 'fireSpinner').
- * @param {Array<object>} upgradeEffects - An array of objects defining the upgrades for each level.
- * @param {object} state - The global game state.
- * @returns {number} The modified value after applying upgrades.
- */
-function getSkillModifiedValue(baseValue, skillKey, upgradeEffects, state) {
-    const skillLevel = state.playerStats.skillLevels[skillKey] || 1;
-    if (skillLevel === 1) return baseValue;
-
-    const upgradePath = SKILL_UPGRADE_PATHS[skillKey];
-    if (!upgradePath) return baseValue;
-
-    let modifiedValue = baseValue;
-
-    // Apply upgrades cumulatively up to the current level
-    for (let level = 2; level <= skillLevel; level++) {
-        const effect = upgradeEffects.find(e => e.level === level);
-        if (effect) {
-            if (effect.type === 'percentage') {
-                // For energy drain reduction, increase duration. E.g., 10% reduction means duration / (1 - 0.10)
-                modifiedValue /= (1 - effect.value);
-            } else if (effect.type === 'additive') {
-                modifiedValue += effect.value; // e.g., value: 1 for 1 second increase
-            }
-        }
-    }
-
-    return modifiedValue;
-}
-
-function consumeEnergy(state, actionName, costOverride = null) {
-    let cost = costOverride !== null ? costOverride : (ENERGY_SETTINGS.ENERGY_COSTS[actionName] || ENERGY_SETTINGS.ENERGY_COSTS.default);
-
-    // Apply skill-specific energy cost modifications
-    if (actionName === 'fieryGroundPound') {
-        cost = getSkillModifiedValue(cost, 'fieryGroundPound', fieryGroundPoundUpgradeEffects, state);
-    }
-
-    if (state.playerEnergy >= cost) {
-        state.playerEnergy -= cost;
-        return true;
-    }
-    console.log(`-> ${actionName}: Not enough energy. Have: ${state.playerEnergy}, Need: ${cost}`);
-    return false;
-}
-
-function initiateJump(state, duration) {
-    state.manualJumpOverride.duration = duration;
-    state.jumpState.isJumping = true;
-    state.jumpState.progress = 0;
-    state.manualJumpOverride.isActive = true;
-    state.manualJumpOverride.startTime = Date.now();
-}
 
 export function startFireMage(state) {
     if (!state.gameRunning || state.isPaused || state.isFireMageActive || state.isFireMageOnCooldown) return;
@@ -467,48 +393,7 @@ export function startHoudini(state) {
     console.log("-> startHoudini: Houdini initiated.");
 }
 
-export function startFieryHoudini(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFieryHoudiniOnCooldown) return;
 
-    const now = Date.now();
-    if (now - state.fieryHoudiniLastActivationTime < FIERY_HOUDINI_COOLDOWN_MS) {
-        console.log("-> startFieryHoudini: Fiery Houdini is on cooldown.");
-        return;
-    }
-
-    const skillLevel = state.playerStats.skillLevels.fieryHoudini || 1;
-    const energyCost = getSkillModifiedValue(FIERY_HOUDINI_ENERGY_COST, 'fieryHoudini', fieryHoudiniUpgradeEffects, state);
-
-    if (!consumeEnergy(state, 'fieryHoudini', energyCost)) return;
-
-    const range = getSkillModifiedValue(FIERY_HOUDINI_RANGE, 'fieryHoudini', fieryHoudiniUpgradeEffects, state);
-
-    state.jumpState.isFieryHoudini = true;
-    state.jumpState.fieryHoudiniDuration = FIERY_HOUDINI_DURATION_MS;
-    state.jumpState.fieryHoudiniPhase = 'disappearing';
-    state.fieryHoudiniEndTime = now + FIERY_HOUDINI_DURATION_MS;
-    state.fieryHoudiniLastActivationTime = now;
-    state.isFieryHoudiniOnCooldown = true;
-
-    if (skillLevel >= 4) {
-        state.isInvincible = true;
-        state.invincibilityEndTime = now + FIERY_HOUDINI_DURATION_MS + 300; // Invincible during and 300ms after
-    }
-
-    const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
-    createFieryHoudiniPoof(STICK_FIGURE_FIXED_X + range / 2, playerY - 50);
-
-    // Find and incinerate the current obstacle if it's in range
-    if (state.currentObstacle && state.currentObstacle.x < STICK_FIGURE_FIXED_X + range) {
-        state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
-        state.currentObstacle = null;
-        state.playerStats.obstaclesIncinerated++;
-    }
-
-    initiateJump(state, JUMP_DURATIONS.fieryHoudini);
-    playAnimationSound('fieryHoudini');
-    console.log("-> startFieryHoudini: Fiery Houdini initiated.");
-}
 
 export function startMeteorStrike(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
@@ -595,12 +480,7 @@ export function startBlinkStrike(state) {
     console.log("-> startBlinkStrike: Blink Strike initiated.");
 }
 
-const firestormUpgradeEffects = [
-    { level: 2, type: 'percentage', value: 0.15 }, // 15% energy drain reduction
-    { level: 3, type: 'additive', value: 2000 },   // 2 seconds duration increase
-    { level: 4, type: 'special', value: 'widerArea' }, // Wider area of effect
-    { level: 5, type: 'special', value: 'fireShield' } // Periodically spawns a protective fire shield
-];
+
 
 export function startFirestorm(state) {
     if (!state.gameRunning || state.isFirestormActive) return;

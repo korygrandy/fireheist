@@ -7,8 +7,10 @@
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/gamepad.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/gamepad.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/skill-upgrades.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/skill-upgrades.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/state-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state-manager.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
