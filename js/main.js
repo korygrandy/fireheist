@@ -896,17 +896,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-        // Debug hotkey for environmental effects
+                // Debug hotkey for environmental effects
 
-        if (e.code === 'KeyQ' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
 
-            console.log("-> DEBUG: 'Q' key pressed, calling startThemeEffect...");
+                if (e.code === 'KeyE' && gameState.gameRunning && !gameState.isPaused) {
 
-            startThemeEffect();
 
-        }
+
+                    e.preventDefault();
+
+
+
+                    console.log("-> DEBUG: 'E' key pressed, calling startThemeEffect...");
+
+
+
+                    startThemeEffect();
+
+
+
+                }
 
     });
 

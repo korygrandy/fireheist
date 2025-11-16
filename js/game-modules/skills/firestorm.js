@@ -66,6 +66,29 @@ export const firestormSkill = {
                 }
 
                 const skillLevel = gameState.playerStats.skillLevels.firestorm || 1;
+
+                // Lightning flashes for Level 3+, with increasing intensity
+                if (skillLevel >= 3) {
+                    if (!gameState.firestormNextFlashTime) {
+                        gameState.firestormNextFlashTime = Date.now() + (Math.random() * 1000 + 500); // Initial flash delay
+                    }
+
+                    if (Date.now() >= gameState.firestormNextFlashTime) {
+                        gameState.firestormLightningFlashes.push({
+                            duration: Math.random() * 200 + 50, // 50ms to 250ms
+                            startTime: Date.now()
+                        });
+
+                        let nextFlashDelay;
+                        if (skillLevel >= 4 && Math.random() < 0.6) { // Level 4+ rapid flashes
+                            nextFlashDelay = Math.random() * 100; // 0-100ms
+                        } else { // Level 3 moderate flashes
+                            nextFlashDelay = Math.random() * 400 + 100; // 100-500ms
+                        }
+                        gameState.firestormNextFlashTime = Date.now() + nextFlashDelay;
+                    }
+                }
+
                 if (skillLevel >= 5 && !gameState.isFireShieldActive) {
                     if (!gameState.fireShieldSpawnTimer) {
                         gameState.fireShieldSpawnTimer = 3000;
@@ -120,6 +143,14 @@ export const firestormSkill = {
                 gameState.playerEmberParticles.splice(i, 1);
             }
         }
+
+        // Update lightning flashes
+        for (let i = gameState.firestormLightningFlashes.length - 1; i >= 0; i--) {
+            const flash = gameState.firestormLightningFlashes[i];
+            if (Date.now() - flash.startTime > flash.duration) {
+                gameState.firestormLightningFlashes.splice(i, 1);
+            }
+        }
     },
 
     draw: function(ctx, gameState, playerY) {
@@ -171,6 +202,19 @@ export const firestormSkill = {
             ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
             ctx.fill();
 
+            ctx.restore();
+        }
+
+        // Draw lightning flashes
+        for (const flash of gameState.firestormLightningFlashes) {
+            const elapsed = Date.now() - flash.startTime;
+            const progress = elapsed / flash.duration;
+            const opacity = Math.sin(progress * Math.PI) * 0.5; // Fade in and out
+
+            ctx.save();
+            ctx.globalAlpha = opacity;
+            ctx.fillStyle = 'rgba(255, 100, 0, 0.8)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.restore();
         }
     }

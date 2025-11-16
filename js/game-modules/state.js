@@ -128,6 +128,7 @@ const state = {
     fireShieldEndTime: 0,
     firestormEndTime: 0,
     firestormParticles: [],
+    firestormLightningFlashes: [],
     playerEmberParticles: [],
     fireballRollParticles: [],
     ignitedObstacles: [],
@@ -178,6 +179,7 @@ const state = {
         isActive: false
     },
     playerStats: { // New player stats object
+        skillLevels: {}, // e.g., { 'firestorm': 1, 'shotgun': 2 }
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
         obstaclesIncinerated: 0,
         notifiedArmoryUnlocks: [], // To track shown notifications

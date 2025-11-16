@@ -2,9 +2,9 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, OBSTACLE_EMOJI_Y_OFFSET, FIREBALL_SIZE, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS } from '../../constants.js';
 import { drawCityscape } from './environmental-effects.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
-import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles } from './effects.js';
+import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
-import { drawStickFigure, drawFireShield } from './player.js';
+import { drawStickFigure } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags } from './overlays.js';
 import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
@@ -120,9 +120,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
     }
 
     drawStickFigure(currentX, currentY, gameState.jumpState, groundAngleRad);
-    if (gameState.isFireShieldActive) {
-        drawFireShield(currentX, currentY);
-    }
+    drawFireShield(currentX, currentY);
     fireSpinnerSkill.draw(ctx, gameState, currentX, currentY);
     fieryGroundPoundSkill.draw(ctx, gameState, currentX, currentY);
     fireMageSkill.draw(ctx, gameState, currentX, currentY);

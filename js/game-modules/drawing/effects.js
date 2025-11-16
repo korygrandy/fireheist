@@ -641,8 +641,44 @@ export function createMeteorStrikeEffect(targetObstacle, skillLevel) {
             vx: Math.cos(angle) * speed,
             vy: Math.sin(angle) * speed,
             life: 1.5, // Longer life for a bigger boom
-            size: Math.random() * 8 + 4,
-            color: color
-        });
-    }
-}
+                        size: Math.random() * 8 + 4,
+                        color: color
+                    });
+                }
+            }
+            
+            export function drawFireShield(playerX, playerY) {
+                if (!gameState.isFireShieldActive) return;
+            
+                const shieldRadius = STICK_FIGURE_TOTAL_HEIGHT / 2 + 15;
+                const pulse = Math.sin(Date.now() / 200) * 5; // Gentle pulse effect
+                const currentRadius = shieldRadius + pulse;
+            
+                // Determine opacity based on remaining time
+                const remainingTime = gameState.fireShieldEndTime - Date.now();
+                let opacity = 1;
+                if (remainingTime < 1000) { // Fade out in the last second
+                    opacity = remainingTime / 1000;
+                }
+            
+                ctx.save();
+                ctx.globalAlpha = opacity * 0.5; // Semi-transparent
+            
+                // Outer glow
+                ctx.shadowColor = 'rgba(255, 165, 0, 0.9)';
+                ctx.shadowBlur = 20;
+            
+                // Main shield circle
+                ctx.fillStyle = 'rgba(255, 140, 0, 0.7)';
+                ctx.beginPath();
+                ctx.arc(playerX, playerY, currentRadius, 0, Math.PI * 2);
+                ctx.fill();
+            
+                // Inner, brighter ring
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = `rgba(255, 200, 100, ${opacity * 0.8})`;
+                ctx.stroke();
+            
+                ctx.restore();
+            }
+            

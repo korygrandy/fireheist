@@ -82,7 +82,14 @@ function updateGrassThemeEffects(deltaTime) {
 function drawGrassThemeEffects() {
     if (state.environmentalEffects.raindrops.length === 0) return;
 
-    ctx.strokeStyle = 'rgba(174,194,224,0.5)';
+    let rainColor = 'rgba(174,194,224,0.5)'; // Default whitish color
+
+    // Check if Firestorm Level 2 is active and theme is 'grass'
+    if (state.selectedTheme === 'grass' && (state.playerStats.skillLevels.firestorm || 1) >= 2 && state.isFirestormActive) {
+        rainColor = 'rgba(255, 100, 0, 0.7)'; // Orange color for fiery rain
+    }
+
+    ctx.strokeStyle = rainColor;
     ctx.lineWidth = 1;
     ctx.beginPath();
     for (const drop of state.environmentalEffects.raindrops) {
