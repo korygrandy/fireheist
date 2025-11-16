@@ -12,6 +12,13 @@
 </head>
 <body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
 
+    <!-- Preloader Overlay -->
+    <div id="preloader-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex flex-col items-center justify-center z-50">
+        <div class="text-white text-4xl font-bold mb-8">Loading Audio...</div>
+        <div id="preloader-message" class="hidden text-white text-2xl font-semibold mb-4">Audio Preloading Completed!</div>
+        <button id="preloader-start-button" class="hidden control-btn text-5xl font-extrabold px-12 py-6 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-300">START GAME</button>
+    </div>
+
     <div id="appContainer" class="w-full max-w-7xl space-y-8">
         <div id="debug-panel" class="hidden bg-red-100 border-2 border-red-500 p-4 rounded-lg shadow-lg space-y-4">
             <h2 class="text-xl font-bold text-red-700 text-center">--- DEBUG MODE ---</h2>
@@ -31,7 +38,7 @@
                 </div>
                 <div class="space-y-2">
                     <div class="flex items-center space-x-2">
-                        <input type="number" id="debugIncinerateCountInput" class="w-24 p-1 border rounded" placeholder="Count">
+                        <input type="number" id="debugIncinerateCountInput" clasCan s="w-24 p-1 border rounded" placeholder="Count">
                         <button id="debugSetIncinerateCountBtn" class="control-btn">Set Incinerations</button>
                     </div>
                     <button id="debugAddCashBtn" class="control-btn">Copy Cash Command</button>

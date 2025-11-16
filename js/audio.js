@@ -144,22 +144,48 @@ export function preloadEndgameSounds() {
 }
 
 export function preloadGameStartSound() {
-    gameStartSound.buffer;
+    return gameStartSound.loaded;
 }
 
 export function preloadAnimationSounds() {
+    const loadingPromises = [];
     for (const animationName in ANIMATION_SOUND_MAP) {
         const url = ANIMATION_SOUND_MAP[animationName];
-        animationPlayers[animationName] = new Tone.Player({
+        const player = new Tone.Player({
             url: `./${url}`,
             volume: -10,
             onload: () => console.log(`-> AUDIO: ${animationName} sound loaded.`),
             onerror: (e) => console.error(`-> AUDIO: Error loading ${animationName} sound:`, e)
         }).connect(playerActionsBus);
-        animationPlayers[animationName].mute = isMuted;
-        animationPlayers[animationName].buffer; // Preload the buffer
+        player.mute = isMuted;
+        animationPlayers[animationName] = player;
+        loadingPromises.push(player.loaded);
     }
+    return Promise.all(loadingPromises);
 }
+
+export function preloadAllAudio() {
+    console.log("-> AUDIO: Starting to preload all audio assets...");
+    const allAudioPromises = [
+        preloadGameStartSound(),
+        preloadAnimationSounds(),
+        // Preload other Tone.Player instances directly
+        quackSound.loaded,
+        powerUpSound.loaded,
+        winnerSound.loaded,
+        loserSound.loaded,
+        pauseGameSound.loaded,
+        ...collisionSounds.map(sound => sound instanceof Tone.Player ? sound.loaded : Promise.resolve())
+    ];
+
+    return Promise.all(allAudioPromises).then(() => {
+        console.log("-> AUDIO: All audio assets preloaded successfully.");
+    }).catch(error => {
+        console.error("-> AUDIO.ERROR: Failed to preload all audio assets:", error);
+        throw error; // Re-throw to propagate the error
+    });
+}
+
 
 export function playAnimationSound(animationName) {
     if (isMuted) { return; }

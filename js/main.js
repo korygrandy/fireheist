@@ -23,7 +23,7 @@ import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscr
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
-import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted } from './audio.js';
+import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted, preloadAllAudio } from './audio.js';
 import { initGamepad } from './game-modules/gamepad.js';
 import { molotovSkill } from './game-modules/skills/molotov.js';
 import { shotgunSkill } from './game-modules/skills/shotgun.js';
@@ -48,7 +48,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     console.log("-> DOMContentLoaded: Initializing game components.");
 
+    const preloaderOverlay = document.getElementById('preloader-overlay');
+    const preloaderStartButton = document.getElementById('preloader-start-button');
+    const loadingMessage = preloaderOverlay.querySelector('div');
+    const preloaderMessage = document.getElementById('preloader-message');
 
+    // Show preloader immediately
+    preloaderOverlay.classList.remove('hidden');
+
+    // Preload all audio assets
+    await preloadAllAudio();
+
+    // Once audio is loaded, hide loading message and show start button
+    loadingMessage.classList.add('hidden');
+    preloaderMessage.classList.remove('hidden');
+    preloaderStartButton.classList.remove('hidden');
+
+    preloaderStartButton.addEventListener('click', () => {
+        preloaderOverlay.classList.add('hidden');
+        // Start ambient music for the selected theme
+        playAmbientSound(gameState.selectedTheme);
+        console.log("-> Preloader: Start Game button clicked. Ambient music started.");
+    });
 
     // Delegated event listener for the daily challenge start button
 
@@ -415,15 +436,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // 2. Load initial UI data, then initialize debug panel
+        // 2. Load initial UI data, then initialize debug panel
 
-    await initializeUIData();
 
-    preloadGameStartSound();
 
-    preloadAnimationSounds(); // Preload all animation sounds
+        await initializeUIData();
 
-    initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
+
+
+        initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
 
     initializeDailyChallengeUI(); // Initialize the Daily Challenge UI after all other UI is ready
 
