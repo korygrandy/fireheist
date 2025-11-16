@@ -517,41 +517,7 @@ export function createFirestormFlashes(angleRad) {
     }
 }
 
-export function drawFirestormFlashes() {
-    for (let i = gameState.firestormParticles.length - 1; i >= 0; i--) {
-        const p = gameState.firestormParticles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life -= 0.05;
-        p.size *= 0.95; // Shrink
-        if (p.life <= 0 || p.size <= 0.5) {
-            gameState.firestormParticles.splice(i, 1);
-        } else {
-            ctx.save();
-            ctx.globalAlpha = p.life;
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-    }
-}
 
-export function createPlayerEmbers(playerY) {
-    if (gameState.playerEmberParticles.length >= gameState.MAX_EMBER_PARTICLES) return;
-    const numEmbers = 3 + Math.floor(Math.random() * 3); // Create 3 to 5 embers per call
-    for (let i = 0; i < numEmbers; i++) {
-        gameState.playerEmberParticles.push({
-            x: STICK_FIGURE_FIXED_X + (Math.random() - 0.5) * 30, // Wider spread
-            y: playerY + Math.random() * STICK_FIGURE_TOTAL_HEIGHT,
-            life: 1.2, // Slightly longer lifespan
-            size: Math.random() * 4 + 2, // Slightly larger embers
-            vx: (Math.random() - 0.5) * 1, // More varied velocity
-            vy: (Math.random() - 0.5) * 1
-        });
-    }
-}
 
 export function createFireExplosion(x, y) {
     const particleCount = 50;

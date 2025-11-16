@@ -2,7 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS, ACCELERATOR_DURATION_MS } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import { gameState } from '../state-manager.js';
-import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle, createPlayerEmbers } from './effects.js';
+import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle } from './effects.js';
 
 export function drawStickFigure(x, y, jumpState, angleRad) {
     if (gameState.playerIsInvisible) {

@@ -435,24 +435,7 @@ export function startBlinkStrike(state) {
 
 
 
-export function startFirestorm(state) {
-    if (!state.gameRunning || state.isFirestormActive) return;
-    if (state.playerEnergy <= state.maxPlayerEnergy * 0.5) {
-        console.log("-> startFirestorm: Not enough energy to activate. Requires > 50%.");
-        return;
-    }
 
-    const skillLevel = state.playerStats.skillLevels.firestorm || 1;
-    const baseDuration = 10000; // 10 seconds
-    const modifiedDuration = getSkillModifiedValue(baseDuration, 'firestorm', firestormUpgradeEffects, state);
-
-    state.isFirestormActive = true;
-    state.firestormEndTime = Date.now() + modifiedDuration;
-    state.isFirestormDrainingEnergy = true;
-    state.firestormDrainEndTime = state.firestormEndTime;
-    playAnimationSound('firestorm');
-    console.log("-> startFirestorm: Firestorm V2 initiated.");
-}
 
 export function startJetstreamDash(state) {
     if (!state.gameRunning || state.isPaused || state.jumpState.isJumping || state.isJetstreamDashing) return;

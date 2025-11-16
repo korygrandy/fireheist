@@ -50,21 +50,12 @@ import {
     setVictory,
     setGameOverSequenceStartTime,
     setLastTime,
-    setFirestormActive,
-    setFirestormEndTime,
-    setFirestormDrainingEnergy,
-    setFirestormDrainEndTime,
-    setFireSpinnerDrainingEnergy,
-    setFireSpinnerDrainEndTime,
-    setMageSpinnerActive,
-    setMageSpinnerEndTime,
     setFireMageOnCooldown,
     setFireMageActive,
     setFireMageEndTime,
     setMageSpinnerFireballTimer,
     incrementMageSpinnerFireballsSpawned,
     setMageSpinnerOnCooldown,
-    setFieryHoudiniOnCooldown,
     setManualJumpOverrideActive,
     setJumpProgress,
     setJumping,
@@ -161,7 +152,7 @@ import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
 import { castMageSpinnerFireball } from './actions.js';
 import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
-import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFirestormFlashes, createPlayerEmbers, createFireTrail, createHoverParticle, createJetstreamParticle } from './drawing/effects.js';
+import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFireTrail, createJetstreamParticle } from './drawing/effects.js';
 import { checkCollision, checkAcceleratorCollision, checkProximityEventCollection } from './collision.js';
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
@@ -174,6 +165,7 @@ import { molotovSkill } from './skills/molotov.js';
 import { shotgunSkill } from './skills/shotgun.js';
 import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './skills/fireSpinner.js';
+import { firestormSkill } from './skills/firestorm.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -261,17 +253,7 @@ export function animate(timestamp) {
 
     updateEnvironmentalEffects(deltaTime);
 
-    if (gameState.isFirestormDrainingEnergy) {
-        const remainingTime = gameState.firestormDrainEndTime - Date.now();
-        if (remainingTime <= 0) {
-            setPlayerEnergy(0);
-            setFirestormDrainingEnergy(false);
-        } else {
-            const energyToDrain = gameState.playerEnergy;
-            const drainRate = energyToDrain / remainingTime;
-            setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
-        }
-    } else if (gameState.isMageSpinnerActive) { 
+    if (gameState.isMageSpinnerActive) { 
         const remainingTime = gameState.mageSpinnerEndTime - Date.now();
         if (remainingTime <= 0) {
             setPlayerEnergy(0); 
@@ -474,45 +456,6 @@ export function animate(timestamp) {
         if (fireball.x > canvas.width + fireball.size || fireball.y > canvas.height + fireball.size) {
             removeFireball(i);
         }
-    }
-
-    if (gameState.isFirestormActive) {
-        if (Date.now() > gameState.firestormEndTime) {
-            setFirestormActive(false);
-        } else {
-            const skillLevel = gameState.playerStats.skillLevels.firestorm || 1;
-            if (skillLevel >= 5 && !gameState.isFireShieldActive) {
-                if (!gameState.fireShieldSpawnTimer) {
-                    gameState.fireShieldSpawnTimer = 3000; 
-                }
-                gameState.fireShieldSpawnTimer -= deltaTime;
-                if (gameState.fireShieldSpawnTimer <= 0) {
-                    gameState.isFireShieldActive = true;
-                    gameState.fireShieldEndTime = Date.now() + 2000; 
-                    gameState.fireShieldSpawnTimer = 3000; 
-                }
-            }
-
-            if (gameState.currentObstacle && !gameState.ignitedObstacles.some(o => o.x === gameState.currentObstacle.x)) {
-                const burnoutDuration = 500 + Math.random() * 1000; 
-                addIgnitedObstacle({
-                    ...gameState.currentObstacle,
-                    burnoutTime: Date.now() + burnoutDuration,
-                    speedMultiplier: 1.2 
-                });
-                setCurrentObstacle(null); 
-                console.log("-> Firestorm: Robust catch-all ignited a stray obstacle.");
-            }
-
-            if (gameState.frameCount % 8 === 0) { 
-                createFirestormFlashes(angleRad);
-                createPlayerEmbers(runnerY);
-            }
-        }
-    }
-
-    if (gameState.isFireShieldActive && Date.now() > gameState.fireShieldEndTime) {
-        gameState.isFireShieldActive = false;
     }
 
     for (let i = gameState.ignitedObstacles.length - 1; i >= 0; i--) {
@@ -881,6 +824,7 @@ export function animate(timestamp) {
     }
 
     fireSpinnerSkill.update(gameState, deltaTime);
+    firestormSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);
@@ -952,6 +896,6 @@ for (let i = gameState.molotovCocktails.length - 1; i >= 0; i--) {
 
     setLastTime(timestamp);
     updateClouds(); 
-    drawing.draw();
+    drawing.draw(runnerY);
     requestAnimationFrame(animate);
 }

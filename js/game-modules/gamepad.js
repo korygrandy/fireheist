@@ -13,7 +13,7 @@ import { togglePauseGame, handleExitOrReset } from './game-controller.js';
 import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
-    startFirestorm, startFieryGroundPound, 
+    startFieryGroundPound, 
     startFireStomper, startMageSpinner, 
     castFireball, startFireMage, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
@@ -28,6 +28,7 @@ import {
 } from './drawing/leaderboard-initials.js';
 import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './skills/fireSpinner.js';
+import { firestormSkill } from './skills/firestorm.js';
 
 let activeGamepad = null;
 let gamepadConnected = false;
@@ -41,7 +42,7 @@ let buttonStates = {};
 
 // --- Game Action Mapping ---
 const skillActionMap = {
-    firestorm: startFirestorm,
+    firestorm: () => firestormSkill.activate(gameState),
     fireSpinner: () => fireSpinnerSkill.activate(gameState),
     fieryGroundPound: startFieryGroundPound,
     fireStomper: startFireStomper,

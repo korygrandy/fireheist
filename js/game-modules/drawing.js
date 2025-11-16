@@ -19,7 +19,7 @@ export function setInitialLoad(value) {
 
 
 
-export function draw() {
+export function draw(playerY) {
     // 1. Clear canvas with sky color
     clearCanvas(currentTheme.sky);
 
@@ -40,12 +40,13 @@ export function draw() {
         gameState.ignitedObstacles,
         gameState.vanishingObstacles,
         gameState.flippingObstacles,
-        groundAngleRad
+        groundAngleRad,
+        playerY
     );
 
     // 6. Draw Game Objects (Player, Obstacles, etc.)
     if (gameState.currentSegmentIndex < gameState.raceSegments.length || gameState.isGameOverSequence) {
-        drawGameObjects(gameState, currentSegment, groundAngleRad);
+        drawGameObjects(gameState, currentSegment, groundAngleRad, playerY);
     }
 
     // 7. Draw UI Overlays
