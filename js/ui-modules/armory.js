@@ -231,6 +231,7 @@ export function openSkillUpgradeModal(skillKey) {
  * Closes the skill upgrade modal.
  */
 export function closeSkillUpgradeModal() {
+    playAnimationSound('beep');
     skillUpgradeModal.classList.add('hidden');
     currentSkillKeyForModal = null;
     populateArmoryItems(); // Refresh armory to show updated levels/buttons

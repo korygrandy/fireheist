@@ -24,7 +24,7 @@ import { startThemeEffect } from './game-modules/drawing/environmental-effects.j
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted, preloadCriticalAudio, preloadSecondaryAudio, playAmbientSound, ambientMusic } from './audio.js';
-import { initGamepad } from './game-modules/gamepad.js';
+import { initGamepad, reinitializeUINavigation } from './game-modules/gamepad.js';
 import { molotovSkill } from './game-modules/skills/molotov.js';
 import { shotgunSkill } from './game-modules/skills/shotgun.js';
 import { fieryHoudiniSkill } from './game-modules/skills/fieryHoudini.js';
@@ -45,6 +45,9 @@ function initializeDailyChallengeUI() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+
+    // Initialize the dedicated gamepad polling loop immediately
+    initGamepad();
 
     const cheatEmoji = document.getElementById('cheat-emoji');
     if (cheatEmoji) {
@@ -82,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     preloaderStartButton.classList.remove('hidden');
 
     preloaderStartButton.addEventListener('click', async () => {
+        playAnimationSound('ignited-flame'); // Play ignited-flame sound on click
         preloaderOverlay.classList.add('hidden');
         // Ensure Tone.js context is running before playing audio
         if (Tone.context.state !== 'running') {
@@ -514,11 +518,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
-    if (stopButton) { stopButton.addEventListener('click', () => stopGame(true)); }
+        if (stopButton) { stopButton.addEventListener('click', () => stopGame(true)); }
 
-    if (loadButton) { loadButton.addEventListener('click', loadCustomData); }
+        if (loadButton) {
 
-    if (soundToggleButton) { soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton)); }
+            loadButton.addEventListener('click', () => {
+
+                playAnimationSound('beep');
+
+                loadCustomData();
+
+            });
+
+        }
+
+        if (soundToggleButton) { soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton)); }
 
     if (fullscreenToggleButton) { fullscreenToggleButton.addEventListener('click', toggleFullScreen); }
 
@@ -527,41 +541,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Listen for fullscreen changes to update button text and apply immersive class
 
     document.addEventListener('fullscreenchange', () => {
-
         updateControlPanelState(gameState.gameRunning, gameState.isPaused);
-
         const actionButtons = document.getElementById('actionButtons');
 
         if (document.fullscreenElement && gameState.gameRunning) {
-
             document.body.classList.add('game-active-fullscreen');
-
             header.classList.add('hidden');
-
             controlPanel.classList.add('hidden');
-
             actionButtons.classList.add('hidden');
-
             mainElement.classList.remove('grid', 'lg:grid-cols-3', 'gap-8');
-
             document.body.style.backgroundColor = '#000';
-
         } else {
-
             document.body.classList.remove('game-active-fullscreen');
-
             header.classList.remove('hidden');
-
             controlPanel.classList.remove('hidden');
-
             actionButtons.classList.remove('hidden');
-
             mainElement.classList.add('grid', 'lg:grid-cols-3', 'gap-8');
-
             document.body.style.backgroundColor = '';
-
+            reinitializeUINavigation(); // Re-scan for UI elements
         }
-
     });
 
 

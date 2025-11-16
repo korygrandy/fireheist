@@ -39,7 +39,6 @@ let gamepadConnected = false;
 // --- UI Navigation State ---
 let focusableElements = [];
 let currentFocusIndex = -1;
-let uiNavigationMode = false;
 let buttonStates = {};
 
 
@@ -95,9 +94,6 @@ window.addEventListener('gamepadconnected', (event) => {
     gamepadConnected = true;
     updateGamepadIndicator();
     updateInfoPanelForGamepad(true);
-    if (!gameState.gameRunning) {
-        enterUINavigationMode();
-    }
 });
 
 window.addEventListener('gamepaddisconnected', (event) => {
@@ -107,7 +103,6 @@ window.addEventListener('gamepaddisconnected', (event) => {
     gamepadConnected = false;
     updateGamepadIndicator();
     updateInfoPanelForGamepad(false);
-    exitUINavigationMode();
 });
 
 function updateGamepadIndicator() {
@@ -138,25 +133,12 @@ function setFocus(index) {
     }
 }
 
-export function enterUINavigationMode() {
-    if (!gamepadConnected) return;
-    console.log("Entering UI Navigation Mode");
-    buttonStates = {}; // Clear all previous button states
-    uiNavigationMode = true;
-    // The main loop will now handle updating elements and setting initial focus.
-}
-
-export function exitUINavigationMode() {
-    console.log("Exiting UI Navigation Mode");
-    buttonStates = {}; // Clear all previous button states
-    uiNavigationMode = false;
-    if (currentFocusIndex >= 0 && currentFocusIndex < focusableElements.length) {
-        focusableElements[currentFocusIndex].classList.remove('gamepad-focus');
-    }
+export function reinitializeUINavigation() {
+    console.log("-> Gamepad: Re-initializing UI navigation state.");
     currentFocusIndex = -1;
-    focusableElements = [];
+    updateFocusableElements();
+    setFocus(0);
 }
-
 
 // --- Main Input Polling Function ---
 
@@ -172,6 +154,23 @@ function updateGamepadState() {
         return;
     }
 
+    // --- Global Actions (Pause/Unpause, Reset) ---
+    const startButton = currentGamepad.buttons[9].pressed;
+    const backButton = currentGamepad.buttons[8].pressed;
+
+    if (startButton && !buttonStates['START_BUTTON']) {
+        if (gameState.gameRunning) {
+            togglePauseGame();
+        }
+    }
+    if (backButton && !buttonStates['BACK_BUTTON']) {
+        handleExitOrReset();
+    }
+    buttonStates['START_BUTTON'] = startButton;
+    buttonStates['BACK_BUTTON'] = backButton;
+
+
+    // --- Leaderboard Input Handling ---
     if (gameState.leaderboardInitials.isActive) {
         const dpadBtn_Up = currentGamepad.buttons[12].pressed;
         const dpadBtn_Down = currentGamepad.buttons[13].pressed;
@@ -179,38 +178,25 @@ function updateGamepadState() {
         const dpadBtn_Right = currentGamepad.buttons[15].pressed;
         const aButton = currentGamepad.buttons[0].pressed;
 
-        if (dpadBtn_Up && !buttonStates['DPAD_UP_INITIALS']) {
-            cycleInitialLetter('up');
-        }
-        if (dpadBtn_Down && !buttonStates['DPAD_DOWN_INITIALS']) {
-            cycleInitialLetter('down');
-        }
-        if (dpadBtn_Left && !buttonStates['DPAD_LEFT_INITIALS']) {
-            changeInitialSlot('left');
-        }
-        if (dpadBtn_Right && !buttonStates['DPAD_RIGHT_INITIALS']) {
-            changeInitialSlot('right');
-        }
-        if (aButton && !buttonStates['A_BUTTON_INITIALS']) {
-            confirmInitialSelection();
-        }
+        if (dpadBtn_Up && !buttonStates['DPAD_UP_INITIALS']) { cycleInitialLetter('up'); }
+        if (dpadBtn_Down && !buttonStates['DPAD_DOWN_INITIALS']) { cycleInitialLetter('down'); }
+        if (dpadBtn_Left && !buttonStates['DPAD_LEFT_INITIALS']) { changeInitialSlot('left'); }
+        if (dpadBtn_Right && !buttonStates['DPAD_RIGHT_INITIALS']) { changeInitialSlot('right'); }
+        if (aButton && !buttonStates['A_BUTTON_INITIALS']) { confirmInitialSelection(); }
 
         buttonStates['DPAD_UP_INITIALS'] = dpadBtn_Up;
         buttonStates['DPAD_DOWN_INITIALS'] = dpadBtn_Down;
         buttonStates['DPAD_LEFT_INITIALS'] = dpadBtn_Left;
         buttonStates['DPAD_RIGHT_INITIALS'] = dpadBtn_Right;
         buttonStates['A_BUTTON_INITIALS'] = aButton;
-        return; // Prevent other gamepad logic from running
+        return; // Prevent other logic
     }
 
-    const shouldBeUIMode = !gameState.gameRunning || gameState.isPaused;
-    if (shouldBeUIMode && !uiNavigationMode) {
-        enterUINavigationMode();
-    } else if (!shouldBeUIMode && uiNavigationMode) {
-        exitUINavigationMode();
-    }
+    // --- Determine Mode: UI Navigation or Gameplay ---
+    const isUIMode = !gameState.gameRunning || gameState.isPaused;
 
-    if (uiNavigationMode) {
+    if (isUIMode) {
+        // --- UI Navigation Logic ---
         updateFocusableElements();
         if (currentFocusIndex === -1 && focusableElements.length > 0) {
             setFocus(0);
@@ -222,11 +208,6 @@ function updateGamepadState() {
         const dpadBtn_Left = currentGamepad.buttons[14].pressed;
         const dpadBtn_Right = currentGamepad.buttons[15].pressed;
         const aButton = currentGamepad.buttons[0].pressed;
-        const startButton = currentGamepad.buttons[9].pressed;
-
-        if (startButton && !buttonStates['START_BUTTON_UI']) {
-            togglePauseGame();
-        }
 
         if (focusedElement && focusedElement.tagName === 'SELECT') {
             if (dpadBtn_Right && !buttonStates['DPAD_RIGHT']) {
@@ -239,77 +220,66 @@ function updateGamepadState() {
             }
         }
 
-        if (dpadBtn_Up && !buttonStates['DPAD_UP']) {
-            const nextIndex = (currentFocusIndex - 1 + focusableElements.length) % focusableElements.length;
-            setFocus(nextIndex);
-        }
-        if (dpadBtn_Down && !buttonStates['DPAD_DOWN']) {
-            const nextIndex = (currentFocusIndex + 1) % focusableElements.length;
-            setFocus(nextIndex);
-        }
+        if (dpadBtn_Up && !buttonStates['DPAD_UP']) { setFocus((currentFocusIndex - 1 + focusableElements.length) % focusableElements.length); }
+        if (dpadBtn_Down && !buttonStates['DPAD_DOWN']) { setFocus((currentFocusIndex + 1) % focusableElements.length); }
         if (aButton && !buttonStates['A_BUTTON_UI']) {
             if (focusedElement && focusedElement.tagName !== 'SELECT') {
                 focusedElement.click();
             }
         }
 
-        buttonStates['DPAD_UP'] = dpadBtn_Up;
-        buttonStates['DPAD_DOWN'] = dpadBtn_Down;
-        buttonStates['DPAD_LEFT'] = dpadBtn_Left;
-        buttonStates['DPAD_RIGHT'] = dpadBtn_Right;
-        buttonStates['A_BUTTON_UI'] = aButton;
-        buttonStates['START_BUTTON_UI'] = startButton;
+        buttonStates = {
+            ...buttonStates, // Preserve global button states like START_BUTTON
+            DPAD_UP: dpadBtn_Up,
+            DPAD_DOWN: dpadBtn_Down,
+            DPAD_LEFT: dpadBtn_Left,
+            DPAD_RIGHT: dpadBtn_Right,
+            A_BUTTON_UI: aButton,
+        };
 
     } else {
         // --- In-Game Action Input Handling ---
+        if (currentFocusIndex !== -1) {
+            focusableElements[currentFocusIndex].classList.remove('gamepad-focus');
+            currentFocusIndex = -1;
+        }
 
-        // Cheat Code: Press Left Bumper (4) and Right Bumper (5) simultaneously for max energy
         const leftBumperPressed = currentGamepad.buttons[4].pressed;
         const rightBumperPressed = currentGamepad.buttons[5].pressed;
         if (leftBumperPressed && rightBumperPressed && !buttonStates['CHEAT_COMBO']) {
-            if (gameState.gameRunning && !gameState.isPaused) {
-                setPlayerEnergy(gameState.maxPlayerEnergy);
-                console.log("-> CHEAT: Max energy granted via gamepad!");
-            }
+            setPlayerEnergy(gameState.maxPlayerEnergy);
+            console.log("-> CHEAT: Max energy granted via gamepad!");
         }
-        // Use a combined state to detect a single "chord" press
         buttonStates['CHEAT_COMBO'] = leftBumperPressed && rightBumperPressed;
 
-
         const buttonMap = {
-            0: { action: startManualJump, name: 'A_BUTTON_GAME', requiresState: true },
-            1: { action: handleSpecialMove, name: 'B_BUTTON_GAME', requiresState: true },
-            2: { action: startMeteorStrike, name: 'X_BUTTON_GAME', requiresState: true },
-            3: { action: startFirestorm, name: 'Y_BUTTON_GAME', requiresState: true },
-            4: { action: startBackflip, name: 'LB_BUTTON_GAME', requiresState: true },
-            5: { action: startFrontflip, name: 'RB_BUTTON_GAME', requiresState: true },
-            6: { action: startHoudini, name: 'LT_BUTTON_GAME', requiresState: true },
-            7: { action: () => fieryGroundPoundSkill.activate(gameState), name: 'RT_BUTTON_GAME', requiresState: true },
-            8: { action: handleExitOrReset, name: 'BACK_BUTTON', requiresState: false },
-            9: { action: togglePauseGame, name: 'START_BUTTON_GAME', requiresState: false },
-            10: { action: startCartoonScramble, name: 'LSTICK_CLICK_GAME', requiresState: true },
-            11: { action: startShockwave, name: 'RSTICK_CLICK_GAME', requiresState: true }
+            0: { action: startManualJump, name: 'A_BUTTON_GAME' },
+            1: { action: handleSpecialMove, name: 'B_BUTTON_GAME' },
+            2: { action: startMeteorStrike, name: 'X_BUTTON_GAME' },
+            3: { action: () => firestormSkill.activate(gameState), name: 'Y_BUTTON_GAME' },
+            4: { action: startBackflip, name: 'LB_BUTTON_GAME' },
+            5: { action: startFrontflip, name: 'RB_BUTTON_GAME' },
+            6: { action: startHoudini, name: 'LT_BUTTON_GAME' },
+            7: { action: () => fieryGroundPoundSkill.activate(gameState), name: 'RT_BUTTON_GAME' },
+            // 8 is now handled globally
+            // 9 is now handled globally
+            10: { action: startCartoonScramble, name: 'LSTICK_CLICK_GAME' },
+            11: { action: startShockwave, name: 'RSTICK_CLICK_GAME' }
         };
 
+        let newButtonStates = {};
         currentGamepad.buttons.forEach((button, index) => {
             const mapping = buttonMap[index];
             if (mapping) {
                 const buttonName = mapping.name;
                 const isPressed = button.pressed;
-                const wasPressed = buttonStates[buttonName] || false;
-
-                if (isPressed && !wasPressed) {
-                    if (mapping.requiresState) {
-                        if (gameState.gameRunning && !gameState.isPaused) {
-                            mapping.action(gameState);
-                        }
-                    } else {
-                        mapping.action();
-                    }
+                if (isPressed && !buttonStates[buttonName]) {
+                    mapping.action(gameState);
                 }
-                buttonStates[buttonName] = isPressed;
+                newButtonStates[buttonName] = isPressed;
             }
         });
+        buttonStates = { ...buttonStates, ...newButtonStates };
     }
 }
 
@@ -319,7 +289,6 @@ function gamepadLoop() {
 }
 
 export function initGamepad() {
-    // Check for already-connected gamepads on startup
     setTimeout(() => {
         const gamepads = navigator.getGamepads();
         const isConnected = Array.from(gamepads).some(g => g);
@@ -329,14 +298,9 @@ export function initGamepad() {
             gamepadConnected = true;
             updateGamepadIndicator();
             updateInfoPanelForGamepad(true);
-            if (!gameState.gameRunning) {
-                enterUINavigationMode();
-            }
         } else {
             updateInfoPanelForGamepad(false);
         }
     }, 500);
-
-    // Start the dedicated gamepad polling loop
     gamepadLoop();
 }

@@ -148,9 +148,38 @@ export function preloadGameStartSound() {
     return gameStartSound.loaded;
 }
 
+const CRITICAL_UI_SOUNDS = [
+    'beep', 'armory-tab', 'hof-tab', 'keypress', 'submit-chime',
+    'skill-unlock', 'final-skill-unlock', 'select-sound', 'unselect-sound',
+    'upgrade-skill', 'vault-upgrade', 'start-daily-challenge', 'ignited-flame'
+];
+
+export function preloadCriticalUISounds() {
+    const loadingPromises = [];
+    for (const soundName of CRITICAL_UI_SOUNDS) {
+        if (ANIMATION_SOUND_MAP[soundName]) {
+            const url = ANIMATION_SOUND_MAP[soundName];
+            const player = new Tone.Player({
+                url: `./${url}`,
+                volume: -10,
+                onload: () => console.log(`-> AUDIO: Critical UI sound '${soundName}' loaded.`),
+                onerror: (e) => console.error(`-> AUDIO: Error loading '${soundName}':`, e)
+            }).connect(uiBus); // Connect UI sounds to the uiBus
+            player.mute = isMuted;
+            animationPlayers[soundName] = player;
+            loadingPromises.push(player.loaded);
+        }
+    }
+    return Promise.all(loadingPromises);
+}
+
 export function preloadAnimationSounds() {
     const loadingPromises = [];
     for (const animationName in ANIMATION_SOUND_MAP) {
+        // Skip sounds that were already loaded as critical UI sounds
+        if (animationPlayers[animationName]) {
+            continue;
+        }
         const url = ANIMATION_SOUND_MAP[animationName];
         const player = new Tone.Player({
             url: `./${url}`,
@@ -168,7 +197,7 @@ export function preloadAnimationSounds() {
 export function preloadSecondaryAudio() {
     console.log("-> AUDIO: Starting to preload secondary audio assets...");
     const secondaryPromises = [
-        ...Object.values(animationPlayers).map(player => player.loaded),
+        preloadAnimationSounds(), // This will now load only non-critical sounds
         winnerSound.loaded,
         loserSound.loaded,
         ...collisionSounds.map(sound => sound instanceof Tone.Player ? sound.loaded : Promise.resolve())
@@ -188,7 +217,8 @@ export function preloadCriticalAudio() {
         gameStartSound.loaded,
         pauseGameSound.loaded,
         quackSound.loaded,
-        powerUpSound.loaded
+        powerUpSound.loaded,
+        preloadCriticalUISounds() // Load essential UI sounds
     ];
 
     // Preload the default theme's ambient sound

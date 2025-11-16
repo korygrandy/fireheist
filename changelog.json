@@ -1,5 +1,12 @@
 [
     {
+        "version": "1.5.15",
+        "date": "2025-11-16",
+        "changes": [
+            "feat(cheat): Added an emoji-based cheat mode. Clicking the second fire emoji in the main title copies it to the clipboard. Pasting this emoji into the player emoji input field unlocks all personas, skills, and grants 1,000,000,000 cash for upgrades."
+        ]
+    },
+    {
         "version": "1.5.14",
         "date": "2025-11-16",
         "changes": [
@@ -99,20 +106,6 @@
             "feat(gameplay): Unified the 'Back' button and 'Escape' key behavior to intelligently exit fullscreen or reset the game.",
             "fix(gamepad): Resolved multiple cross-browser compatibility issues, ensuring D-pad navigation works in both Chrome and Edge.",
             "fix(gamepad): Fixed numerous state management bugs that caused the controller to become unresponsive after pausing, resetting, or changing button mappings."
-        ]
-    },
-    {
-        "version": "1.5.01",
-        "date": "2025-11-08",
-        "changes": [
-            "feat: Added new special skill: 'Mage-Spinner'. This skill combines the effects of the Fire-Spinner and Fire-Mage, automatically casting fireballs at nearby obstacles.",
-            "feat: Added visual effects for the Mage Spinner, including a fiery glow, embers, and orbiting fireballs.",
-            "feat: Added the ability to manually cast fireballs by pressing the skill key ('U') while Mage Spinner is active.",
-            "docs: Added the Mage-Spinner keybinding to the keyboard controls in the info panel.",
-            "fix: Fixed a critical syntax error in `js/main.js` by correcting the placement of several code blocks.",
-            "fix: Fixed multiple `ReferenceError`s across several files by importing necessary constants.",
-            "fix: Fixed a bug preventing manual fireballs from being cast during Mage Spinner.",
-            "perf: Lowered the energy cost of the Mage Spinner from 100 to 80."
         ]
     }
 ]

@@ -246,7 +246,8 @@ export const ANIMATION_SOUND_MAP = {
     'vault-upgrade': 'fx/vault-upgrade.mp3',
     'vine-boom': 'fx/vine-boom.mp3',
     'keypress': 'fx/keypress.mp3',
-    'submit-chime': 'fx/submit-chime.mp3'
+    'submit-chime': 'fx/submit-chime.mp3',
+    'ignited-flame': 'fx/ignited-flame.mp3'
     // Other animations will be added here
 };
 
