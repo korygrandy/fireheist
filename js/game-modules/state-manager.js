@@ -1056,7 +1056,7 @@ export function setShotgunBlastActive(isActive) {
     state.isShotgunBlastActive = isActive;
 }
 
-export function addShotgunParticle(particle) {
+export function addShotgunParticle(state, particle) {
     state.shotgunParticles.push(particle);
 }
 

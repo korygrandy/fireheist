@@ -30,13 +30,14 @@ export const shotgunSkill = {
             const velocityX = Math.cos(angle) * speed;
             const velocityY = Math.sin(angle) * speed;
 
-            addShotgunParticle({
+            const particle = {
                 x: state.stickFigureFixedX + 20,
                 y: playerY,
                 velocityX,
                 velocityY,
                 lifespan: 60
-            });
+            };
+            addShotgunParticle(state, particle);
         }
 
         setTimeout(() => {
@@ -84,14 +85,6 @@ export const shotgunSkill = {
             if (!particleRemoved && particle.lifespan <= 0) {
                 gameState.shotgunParticles.splice(i, 1);
             }
-        }
-    },
-
-    draw: function(ctx, gameState) {
-        ctx.fillStyle = 'orange'; // Default color
-        for (const particle of gameState.shotgunParticles) {
-            ctx.fillStyle = particle.color;
-            ctx.fillRect(particle.x, particle.y, 5, 5);
         }
     }
 };

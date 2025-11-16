@@ -770,6 +770,7 @@ export function animate(timestamp) {
     fireMageSkill.update(gameState, deltaTime);
     mageSpinnerSkill.update(gameState, deltaTime);
     fireballRollSkill.update(gameState, deltaTime);
+    shotgunSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);

@@ -54,7 +54,6 @@ export function draw(playerY) {
     drawUIOverlaysAndEffects(gameState, isInitialLoad, COLLISION_DURATION_MS);
 
     // Draw skill effects
-    shotgunSkill.draw(ctx, gameState);
     for (const cocktail of gameState.molotovCocktails) {
         molotovSkill.draw(cocktail, ctx);
     }

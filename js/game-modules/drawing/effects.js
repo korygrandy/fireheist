@@ -679,6 +679,37 @@ export function createMeteorStrikeEffect(targetObstacle, skillLevel) {
                 ctx.strokeStyle = `rgba(255, 200, 100, ${opacity * 0.8})`;
                 ctx.stroke();
             
-                ctx.restore();
-            }
+            
+            
+    ctx.restore();
+            
+}
+            
+
+            
+export function drawShotgunBlast() {
+            
+
+            
+    if (!gameState.shotgunParticles || gameState.shotgunParticles.length === 0) return;
+            
+
+            
+    ctx.fillStyle = 'orange';
+            
+
+            
+    for (const particle of gameState.shotgunParticles) {
+            
+
+            
+        ctx.fillRect(particle.x, particle.y, 5, 5);
+            
+
+            
+    }
+            
+
+            
+}
             
