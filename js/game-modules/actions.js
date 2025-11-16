@@ -423,26 +423,7 @@ export function startEchoSlam(state) {
     console.log("-> startEchoSlam: Echo Slam initiated.");
 }
 
-export function startFireballRoll(state) {
-    if (!state.gameRunning || state.isPaused || state.isFireballRolling) return;
 
-    // No initial energy cost, but will drain over time
-    if (state.playerEnergy <= 0) {
-        console.log("-> startFireballRoll: Not enough energy to activate.");
-        return;
-    }
-
-    state.jumpState.isFireballRolling = true;
-    state.jumpState.fireballRollDuration = JUMP_DURATIONS.fireballRoll;
-    state.isInvincible = true; // Grant invincibility during the roll
-    state.invincibilityEndTime = Date.now() + JUMP_DURATIONS.fireballRoll;
-    state.fireballRollDrainEndTime = Date.now() + JUMP_DURATIONS.fireballRoll; // Energy drains for the duration
-
-        playAnimationSound('fireballRoll'); // Play sound for Fireball Roll
-
-        console.log("-> startFireballRoll: Fireball Roll initiated.");
-
-    }
 
     
 

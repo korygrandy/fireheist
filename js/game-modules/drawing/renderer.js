@@ -11,6 +11,7 @@ import { firestormSkill } from '../skills/firestorm.js';
 import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
 import { fireMageSkill } from '../skills/fireMage.js';
 import { mageSpinnerSkill } from '../skills/mageSpinner.js';
+import { fireballRollSkill } from '../skills/fireballRoll.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -24,7 +25,7 @@ export function drawBackground(theme, groundAngleRad) {
     drawSlantedGround(groundAngleRad);
 }
 
-export function drawParticlesAndEffects(activeFireballs, ignitedObstacles, vanishingObstacles, flippingObstacles, groundAngleRad, playerY) {
+export function drawParticlesAndEffects(gameState, activeFireballs, ignitedObstacles, vanishingObstacles, flippingObstacles, groundAngleRad, playerY) {
     drawEnvironmentalEffects();
     drawGroundPoundParticles();
     drawHoudiniParticles();
@@ -126,6 +127,10 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
     fieryGroundPoundSkill.draw(ctx, gameState, currentX, currentY);
     fireMageSkill.draw(ctx, gameState, currentX, currentY);
     mageSpinnerSkill.draw(ctx, gameState, currentX, currentY);
+    fireballRollSkill.draw(ctx, gameState, currentX, currentY);
+    if (!gameState.jumpState.isFireballRolling) {
+        drawStickFigure(currentX, currentY, gameState.jumpState, currentSegment.angleRad);
+    }
 
 
 

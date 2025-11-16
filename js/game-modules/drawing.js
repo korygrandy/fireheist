@@ -36,6 +36,7 @@ export function draw(playerY) {
 
     // 5. Draw Environmental & Particle Effects on top of the ground
     drawParticlesAndEffects(
+        gameState,
         gameState.activeFireballs,
         gameState.ignitedObstacles,
         gameState.vanishingObstacles,

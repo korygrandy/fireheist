@@ -129,6 +129,7 @@ const state = {
     firestormEndTime: 0,
     firestormParticles: [],
     playerEmberParticles: [],
+    fireballRollParticles: [],
     ignitedObstacles: [],
     MAX_FIRESTORM_PARTICLES: 50,
     MAX_EMBER_PARTICLES: 100,

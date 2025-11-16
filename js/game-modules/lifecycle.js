@@ -170,6 +170,7 @@ import { firestormSkill } from './skills/firestorm.js';
 import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
 import { fireMageSkill } from './skills/fireMage.js';
 import { mageSpinnerSkill } from './skills/mageSpinner.js';
+import { fireballRollSkill } from './skills/fireballRoll.js';
 
 export function animate(timestamp) {
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
@@ -750,6 +751,7 @@ export function animate(timestamp) {
     fieryGroundPoundSkill.update(gameState, deltaTime);
     fireMageSkill.update(gameState, deltaTime);
     mageSpinnerSkill.update(gameState, deltaTime);
+    fireballRollSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);
@@ -780,16 +782,7 @@ export function animate(timestamp) {
         }
     }
 
-    if (gameState.jumpState.isFireballRolling) {
-        setFireballRollDuration(gameState.jumpState.fireballRollDuration - deltaTime);
-        if (gameState.jumpState.fireballRollDuration <= 0) {
-            setFireballRolling(false);
-            gameState.isInvincible = false; // End invincibility
-        } else {
-            // Emit fire particles (re-using fire trail particles for now)
-            createFireTrail(gameState.stickFigureFixedX, runnerY + STICK_FIGURE_TOTAL_HEIGHT / 2);
-        }
-    }
+
 
 
 

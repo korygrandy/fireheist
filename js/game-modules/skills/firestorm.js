@@ -110,10 +110,13 @@ export const firestormSkill = {
         // Update embers
         for (let i = gameState.playerEmberParticles.length - 1; i >= 0; i--) {
             const p = gameState.playerEmberParticles[i];
+            p.vx += (Math.random() - 0.5) * 0.4; // Wind
+            p.vy += 0.05; // Gravity
             p.x += p.vx;
             p.y += p.vy;
-            p.life -= 0.05;
-            if (p.life <= 0) {
+            p.life -= 0.03; // Fade faster
+            p.size *= 0.97; // Shrink
+            if (p.life <= 0 || p.size < 0.5) {
                 gameState.playerEmberParticles.splice(i, 1);
             }
         }
@@ -152,14 +155,22 @@ export const firestormSkill = {
             ctx.save();
             ctx.globalAlpha = p.life;
 
-            // Subtle glow for embers
-            ctx.shadowColor = 'rgba(255, 150, 0, 0.8)';
-            ctx.shadowBlur = 5;
-
-            ctx.fillStyle = `rgba(255, ${Math.random() * 200}, 0, ${p.life})`;
+            // Main particle body with flickering color
+            const flicker = Math.floor(Math.random() * 100);
+            ctx.fillStyle = `rgba(255, ${100 + flicker}, 0, 0.8)`;
+            ctx.shadowColor = 'orange';
+            ctx.shadowBlur = 8;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
+
+            // Brighter core
+            ctx.shadowColor = 'transparent';
+            ctx.fillStyle = `rgba(255, 255, 200, ${p.life})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+
             ctx.restore();
         }
     }

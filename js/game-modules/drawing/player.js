@@ -378,34 +378,8 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         legMovementX2 = -5; legMovementY2 = bodyY;
         armMovementX1 = 5; armMovementY1 = headY + 20;
         armMovementX2 = -5; armMovementY2 = headY + 20;
-    } else if (gameState.isFireMageActive) {
-        // Add a fiery glow and embers for Fire Mage
-
-    } else if (jumpState.isFireballRolling) {
-        // Draw player as a rolling fireball
-        ctx.shadowColor = 'orange';
-        ctx.shadowBlur = 25;
-
-        ctx.save();
-        ctx.translate(0, -STICK_FIGURE_TOTAL_HEIGHT / 2); // Center the fireball vertically
-        ctx.rotate(gameState.frameCount * 0.02); // Rolling animation (even slower spin)
-
-        ctx.beginPath();
-        ctx.arc(0, 0, STICK_FIGURE_TOTAL_HEIGHT / 1.5, 0, Math.PI * 2); // Fiery ball
-        ctx.fillStyle = `rgba(255, ${100 + Math.floor(Math.random() * 100)}, 0, 0.9)`;
-        ctx.fill();
-
-        ctx.strokeStyle = `rgba(255, ${150 + Math.floor(Math.random() * 100)}, 0, 1)`;
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        ctx.restore();
-
-        // Prevent default drawing
-        ctx.restore(); // from the main translate/rotate
-        return;
     }
-
+    
     // Reset shadow properties if they were set by a special move
     ctx.shadowColor = 'transparent';
     ctx.shadowBlur = 0;
@@ -446,8 +420,6 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         ctx.restore();
 
     }
-
-    
 
     export function drawFireShield(x, y) {
 

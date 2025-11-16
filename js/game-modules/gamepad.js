@@ -18,7 +18,7 @@ import {
     startBackflip, startFrontflip, startGroundPound, startHover, 
     startCartoonScramble, startShockwave, startHurdle, startDive,
     startMeteorStrike, startHoudini, startBlinkStrike, startJetstreamDash,
-    startEchoSlam, startFireballRoll
+    startEchoSlam
 } from './actions.js';
 import { 
     cycleInitialLetter, 
@@ -31,6 +31,7 @@ import { firestormSkill } from './skills/firestorm.js';
 import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
 import { fireMageSkill } from './skills/fireMage.js';
 import { mageSpinnerSkill } from './skills/mageSpinner.js';
+import { fireballRollSkill } from './skills/fireballRoll.js';
 
 let activeGamepad = null;
 let gamepadConnected = false;
@@ -53,7 +54,7 @@ const skillActionMap = {
     blinkStrike: startBlinkStrike,
     jetstreamDash: startJetstreamDash,
     echoSlam: startEchoSlam,
-    fireballRoll: startFireballRoll
+    fireballRoll: () => fireballRollSkill.activate(gameState)
 };
 
 function handleSpecialMove() {
