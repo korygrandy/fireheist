@@ -197,7 +197,10 @@ function updateGamepadState() {
 
     if (isUIMode) {
         // --- UI Navigation Logic ---
-        updateFocusableElements();
+        updateFocusableElements(); // Always re-scan UI elements in this mode
+        if (currentFocusIndex >= focusableElements.length) {
+             currentFocusIndex = -1; // Reset if focus is out of bounds
+        }
         if (currentFocusIndex === -1 && focusableElements.length > 0) {
             setFocus(0);
         }
