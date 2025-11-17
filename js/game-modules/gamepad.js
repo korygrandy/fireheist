@@ -294,7 +294,7 @@ function updateGamepadState() {
 }
 
 function gamepadLoop() {
-    if (gameState.gameRunning || gameState.isMiniGameActive) {
+    if (gameState.gameRunning || gameState.isMiniGameActive || gameState.leaderboardInitials.isActive) {
         updateGamepadState();
     }
     requestAnimationFrame(gamepadLoop);
