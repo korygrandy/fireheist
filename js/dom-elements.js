@@ -44,3 +44,14 @@ export const skillModalTitle = document.getElementById('skillModalTitle');
 export const skillModalContent = document.getElementById('skillModalContent');
 export const closeSkillModalBtn = document.getElementById('closeSkillModalBtn');
 export const totalCashDisplay = document.getElementById('totalCashDisplay');
+
+// Mini-Game: Blow That Dough
+export const miniGameOverlay = document.getElementById('miniGameOverlay');
+export const miniGameTimerDisplay = document.getElementById('miniGameTimerDisplay');
+export const miniGameCashDisplay = document.getElementById('miniGameCashDisplay');
+export const investmentOpportunityDisplay = document.getElementById('investmentOpportunityDisplay');
+export const investButton = document.getElementById('investButton');
+export const passButton = document.getElementById('passButton');
+export const miniGameResults = document.getElementById('miniGameResults');
+export const miniGameScoreDisplay = document.getElementById('miniGameScoreDisplay');
+export const closeMiniGameResults = document.getElementById('closeMiniGameResults');

@@ -202,6 +202,7 @@ export function startGame() {
     console.log("-> START GAME: Initiating game start sequence.");
 
     resetGameState();
+    gameState.miniGameBonus = 0; // Reset the bonus for the new run
 
     setGameRunning(true);
     drawing.setInitialLoad(false);
@@ -313,6 +314,11 @@ export function stopGame(shouldReset = true) {
         resetGameState();
         drawing.draw();
     } else {
+        // On successful run completion, add the mini-game bonus to the total
+        if (gameState.miniGameBonus) {
+            gameState.playerStats.totalAccumulatedCash += gameState.miniGameBonus;
+            console.log(`-> STOP GAME: Added mini-game bonus of $${gameState.miniGameBonus} to total cash.`);
+        }
         showResultsScreen(gameState.financialMilestones, gameState.raceSegments);
         updateControlPanelState(false, false);
         document.getElementById('startButton').textContent = "Restart Heist!";

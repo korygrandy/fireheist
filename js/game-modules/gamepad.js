@@ -193,7 +193,14 @@ function updateGamepadState() {
     }
 
     // --- Determine Mode: UI Navigation or Gameplay ---
-    const isUIMode = !gameState.gameRunning || gameState.isPaused;
+    const isUIMode = (!gameState.gameRunning && !gameState.isMiniGameActive) || gameState.isPaused;
+
+    // --- Store Gamepad State for Mini-Game ---
+    // This needs to run regardless of UI or Game mode so the mini-game can access it.
+    gameState.gamepad = {
+        axes: currentGamepad.axes,
+        buttons: currentGamepad.buttons
+    };
 
     if (isUIMode) {
         // --- UI Navigation Logic ---
@@ -287,7 +294,9 @@ function updateGamepadState() {
 }
 
 function gamepadLoop() {
-    updateGamepadState();
+    if (gameState.gameRunning || gameState.isMiniGameActive) {
+        updateGamepadState();
+    }
     requestAnimationFrame(gamepadLoop);
 }
 

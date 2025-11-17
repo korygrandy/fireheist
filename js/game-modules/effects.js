@@ -9,7 +9,6 @@ import { playChaChing, playDebuffSound } from '../audio.js';
 
 export function applySpeedEffect(type) {
     if (gameState.isColliding) {
-        console.log(`-> SPEED EFFECT BLOCKED: ${type} blocked by active collision.`);
         return;
     }
 

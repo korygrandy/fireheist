@@ -22,6 +22,7 @@ import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireStomper, castFireball, startBlinkStrike, startJetstreamDash, startEchoSlam } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
+import { spawnEasterEgg } from './game-modules/spawning.js';
 import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
 import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted, preloadCriticalAudio, preloadSecondaryAudio, playAmbientSound, ambientMusic } from './audio.js';
 import { initGamepad, reinitializeUINavigation } from './game-modules/gamepad.js';
@@ -34,6 +35,7 @@ import { fieryGroundPoundSkill } from './game-modules/skills/fieryGroundPound.js
 import { fireMageSkill } from './game-modules/skills/fireMage.js';
 import { mageSpinnerSkill } from './game-modules/skills/mageSpinner.js';
 import { fireballRollSkill } from './game-modules/skills/fireballRoll.js';
+import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -534,15 +536,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (soundToggleButton) { soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton)); }
 
-    if (fullscreenToggleButton) { fullscreenToggleButton.addEventListener('click', toggleFullScreen); }
+        if (fullscreenToggleButton) { fullscreenToggleButton.addEventListener('click', toggleFullScreen); }
 
+    
 
+        // Mini-Game Event Listeners
 
-    // Listen for fullscreen changes to update button text and apply immersive class
+        const closeMiniGameBtn = document.getElementById('closeMiniGameResults');
 
-    document.addEventListener('fullscreenchange', () => {
-        updateControlPanelState(gameState.gameRunning, gameState.isPaused);
-        const actionButtons = document.getElementById('actionButtons');
+        if (closeMiniGameBtn) { closeMiniGameBtn.addEventListener('click', closeMiniGameResults); }
+
+    
+
+        // Listen for fullscreen changes to update button text and apply immersive class
+
+        document.addEventListener('fullscreenchange', () => {
+
+            updateControlPanelState(gameState.gameRunning, gameState.isPaused);
+
+            const actionButtons = document.getElementById('actionButtons');
 
         if (document.fullscreenElement && gameState.gameRunning) {
             document.body.classList.add('game-active-fullscreen');
@@ -931,25 +943,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 e.preventDefault();
 
-                setPlayerEnergy(gameState.maxPlayerEnergy);
+                                setPlayerEnergy(gameState.maxPlayerEnergy);
 
-                console.log("-> CHEAT: Max energy granted!");
+                                console.log("-> CHEAT: Max energy granted!");
 
-            }
+                            }
 
-        }
+                        }
 
+                
 
+                        // Debug hotkey for spawning easter egg
 
-                // Debug hotkey for environmental effects
+                        if (e.code === 'KeyE' && gameState.gameRunning && !gameState.isPaused) {
 
+                            e.preventDefault();
 
+                            spawnEasterEgg();
 
-                if (e.code === 'KeyE' && gameState.gameRunning && !gameState.isPaused) {
+                        }
 
+                
 
+                                // Debug hotkey for environmental effects
 
-                    e.preventDefault();
+                
+
+                                if (e.code === 'KeyQ' && gameState.gameRunning && !gameState.isPaused) {
+
+                
+
+                                    e.preventDefault();
 
 
 
@@ -1157,11 +1181,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // --- END JUMP & PAUSE CONTROLS ---
+            // --- END JUMP & PAUSE CONTROLS ---
 
 
 
-    frequencyRange.dispatchEvent(new Event('input')); // Trigger initial display of frequency value
+        
+
+
+
+            frequencyRange.dispatchEvent(new Event('input')); // Trigger initial display of frequency value
 
 
 

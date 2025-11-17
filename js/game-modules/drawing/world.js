@@ -270,6 +270,19 @@ export function drawObstacle(obstacle, angleRad) {
     const obstacleY = GROUND_Y - obstacleX * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET;
 
     ctx.save();
+
+    if (obstacle.isEasterEgg) {
+        const distanceToPlayer = obstacle.x - STICK_FIGURE_FIXED_X;
+        const fadeDistance = 500; // Start fading in when the egg is 500px away
+        if (distanceToPlayer < fadeDistance) {
+            const fadeProgress = Math.max(0, (fadeDistance - distanceToPlayer) / fadeDistance);
+            obstacle.opacity = Math.max(0.02, fadeProgress); // Fade from 0.02 to 1.0
+        }
+        ctx.globalAlpha = obstacle.opacity;
+    } else {
+        ctx.globalAlpha = 1; // Ensure non-easter egg obstacles are fully visible
+    }
+
     ctx.translate(obstacleX, obstacleY);
     ctx.rotate(-angleRad);
 

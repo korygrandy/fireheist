@@ -177,6 +177,10 @@ export function prepareRaceData(milestones) {
     return segments;
 }
 
+export function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export function drawChart(financialMilestones, chartCtx) {
     const allDates = Object.keys(financialMilestones);
     const allValues = Object.values(financialMilestones);

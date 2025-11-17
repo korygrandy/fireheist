@@ -8,7 +8,8 @@ export function spawnObstacle() {
         emoji: isEasterEgg ? EASTER_EGG_EMOJI : state.obstacleEmoji,
         spawnTime: Date.now(),
         hasBeenHit: false,
-        isEasterEgg: isEasterEgg
+        isEasterEgg: isEasterEgg,
+        opacity: isEasterEgg ? 0.02 : 1.0
     };
 
     if (state.isFirestormActive) {
@@ -25,6 +26,23 @@ export function spawnObstacle() {
             console.log(`-> spawnObstacle: New obstacle spawned.`);
         }
     }
+}
+
+export function spawnEasterEgg() {
+    if (state.currentObstacle) {
+        console.log("-> spawnEasterEgg: Obstacle already on screen, cannot spawn easter egg.");
+        return;
+    }
+    const newObstacle = {
+        x: OBSTACLE_SPAWN_X,
+        emoji: EASTER_EGG_EMOJI,
+        spawnTime: Date.now(),
+        hasBeenHit: false,
+        isEasterEgg: true,
+        opacity: 0.02
+    };
+    state.currentObstacle = newObstacle;
+    console.log("-> spawnEasterEgg: DEBUG - Easter egg spawned via key press.");
 }
 
 export function spawnAccelerator() {

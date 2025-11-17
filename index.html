@@ -338,6 +338,29 @@
         </div>
     </div>
 
+    <!-- Mini-Game Overlay -->
+    <div id="miniGameOverlay" class="hidden fixed inset-0 bg-gray-900 bg-opacity-80 flex flex-col items-center justify-center z-50 text-white p-8">
+        <div id="miniGameContent" class="text-center">
+            <h2 class="text-5xl font-extrabold mb-4">Blow That Dough: The Reinvestment Race</h2>
+            <div class="flex justify-around w-full max-w-2xl mx-auto text-3xl font-bold mb-8">
+                <p>Time: <span id="miniGameTimerDisplay">15s</span></p>
+                <p>Cash: <span id="miniGameCashDisplay">$0</span></p>
+            </div>
+            <div id="investmentOpportunityDisplay" class="bg-gray-800 p-8 rounded-2xl mb-8 min-h-[200px] flex flex-col items-center justify-center">
+                <!-- Investment opportunities will be injected here -->
+            </div>
+            <div class="flex justify-center gap-8">
+                <button id="investButton" class="control-btn text-4xl font-bold bg-green-600 hover:bg-green-700 px-12 py-6">Invest</button>
+                <button id="passButton" class="control-btn text-4xl font-bold bg-red-600 hover:bg-red-700 px-12 py-6">Pass</button>
+            </div>
+        </div>
+        <div id="miniGameResults" class="hidden text-center">
+            <h2 class="text-6xl font-extrabold mb-4">Race Over!</h2>
+            <p class="text-4xl">Portfolio Growth: <span id="miniGameScoreDisplay" class="font-bold text-green-400">$0</span></p>
+            <button id="closeMiniGameResults" class="control-btn text-2xl mt-8 px-8 py-4">Return to Heist</button>
+        </div>
+    </div>
+
     <script type="module" src="js/main.js?v=1.5.08"></script>
 </body>
 </html>

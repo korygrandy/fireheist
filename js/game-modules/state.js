@@ -189,7 +189,19 @@ const state = {
         totalGroundPoundCollisions: 0,
         consecutiveIncinerations: 0,
         hasSeenNewArmoryIndicator: false // New: To track if the user has seen the new armory indicator
-    }
+    },
+
+    // Mini-Game: Blow That Dough
+    isMiniGameActive: false,
+    miniGameType: null,
+    miniGameTimer: 0,
+    miniGameCashToInvest: 0,
+    miniGameScore: 0,
+    currentInvestment: null,
+    investmentOpportunities: [],
+    miniGameResultsDisplayed: false,
+    miniGameBonus: 0,
+    gamepad: null
 };
 
 export default state;

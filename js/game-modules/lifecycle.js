@@ -171,8 +171,27 @@ import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
 import { fireMageSkill } from './skills/fireMage.js';
 import { mageSpinnerSkill } from './skills/mageSpinner.js';
 import { fireballRollSkill } from './skills/fireballRoll.js';
+import { init as initMiniGame, update as updateMiniGame, draw as drawMiniGame } from './mini-games/blowThatDough.js';
 
 export function animate(timestamp) {
+    if (gameState.isMiniGameActive) {
+        if (!gameState.lastTime) {
+            setLastTime(timestamp);
+            requestAnimationFrame(animate);
+            return;
+        }
+        let deltaTime = timestamp - gameState.lastTime;
+        if (deltaTime > 100) { // Cap delta time to prevent large jumps
+            deltaTime = 100;
+        }
+        setLastTime(timestamp);
+
+        updateMiniGame(deltaTime);
+        drawMiniGame();
+        
+        requestAnimationFrame(animate);
+        return;
+    }
     if (!gameState.gameRunning && !gameState.isGameOverSequence) return;
 
     if (gameState.isPaused) {
@@ -443,9 +462,8 @@ export function animate(timestamp) {
     if (gameState.currentObstacle) {
         if (checkCollision(runnerY, angleRad)) {
             if (gameState.currentObstacle.isEasterEgg) {
-                console.log("🥚 EASTER EGG COLLECTED! Triggering mini-game...");
                 setCurrentObstacle(null); // Remove the egg
-                // Mini-game logic will be added here later
+                initMiniGame();
             } else if (!gameState.isColliding) {
                 incrementHits();
                 setColliding(true);

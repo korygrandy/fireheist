@@ -266,3 +266,35 @@ export const defaultDataString = `12/15/2000: 0
 export const defaultEventDataString = `06/01/2002: 📉 : DECELERATOR
 11/01/2015: 📈 : ACCELERATOR
 03/15/2022: 🎁 : ACCELERATOR`;
+
+// =================================================================
+// MINI-GAME: BLOW THAT DOUGH
+// =================================================================
+
+export const MINI_GAME_STARTING_CASH = 250000;
+
+export const INVESTMENT_OPPORTUNITIES = [
+    // Assets
+    { id: 'stock_tech', name: 'Tech Stock', emoji: '📈', type: 'asset', cost: 50000, roiMultiplier: 2.5 },
+    { id: 'stock_pharma', name: 'Pharma Stock', emoji: '💊', type: 'asset', cost: 75000, roiMultiplier: 2.0 },
+    { id: 'real_estate_house', name: 'Rental House', emoji: '🏠', type: 'asset', cost: 120000, roiMultiplier: 1.8 },
+    { id: 'real_estate_apt', name: 'Apartment Bldg', emoji: '🏢', type: 'asset', cost: 300000, roiMultiplier: 1.6 },
+    { id: 'crypto_btc', name: 'Bitcoin', emoji: '₿', type: 'asset', cost: 100000, roiMultiplier: 3.0 },
+    { id: 'crypto_eth', name: 'Ethereum', emoji: 'Ξ', type: 'asset', cost: 80000, roiMultiplier: 3.2 },
+    { id: 'business_startup', name: 'Startup Inc.', emoji: '💡', type: 'asset', cost: 150000, roiMultiplier: 2.2 },
+    { id: 'business_franchise', name: 'Taco Franchise', emoji: '🌮', type: 'asset', cost: 200000, roiMultiplier: 1.9 },
+    { id: 'bonds_gov', name: 'Govt. Bonds', emoji: '📜', type: 'asset', cost: 25000, roiMultiplier: 1.2 },
+    { id: 'gold_bar', name: 'Gold Bar', emoji: '💰', type: 'asset', cost: 60000, roiMultiplier: 1.5 },
+
+    // Liabilities
+    { id: 'car_sports', name: 'Sports Car', emoji: '🏎️', type: 'liability', cost: 80000 },
+    { id: 'car_luxury', name: 'Luxury Sedan', emoji: '🚗', type: 'liability', cost: 65000 },
+    { id: 'jewelry_watch', name: 'Diamond Watch', emoji: '⌚', type: 'liability', cost: 40000 },
+    { id: 'jewelry_necklace', name: 'Gold Necklace', emoji: '💎', type: 'liability', cost: 30000 },
+    { id: 'vacation_island', name: 'Island Vacation', emoji: '🏝️', type: 'liability', cost: 25000 },
+    { id: 'vacation_ski', name: 'Ski Trip', emoji: '⛷️', type: 'liability', cost: 20000 },
+    { id: 'gadget_phone', name: 'Newest Phone', emoji: '📱', type: 'liability', cost: 1500 },
+    { id: 'gadget_vr', name: 'VR Headset', emoji: '🕶️', type: 'liability', cost: 4000 },
+    { id: 'clothing_designer', name: 'Designer Outfit', emoji: '👕', type: 'liability', cost: 8000 },
+    { id: 'boat_yacht', name: 'Yacht', emoji: '🛥️', type: 'liability', cost: 450000 }
+];
