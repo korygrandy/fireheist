@@ -190,6 +190,8 @@ export function resetGameState() {
     hideResultsScreen();
     updateControlPanelState(false, false);
 
+    setAccumulatedCash(0);
+    gameState.displayCash = 0; // Explicitly reset the display value
     drawing.draw(); // Force a redraw to show the reset state immediately
 
     console.log("-> RESET GAME: Complete.");

@@ -214,12 +214,33 @@ export function animate(timestamp) {
             setVictory(gameState.hitsCounter === 0);
             if (gameState.isVictory) {
                 playWinnerSound();
+
+                // --- FIX: Trigger cash bag for the final milestone ---
+                const finalSegment = gameState.raceSegments[gameState.raceSegments.length - 1];
+                const finalMilestoneValue = finalSegment.milestoneValue;
+                setAccumulatedCash(finalMilestoneValue);
+                gameState.displayCash = finalMilestoneValue; // Instantly update display for the final amount
+                
+                const finalAngleRad = finalSegment.angleRad;
+                const collectionY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(finalAngleRad);
+                addCashBag({
+                    x: STICK_FIGURE_FIXED_X,
+                    y: collectionY,
+                    currentX: STICK_FIGURE_FIXED_X,
+                    currentY: collectionY,
+                    opacity: 1.0,
+                    progress: 0,
+                    isDone: false
+                });
+                playChaChing();
+                // --- END FIX ---
+
                 if (gameState.selectedPersona !== 'custom') {
                     if (!gameState.playerStats.flawlessRuns) {
                         gameState.playerStats.flawlessRuns = {};
                     }
                     gameState.playerStats.flawlessRuns[gameState.currentSkillLevel] = true;
-                    savePlayerStats(); 
+                    savePlayerStats();
                 } else {
                     console.log("-> GAME OVER: Flawless run not recorded for Custom Persona.");
                 }
@@ -231,8 +252,8 @@ export function animate(timestamp) {
             console.log(`-> GAME OVER: Starting sequence. Victory: ${gameState.isVictory}`);
             setGameRunning(false);
             updateHighScore();
-            savePlayerStats(); 
-            checkForNewUnlocks(gameState.playerStats); 
+            savePlayerStats();
+            checkForNewUnlocks(gameState.playerStats);
 
             // Disable the start button and re-enable it after 3 seconds
             const startButton = document.getElementById('startButton');
@@ -243,6 +264,37 @@ export function animate(timestamp) {
                 }, 3000);
             }
         }
+
+        // --- FIX: Animate cash bags during game over sequence ---
+        const deltaTime = timestamp - (gameState.lastTime || timestamp); // Use lastTime or current timestamp
+        for (let i = gameState.activeCashBags.length - 1; i >= 0; i--) {
+            const bag = gameState.activeCashBags[i];
+            if (bag.isDone) {
+                removeCashBag(i);
+                continue;
+            }
+            bag.progress += deltaTime / CASH_BAG_ANIMATION_DURATION;
+            const t = bag.progress;
+
+            if (t < 1) {
+                if (t < 0.5) {
+                    const hopProgress = t * 2;
+                    const hopHeight = 80;
+                    const yOffset = -4 * hopHeight * (hopProgress - hopProgress * hopProgress);
+                    bag.currentY = bag.y + yOffset;
+                    bag.currentX = bag.x;
+                    bag.opacity = 1.0;
+                } else {
+                    const moveProgress = (t - 0.5) * 2;
+                    bag.currentX = bag.x + (COUNTER_TARGET_X - bag.x) * moveProgress;
+                    bag.currentY = bag.currentY + (COUNTER_TARGET_Y - bag.currentY) * moveProgress * 0.5;
+                    bag.opacity = 1 - Math.max(0, (t - 0.8) / 0.2);
+                }
+            } else {
+                bag.isDone = true;
+            }
+        }
+        // --- END FIX ---
 
         drawing.draw();
         drawVictoryOverlay(timestamp - gameState.gameOverSequenceStartTime);

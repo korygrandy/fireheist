@@ -95,39 +95,23 @@ export async function initializeUIData() {
         }
     }
 
-    if (!settingsLoaded) {
-        try {
-            const response = await fetch('milestones.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            dataInput.value = data.milestones.join('\n');
-            eventDataInput.value = data.events.join('\n');
-        } catch (error) {
-            console.error('Error loading default milestone data:', error);
-            dataInput.value = defaultDataString.trim();
-            eventDataInput.value = defaultEventDataString.trim();
-        }
-
-        // Directly parse and prepare the initial data if no settings were loaded
-        const financialMilestones = parseData(dataInput.value);
-        setFinancialMilestones(financialMilestones);
-        if (gameState.financialMilestones && Object.keys(gameState.financialMilestones).length >= 2) {
-            const raceSegments = prepareRaceData(gameState.financialMilestones);
-            setRaceSegments(raceSegments);
-            const firstMilestoneDate = Object.keys(gameState.financialMilestones)[0];
-            const customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
-            setCustomEvents(customEvents);
-            dataMessage.textContent = `Default data loaded. ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} events ready.`;
-            dataMessage.style.color = 'green';
-        } else {
-            dataMessage.textContent = "Error: Default data is invalid. Please check 'milestones.json' or provide valid custom data.";
-            dataMessage.style.color = 'red';
-            setFinancialMilestones({});
-            setRaceSegments([]);
-            setCustomEvents({});
-        }
+    // Directly parse and prepare the initial data based on what loadSettings() has put into the inputs
+    const financialMilestones = parseData(dataInput.value);
+    setFinancialMilestones(financialMilestones);
+    if (gameState.financialMilestones && Object.keys(gameState.financialMilestones).length >= 2) {
+        const raceSegments = prepareRaceData(gameState.financialMilestones);
+        setRaceSegments(raceSegments);
+        const firstMilestoneDate = Object.keys(gameState.financialMilestones)[0];
+        const customEvents = parseEventData(eventDataInput.value, firstMilestoneDate) || {};
+        setCustomEvents(customEvents);
+        dataMessage.textContent = `Data loaded. ${gameState.raceSegments.length} milestones and ${Object.values(gameState.customEvents).flat().length} events ready.`;
+        dataMessage.style.color = 'green';
+    } else {
+        dataMessage.textContent = "Error: Milestone data is invalid. Please check your input or provide valid data.";
+        dataMessage.style.color = 'red';
+        setFinancialMilestones({});
+        setRaceSegments([]);
+        setCustomEvents({});
     }
 
     displayLeaderboard(); // Display leaderboard on startup

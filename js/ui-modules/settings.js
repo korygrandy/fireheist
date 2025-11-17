@@ -75,8 +75,8 @@ export function loadSettings() {
         if (speedRadio) speedRadio.checked = true;
 
         // Load saved data into text areas, falling back to default if not present
-        dataInput.value = settings.milestoneData || defaultDataString.trim();
-        eventDataInput.value = settings.eventData || defaultEventDataString.trim();
+        dataInput.value = settings.milestoneData ?? defaultDataString.trim();
+        eventDataInput.value = settings.eventData ?? defaultEventDataString.trim();
 
         // Also parse and apply the loaded data to the game state
         const financialMilestones = parseData(dataInput.value);
@@ -107,6 +107,9 @@ export function loadSettings() {
         setAutoHurdleEnabled(false);
         setSelectedTheme('grass');
         setSelectedPersona('custom');
+        // Also populate the text areas with defaults
+        dataInput.value = defaultDataString.trim();
+        eventDataInput.value = defaultEventDataString.trim();
         return false; // Indicate that settings were not loaded
     }
 }
