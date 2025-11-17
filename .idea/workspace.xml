@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/js/game-modules/collision.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/collision.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/world.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/world.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/spawning.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/spawning.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/dom-elements.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/dom-elements.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +43,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/mini-game-blow-that-dough",
+    "git-widget-placeholder": "feature/prediction-addiction-mini-game",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",

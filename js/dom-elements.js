@@ -47,11 +47,21 @@ export const totalCashDisplay = document.getElementById('totalCashDisplay');
 
 // Mini-Game: Blow That Dough
 export const miniGameOverlay = document.getElementById('miniGameOverlay');
+export const miniGameContent = document.getElementById('miniGameContent'); // Added for Prediction Addiction to hide it
 export const miniGameTimerDisplay = document.getElementById('miniGameTimerDisplay');
 export const miniGameCashDisplay = document.getElementById('miniGameCashDisplay');
 export const investmentOpportunityDisplay = document.getElementById('investmentOpportunityDisplay');
 export const investButton = document.getElementById('investButton');
 export const passButton = document.getElementById('passButton');
 export const miniGameResults = document.getElementById('miniGameResults');
+export const miniGameTitle = document.getElementById('miniGameTitle'); // Added for generic title
 export const miniGameScoreDisplay = document.getElementById('miniGameScoreDisplay');
 export const closeMiniGameResults = document.getElementById('closeMiniGameResults');
+
+// Mini-Game: Prediction Addiction
+export const predictionAddictionContent = document.getElementById('predictionAddictionContent');
+export const crystalBall = document.getElementById('crystalBall');
+export const predictUpButton = document.getElementById('predictUpButton');
+export const predictDownButton = document.getElementById('predictDownButton');
+export const predictionOutcome = document.getElementById('predictionOutcome');
+export const predictionReward = document.getElementById('predictionReward');

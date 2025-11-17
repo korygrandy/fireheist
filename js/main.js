@@ -813,29 +813,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 }
 
-                if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
+                                if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+                                    e.preventDefault();
 
-                    startMoonwalk(gameState);
+                                    startShockwave(gameState);
 
-                }
+                                }
 
-                if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
+                                if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+                                    e.preventDefault();
 
-                    startShockwave(gameState);
+                                    startMoonwalk(gameState);
 
-                }
-
-                if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
-
-                    e.preventDefault();
-
-                    handleSpecialMove(); // Molotov Cocktail will be handled by activeArmorySkill
-
-                }
+                                }
 
         if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
 

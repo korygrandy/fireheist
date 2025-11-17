@@ -172,6 +172,7 @@ import { fireMageSkill } from './skills/fireMage.js';
 import { mageSpinnerSkill } from './skills/mageSpinner.js';
 import { fireballRollSkill } from './skills/fireballRoll.js';
 import { init as initMiniGame, update as updateMiniGame, draw as drawMiniGame } from './mini-games/blowThatDough.js';
+import { init as initPredictionAddiction, update as updatePredictionAddiction, draw as drawPredictionAddiction } from './mini-games/predictionAddiction.js';
 
 export function animate(timestamp) {
     if (gameState.isMiniGameActive) {
@@ -186,8 +187,13 @@ export function animate(timestamp) {
         }
         setLastTime(timestamp);
 
-        updateMiniGame(deltaTime);
-        drawMiniGame();
+        if (gameState.miniGameType === 'blowThatDough') {
+            updateMiniGame(deltaTime);
+            drawMiniGame();
+        } else if (gameState.miniGameType === 'predictionAddiction') {
+            updatePredictionAddiction(deltaTime);
+            drawPredictionAddiction();
+        }
         
         requestAnimationFrame(animate);
         return;
@@ -463,7 +469,15 @@ export function animate(timestamp) {
         if (checkCollision(runnerY, angleRad)) {
             if (gameState.currentObstacle.isEasterEgg) {
                 setCurrentObstacle(null); // Remove the egg
-                initMiniGame();
+                const miniGameTypes = ['blowThatDough', 'predictionAddiction'];
+                const selectedMiniGameType = miniGameTypes[Math.floor(Math.random() * miniGameTypes.length)];
+                gameState.miniGameType = selectedMiniGameType; // Set the type in global state
+
+                if (selectedMiniGameType === 'blowThatDough') {
+                    initMiniGame();
+                } else if (selectedMiniGameType === 'predictionAddiction') {
+                    initPredictionAddiction();
+                }
             } else if (!gameState.isColliding) {
                 incrementHits();
                 setColliding(true);
