@@ -321,7 +321,7 @@ export function stopGame(shouldReset = true) {
         drawing.draw();
     } else {
         // On successful run completion, add the main heist value and any mini-game bonus to the total
-        if (gameState.accumulatedCash > 0 || gameState.miniGameBonus > 0) {
+        if (gameState.isVictory && (gameState.accumulatedCash > 0 || gameState.miniGameBonus > 0)) {
             const winnings = gameState.accumulatedCash + gameState.miniGameBonus;
             gameState.playerStats.totalAccumulatedCash += winnings;
             console.log(`-> STOP GAME: Added winnings of $${winnings.toLocaleString()} to total cash.`);
