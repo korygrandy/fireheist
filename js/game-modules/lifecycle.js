@@ -467,18 +467,7 @@ export function animate(timestamp) {
 
     if (gameState.currentObstacle) {
         if (checkCollision(runnerY, angleRad)) {
-            if (gameState.currentObstacle.isEasterEgg) {
-                setCurrentObstacle(null); // Remove the egg
-                const miniGameTypes = ['blowThatDough', 'predictionAddiction'];
-                const selectedMiniGameType = miniGameTypes[Math.floor(Math.random() * miniGameTypes.length)];
-                gameState.miniGameType = selectedMiniGameType; // Set the type in global state
-
-                if (selectedMiniGameType === 'blowThatDough') {
-                    initMiniGame();
-                } else if (selectedMiniGameType === 'predictionAddiction') {
-                    initPredictionAddiction();
-                }
-            } else if (!gameState.isColliding) {
+            if (!gameState.isColliding) {
                 incrementHits();
                 setColliding(true);
                 setCollisionDuration(COLLISION_DURATION_MS);

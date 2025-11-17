@@ -11,6 +11,8 @@ import { playAnimationSound } from '../audio.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
 import { createShatterEffect } from './drawing/effects.js';
+import { init as initMiniGame } from './mini-games/blowThatDough.js';
+import { init as initPredictionAddiction } from './mini-games/predictionAddiction.js';
 
 export function checkCollision(runnerY, angleRad) {
     if (!gameState.currentObstacle || gameState.currentObstacle.hasBeenHit || gameState.isColliding) return false;
@@ -54,6 +56,37 @@ export function checkCollision(runnerY, angleRad) {
     const minClearanceY = obstacleTopY - STICK_FIGURE_TOTAL_HEIGHT + 5;
 
     const runnerIsJumpingClear = gameState.jumpState.isJumping && (runnerY < minClearanceY);
+
+    // Check for Easter Egg collision first, as it has unique activation requirements
+    if (gameState.currentObstacle.isEasterEgg) {
+        const collisionTolerance = 5;
+        // Check for physical collision with the easter egg
+        if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
+            if (gameState.jumpState.isGroundPound) {
+                // Successful activation with Ground Pound
+                setCurrentObstacle(null); // Remove the egg
+                const miniGameTypes = ['blowThatDough', 'predictionAddiction'];
+                const selectedMiniGameType = miniGameTypes[Math.floor(Math.random() * miniGameTypes.length)];
+                gameState.miniGameType = selectedMiniGameType; // Set the type in global state
+
+                if (selectedMiniGameType === 'blowThatDough') {
+                    initMiniGame();
+                } else if (selectedMiniGameType === 'predictionAddiction') {
+                    initPredictionAddiction();
+                }
+                return false; // Mini-game activated, no further collision processing
+            } else {
+                // Easter egg hit, but not with a Ground Pound, so pass through
+                return false;
+            }
+        } else {
+            // No physical collision with easter egg, so pass through
+            return false;
+        }
+    }
+
+    // If we reach here, it's not an easter egg, or it's an easter egg that was passed through.
+    // Now proceed with standard collision checks for regular obstacles.
 
     if (horizontalDistance < gameState.COLLISION_RANGE_X) {
         // Priority 1: Check for active Firestorm first, as it overrides all other collision types.

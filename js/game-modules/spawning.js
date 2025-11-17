@@ -9,7 +9,7 @@ export function spawnObstacle() {
         spawnTime: Date.now(),
         hasBeenHit: false,
         isEasterEgg: isEasterEgg,
-        opacity: isEasterEgg ? 0.02 : 1.0
+        opacity: isEasterEgg ? 0.05 : 1.0
     };
 
     if (state.isFirestormActive) {
@@ -39,7 +39,7 @@ export function spawnEasterEgg() {
         spawnTime: Date.now(),
         hasBeenHit: false,
         isEasterEgg: true,
-        opacity: 0.02
+        opacity: 0.0001
     };
     state.currentObstacle = newObstacle;
     console.log("-> spawnEasterEgg: DEBUG - Easter egg spawned via key press.");

@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/dom-elements.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/dom-elements.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/collision.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/collision.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/spawning.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/spawning.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
