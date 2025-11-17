@@ -1201,4 +1201,9 @@ export function setSkillLevel(level) {
     state.currentSkillLevel = level;
 }
 
+export function setFinalMilestoneAnimation(isActive, startTime) {
+    state.finalMilestoneAnimation.isActive = isActive;
+    state.finalMilestoneAnimation.startTime = startTime;
+}
+
 

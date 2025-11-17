@@ -1,6 +1,6 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, ACCELERATOR_EMOJI_SIZE, ACCELERATOR_EMOJI, OBSTACLE_EMOJI_SIZE, EVENT_POPUP_HEIGHT, NUM_CLOUDS, CLOUD_SPEED_FACTOR, STICK_FIGURE_FIXED_X, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../../constants.js';
-import { currentTheme } from '../../theme.js';
+import { currentTheme, finalMilestoneAnchors } from '../../theme.js';
 import { gameState, GRASS_ANIMATION_INTERVAL_MS } from '../state-manager.js';
 import { createAshParticle } from './effects.js';
 
@@ -199,8 +199,13 @@ export function drawSlantedGround(angleRad) {
     }
 }
 
-export function drawHurdle(hurdleData) {
+export function drawHurdle(hurdleData, isFinalHurdle) {
     if (!hurdleData || !hurdleData.isMilestone) return; // Only draw if it's a milestone
+
+    if (isFinalHurdle) {
+        drawFinalMilestoneAnchor(hurdleData);
+        return;
+    }
 
     const hurdleDrawX = canvas.width - 100 - gameState.backgroundOffset;
     const currentAngleRad = gameState.raceSegments[gameState.currentSegmentIndex] ? gameState.raceSegments[gameState.currentSegmentIndex].angleRad : 0;
@@ -263,8 +268,107 @@ export function drawHurdle(hurdleData) {
     }
 }
 
+function drawPhoenixArchway(hurdleData, drawX, groundY, angleRad) {
+    ctx.save();
+    ctx.translate(drawX, groundY);
+    ctx.rotate(-angleRad);
+
+    const archwayHeight = hurdleData.hurdleHeight + 80;
+    const archwayWidth = 100;
+
+    // Pulsating glow effect
+    const glowIntensity = 0.5 + Math.sin(performance.now() / 300) * 0.5;
+    ctx.shadowColor = `rgba(255, 223, 0, ${glowIntensity})`;
+    ctx.shadowBlur = 30;
+
+    // Draw the archway (simplified as two pillars and a top arc)
+    const gradient = ctx.createLinearGradient(0, -archwayHeight, 0, 0);
+    gradient.addColorStop(0, 'rgba(255, 100, 0, 1)');
+    gradient.addColorStop(0.5, 'rgba(255, 200, 0, 1)');
+    gradient.addColorStop(1, 'rgba(255, 100, 0, 1)');
+    ctx.fillStyle = gradient;
+
+    // Left Pillar
+    ctx.beginPath();
+    ctx.moveTo(-archwayWidth / 2, 0);
+    ctx.quadraticCurveTo(-archwayWidth / 2, -archwayHeight / 2, 0, -archwayHeight);
+    ctx.lineTo(-archwayWidth / 2 + 15, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Right Pillar
+    ctx.beginPath();
+    ctx.moveTo(archwayWidth / 2, 0);
+    ctx.quadraticCurveTo(archwayWidth / 2, -archwayHeight / 2, 0, -archwayHeight);
+    ctx.lineTo(archwayWidth / 2 - 15, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw rising embers
+    for (let i = 0; i < 20; i++) {
+        const x = (Math.random() - 0.5) * archwayWidth;
+        const y = -Math.random() * archwayHeight;
+        const size = Math.random() * 3 + 1;
+        const opacity = Math.random() * 0.8;
+        ctx.fillStyle = `rgba(255, 223, 0, ${opacity})`;
+        ctx.fillRect(x, y, size, size);
+    }
+
+    // Victory Animation: Golden Spark Shower
+    if (gameState.finalMilestoneAnimation.isActive) {
+        const animationDuration = 3000; // 3 seconds
+        const elapsed = performance.now() - gameState.finalMilestoneAnimation.startTime;
+        const progress = elapsed / animationDuration;
+
+        if (progress < 1) {
+            for (let i = 0; i < 5; i++) { // Add 5 new sparks each frame
+                const x = (Math.random() - 0.5) * archwayWidth;
+                const y = -archwayHeight + (Math.random() * 20);
+                const size = Math.random() * 4 + 2;
+                const opacity = 1 - progress; // Fade out over time
+                ctx.fillStyle = `rgba(255, 215, 0, ${opacity})`;
+                ctx.fillRect(x, y + (progress * (groundY + archwayHeight)), size, size);
+            }
+        } else {
+            // Animation finished, reset the state
+            gameState.finalMilestoneAnimation.isActive = false;
+        }
+    }
+
+    // Draw the milestone labels
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 18px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(hurdleData.label, 0, -archwayHeight - 40);
+    ctx.font = '14px Arial';
+    ctx.fillText(hurdleData.dateLabel, 0, -archwayHeight - 20);
+
+    ctx.restore();
+}
+
+function drawFinalMilestoneAnchor(hurdleData) {
+    const anchorType = finalMilestoneAnchors[gameState.selectedTheme] || 'phoenix'; // Default to phoenix
+    const drawX = canvas.width - 100 - gameState.backgroundOffset;
+    const angleRad = gameState.raceSegments[gameState.currentSegmentIndex]?.angleRad || 0;
+    const groundY = GROUND_Y - drawX * Math.tan(angleRad);
+
+    if (drawX < -100 || drawX > canvas.width + 100) return;
+
+    switch (anchorType) {
+        case 'phoenix':
+            drawPhoenixArchway(hurdleData, drawX, groundY, angleRad);
+            break;
+        // Add cases for other anchor types here in the future
+        // case 'pyramid':
+        //     drawPyramid(hurdleData, drawX, groundY, angleRad);
+        //     break;
+    }
+}
+
 export function drawObstacle(obstacle, angleRad) {
     if (!obstacle) return;
+
 
     const obstacleX = obstacle.x;
     const obstacleY = GROUND_Y - obstacleX * Math.tan(angleRad) + OBSTACLE_EMOJI_Y_OFFSET;

@@ -81,7 +81,8 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
                 currentSegment.animationProgress = 0;
             }
         }
-        drawHurdle(currentSegment);
+        const isFinalHurdle = gameState.currentSegmentIndex === gameState.raceSegments.length - 1;
+        drawHurdle(currentSegment, isFinalHurdle);
 
         if (gameState.currentObstacle) drawObstacle(gameState.currentObstacle, groundAngleRad);
         if (gameState.currentAccelerator) drawAccelerator(gameState.currentAccelerator, groundAngleRad);

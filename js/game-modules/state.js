@@ -201,7 +201,11 @@ const state = {
     investmentOpportunities: [],
     miniGameResultsDisplayed: false,
     miniGameBonus: 0,
-    gamepad: null
+    gamepad: null,
+    finalMilestoneAnimation: {
+        isActive: false,
+        startTime: 0
+    }
 };
 
 export default state;

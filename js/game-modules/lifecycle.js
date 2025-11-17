@@ -148,6 +148,7 @@ import {
     removeMolotovCocktail,
     clearMolotovCocktails,
     setObstacleHit,
+    setFinalMilestoneAnimation,
 } from './state-manager.js';
 import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
@@ -214,6 +215,7 @@ export function animate(timestamp) {
             setVictory(gameState.hitsCounter === 0);
             if (gameState.isVictory) {
                 playWinnerSound();
+                setFinalMilestoneAnimation(true, timestamp); // Trigger the victory animation
                 if (gameState.selectedPersona !== 'custom') {
                     if (!gameState.playerStats.flawlessRuns) {
                         gameState.playerStats.flawlessRuns = {};

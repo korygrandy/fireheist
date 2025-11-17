@@ -106,6 +106,17 @@ export const themes = {
     }
 };
 
+export const finalMilestoneAnchors = {
+    'grass': 'phoenix',
+    'mountains': 'phoenix',
+    'roadway': 'phoenix',
+    'snow': 'phoenix',
+    'desert': 'phoenix',
+    'volcano': 'phoenix',
+    'outerspace': 'phoenix',
+    'night': 'phoenix'
+};
+
 export let currentTheme = themes.grass; // Default theme
 
 export function setTheme(themeName) {
