@@ -1,13 +1,13 @@
-// Placeholder for persona module
-import { personaSelector, customPersonaControls, personaDetailsContainer, emojiInput, frequencyValueSpan, themeSelector } from '../dom-elements.js';
+import { personaSelector, customPersonaControls, personaDetailsContainer, emojiInput, frequencyValueSpan, themeSelector, dataInput, eventDataInput } from '../dom-elements.js';
 import { personas } from '../personas.js';
 import { personaUnlocks } from '../unlocks.js';
 import { gameState, setSelectedPersona, setStickFigureEmoji, setCurrentSkillLevel, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setSelectedTheme } from '../game-modules/state-manager.js';
-import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL } from '../constants.js';
+import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL, defaultDataString, defaultEventDataString } from '../constants.js';
 import { initializeMusicPlayer } from '../audio.js';
-import { saveSettings } from './settings.js';
+import { saveSettings, loadSettings } from './settings.js';
 import { setTheme } from '../theme.js';
 import { applySkillLevelSettings } from './input-handlers.js';
+import { loadCustomData } from './data.js';
 
 export function applyPersona(personaKey) {
     setSelectedPersona(personaKey);
@@ -16,6 +16,14 @@ export function applyPersona(personaKey) {
     if (personaKey === 'custom') {
         customPersonaControls.style.display = 'block';
         personaDetailsContainer.classList.add('hidden');
+        dataInput.disabled = false;
+        eventDataInput.disabled = false;
+
+        // When switching back to custom, reload the user's saved settings or defaults
+        const savedSettings = JSON.parse(localStorage.getItem('fireHeistSettings'));
+        dataInput.value = savedSettings?.milestoneData ?? defaultDataString.trim();
+        eventDataInput.value = savedSettings?.eventData ?? defaultEventDataString.trim();
+
         const cleanEmoji = gameState.stickFigureEmoji.replace(/\uFE0F/g, '');
         const musicUrl = EMOJI_MUSIC_MAP[cleanEmoji] || DEFAULT_MUSIC_URL;
         initializeMusicPlayer(musicUrl);
@@ -63,9 +71,18 @@ export function applyPersona(personaKey) {
         themeSelector.value = gameState.selectedTheme;
         setTheme(gameState.selectedTheme);
 
+        // Load persona-specific data and disable inputs
+        dataInput.value = persona.milestones.join('\\n');
+        eventDataInput.value = persona.events.join('\\n');
+        dataInput.disabled = true;
+        eventDataInput.disabled = true;
+
         // Initialize music player with persona's music
         initializeMusicPlayer(persona.music);
     }
+    
+    // After applying persona settings, reload the data to update the game state
+    loadCustomData();
     saveSettings();
 }
 
