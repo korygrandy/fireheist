@@ -79,15 +79,6 @@ function createChallengeHTML(config, results = null) {
     `;
 
     container.innerHTML = finalHTML;
-
-    setTimeout(() => {
-        const challengeContainer = container.querySelector('.daily-challenge-container');
-        if (challengeContainer) {
-            challengeContainer.classList.add('expanded');
-        } else {
-            console.error("-> createChallengeHTML: Could not find '.daily-challenge-container' to expand.");
-        }
-    }, 10);
 }
 
 export function displayDailyChallenge() {

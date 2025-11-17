@@ -89,6 +89,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     preloaderStartButton.addEventListener('click', async () => {
         playAnimationSound('ignited-flame'); // Play ignited-flame sound on click
         preloaderOverlay.classList.add('hidden');
+        
+        // Also expand the daily challenge container
+        const challengeContainer = document.querySelector('.daily-challenge-container');
+        if (challengeContainer) {
+            challengeContainer.classList.add('expanded');
+        }
+
         // Ensure Tone.js context is running before playing audio
         if (Tone.context.state !== 'running') {
             await Tone.start();

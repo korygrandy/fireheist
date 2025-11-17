@@ -281,14 +281,14 @@ export function playLoserSound() {
 }
 
 export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
+    // If a music player instance already exists, stop and dispose of it first.
+    if (backgroundMusic) {
+        backgroundMusic.stop().dispose();
+    }
+
     // Stop the transport and cancel any scheduled events to prevent overlaps
     Tone.Transport.stop();
     Tone.Transport.cancel();
-
-    if (backgroundMusic) {
-        if (backgroundMusic.state === 'started') { backgroundMusic.stop(); }
-        backgroundMusic.dispose();
-    }
 
     backgroundMusic = new Tone.Player({
         url: musicUrl,

@@ -79,6 +79,7 @@ import * as drawing from './drawing.js';
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from '../ui-modules/daily-challenge-ui.js';
 import { markDailyChallengeAsPlayed, updateDailyChallengeWinStreak } from '../daily-challenge.js';
 import { animate } from './lifecycle.js';
+import { updateArmoryCashDisplay } from '../ui-modules/armory.js';
 
 export function togglePauseGame() {
     if (!gameState.gameRunning) return;
@@ -290,15 +291,20 @@ export function stopGame(shouldReset = true) {
         if (shouldReset) {
             console.log("-> STOP GAME: Resetting Daily Challenge.");
             resetGameState();
-            displayDailyChallenge(); 
             showSandboxControls(); 
             gameState.isDailyChallengeActive = false; 
         } else {
             console.log("-> STOP GAME: Daily Challenge finished, cleaning up.");
             
-            // The score has already been saved and the HTML overlay displayed from leaderboard-initials.js
-            // This block is now just for final state cleanup.
-            
+            // Add the winnings from the daily challenge to the player's total stats
+            if (gameState.accumulatedCash > 0 || gameState.miniGameBonus > 0) {
+                const winnings = gameState.accumulatedCash + gameState.miniGameBonus;
+                gameState.playerStats.totalAccumulatedCash += winnings;
+                console.log(`-> STOP GAME: Added Daily Challenge winnings of $${winnings.toLocaleString()} to total cash.`);
+                // savePlayerStats(); // The save is already called in leaderboard-initials.js
+                updateArmoryCashDisplay(); // Explicitly update the UI
+            }
+
             showSandboxControls();
             setGameOverSequence(false); // End the game over sequence
             gameState.isDailyChallengeActive = false; // Fully deactivate daily challenge mode
@@ -314,10 +320,11 @@ export function stopGame(shouldReset = true) {
         resetGameState();
         drawing.draw();
     } else {
-        // On successful run completion, add the mini-game bonus to the total
-        if (gameState.miniGameBonus) {
-            gameState.playerStats.totalAccumulatedCash += gameState.miniGameBonus;
-            console.log(`-> STOP GAME: Added mini-game bonus of $${gameState.miniGameBonus} to total cash.`);
+        // On successful run completion, add the main heist value and any mini-game bonus to the total
+        if (gameState.accumulatedCash > 0 || gameState.miniGameBonus > 0) {
+            const winnings = gameState.accumulatedCash + gameState.miniGameBonus;
+            gameState.playerStats.totalAccumulatedCash += winnings;
+            console.log(`-> STOP GAME: Added winnings of $${winnings.toLocaleString()} to total cash.`);
         }
         showResultsScreen(gameState.financialMilestones, gameState.raceSegments);
         updateControlPanelState(false, false);

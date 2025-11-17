@@ -10,6 +10,15 @@ import { playAnimationSound } from '../audio.js';
 // =================================================================
 
 /**
+ * Updates the total cash display in the Armory tab.
+ */
+export function updateArmoryCashDisplay() {
+    if (totalCashDisplay) {
+        totalCashDisplay.textContent = `$${gameState.playerStats.totalAccumulatedCash.toLocaleString()}`;
+    }
+}
+
+/**
  * Handles the selection of an armory skill.
  * @param {string} skillKey - The key of the skill to select.
  */
