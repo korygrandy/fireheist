@@ -12,12 +12,17 @@ import { loadCustomData } from './data.js';
 export function applyPersona(personaKey) {
     setSelectedPersona(personaKey);
     const persona = personas[personaKey];
+    const dataTabButton = document.querySelector('button[data-tab="data"]');
 
     if (personaKey === 'custom') {
         customPersonaControls.style.display = 'block';
         personaDetailsContainer.classList.add('hidden');
         dataInput.disabled = false;
         eventDataInput.disabled = false;
+        if (dataTabButton) {
+            dataTabButton.disabled = false;
+            dataTabButton.classList.remove('disabled-tab');
+        }
 
         // When switching back to custom, reload the user's saved settings or defaults
         const savedSettings = JSON.parse(localStorage.getItem('fireHeistSettings'));
@@ -30,6 +35,10 @@ export function applyPersona(personaKey) {
     } else {
         customPersonaControls.style.display = 'none';
         personaDetailsContainer.classList.remove('hidden');
+        if (dataTabButton) {
+            dataTabButton.disabled = true;
+            dataTabButton.classList.add('disabled-tab');
+        }
 
         // Populate and display persona details
         personaDetailsContainer.innerHTML = `
@@ -72,8 +81,8 @@ export function applyPersona(personaKey) {
         setTheme(gameState.selectedTheme);
 
         // Load persona-specific data and disable inputs
-        dataInput.value = persona.milestones.join('\\n');
-        eventDataInput.value = persona.events.join('\\n');
+        dataInput.value = persona.milestones.join('\n');
+        eventDataInput.value = persona.events.join('\n');
         dataInput.disabled = true;
         eventDataInput.disabled = true;
 

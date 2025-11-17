@@ -47,6 +47,12 @@ body.game-active-fullscreen:fullscreen {
     @apply border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300;
 }
 
+.disabled-tab {
+    color: #d1d5db; /* light gray */
+    cursor: default;
+    opacity: 0.6;
+}
+
 .gamepad-focus {
     outline: 3px solid #3b82f6; /* A prominent blue outline */
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);

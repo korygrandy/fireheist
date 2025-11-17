@@ -214,6 +214,13 @@ export function startGame() {
     applySkillLevelSettings(gameState.currentSkillLevel);
     setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
 
+    // Disable data tab if a persona is chosen
+    const dataTabButton = document.querySelector('button[data-tab="data"]');
+    if (gameState.selectedPersona !== 'custom' && dataTabButton) {
+        dataTabButton.disabled = true;
+        dataTabButton.classList.add('disabled-tab');
+    }
+
     let musicUrl = DEFAULT_MUSIC_URL;
     const cleanEmoji = gameState.stickFigureEmoji.replace(/\uFE0F/g, '');
     const isDefaultEmoji = cleanEmoji === '🦹‍♂️';
@@ -288,6 +295,13 @@ export function stopGame(shouldReset = true) {
     document.body.style.backgroundColor = ''; 
     document.body.classList.remove('game-active-fullscreen'); 
     exitFullScreenIfActive(); 
+
+    // Re-enable data tab if custom persona is selected
+    const dataTabButton = document.querySelector('button[data-tab="data"]');
+    if (gameState.selectedPersona === 'custom' && dataTabButton) {
+        dataTabButton.disabled = false;
+        dataTabButton.classList.remove('disabled-tab');
+    }
 
     Tone.Transport.stop();
 
