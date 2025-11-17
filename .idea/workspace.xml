@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/persona.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/persona.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/player.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/unlocks.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/unlocks.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +42,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "defect/persona-milestone-dataload-fails",
+    "git-widget-placeholder": "feature/re-add-big-head-mode",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",

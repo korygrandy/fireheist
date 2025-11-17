@@ -10,12 +10,12 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         return; // Don't draw the player if invisible
     }``
 
+    // Determine if Big Head Mode is active
+    const isBigHeadMode = gameState.playerStats.activeArmorySkill === 'bigHeadMode';
+    const headFontSize = isBigHeadMode ? '56px Arial' : '28px Arial';
+
     if (gameState.isColliding) {
-        console.log(`[DEBUG] Drawing player in collision state.
-          isColliding: ${gameState.isColliding},
-          collisionDuration: ${gameState.collisionDuration},
-          globalAlpha: ${ctx.globalAlpha},
-          x: ${x}, y: ${y}`);
+        console.log(`[DEBUG] Drawing player in collision state.\n          isColliding: ${gameState.isColliding},\n          collisionDuration: ${gameState.collisionDuration},\n          globalAlpha: ${ctx.globalAlpha},\n          x: ${x}, y: ${y}`);
     }
 
     // Determine the base color based on the theme
@@ -30,6 +30,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
 
     let headY = -STICK_FIGURE_TOTAL_HEIGHT;
     let bodyY = 0;
+    const headRenderY = isBigHeadMode ? headY - 20 : headY; // Use a separate variable for rendering
 
     const isFading = gameState.collisionDuration > 0;
     const fadeProgress = isFading ? gameState.collisionDuration / COLLISION_DURATION_MS : 0;
@@ -123,10 +124,10 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         // --- Draw Head ---
         ctx.save();
         ctx.scale(headScaleX, 1);
-            ctx.font = '28px Arial';
+            ctx.font = headFontSize; // Use dynamic font size
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(gameState.stickFigureEmoji, 0, headY);        ctx.restore();
+            ctx.fillText(gameState.stickFigureEmoji, 0, headRenderY);        ctx.restore();
 
         // --- Draw Body and Limbs ---
         ctx.save();
@@ -387,10 +388,10 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     ctx.save();
     ctx.rotate(animationRotation);
 
-    ctx.font = '28px Arial';
+    ctx.font = headFontSize; // Use dynamic font size
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(gameState.stickFigureEmoji, 0, headY);
+    ctx.fillText(gameState.stickFigureEmoji, 0, headRenderY);
 
     ctx.strokeStyle = 'black';
     ctx.beginPath();
