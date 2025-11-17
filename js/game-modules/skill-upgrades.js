@@ -12,10 +12,10 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 5,
         levels: [
             { cost: 0, description: "Default: A fiery vortex that drains energy over time." }, // Level 1 (initial unlock)
-            { cost: 100000, description: "Energy drain is reduced by 10%." }, // -> Level 2
-            { cost: 250000, description: "Energy drain is reduced by 20%." }, // -> Level 3
-            { cost: 500000, description: "Duration is increased by 1 second." }, // -> Level 4
-            { cost: 1000000, description: "Also incinerates nearby obstacles upon activation." } // -> Level 5
+            { cost: 540000, description: "Energy drain is reduced by 10%." }, // -> Level 2
+            { cost: 1350000, description: "Energy drain is reduced by 20%." }, // -> Level 3
+            { cost: 2700000, description: "Duration is increased by 1 second." }, // -> Level 4
+            { cost: 5400000, description: "Also incinerates nearby obstacles upon activation." } // -> Level 5
         ]
     },
     fieryGroundPound: {
@@ -23,10 +23,10 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 5,
         levels: [
             { cost: 0, description: "Default: A powerful slam that incinerates all obstacles on screen." }, // Level 1
-            { cost: 120000, description: "Slightly larger impact radius." }, // -> Level 2
-            { cost: 300000, description: "Energy cost is reduced by 10." }, // -> Level 3
-            { cost: 600000, description: "Significantly larger impact radius." }, // -> Level 4
-            { cost: 1200000, description: "Leaves a trail of fire that destroys the next obstacle." } // -> Level 5
+            { cost: 648000, description: "Slightly larger impact radius." }, // -> Level 2
+            { cost: 1620000, description: "Energy cost is reduced by 10." }, // -> Level 3
+            { cost: 3240000, description: "Significantly larger impact radius." }, // -> Level 4
+            { cost: 6480000, description: "Leaves a trail of fire that destroys the next obstacle." } // -> Level 5
         ]
     },
     moonwalk: {
@@ -34,8 +34,8 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 3,
         levels: [
             { cost: 0, description: "Default: A stylish backwards slide." }, // Level 1
-            { cost: 50000, description: "Gain a small amount of energy on use." }, // -> Level 2
-            { cost: 150000, description: "Become briefly invincible at the start of the move." } // -> Level 3
+            { cost: 270000, description: "Gain a small amount of energy on use." }, // -> Level 2
+            { cost: 810000, description: "Become briefly invincible at the start of the move." } // -> Level 3
         ]
     },
     firestorm: {
@@ -43,10 +43,10 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 5,
         levels: [
             { cost: 0, description: "Default: A powerful continuous fire attack that rapidly drains energy." }, // Level 1
-            { cost: 150000, description: "Energy drain is reduced by 15%." }, // -> Level 2
-            { cost: 400000, description: "Duration is increased by 2 seconds." }, // -> Level 3
-            { cost: 800000, description: "Wider area of effect." }, // -> Level 4
-            { cost: 1500000, description: "Periodically spawns a protective fire shield." } // -> Level 5
+            { cost: 810000, description: "Energy drain is reduced by 15%." }, // -> Level 2
+            { cost: 2160000, description: "Duration is increased by 2 seconds." }, // -> Level 3
+            { cost: 4320000, description: "Wider area of effect." }, // -> Level 4
+            { cost: 8100000, description: "Periodically spawns a protective fire shield." } // -> Level 5
         ]
     },
     fireStomper: {
@@ -54,8 +54,8 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 3,
         levels: [
             { cost: 0, description: "Default: A powerful stomp that flips and crumbles obstacles." }, // Level 1
-            { cost: 80000, description: "Increased stun duration on enemies." }, // -> Level 2
-            { cost: 200000, description: "Also grants a temporary speed boost." } // -> Level 3
+            { cost: 432000, description: "Increased stun duration on enemies." }, // -> Level 2
+            { cost: 1080000, description: "Also grants a temporary speed boost." } // -> Level 3
         ]
     },
     fieryHoudini: {
@@ -63,9 +63,9 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 4,
         levels: [
             { cost: 0, description: "Default: Teleport forward, incinerating nearby obstacles." }, // Level 1
-            { cost: 180000, description: "Increased teleport distance." }, // -> Level 2
-            { cost: 450000, description: "Reduced energy cost." }, // -> Level 3
-            { cost: 900000, description: "Brief invincibility after reappearing." } // -> Level 4
+            { cost: 972000, description: "Increased teleport distance." }, // -> Level 2
+            { cost: 2430000, description: "Reduced energy cost." }, // -> Level 3
+            { cost: 4860000, description: "Brief invincibility after reappearing." } // -> Level 4
         ]
     },
     meteorStrike: {
@@ -73,8 +73,8 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 3,
         levels: [
             { cost: 0, description: "Default: Calls down a meteor to destroy the current obstacle." }, // Level 1
-            { cost: 250000, description: "Meteor destroys the target obstacle and one other." },    // -> Level 2
-            { cost: 750000, description: "Meteor destroys all on-screen obstacles." }             // -> Level 3
+            { cost: 1350000, description: "Meteor destroys the target obstacle and one other." },    // -> Level 2
+            { cost: 4050000, description: "Meteor destroys all on-screen obstacles." }             // -> Level 3
         ]
     },
     // NOTE: Add other skills here as they become upgradeable

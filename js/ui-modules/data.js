@@ -7,6 +7,7 @@ import { displayLeaderboard } from "./leaderboard.js";
 import { populateThemeSelector } from './theme.js';
 import { populatePersonaSelector } from './persona.js';
 import { handleAutoHurdleToggle } from './input-handlers.js';
+import { populateArmoryItems } from './armory.js';
 import { ARMORY_ITEMS } from '../unlocks.js';
 import { checkSkillUnlockStatus } from '../unlocks.js';
 import { gameState, setFinancialMilestones, setRaceSegments, setCustomEvents, setActiveArmorySkill, setTotalAccumulatedCash } from '../game-modules/state-manager.js';
@@ -130,4 +131,5 @@ export async function initializeUIData() {
     }
 
     displayLeaderboard(); // Display leaderboard on startup
+    populateArmoryItems(); // Refresh armory UI
 }
