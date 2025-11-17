@@ -703,13 +703,185 @@ export function drawShotgunBlast() {
             
 
             
-        ctx.fillRect(particle.x, particle.y, 5, 5);
+                ctx.fillRect(particle.x, particle.y, 5, 5);
             
 
             
-    }
+            }
             
 
             
-}
+        }
+            
+
+            
+        
+            
+
+            
+        export function createPhoenixSparks(x, y) {
+            
+
+            
+            const particleCount = 50;
+            
+
+            
+            for (let i = 0; i < particleCount; i++) {
+            
+
+            
+                const angle = Math.random() * Math.PI * 2;
+            
+
+            
+                const speed = Math.random() * 5 + 2;
+            
+
+            
+                gameState.phoenixSparks.push({
+            
+
+            
+                    x: x + (Math.random() - 0.5) * 80, // Spawn across the top of the arch
+            
+
+            
+                    y: y + (Math.random() - 0.5) * 20,
+            
+
+            
+                    vx: Math.cos(angle) * speed * 0.5,
+            
+
+            
+                    vy: Math.sin(angle) * speed,
+            
+
+            
+                    size: Math.random() * 4 + 2,
+            
+
+            
+                    life: 1.5, // Longer life for a nice trail
+            
+
+            
+                    gravity: 0.1,
+            
+
+            
+                    color: `rgba(255, ${190 + Math.floor(Math.random() * 65)}, 0, 0.9)`
+            
+
+            
+                });
+            
+
+            
+            }
+            
+
+            
+        }
+            
+
+            
+        
+            
+
+            
+        export function drawPhoenixSparks() {
+            
+
+            
+            for (let i = gameState.phoenixSparks.length - 1; i >= 0; i--) {
+            
+
+            
+                const p = gameState.phoenixSparks[i];
+            
+
+            
+                p.vy += p.gravity;
+            
+
+            
+                p.x += p.vx;
+            
+
+            
+                p.y += p.vy;
+            
+
+            
+                p.life -= 0.02;
+            
+
+            
+        
+            
+
+            
+                if (p.life <= 0) {
+            
+
+            
+                    gameState.phoenixSparks.splice(i, 1);
+            
+
+            
+                } else {
+            
+
+            
+                    ctx.save();
+            
+
+            
+                    ctx.globalAlpha = p.life;
+            
+
+            
+                    ctx.fillStyle = p.color;
+            
+
+            
+                    ctx.shadowColor = 'white';
+            
+
+            
+                    ctx.shadowBlur = 5;
+            
+
+            
+                    ctx.beginPath();
+            
+
+            
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            
+
+            
+                    ctx.fill();
+            
+
+            
+                    ctx.restore();
+            
+
+            
+                }
+            
+
+            
+            }
+            
+
+            
+        }
+            
+
+            
+        
             

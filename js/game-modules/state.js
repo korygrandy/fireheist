@@ -122,6 +122,7 @@ const state = {
     ashParticles: [],
     shotgunParticles: [],
     molotovCocktails: [],
+    phoenixSparks: [],
     isFirestormActive: false,
     isFireShieldActive: false,
     isShotgunBlastActive: false,
@@ -201,11 +202,7 @@ const state = {
     investmentOpportunities: [],
     miniGameResultsDisplayed: false,
     miniGameBonus: 0,
-    gamepad: null,
-    finalMilestoneAnimation: {
-        isActive: false,
-        startTime: 0
-    }
+    gamepad: null
 };
 
 export default state;

@@ -269,9 +269,20 @@ export function drawHurdle(hurdleData, isFinalHurdle) {
 }
 
 function drawPhoenixArchway(hurdleData, drawX, groundY, angleRad) {
+    let finalDrawX = drawX;
+    let finalGroundY = groundY;
+    let finalAngleRad = angleRad;
+
+    // If the game is over and won, override the position to be fixed and centered.
+    if (gameState.isGameOverSequence && gameState.isVictory) {
+        finalDrawX = canvas.width / 2;
+        finalGroundY = GROUND_Y;
+        finalAngleRad = 0;
+    }
+
     ctx.save();
-    ctx.translate(drawX, groundY);
-    ctx.rotate(-angleRad);
+    ctx.translate(finalDrawX, finalGroundY);
+    ctx.rotate(-finalAngleRad);
 
     const archwayHeight = hurdleData.hurdleHeight + 80;
     const archwayWidth = 100;
@@ -312,27 +323,6 @@ function drawPhoenixArchway(hurdleData, drawX, groundY, angleRad) {
         const opacity = Math.random() * 0.8;
         ctx.fillStyle = `rgba(255, 223, 0, ${opacity})`;
         ctx.fillRect(x, y, size, size);
-    }
-
-    // Victory Animation: Golden Spark Shower
-    if (gameState.finalMilestoneAnimation.isActive) {
-        const animationDuration = 3000; // 3 seconds
-        const elapsed = performance.now() - gameState.finalMilestoneAnimation.startTime;
-        const progress = elapsed / animationDuration;
-
-        if (progress < 1) {
-            for (let i = 0; i < 5; i++) { // Add 5 new sparks each frame
-                const x = (Math.random() - 0.5) * archwayWidth;
-                const y = -archwayHeight + (Math.random() * 20);
-                const size = Math.random() * 4 + 2;
-                const opacity = 1 - progress; // Fade out over time
-                ctx.fillStyle = `rgba(255, 215, 0, ${opacity})`;
-                ctx.fillRect(x, y + (progress * (groundY + archwayHeight)), size, size);
-            }
-        } else {
-            // Animation finished, reset the state
-            gameState.finalMilestoneAnimation.isActive = false;
-        }
     }
 
     // Draw the milestone labels

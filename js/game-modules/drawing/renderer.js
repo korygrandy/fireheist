@@ -2,7 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, OBSTACLE_EMOJI_Y_OFFSET, FIREBALL_SIZE, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS } from '../../constants.js';
 import { drawCityscape } from './environmental-effects.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
-import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast } from './effects.js';
+import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags } from './overlays.js';
@@ -30,6 +30,7 @@ export function drawParticlesAndEffects(gameState, activeFireballs, ignitedObsta
     drawGroundPoundParticles();
     drawHoudiniParticles();
     drawShotgunBlast();
+    drawPhoenixSparks();
 
     drawMoonwalkParticles();
     drawHoverParticles();
@@ -66,6 +67,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
             const distanceToHurdle = hurdleDrawX - STICK_FIGURE_FIXED_X;
             const animationThreshold = 300;
             const previousState = currentSegment.animationState;
+            const isFinalHurdle = gameState.currentSegmentIndex === gameState.raceSegments.length - 1;
 
             if (distanceToHurdle < animationThreshold && distanceToHurdle > 0) {
                 currentSegment.animationState = 'approaching';
@@ -73,6 +75,10 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
             } else if (distanceToHurdle <= 0) {
                 if (previousState !== 'cleared') {
                     currentSegment.animationProgress = 0;
+                    if (isFinalHurdle) {
+                        const groundAtHurdleY = GROUND_Y - hurdleDrawX * Math.tan(groundAngleRad);
+                        createPhoenixSparks(hurdleDrawX, groundAtHurdleY - currentSegment.hurdleHeight - 40);
+                    }
                 }
                 currentSegment.animationState = 'cleared';
                 currentSegment.animationProgress = Math.min(1, currentSegment.animationProgress + 0.015);
@@ -80,9 +86,11 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
                 currentSegment.animationState = 'idle';
                 currentSegment.animationProgress = 0;
             }
+            drawHurdle(currentSegment, isFinalHurdle);
+        } else {
+             const isFinalHurdle = gameState.currentSegmentIndex === gameState.raceSegments.length - 1;
+             drawHurdle(currentSegment, isFinalHurdle);
         }
-        const isFinalHurdle = gameState.currentSegmentIndex === gameState.raceSegments.length - 1;
-        drawHurdle(currentSegment, isFinalHurdle);
 
         if (gameState.currentObstacle) drawObstacle(gameState.currentObstacle, groundAngleRad);
         if (gameState.currentAccelerator) drawAccelerator(gameState.currentAccelerator, groundAngleRad);
