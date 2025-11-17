@@ -190,6 +190,8 @@ export function resetGameState() {
     hideResultsScreen();
     updateControlPanelState(false, false);
 
+    drawing.draw(); // Force a redraw to show the reset state immediately
+
     console.log("-> RESET GAME: Complete.");
 }
 

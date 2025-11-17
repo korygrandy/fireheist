@@ -132,7 +132,6 @@ export function closeResults() {
     state.isMiniGameActive = false;
     state.miniGameType = null;
     state.lastTime = 0;
-    state.miniGameBonus = 0; // Reset bonus
 
     // Clean up event listeners
     predictUpButton.removeEventListener('click', handlePredictUp);
