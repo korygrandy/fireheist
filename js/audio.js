@@ -224,13 +224,17 @@ export function preloadCriticalAudio() {
     // Preload the default theme's ambient sound
     const defaultAmbientUrl = THEME_AMBIENT_SOUND_MAP['grass'];
     if (defaultAmbientUrl) {
-        currentAmbientTheme = 'grass'; // Set the current theme
-        ambientMusic = new Tone.Player({
-            url: defaultAmbientUrl,
-            loop: true,
-            volume: -25
-        }).connect(ambientBus);
-        criticalAudioPromises.push(ambientMusic.loaded);
+        const ambientLoadPromise = new Promise((resolve, reject) => {
+            currentAmbientTheme = 'grass'; // Set the current theme
+            ambientMusic = new Tone.Player({
+                url: defaultAmbientUrl,
+                loop: true,
+                volume: -25,
+                onload: resolve,
+                onerror: reject
+            }).connect(ambientBus);
+        });
+        criticalAudioPromises.push(ambientLoadPromise);
     }
 
     return Promise.all(criticalAudioPromises).then(() => {
@@ -333,10 +337,14 @@ export function playAmbientSound(themeName) {
             volume: -25,
             onload: () => {
                 console.log(`-> AUDIO.SUCCESS: Ambient sound for '${themeName}' loaded.`);
-                if (!isMuted) {
-                    ambientMusic.start();
-                    console.log(`-> playAmbientSound: Started newly loaded ambient sound for '${themeName}'.`);
-                }
+                // Use a short timeout to work around a race condition where the buffer
+                // is not yet ready for playback immediately after onload.
+                setTimeout(() => {
+                    if (!isMuted && ambientMusic && ambientMusic.loaded) {
+                        ambientMusic.start();
+                        console.log(`-> playAmbientSound: Started newly loaded ambient sound for '${themeName}'.`);
+                    }
+                }, 50);
             },
             onerror: (e) => console.error(`-> AUDIO.ERROR: Error loading ambient sound for '${themeName}':`, e)
         }).connect(ambientBus);

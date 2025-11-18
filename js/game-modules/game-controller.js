@@ -106,6 +106,8 @@ export function togglePauseGame() {
 
 export function resetGameState() {
     gameState.showDailyChallengeCompletedOverlay = false;
+    gameState.leaderboardInitials.isActive = false;
+    gameState.leaderboardInitials.submitted = false;
     console.log("-> RESET GAME: Initiated.");
     setGameRunning(false);
     setPaused(false);
@@ -215,11 +217,16 @@ export function startGame() {
     applySkillLevelSettings(gameState.currentSkillLevel);
     setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
 
-    // Disable data tab if a persona is chosen
+    // Disable data tab if a persona is chosen, re-enable it otherwise
     const dataTabButton = document.querySelector('button[data-tab="data"]');
-    if (gameState.selectedPersona !== 'custom' && dataTabButton) {
-        dataTabButton.disabled = true;
-        dataTabButton.classList.add('disabled-tab');
+    if (dataTabButton) {
+        if (gameState.selectedPersona !== 'custom') {
+            dataTabButton.disabled = true;
+            dataTabButton.classList.add('disabled-tab');
+        } else {
+            dataTabButton.disabled = false;
+            dataTabButton.classList.remove('disabled-tab');
+        }
     }
 
     let musicUrl = DEFAULT_MUSIC_URL;
@@ -330,6 +337,10 @@ export function stopGame(shouldReset = true) {
             }
 
             showSandboxControls();
+            const infoPanel = document.getElementById('info-panel');
+            if (infoPanel) {
+                infoPanel.classList.add('hidden');
+            }
             setGameOverSequence(false); // End the game over sequence
             gameState.isDailyChallengeActive = false; // Fully deactivate daily challenge mode
             

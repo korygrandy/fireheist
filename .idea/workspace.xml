@@ -5,20 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/audio.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/audio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/daily-challenge.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/daily-challenge.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/leaderboard-initials.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/leaderboard-initials.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/daily-challenge-ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/daily-challenge-ui.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/data.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/data.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +74,7 @@
       <option name="presentableId" value="Default" />
       <updated>1763064864972</updated>
       <workItem from="1763064867591" duration="7872000" />
-      <workItem from="1763410316063" duration="10890000" />
+      <workItem from="1763410316063" duration="13418000" />
     </task>
     <servers />
   </component>

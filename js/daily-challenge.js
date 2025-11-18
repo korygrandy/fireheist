@@ -92,6 +92,12 @@ export function startDailyChallengeGame() {
         // Hide sandbox controls
         hideSandboxControls();
 
+        // Show the info panel with controls
+        const infoPanel = document.getElementById('info-panel');
+        if (infoPanel) {
+            infoPanel.classList.remove('hidden');
+        }
+
         // Start the game
         startGame();
 

@@ -213,7 +213,7 @@ export function animate(timestamp) {
         if (!gameState.isGameOverSequence) {
             setVictory(gameState.hitsCounter === 0);
             if (gameState.isVictory) {
-                playWinnerSound();
+                setTimeout(() => playWinnerSound(), 10);
 
                 // --- FIX: Trigger cash bag for the final milestone ---
                 const finalSegment = gameState.raceSegments[gameState.raceSegments.length - 1];
@@ -245,7 +245,7 @@ export function animate(timestamp) {
                     console.log("-> GAME OVER: Flawless run not recorded for Custom Persona.");
                 }
             } else {
-                playLoserSound();
+                setTimeout(() => playLoserSound(), 10);
             }
             setGameOverSequence(true);
             setGameOverSequenceStartTime(timestamp);
@@ -411,8 +411,10 @@ export function animate(timestamp) {
         if (event && !event.wasTriggered && daysCheck >= event.daysSinceStart) {
             if (!gameState.onScreenCustomEvent || gameState.onScreenCustomEvent.daysSinceStart !== event.daysSinceStart) {
                 console.info(`-> CUSTOM EVENT AUTO-TRIGGERED: Date: ${event.date}. Object missed or spawned late. Applying effect directly.`);
-                activateCustomEvent(event);
-                applySpeedEffect(event.type);
+                setTimeout(() => {
+                    activateCustomEvent(event);
+                    applySpeedEffect(event.type);
+                }, 10); // 10ms delay to prevent audio context errors
             }
         }
     });
