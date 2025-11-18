@@ -68,6 +68,7 @@ export function handleSkillLevelChange(event) {
 }
 
 export function selectSuggestedEmoji(emoji) {
+    playAnimationSound('keypress');
     emojiInput.value = emoji;
     setStickFigureEmoji(emoji);
     saveSettings();
