@@ -158,6 +158,19 @@ export const ARMORY_ITEMS = {
         },
         unlockText: 'Unlock condition to be determined.'
     },
+    sixShooterPistol: {
+        name: 'Six Shooter Pistol',
+        description: 'A rapid-fire pistol with 6 shots per clip, incinerating obstacles on impact with fiery bullets.',
+        imageLocked: 'images/six-shooter-locked.png',
+        imageUnlocked: 'images/six-shooter-unlocked.png',
+        tier: 'Epic',
+        unlockCondition: {
+            type: 'fireMageIncinerateCount',
+            count: 50,
+            skillKey: 'sixShooterPistol'
+        },
+        unlockText: 'Incinerate 50 obstacles using Fire Mage'
+    },
     bigHeadMode: {
         name: 'Big Head Mode',
         description: 'Your head is now 2x bigger. A purely cosmetic change for bragging rights.',
@@ -192,6 +205,11 @@ export function getSkillUnlockProgress(condition, stats) {
                 current: stats.consecutiveGroundPounds || 0,
                 target: condition.count
             };
+        case 'fireMageIncinerateCount':
+            return {
+                current: stats.fireMageIncinerations || 0,
+                target: condition.count
+            };
         // Add other progress tracking here
         default:
             return { current: 0, target: 0 };
@@ -215,6 +233,8 @@ export function checkSkillUnlockStatus(condition, stats) {
             return stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
         case 'consecutiveGroundPounds':
             return stats.consecutiveGroundPounds >= condition.count;
+        case 'fireMageIncinerateCount':
+            return stats.fireMageIncinerations >= condition.count;
         // Add other unlock conditions here
         default:
             return false;

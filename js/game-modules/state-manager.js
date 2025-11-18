@@ -1201,4 +1201,12 @@ export function setSkillLevel(level) {
     state.currentSkillLevel = level;
 }
 
+export function setSixShooterAmmo(ammo) {
+    state.sixShooterAmmo = ammo;
+}
+
+export function setSixShooterReloading(isReloading) {
+    state.isSixShooterReloading = isReloading;
+}
+
 

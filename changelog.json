@@ -1,5 +1,19 @@
 [
     {
+        "version": "1.5.21",
+        "date": "2025-11-18",
+        "changes": [
+            "feat(skill): Implemented Phase 1 & 2 of the 'Six Shooter Pistol' skill. This includes its definition in the armory, unlock conditions, state management for ammo/reloading, and integration into the game's core action system to make it functional."
+        ]
+    },
+    {
+        "version": "1.5.20",
+        "date": "2025-11-18",
+        "changes": [
+            "feat(skill): Implemented Phase 1 of the 'Six Shooter Pistol' skill, including its definition in the armory UI, initialization of Fire Mage incineration tracking, and logic to increment Fire Mage incinerations for unlock progression."
+        ]
+    },
+    {
         "version": "1.5.18",
         "date": "2025-11-16",
         "changes": [
@@ -80,41 +94,6 @@
             "fix(debug): Fixed a SyntaxError in debug.js by updating it to use the new displayDailyChallenge function.",
             "fix(build): Added a cache-busting query parameter to the main script import to prevent stale code from being loaded by the browser.",
             "fix(daily-challenge): Resolved a SyntaxError caused by a missing export for the showCountdown function."
-        ]
-    },
-    {
-        "version": "1.5.07",
-        "date": "2025-11-11",
-        "changes": [
-            "feat(ui): Displayed `totalAccumulatedCash` at the top of the Armory panel for better visibility of funds available for skill upgrades.",
-            "feat(ui): Added a new `div` with ID `totalCashDisplay` in `index.html` to house the cash value.",
-            "refactor(armory): Updated `js/ui-modules/armory.js` and `js/dom-elements.js` to correctly populate and export the `totalCashDisplay` element."
-        ]
-    },
-    {
-        "version": "1.5.06",
-        "date": "2025-11-11",
-        "changes": [
-            "feat(ui): The in-game info panel now dynamically displays gamepad controls when a controller is connected, and reverts to keyboard/mobile controls when disconnected.",
-            "feat(gamepad): The info icon is now a focusable element, allowing gamepad users to open and close the info panel.",
-            "feat(gamepad): Remapped the gamepad controls to feature more impressive skills: `X` button triggers Meteor Strike, `Y` button triggers Firestorm, Left Trigger triggers Houdini, and Right Trigger triggers Fiery Ground Pound.",
-            "docs(ui): Updated the in-game info panel to reflect the new, dynamic gamepad control scheme and updated button assignments."
-        ]
-    },
-    {
-        "version": "1.5.05",
-        "date": "2025-11-11",
-        "changes": [
-            "docs: Updated the in-game info panel to include all keyboard and mobile gesture commands."
-        ]
-    },
-    {
-        "version": "1.5.04",
-        "date": "2025-11-11",
-        "changes": [
-            "feat(gameplay): Implemented a feature to automatically pause the game and its audio when the browser tab loses focus or is minimized.",
-            "feat(privacy): Enhanced user privacy by preventing the game from running in the background, which could potentially capture audio or screen information without the user's knowledge.",
-            "fix(ux): Improved the user experience by preventing the game from continuing to play audio when the user has switched to another tab or locked their screen."
         ]
     }
 ]

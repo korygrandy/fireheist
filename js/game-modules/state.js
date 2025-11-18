@@ -82,6 +82,10 @@ const state = {
     jetstreamDashDrainEndTime: 0, // For Jetstream Dash energy drain
     fireballRollDrainEndTime: 0, // For Fireball Roll energy drain
 
+    // Six Shooter Pistol State
+    sixShooterAmmo: 6,
+    isSixShooterReloading: false,
+
     activeFireballs: [], // Array to track on-screen fireballs
     vanishingObstacles: [], // Array for obstacles that "poof" on hit
     meteorParticles: [],
@@ -183,6 +187,7 @@ const state = {
         submitted: false
     },
     playerStats: { // New player stats object
+        fireMageIncinerations: 0, // New: To track incinerations specifically by Fire Mage for Six Shooter Pistol unlock
         skillLevels: {}, // e.g., { 'firestorm': 1, 'shotgun': 2 }
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
         obstaclesIncinerated: 0,

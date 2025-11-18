@@ -31,6 +31,7 @@ export function castFireball(state) {
         spawnTime: Date.now()
     };
     state.activeFireballs.push(fireball);
+    state.playerStats.fireMageIncinerations++; // Increment Fire Mage incinerations
     playAnimationSound('fireball');
     console.log("-> castFireball: Fireball launched!");
 }

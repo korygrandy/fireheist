@@ -36,6 +36,7 @@ import { fieryGroundPoundSkill } from './game-modules/skills/fieryGroundPound.js
 import { fireMageSkill } from './game-modules/skills/fireMage.js';
 import { mageSpinnerSkill } from './game-modules/skills/mageSpinner.js';
 import { fireballRollSkill } from './game-modules/skills/fireballRoll.js';
+import { sixShooterPistolSkill } from './game-modules/skills/sixShooterPistol.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
 
 function initializeDailyChallengeUI() {
@@ -673,6 +674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     fireballRoll: () => fireballRollSkill.activate(gameState),
     shotgunBlast: () => shotgunSkill.activate(gameState),
     molotovCocktail: () => molotovSkill.activate(gameState),
+    sixShooterPistol: () => sixShooterPistolSkill.activate(gameState),
 };
 
 
