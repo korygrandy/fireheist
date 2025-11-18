@@ -54,8 +54,12 @@ function createChallengeHTML(config, results = null) {
                     <p class="text-xs text-gray-500">Days Survived</p>
                 </div>
                 <div>
-                    <p class="text-3xl font-bold text-gray-800">${results ? results.hits : ''}</p>
-                    <p class="text-xs text-gray-500">Obstacles Hit</p>
+                    <p class="text-4xl font-bold text-red-500">${results.hits}</p>
+                    <p class="text-sm text-gray-600">Obstacles Hit</p>
+                </div>
+                <div>
+                    <p class="text-4xl font-bold text-orange-500">${results.totalIncinerated || 0}</p>
+                    <p class="text-sm text-gray-600">Incinerations</p>
                 </div>
             </div>
             <div id="next-challenge-countdown" class="text-sm"></div>

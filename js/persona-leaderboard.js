@@ -24,11 +24,14 @@ export function savePersonaLeaderboardScore(initials, scoreData) {
         if (b.days !== a.days) {
             return b.days - a.days;
         }
-        return a.hits - b.hits;
+        if (a.hits !== b.hits) {
+            return a.hits - b.hits;
+        }
+        return (b.totalIncinerated || 0) - (a.totalIncinerated || 0);
     });
 
-    // Keep only the top 10 scores
-    const topScores = leaderboard.slice(0, 10);
+    // Keep only the top 5 scores
+    const topScores = leaderboard.slice(0, 5);
 
     localStorage.setItem(PERSONA_LEADERBOARD_KEY, JSON.stringify(topScores));
     console.log("-> Persona Leaderboard score saved:", newScore);
@@ -42,14 +45,18 @@ export function displayPersonaLeaderboard() {
     if (!container) return;
 
     const leaderboard = JSON.parse(localStorage.getItem(PERSONA_LEADERBOARD_KEY)) || [];
+    const playerInitials = localStorage.getItem('fireHeistPlayerInitials');
 
     if (leaderboard.length === 0) {
         container.innerHTML = '<p class="text-center text-gray-500">No persona scores yet. Play a game with a persona to get on the board!</p>';
         return;
     }
 
-    container.innerHTML = leaderboard.map((score, index) => `
-        <div class="flex justify-between items-center p-3 rounded-lg ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
+    container.innerHTML = leaderboard.map((score, index) => {
+        const isPlayer = playerInitials && score.initials === playerInitials;
+        const bgColor = isPlayer ? 'bg-yellow-100' : (index % 2 === 0 ? 'bg-gray-100' : 'bg-white');
+        return `
+        <div class="flex justify-between items-center p-3 rounded-lg ${bgColor}">
             <div class="flex items-center">
                 <span class="text-lg font-bold text-gray-700 mr-4">${index + 1}.</span>
                 <span class="text-xl font-mono font-bold text-orange-500">${score.initials}</span>
@@ -59,7 +66,8 @@ export function displayPersonaLeaderboard() {
                 <p class="font-semibold text-gray-800">${score.days.toLocaleString()} Days</p>
                 <p class="text-sm text-red-500">${score.hits} Hits</p>
                 <p class="text-sm text-orange-500">🔥 ${score.totalIncinerated || 0}</p>
+                <p class="text-xs text-gray-400">${new Date(score.timestamp).toLocaleDateString()}</p>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }

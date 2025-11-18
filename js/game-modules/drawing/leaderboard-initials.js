@@ -6,6 +6,7 @@ import { saveLeaderboardScore, displayLeaderboard } from '../../ui-modules/leade
 import { savePersonaLeaderboardScore, displayPersonaLeaderboard } from '../../persona-leaderboard.js';
 import { displayDailyChallengeCompletedScreen } from '../../ui-modules/daily-challenge-ui.js';
 import { updateDailyChallengeWinStreak, markDailyChallengeAsPlayed } from '../../daily-challenge.js';
+import { savePlayerInitials } from '../../ui-modules/settings.js';
 import { stopGame } from '../game-controller.js';
 import { playAnimationSound } from '../../audio.js';
 import { switchTab } from '../../ui-modules/ui-helpers.js';
@@ -61,6 +62,7 @@ export function confirmInitialSelection() {
     if (selectedIndex < 2) {
         gameState.leaderboardInitials.selectedIndex++;
     } else {
+        savePlayerInitials(initials.join(''));
         const scoreData = {
             days: Math.round(gameState.daysElapsedTotal),
             hits: gameState.hitsCounter,

@@ -40,6 +40,11 @@ export function saveSettings() {
     console.log("-> saveSettings: Settings saved to localStorage.");
 }
 
+export function savePlayerInitials(initials) {
+    if (disableSaveSettings.checked) return;
+    localStorage.setItem('fireHeistPlayerInitials', initials);
+}
+
 export function loadSettings() {
     const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (savedSettings && !disableSaveSettings.checked) {
