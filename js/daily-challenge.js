@@ -60,6 +60,11 @@ export function markDailyChallengeAsPlayed(stats, winStreak) {
 }
 
 export function startDailyChallengeGame() {
+    if (getDailyChallengeResults()) {
+        console.warn("-> Daily Challenge: Already played today. Cannot start again.");
+        return;
+    }
+
     console.log("-> Daily Challenge: Starting game.");
 
     const stopButton = document.getElementById('stopButton');

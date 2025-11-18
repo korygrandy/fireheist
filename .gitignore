@@ -1,1 +1,31 @@
+/node_modules
+/test-artifacts/
+/html-report/
+/playwright-report/
+/screenshots/
+/e2e.tests/tests/visual.spec.ts-snapshots
+.env
+.DS_Store
+/dist
+/build
+/auth
+.gitignore
+bootstrap-playwright.js
+package-lock.json
+package.json
+tsconfig.json
+.github/copilot-instructions.md
+.github/chatmodes/ 🎭 planner.chatmode.md
+.github/chatmodes/🎭 generator.chatmode.md
+.github/chatmodes/🎭 healer.chatmode.md
+.idea/workspace.xml
+.vscode/mcp.json
+e2e.tests/FIREHEIST_TEST_PLAN.md
+e2e.tests/playwright.config.ts
+e2e.tests/testdata.json
+e2e.tests/fixtures/baseTest.ts
+e2e.tests/pages/LandingPage.ts
+e2e.tests/utils/GlobalData.ts
+e2e.tests/utils/TestUtils.ts
+.idea/workspace.xml
 /e2e.tests/

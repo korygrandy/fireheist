@@ -2,11 +2,18 @@
 
 import { canvas, ctx } from '../../dom-elements.js';
 import { gameState } from '../state-manager.js';
-import { saveLeaderboardScore } from '../../ui-modules/leaderboard.js';
+import { saveLeaderboardScore, displayLeaderboard } from '../../ui-modules/leaderboard.js';
+import { savePersonaLeaderboardScore, displayPersonaLeaderboard } from '../../persona-leaderboard.js';
 import { displayDailyChallengeCompletedScreen } from '../../ui-modules/daily-challenge-ui.js';
-import { updateDailyChallengeWinStreak } from '../../daily-challenge.js';
+import { updateDailyChallengeWinStreak, markDailyChallengeAsPlayed } from '../../daily-challenge.js';
 import { stopGame } from '../game-controller.js';
 import { playAnimationSound } from '../../audio.js';
+import { switchTab } from '../../ui-modules/ui-helpers.js';
+import * as drawing from '../drawing.js';
+import { setTheme } from '../../theme.js';
+import { setStickFigureEmoji } from '../state-manager.js';
+import { emojiInput, themeSelector } from '../../dom-elements.js';
+import { loadDefaultData } from '../../ui-modules/data.js';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const BOX_SIZE = 60;
@@ -52,23 +59,68 @@ export function confirmInitialSelection() {
     const { initials, selectedIndex } = gameState.leaderboardInitials;
 
     if (selectedIndex < 2) {
-        // Advance to the next initial
         gameState.leaderboardInitials.selectedIndex++;
     } else {
-        // On the last initial, save the score and end the game
         const scoreData = {
             days: Math.round(gameState.daysElapsedTotal),
-            hits: gameState.hitsCounter
+            hits: gameState.hitsCounter,
+            persona: gameState.selectedPersona,
+            totalIncinerated: gameState.obstaclesIncinerated
         };
-        saveLeaderboardScore(initials.join(''), scoreData);
 
-        const newWinStreak = updateDailyChallengeWinStreak(gameState.isVictory);
-        const results = { ...scoreData, winStreak: newWinStreak };
-        displayDailyChallengeCompletedScreen(results);
         playAnimationSound('submit-chime');
-
         gameState.leaderboardInitials.isActive = false;
-        stopGame(false);
+        gameState.leaderboardInitials.submitted = true;
+
+        const wasDailyChallenge = gameState.isDailyChallengeActive;
+
+        if (wasDailyChallenge) {
+            gameState.showDailyChallengeCompletedOverlay = true;
+            drawing.draw(); // Show the overlay
+
+            setTimeout(() => {
+                // Hide overlay and save results
+                gameState.showDailyChallengeCompletedOverlay = false;
+                const newWinStreak = updateDailyChallengeWinStreak(gameState.isVictory);
+                const results = { ...scoreData, winStreak: newWinStreak };
+                markDailyChallengeAsPlayed(scoreData, newWinStreak);
+                saveLeaderboardScore(initials.join(''), scoreData);
+
+                // Stop the game, which will show the main UI panels
+                stopGame(false);
+
+                // Now update the UI with the completed screen and switch to it
+                displayDailyChallengeCompletedScreen(results);
+                switchTab('player');
+
+                // Reset to default theme and emoji before redrawing
+                setTheme('grass');
+                setStickFigureEmoji('🦹‍♂️');
+                if (emojiInput) emojiInput.value = '🦹‍♂️';
+                if (themeSelector) themeSelector.value = 'grass';
+                loadDefaultData();
+
+                // Redraw the canvas in its initial "tips" state
+                drawing.setInitialLoad(true);
+                drawing.draw();
+
+                // Ensure the main start button is enabled
+                const startButton = document.getElementById('startButton');
+                if (startButton) {
+                    startButton.disabled = false;
+                }
+
+            }, 3000);
+        } else {
+            // This is for persona games
+            if (gameState.selectedPersona !== 'custom') {
+                savePersonaLeaderboardScore(initials.join(''), scoreData);
+            }
+            stopGame(false);
+            displayLeaderboard();
+            displayPersonaLeaderboard();
+            switchTab('hallOfFame');
+        }
     }
 }
 

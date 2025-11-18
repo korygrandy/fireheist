@@ -16,6 +16,7 @@ import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmor
 import { startDailyChallengeGame, getDailyChallengeResults } from './daily-challenge.js';
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './ui-modules/daily-challenge-ui.js';
 import { displayLeaderboard } from './ui-modules/leaderboard.js';
+import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
@@ -351,11 +352,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const tab = button.getAttribute('data-tab');
 
-                if (tab === 'hallOfFame') {
+                                if (tab === 'hallOfFame') {
 
-                    displayLeaderboard();
+                                    displayLeaderboard();
 
-                }
+                                    displayPersonaLeaderboard();
+
+                                } else if (tab === 'player') {
+                                    initializeDailyChallengeUI();
+                                    const dailyChallengePlaceholder = document.getElementById('daily-challenge-placeholder');
+                                    if (dailyChallengePlaceholder) {
+                                        dailyChallengePlaceholder.classList.remove('hidden');
+                                    }
+                                }
 
                 switchTab(tab);
 

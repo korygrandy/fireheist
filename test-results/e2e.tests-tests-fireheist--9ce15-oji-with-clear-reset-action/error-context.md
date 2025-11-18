@@ -1,0 +1,93 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]: Audio Preloading Completed!
+    - button "START GAME" [ref=e4] [cursor=pointer]
+  - generic [ref=e5]:
+    - banner [ref=e6]:
+      - heading "The 🔥FIRE🔥 Heist Game v1.5.18" [level=1] [ref=e7]
+      - paragraph [ref=e8]: Heist your way to financial independence!
+    - main [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - heading "Heist Control Panel" [level=2] [ref=e12]
+          - generic [ref=e13] [cursor=pointer]: ℹ️
+        - generic [ref=e14]:
+          - button "👤 Player" [ref=e15] [cursor=pointer]
+          - generic [ref=e16]: "|"
+          - button "🎮 Gameplay" [ref=e17] [cursor=pointer]
+          - generic [ref=e18]: "|"
+          - button "🛠️ Data" [ref=e19] [cursor=pointer]
+          - generic [ref=e20]: "|"
+          - button "🏆 Hall of Fame" [ref=e21] [cursor=pointer]
+          - generic [ref=e22]: "|"
+          - button "⚔️ Armory NEW" [ref=e23] [cursor=pointer]
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - heading "Daily Challenge" [level=3] [ref=e29]
+            - generic [ref=e30]: "🔥 Current Win Streak: 0"
+          - paragraph [ref=e31]: A unique, deterministic challenge every day. Good luck!
+          - generic [ref=e32]:
+            - generic [ref=e33]:
+              - text: ⛰️
+              - paragraph [ref=e34]: Theme
+            - generic [ref=e35]:
+              - text: 🦸‍♀️
+              - paragraph [ref=e36]: Runner
+            - generic [ref=e37]:
+              - text: Rookie
+              - paragraph [ref=e38]: Skill
+          - button "Start Daily Challenge" [ref=e39] [cursor=pointer]
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]: Choose your Persona
+            - combobox "Choose your Persona" [ref=e44]:
+              - option "Custom Persona"
+              - 'option "LOCKED: Achieve a flawless run on Novice difficulty" [disabled]'
+              - option
+              - option
+              - option
+              - option
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - generic [ref=e47]: Select your Runner, or paste your own Emoji
+              - textbox "Select your Runner, or paste your own Emoji" [active] [ref=e48]: 🦹
+              - generic [ref=e49]:
+                - button "Use 🧟 as runner" [ref=e50] [cursor=pointer]: 🧟
+                - button "Use 🥷 as runner" [ref=e51] [cursor=pointer]: 🥷
+                - button "Use 🦁 as runner" [ref=e52] [cursor=pointer]: 🦁
+                - button "Use 💃 as runner" [ref=e53] [cursor=pointer]: 💃
+                - button "Use 🐶 as runner" [ref=e54] [cursor=pointer]: 🐶
+                - button "Use 🚀 as runner" [ref=e55] [cursor=pointer]: 🚀
+                - button "Use 👽 as runner" [ref=e56] [cursor=pointer]: 👽
+            - generic [ref=e57]:
+              - generic [ref=e58]: Skill Level
+              - generic [ref=e59]:
+                - generic [ref=e60] [cursor=pointer]:
+                  - radio "Rookie" [checked] [ref=e61]
+                  - generic [ref=e62]: Rookie
+                - generic [ref=e63] [cursor=pointer]:
+                  - radio "Novice" [ref=e64]
+                  - generic [ref=e65]: Novice
+                - generic [ref=e66] [cursor=pointer]:
+                  - radio "Pro" [ref=e67]
+                  - generic [ref=e68]: Pro
+            - generic [ref=e69]:
+              - generic [ref=e70]: Select a Theme
+              - combobox "Select a Theme" [ref=e71]:
+                - option "🌻 Grassy Knolls" [selected]
+                - option "⛰️ Mt. Brown"
+                - option "🌃 City Night"
+                - option "🗻 White Snowpeaks"
+                - option "🏜️ Desert Dunes"
+                - option "🌋 Island Volcano"
+                - option "🌑 Outer Space"
+                - option "🌙 Deep Night"
+      - generic [ref=e77]:
+        - button "▶️ Start the Heist!" [ref=e78] [cursor=pointer]
+        - button "🔄 Reset Game" [disabled] [ref=e79]
+        - button "🔇 Mute" [ref=e80] [cursor=pointer]
+        - button "↗️ Fullscreen" [ref=e81] [cursor=pointer]
+```

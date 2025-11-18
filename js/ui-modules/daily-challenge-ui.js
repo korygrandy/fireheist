@@ -35,7 +35,7 @@ function createChallengeHTML(config, results = null) {
                     <p class="text-xs text-gray-500">Skill</p>
                 </div>
             </div>
-            <button id="startDailyChallengeBtn" class="control-btn primary-btn w-full">Start Daily Challenge</button>
+            <button id="startDailyChallengeBtn" class="control-btn primary-btn w-full" ${results ? 'disabled' : ''}>Start Daily Challenge</button>
         </div>
     `;
 
@@ -79,6 +79,11 @@ function createChallengeHTML(config, results = null) {
     `;
 
     container.innerHTML = finalHTML;
+
+    const challengeContainer = container.querySelector('.daily-challenge-container');
+    if (challengeContainer) {
+        challengeContainer.classList.add('expanded');
+    }
 }
 
 export function displayDailyChallenge() {

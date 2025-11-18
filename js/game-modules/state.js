@@ -177,7 +177,8 @@ const state = {
     leaderboardInitials: {
         initials: ['A', 'A', 'A'],
         selectedIndex: 0,
-        isActive: false
+        isActive: false,
+        submitted: false
     },
     playerStats: { // New player stats object
         skillLevels: {}, // e.g., { 'firestorm': 1, 'shotgun': 2 }
@@ -202,7 +203,8 @@ const state = {
     investmentOpportunities: [],
     miniGameResultsDisplayed: false,
     miniGameBonus: 0,
-    gamepad: null
+    gamepad: null,
+    showDailyChallengeCompletedOverlay: false
 };
 
 export default state;

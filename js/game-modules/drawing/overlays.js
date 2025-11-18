@@ -101,6 +101,8 @@ export function drawDaysCounter() {
 }
 
 export function drawVictoryOverlay(elapsedTime) {
+    if (gameState.showDailyChallengeCompletedOverlay) return;
+
     const opacity = Math.min(1, elapsedTime / 1000);
     let mainText, subText, mainColor;
     const SUCCESS_COLOR = '#00FF88';
@@ -136,7 +138,7 @@ export function drawVictoryOverlay(elapsedTime) {
     let subY = canvas.height / 2 + (dynamicFontSize * 0.6 / 2) + 15;
     ctx.fillText(subText, canvas.width / 2, subY);
 
-    if (gameState.isDailyChallengeActive) {
+    if (gameState.leaderboardInitials.isActive) {
         drawLeaderboardInitials();
     }
 
@@ -285,6 +287,33 @@ export function drawEnergyBar() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(`ENERGY`, x + barWidth / 2, y + barHeight / 2);
+
+    ctx.restore();
+}
+
+export function drawDailyChallengeCompletedOverlay() {
+    if (!gameState.showDailyChallengeCompletedOverlay) return;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 24px Impact, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const textLines = [
+        'Stop back in a day for the next challenge!',
+        'Check the Hall of Fame to see how you rank,',
+        'choose a Persona, or customize your own!'
+    ];
+    const lines = textLines;
+    const lineHeight = 30;
+    const startY = canvas.height / 2 - (lineHeight * (lines.length - 1)) / 2;
+
+    lines.forEach((line, index) => {
+        ctx.fillText(line, canvas.width / 2, startY + index * lineHeight);
+    });
 
     ctx.restore();
 }

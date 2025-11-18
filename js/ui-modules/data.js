@@ -16,6 +16,20 @@ export let financialMilestones = {};
 export let raceSegments = [];
 export let customEvents = {};
 
+export async function loadDefaultData() {
+    try {
+        const response = await fetch('milestones.json');
+        const defaultData = await response.json();
+        const formattedData = defaultData.milestones.map(m => `${m.date}: ${m.value}`).join('\n');
+        dataInput.value = formattedData;
+        eventDataInput.value = ''; // Clear event data
+        parseData(formattedData);
+        parseEventData(''); // Clear existing event data from game state
+    } catch (error) {
+        console.error('Error loading default milestone data:', error);
+    }
+}
+
 export function loadCustomData() {
     console.log("-> loadCustomData: Attempting to load custom data.");
     let isDataValid = true;

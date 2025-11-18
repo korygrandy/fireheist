@@ -105,6 +105,7 @@ export function togglePauseGame() {
 }
 
 export function resetGameState() {
+    gameState.showDailyChallengeCompletedOverlay = false;
     console.log("-> RESET GAME: Initiated.");
     setGameRunning(false);
     setPaused(false);
@@ -277,7 +278,12 @@ export function startGame() {
 }
 
 export function stopGame(shouldReset = true) {
+    if (gameState.leaderboardInitials.isActive) {
+        return;
+    }
     if (!shouldReset && !gameState.gameRunning && !gameState.isGameOverSequence) return;
+
+    const wasDailyChallengeCompletion = gameState.isDailyChallengeActive && !shouldReset;
 
     console.log("-> STOP GAME: Game execution halted.");
     setGameRunning(false);
@@ -330,7 +336,7 @@ export function stopGame(shouldReset = true) {
             document.getElementById('startButton').textContent = "Start the Heist!";
             const stopButton = document.getElementById('stopButton');
             if (stopButton) {
-                stopButton.disabled = false;
+                stopButton.disabled = true;
             }
         }
     } else if (shouldReset) {
@@ -352,7 +358,7 @@ export function stopGame(shouldReset = true) {
 
     // Re-enable start button and set focus after a short delay to allow UI to settle
     setTimeout(() => {
-        if (startButton) {
+        if (startButton && !wasDailyChallengeCompletion) {
             startButton.disabled = false;
         }
         gameCanvas.focus(); // Ensure canvas has focus after game stops
