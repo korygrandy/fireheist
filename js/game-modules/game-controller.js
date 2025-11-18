@@ -108,6 +108,7 @@ export function resetGameState() {
     gameState.showDailyChallengeCompletedOverlay = false;
     gameState.leaderboardInitials.isActive = false;
     gameState.leaderboardInitials.submitted = false;
+    gameState.obstaclesIncinerated = 0;
     console.log("-> RESET GAME: Initiated.");
     setGameRunning(false);
     setPaused(false);

@@ -1,4 +1,5 @@
 // js/persona-leaderboard.js
+import { personas } from './personas.js';
 
 const PERSONA_LEADERBOARD_KEY = 'fireHeistPersonaLeaderboard';
 
@@ -52,12 +53,12 @@ export function displayPersonaLeaderboard() {
             <div class="flex items-center">
                 <span class="text-lg font-bold text-gray-700 mr-4">${index + 1}.</span>
                 <span class="text-xl font-mono font-bold text-orange-500">${score.initials}</span>
-                <span class="text-lg font-bold text-gray-700 ml-4">${score.persona}</span>
+                <span class="text-lg font-bold text-gray-700 ml-4">${personas[score.persona].emoji}</span>
             </div>
             <div class="text-right">
                 <p class="font-semibold text-gray-800">${score.days.toLocaleString()} Days</p>
                 <p class="text-sm text-red-500">${score.hits} Hits</p>
-                <p class="text-sm text-orange-500">🔥Incinerations = ${score.totalIncinerated}</p>
+                <p class="text-sm text-orange-500">🔥 ${score.totalIncinerated || 0}</p>
             </div>
         </div>
     `).join('');

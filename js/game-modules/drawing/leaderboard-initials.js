@@ -67,6 +67,7 @@ export function confirmInitialSelection() {
             persona: gameState.selectedPersona,
             totalIncinerated: gameState.obstaclesIncinerated
         };
+        console.log('-> leaderboard-initials: scoreData:', scoreData);
 
         playAnimationSound('submit-chime');
         gameState.leaderboardInitials.isActive = false;

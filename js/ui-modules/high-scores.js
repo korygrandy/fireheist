@@ -25,12 +25,11 @@ export function displayHighScores() {
                     </div>
                 </div>
                 <div class="text-sm text-gray-600 mt-1">
-                    <span>Days: <strong>${score.days.toLocaleString()}</strong></span> | 
-                    <span>Hits: <strong>${score.hits}</strong></span> | 
-                    <span>Speed: <strong>${score.speed.toFixed(1)}x</strong></span>
-                </div>
-            `;
-        } else {
+                                    <span>Days: <strong>${score.days}</strong></span> |
+                                    <span>Hits: <strong>${score.hits}</strong></span> |
+                                    <span>🔥: <strong>${score.totalIncinerated || 0}</strong></span>
+                                </div>
+                            </li>`;        } else {
             content = `
                 <div class="font-bold text-lg text-gray-500">${level}</div>
                 <div class="text-sm text-gray-400 mt-1">No record yet.</div>

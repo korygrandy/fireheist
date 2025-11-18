@@ -6,8 +6,8 @@ export function updateHighScore() {
     const currentScore = {
         days: Math.round(state.daysElapsedTotal),
         hits: state.hitsCounter,
-        emoji: state.stickFigureEmoji,
-        speed: state.intendedSpeedMultiplier
+        totalIncinerated: state.obstaclesIncinerated,
+        date: new Date().toISOString()
     };
 
     const existingScore = highScores[state.currentSkillLevel];
