@@ -9,7 +9,8 @@ export function spawnObstacle() {
         spawnTime: Date.now(),
         hasBeenHit: false,
         isEasterEgg: isEasterEgg,
-        opacity: isEasterEgg ? 0.05 : 1.0
+        opacity: isEasterEgg ? 0.05 : 1.0,
+        sixShooterHits: 0
     };
 
     if (state.isFirestormActive) {

@@ -246,3 +246,20 @@ export function checkMolotovCollision(cocktail, obstacle) {
            cocktail.y + cocktailSize > obstacleY;
 }
 
+export function checkSixShooterBulletCollision(bullet, obstacle) {
+    if (!obstacle || obstacle.hasBeenHit) return false;
+
+    const bulletWidth = bullet.width;
+    const bulletHeight = bullet.height;
+    const obstacleX = obstacle.x;
+    const groundAngle = gameState.raceSegments[gameState.currentSegmentIndex].angleRad;
+    const obstacleY = GROUND_Y - obstacleX * Math.tan(groundAngle) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+
+    // Simple AABB collision detection
+    const collision = bullet.x < obstacleX + OBSTACLE_WIDTH &&
+           bullet.x + bulletWidth > obstacleX &&
+           bullet.y < obstacleY + OBSTACLE_HEIGHT &&
+           bullet.y + bulletHeight > obstacleY;
+
+    return collision;
+}

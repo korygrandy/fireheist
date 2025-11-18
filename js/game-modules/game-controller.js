@@ -2,7 +2,8 @@ import { header, controlPanel, mainElement, startButton, canvas } from '../dom-e
 import {
     DEFAULT_MUSIC_URL,
     EMOJI_MUSIC_MAP,
-    THEME_MUSIC_MAP
+    THEME_MUSIC_MAP,
+    SIX_SHOOTER_AMMO_CAPACITY
 } from '../constants.js';
 import {
     isMuted,
@@ -73,7 +74,8 @@ import {
     setLastTime,
     setBackgroundOffset,
     setSegmentProgress,
-    setObstaclesIncinerated
+    setObstaclesIncinerated,
+    setSixShooterAmmo
 } from './state-manager.js';
 import { initializeClouds, generateGrassBlades } from './drawing/world.js';
 import * as drawing from './drawing.js';
@@ -139,6 +141,7 @@ export function resetGameState() {
 
     resetJumpState();
     resetManualJumpOverride();
+    setSixShooterAmmo(SIX_SHOOTER_AMMO_CAPACITY);
 
     setFirestormActive(false);
     setFirestormEndTime(0);

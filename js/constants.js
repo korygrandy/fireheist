@@ -77,6 +77,12 @@ export const MAGE_SPINNER_FIREBALL_COUNT = 14; // 14 fireballs over the duration
 export const FIERY_HOUDINI_ENERGY_COST = 60;
 export const FIERY_HOUDINI_DURATION_MS = 800;
 export const FIERY_HOUDINI_COOLDOWN_MS = 12000; // 12 seconds cooldown
+export const SIX_SHOOTER_HITS_TO_DESTROY = {
+    'Pro': 6,
+    'Novice': 4,
+    'Rookie': 2
+};
+export const SIX_SHOOTER_AMMO_CAPACITY = 6;
 export const FIERY_HOUDINI_RANGE = 300; // The range of the destructive poof in pixels
 export const BLINK_STRIKE_DURATION_MS = 300;
 export const JETSTREAM_DASH_DURATION_MS = 5000;
@@ -249,7 +255,9 @@ export const ANIMATION_SOUND_MAP = {
     'vine-boom': 'fx/vine-boom.mp3',
     'keypress': 'fx/keypress.mp3',
     'submit-chime': 'fx/submit-chime.mp3',
-    'ignited-flame': 'fx/ignited-flame.mp3'
+    'ignited-flame': 'fx/ignited-flame.mp3',
+    'six-shooter-firing': 'fx/six-shooter-firing.mp3',
+    'six-shooter-reload': 'fx/six-shooter-reload.mp3'
     // Other animations will be added here
 };
 

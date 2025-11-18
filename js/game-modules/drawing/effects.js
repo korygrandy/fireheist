@@ -66,6 +66,48 @@ export function drawGroundPoundParticles() {
         }
     }
 }
+        
+        export function createImpactSpark(x, y) {
+            const sparkCount = 10;
+            const sparks = [];
+            for (let i = 0; i < sparkCount; i++) {
+                sparks.push({
+                    x,
+                    y,
+                    size: Math.random() * 3 + 1,
+                    velocityX: (Math.random() - 0.5) * 4,
+                    velocityY: (Math.random() - 0.5) * 4,
+                    life: 100, // Lifespan of the spark
+                });
+            }
+            gameState.activeImpactSparks.push(sparks);
+        }
+        
+        export function drawImpactSparks() {
+            gameState.activeImpactSparks.forEach((sparkCluster, clusterIndex) => {
+                sparkCluster.forEach((spark, sparkIndex) => {
+                    ctx.fillStyle = `rgba(255, 223, 186, ${spark.life / 100})`;
+                    ctx.fillRect(spark.x, spark.y, spark.size, spark.size);
+        
+                    spark.x += spark.velocityX;
+                    spark.y += spark.velocityY;
+                    spark.life -= 2;
+        
+                    if (spark.life <= 0) {
+                        sparkCluster.splice(sparkIndex, 1);
+                    }
+                });
+        
+                if (sparkCluster.length === 0) {
+                    gameState.activeImpactSparks.splice(clusterIndex, 1);
+                }
+            });
+        }
+                    
+                    
+                
+                    
+        
 
 export function createMoonwalkSparkle(x, y) {
     gameState.moonwalkParticles.push({

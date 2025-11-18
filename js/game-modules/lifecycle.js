@@ -31,6 +31,7 @@ import {
     ACCELERATOR_BASE_SPEED_BOOST,
     JETSTREAM_DASH_DURATION_MS,
     FIREBALL_ROLL_DURATION_MS,
+    SIX_SHOOTER_HITS_TO_DESTROY,
 } from '../constants.js';
 import {
     playWinnerSound,
@@ -153,8 +154,8 @@ import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
 import { castMageSpinnerFireball } from './actions.js';
 import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
-import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFireTrail, createJetstreamParticle } from './drawing/effects.js';
-import { checkCollision, checkAcceleratorCollision, checkProximityEventCollection } from './collision.js';
+import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFireTrail, createJetstreamParticle, createImpactSpark } from './drawing/effects.js';
+import { checkCollision, checkAcceleratorCollision, checkProximityEventCollection, checkSixShooterBulletCollision } from './collision.js';
 import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning.js';
 import { applySpeedEffect } from './effects.js';
 import { updateHighScore } from './score.js';
@@ -171,6 +172,7 @@ import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
 import { fireMageSkill } from './skills/fireMage.js';
 import { mageSpinnerSkill } from './skills/mageSpinner.js';
 import { fireballRollSkill } from './skills/fireballRoll.js';
+import { sixShooterPistolSkill } from './skills/sixShooterPistol.js';
 import { init as initMiniGame, update as updateMiniGame, draw as drawMiniGame } from './mini-games/blowThatDough.js';
 import { init as initPredictionAddiction, update as updatePredictionAddiction, draw as drawPredictionAddiction } from './mini-games/predictionAddiction.js';
 
@@ -496,6 +498,78 @@ export function animate(timestamp) {
             removeFireball(i);
         }
     }
+
+            // Update Six Shooter Bullets and check for collisions
+
+            for (let i = gameState.activeSixShooterBullets.length - 1; i >= 0; i--) {
+
+                const bullet = gameState.activeSixShooterBullets[i];
+
+        
+
+                if (gameState.currentObstacle && !gameState.currentObstacle.hasBeenHit) {
+
+                    const hit = checkSixShooterBulletCollision(bullet, gameState.currentObstacle);
+
+                    if (hit) {
+
+                        
+
+                        createImpactSpark(bullet.x, bullet.y);
+
+                        gameState.activeSixShooterBullets.splice(i, 1);
+
+                        
+
+                        gameState.currentObstacle.sixShooterHits = (gameState.currentObstacle.sixShooterHits || 0) + 1;
+
+                        
+
+                        const requiredHits = SIX_SHOOTER_HITS_TO_DESTROY[gameState.currentSkillLevel] || 2;
+
+        
+
+                        if (gameState.currentObstacle.sixShooterHits >= requiredHits) {
+
+                            const obstacleX = gameState.currentObstacle.x;
+
+                            const groundAngle = gameState.raceSegments[Math.min(gameState.currentSegmentIndex, gameState.raceSegments.length - 1)].angleRad;
+
+                            const obstacleY = GROUND_Y - obstacleX * Math.tan(groundAngle) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+
+                            
+
+                            createShatterEffect(obstacleX, obstacleY, gameState.currentObstacle.emoji);
+
+                            playAnimationSound('shatter');
+
+        
+
+                            setCurrentObstacle(null);
+
+                            incrementObstaclesIncinerated();
+
+                            incrementConsecutiveIncinerations();
+
+                            resetStreaks();
+
+                            console.log("-> SIX SHOOTER: Obstacle destroyed!");
+
+                        } else {
+
+                            playAnimationSound('keypress'); // Placeholder "tink" sound
+
+                        }
+
+        
+
+                        continue;
+
+                    }
+
+                }
+
+            }
 
     for (let i = gameState.ignitedObstacles.length - 1; i >= 0; i--) {
         const obstacle = gameState.ignitedObstacles[i];
@@ -855,6 +929,7 @@ export function animate(timestamp) {
     mageSpinnerSkill.update(gameState, deltaTime);
     fireballRollSkill.update(gameState, deltaTime);
     shotgunSkill.update(gameState, deltaTime);
+    sixShooterPistolSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);

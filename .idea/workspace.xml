@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="" />
+    <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/fx/six-shooter-firing.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fx/six-shooter-reload.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/six-shooter-locked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/six-shooter-unlocked.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/changelog.json" beforeDir="false" afterPath="$PROJECT_DIR$/changelog.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/collision.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/collision.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/skills/sixShooterPistol.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/skills/sixShooterPistol.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/spawning.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/spawning.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/version.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,7 +73,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/six-shooter-pistol",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -80,6 +98,7 @@
       <updated>1763064864972</updated>
       <workItem from="1763064867591" duration="7872000" />
       <workItem from="1763410316063" duration="15809000" />
+      <workItem from="1763491212101" duration="10500000" />
     </task>
     <servers />
   </component>

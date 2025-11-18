@@ -86,6 +86,9 @@ const state = {
     sixShooterAmmo: 6,
     isSixShooterReloading: false,
 
+    // Six Shooter Pistol Bullets
+    activeSixShooterBullets: [],
+
     activeFireballs: [], // Array to track on-screen fireballs
     vanishingObstacles: [], // Array for obstacles that "poof" on hit
     meteorParticles: [],
@@ -129,6 +132,7 @@ const state = {
     shotgunParticles: [],
     molotovCocktails: [],
     phoenixSparks: [],
+    activeImpactSparks: [],
     isFirestormActive: false,
     isFireShieldActive: false,
     isShotgunBlastActive: false,

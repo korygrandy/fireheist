@@ -1,5 +1,30 @@
 [
     {
+        "version": "1.5.25",
+        "date": "2025-11-18",
+        "changes": [
+            "fix(skill): Corrected an off-by-one error in the Six Shooter Pistol's ammo logic that caused it to fire only 5 shots instead of 6. The reload condition is now checked correctly, ensuring the full cylinder is spent before reloading."
+        ]
+    },
+    {
+        "version": "1.5.24",
+        "date": "2025-11-18",
+        "changes": [
+            "fix(collision): Resolved a critical bug where players would collide with an obstacle before all six bullets from the Six Shooter could land. Obstacles now become 'passable' to the player after taking the first bullet hit, preventing a physical collision while allowing the remaining bullets to register and destroy the obstacle.",
+            "fix(vfx): Corrected a rendering order issue where the Six Shooter's bullet impact sparks were being drawn behind the obstacle. The sparks are now drawn in the UI overlay layer, ensuring they are always visible on top of all game objects."
+        ]
+    },
+    {
+        "version": "1.5.23",
+        "date": "2025-11-18",
+        "changes": [
+            "feat(skill): Implemented Phase 3 (now Phase 4) of the 'Six Shooter Pistol' skill: bullet-obstacle collision detection, visual impact spark effects on every hit, and difficulty-based damage (2/4/6 hits for Rookie/Novice/Pro).",
+            "fix(audio): Corrected the Six Shooter Pistol's sound effects to use 'six-shooter-firing.mp3' and 'six-shooter-reload.mp3' by mapping them in `constants.js`.",
+            "fix(bug): Centralized `SIX_SHOOTER_AMMO_CAPACITY` in `constants.js` and updated `sixShooterPistol.js` and `game-controller.js` to import it, resolving a `SyntaxError` and ensuring correct ammo reset on game restart.",
+            "fix(bug): Fixed a `SyntaxError` in `js/game-modules/drawing/effects.js` caused by an extra closing brace."
+        ]
+    },
+    {
         "version": "1.5.22",
         "date": "2025-11-18",
         "changes": [
@@ -25,7 +50,7 @@
         "version": "1.5.18",
         "date": "2025-11-16",
         "changes": [
-            "feat(easter-egg): Implemented an easter egg obstacle (\"🥚\") that has a small chance to spawn instead of a regular obstacle. Colliding with the easter egg triggers a special console log message and prevents normal collision penalties, serving as a placeholder for future mini-game integration."
+            "feat(easter-egg): Implemented an easter egg obstacle ("🥚") that has a small chance to spawn instead of a regular obstacle. Colliding with the easter egg triggers a special console log message and prevents normal collision penalties, serving as a placeholder for future mini-game integration."
         ]
     },
     {
@@ -50,32 +75,6 @@
         "date": "2025-11-16",
         "changes": [
             "feat(cheat): Added an emoji-based cheat mode. Clicking the second fire emoji in the main title copies it to the clipboard. Pasting this emoji into the player emoji input field unlocks all personas, skills, and grants 1,000,000,000 cash for upgrades."
-        ]
-    },
-    {
-        "version": "1.5.14",
-        "date": "2025-11-16",
-        "changes": [
-            "fix(collision): Corrected the shotgun blast collision detection logic to accurately register hits on obstacles.",
-            "refactor(collision): Replaced the flawed angle-based collision check with a more reliable Axis-Aligned Bounding Box (AABB) implementation."
-        ]
-    },
-    {
-        "version": "1.5.12",
-        "date": "2025-11-12",
-        "changes": [
-            "feat(gameplay): Implemented four new special moves: \"Blink Strike,\" \"Jetstream Dash,\" \"Echo Slam,\" and \"Fireball Roll.\"",
-            "feat(gameplay): Enhanced Echo Slam's secondary shockwave to be destructive, clearing a second nearby obstacle.",
-            "feat(visuals): Created a new, high-speed particle effect for Jetstream Dash, replacing the generic hover particles.",
-            "feat(visuals): Added a brief screen flash upon Blink Strike's reappearance for increased visual impact.",
-            "feat(visuals): Added flaking ember particles to the Fireball Roll animation for a more dynamic and fiery appearance.",
-            "feat(gameplay): Modified Fireball Roll to prevent automatic jumping, allowing the player to roll along the ground unless a jump is manually triggered.",
-            "feat(gameplay): Implemented precise collision detection for the Fireball Roll, requiring a direct overlap with obstacles for incineration, and fixed a bug where invincibility was preventing collision.",
-            "feat(visuals): Implemented a new \"ash blow\" particle effect for Fireball Roll incineration, triggered when the fireball is centered on the obstacle.",
-            "feat(ui): Replaced the emoji for Fiery Houdini with custom locked and unlocked image paths.",
-            "perf(visuals): Slowed down the spinning animation of the Fireball Roll for improved visual appeal (applied twice).",
-            "fix(code): Corrected a `ReferenceError` in `actions.js` by importing the `setScreenFlash` function.",
-            "fix(code): Corrected a `SyntaxError` in `actions.js` by adding a missing closing brace."
         ]
     }
 ]

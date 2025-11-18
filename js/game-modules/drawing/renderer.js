@@ -2,7 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, OBSTACLE_EMOJI_Y_OFFSET, FIREBALL_SIZE, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS } from '../../constants.js';
 import { drawCityscape } from './environmental-effects.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
-import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks } from './effects.js';
+import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks, drawImpactSparks } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay } from './overlays.js';
@@ -12,6 +12,7 @@ import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
 import { fireMageSkill } from '../skills/fireMage.js';
 import { mageSpinnerSkill } from '../skills/mageSpinner.js';
 import { fireballRollSkill } from '../skills/fireballRoll.js';
+import { sixShooterPistolSkill } from '../skills/sixShooterPistol.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -44,6 +45,7 @@ export function drawParticlesAndEffects(gameState, activeFireballs, ignitedObsta
     drawShatteredObstacles();
     drawAshParticles();
     firestormSkill.draw(ctx, gameState, playerY);
+    sixShooterPistolSkill.draw(ctx, gameState);
     drawFireballs(activeFireballs);
 
     ignitedObstacles.forEach(obstacle => drawIgnitedObstacle(obstacle, groundAngleRad));
@@ -159,6 +161,7 @@ export function drawUIOverlaysAndEffects(gameState, isInitialLoad, collisionDura
     drawGameCounters();
     drawEnergyBar();
     if (gameState.daysCounter) drawDaysCounter();
+    drawImpactSparks();
 
     if (gameState.isColliding && gameState.collisionDuration > 0) {
         const fadeProgress = gameState.collisionDuration / collisionDurationMs;

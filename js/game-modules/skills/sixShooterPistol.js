@@ -2,11 +2,10 @@
 
 import { gameState, setSixShooterAmmo, setSixShooterReloading } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
-import { STICK_FIGURE_FIXED_X, GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, SIX_SHOOTER_AMMO_CAPACITY } from '../../constants.js';
 import { canvas } from '../../dom-elements.js';
 
-const SIX_SHOOTER_AMMO_CAPACITY = 6;
-const SIX_SHOOTER_RELOAD_TIME_MS = 1500;
+const SIX_SHOOTER_RELOAD_TIME_MS = 5000;
 const BULLET_VELOCITY_PX_MS = 0.8;
 const BULLET_WIDTH = 10;
 const BULLET_HEIGHT = 4;
@@ -14,7 +13,8 @@ const BULLET_COLOR = '#FF4500'; // Fiery orange-red
 
 function activate(state) {
     if (state.sixShooterAmmo > 0 && !state.isSixShooterReloading) {
-        console.log("-> Six Shooter: Firing shot. Ammo left:", state.sixShooterAmmo - 1);
+        setSixShooterAmmo(state.sixShooterAmmo - 1);
+        console.log(`-> Six Shooter: Firing shot. Ammo left: ${state.sixShooterAmmo}`);
 
         const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
         const groundAngleRad = currentSegment.angleRad;
@@ -32,10 +32,9 @@ function activate(state) {
         };
         state.activeSixShooterBullets.push(bullet);
 
-        playAnimationSound('shotgun-blast'); // Placeholder sound
-        setSixShooterAmmo(state.sixShooterAmmo - 1);
+        playAnimationSound('six-shooter-firing');
 
-        if (state.sixShooterAmmo - 1 === 0) {
+        if (state.sixShooterAmmo === 0) {
             console.log("-> Six Shooter: Ammo empty. Reloading...");
             setSixShooterReloading(true);
             setTimeout(() => {
@@ -43,7 +42,7 @@ function activate(state) {
                 setSixShooterAmmo(SIX_SHOOTER_AMMO_CAPACITY);
                 setSixShooterReloading(false);
             }, SIX_SHOOTER_RELOAD_TIME_MS);
-            playAnimationSound('shotgun-reload'); // Placeholder sound
+            playAnimationSound('six-shooter-reload');
         }
     } else {
         console.log("-> Six Shooter: Cannot fire. Reloading or out of ammo.");
