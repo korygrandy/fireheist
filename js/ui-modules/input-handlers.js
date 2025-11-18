@@ -1,3 +1,4 @@
+import { playAnimationSound } from '../audio.js';
 import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer } from '../dom-elements.js';
 import { saveSettings } from './settings.js';
 import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setEnableRandomPowerUps, setAutoHurdleEnabled, setCurrentSkillLevel, setMaxPlayerEnergy, setPassiveDrainRate, setAcceleratorFrequencyPercent, setIntendedSpeedMultiplier } from '../game-modules/state-manager.js';
@@ -61,6 +62,7 @@ export function applySkillLevelSettings(level) {
 
 export function handleSkillLevelChange(event) {
     if (event.target.name === 'gameSkillLevel' && event.target.checked) {
+        playAnimationSound('keypress');
         applySkillLevelSettings(event.target.value);
     }
 }
@@ -85,6 +87,7 @@ export function setupSuggestedEmojis() {
 
 export function handleSpeedChange(event) {
     if (event.target.name === 'gameSpeed' && event.target.checked) {
+        playAnimationSound('keypress');
         setIntendedSpeedMultiplier(parseFloat(event.target.value));
         saveSettings();
     }

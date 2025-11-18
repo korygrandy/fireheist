@@ -179,7 +179,7 @@ export function drawMoneyCounter() {
 
 export function drawGameCounters() {
     const daysString = `Days Elapsed: ${Math.round(gameState.daysElapsedTotal).toLocaleString()}`;
-    const hitsString = `Hits: ${gameState.hitsCounter} | 🔥: ${gameState.obstaclesIncinerated} (${gameState.currentSkillLevel} Skill)`;
+    const hitsString = `Hits: ${gameState.hitsCounter} | 🔥: ${gameState.playerStats.obstaclesIncinerated} (${gameState.currentSkillLevel} Skill)`;
 
     const PADDING = 10;
     const LINE_HEIGHT = 20;

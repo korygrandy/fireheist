@@ -5,6 +5,8 @@ export const PLAYER_STATS_KEY = 'fireHeistPlayerStats'; // New constant
 export const GRASS_ANIMATION_INTERVAL_MS = 200; // Update grass blades every 200ms
 
 const state = {
+    daysElapsedTotal: 0,
+    hitsCounter: 0,
     activeCustomEvents: [],
     gameRunning: false,
     isPaused: false,

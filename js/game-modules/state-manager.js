@@ -389,7 +389,7 @@ export function removeFireball(index) {
  * Increments the obstacles incinerated count.
  */
 export function incrementObstaclesIncinerated() {
-    state.obstaclesIncinerated++;
+    state.playerStats.obstaclesIncinerated++;
 }
 
 /**

@@ -72,7 +72,8 @@ import {
     setGameOverSequenceStartTime,
     setLastTime,
     setBackgroundOffset,
-    setSegmentProgress
+    setSegmentProgress,
+    setObstaclesIncinerated
 } from './state-manager.js';
 import { initializeClouds, generateGrassBlades } from './drawing/world.js';
 import * as drawing from './drawing.js';
@@ -108,7 +109,7 @@ export function resetGameState() {
     gameState.showDailyChallengeCompletedOverlay = false;
     gameState.leaderboardInitials.isActive = false;
     gameState.leaderboardInitials.submitted = false;
-    gameState.obstaclesIncinerated = 0;
+    setObstaclesIncinerated(0);
     console.log("-> RESET GAME: Initiated.");
     setGameRunning(false);
     setPaused(false);
