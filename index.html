@@ -2,389 +2,439 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔥 The FIRE Heist Game</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <script src="https://cdn.tailwindcss.com/"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
-    <link href="https://fonts.googleapis.com/css2?familStrangy=Inter:wght400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <script src="js/vendor/chart.umd.min.js"></script>
+    <script src="js/vendor/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.0">
 </head>
 <body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
 
-    <!-- Preloader Overlay -->
-    <div id="preloader-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex flex-col items-center justify-center z-50">
-        <div class="text-white text-4xl font-bold mb-8">Loading Audio...</div>
-        <div id="preloader-message" class="hidden text-white text-2xl font-semibold mb-4">Audio Preloading Completed!</div>
-        <button id="preloader-start-button" class="hidden control-btn text-5xl font-extrabold px-12 py-6 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-300">START GAME</button>
-    </div>
+<!-- Preloader Overlay -->
+<div id="preloader-overlay"
+     class="fixed inset-0 bg-gray-900 bg-opacity-70 flex flex-col items-center justify-center z-50">
+    <div class="text-white text-4xl font-bold mb-8">Loading Audio...</div>
+    <div id="preloader-message" class="hidden text-white text-2xl font-semibold mb-4">Audio Preloading Completed!</div>
+    <button id="preloader-start-button"
+            class="hidden control-btn text-5xl font-extrabold px-12 py-6 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-300">
+        START GAME
+    </button>
+</div>
 
-    <div id="appContainer" class="w-full max-w-7xl space-y-8">
-        <div id="debug-panel" class="hidden bg-red-100 border-2 border-red-500 p-4 rounded-lg shadow-lg space-y-4">
-            <h2 class="text-xl font-bold text-red-700 text-center">--- DEBUG MODE ---</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <button id="debugUnlockAllBtn" class="control-btn text-xs">Unlock all Achievements</button>
-                    <button id="debugShowDailyResultsBtn" class="control-btn text-xs mt-2">Show Daily Results UI</button>
-                    <button id="debugWinBtn" class="control-btn text-xs mt-2 bg-green-200">Debug Win</button>
+<div id="appContainer" class="w-full max-w-7xl space-y-8">
+    <div id="debug-panel" class="hidden bg-red-100 border-2 border-red-500 p-4 rounded-lg shadow-lg space-y-4">
+        <h2 class="text-xl font-bold text-red-700 text-center">--- DEBUG MODE ---</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <button id="debugUnlockAllBtn" class="control-btn text-xs">Unlock all Achievements</button>
+                <button id="debugShowDailyResultsBtn" class="control-btn text-xs mt-2">Show Daily Results UI</button>
+                <button id="debugWinBtn" class="control-btn text-xs mt-2 bg-green-200">Debug Win</button>
 
-                    <button id="debugLoseBtn" class="control-btn text-xs mt-2 bg-red-200">Debug Lose</button>
-                    <button id="debugCycleThemeBtn" class="control-btn text-xs mt-2 bg-blue-200">Cycle Daily Theme</button>
-                    <button id="debugMuteThemeMusicBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute Theme Music</button>
-                    <button id="debugUnmuteThemeMusicBtn" class="control-btn text-xs mt-2 bg-gray-200">Unmute Theme Music</button>
-                    <button id="debugMuteAmbientBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute Ambient</button>
-                    <button id="debugUnmuteAmbientBtn" class="control-btn text-xs mt-2 bg-gray-200">Unmute Ambient</button>
-                    <button id="debugMuteSfxBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute SFX</button>
+                <button id="debugLoseBtn" class="control-btn text-xs mt-2 bg-red-200">Debug Lose</button>
+                <button id="debugCycleThemeBtn" class="control-btn text-xs mt-2 bg-blue-200">Cycle Daily Theme</button>
+                <button id="debugMuteThemeMusicBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute Theme Music
+                </button>
+                <button id="debugUnmuteThemeMusicBtn" class="control-btn text-xs mt-2 bg-gray-200">Unmute Theme Music
+                </button>
+                <button id="debugMuteAmbientBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute Ambient</button>
+                <button id="debugUnmuteAmbientBtn" class="control-btn text-xs mt-2 bg-gray-200">Unmute Ambient</button>
+                <button id="debugMuteSfxBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute SFX</button>
+            </div>
+            <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <input type="number" id="debugIncinerateCountInput" clasCan s="w-24 p-1 border rounded"
+                           placeholder="Count">
+                    <button id="debugSetIncinerateCountBtn" class="control-btn">Set Incinerations</button>
                 </div>
-                <div class="space-y-2">
-                    <div class="flex items-center space-x-2">
-                        <input type="number" id="debugIncinerateCountInput" clasCan s="w-24 p-1 border rounded" placeholder="Count">
-                        <button id="debugSetIncinerateCountBtn" class="control-btn">Set Incinerations</button>
-                    </div>
-                    <button id="debugAddCashBtn" class="control-btn">Copy Cash Command</button>
-                </div>
+                <button id="debugAddCashBtn" class="control-btn">Copy Cash Command</button>
             </div>
         </div>
-        <div id="unlock-notification" class="hidden fixed top-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50"></div>
-        <header class="text-center">
-            <h1 class="text-4xl font-extrabold text-gray-800">The 🔥FIRE<span id="cheat-emoji" title="Copy Cheat Emoji" class="cursor-pointer">🔥</span> Heist Game <span id="version-display" class="text-lg align-middle"></span></h1>
-            <p class="text-gray-500 mt-1">Heist your way to financial independence!</p>
-        </header>
+    </div>
+    <div id="unlock-notification"
+         class="hidden fixed top-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50"></div>
+    <header class="text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800">The 🔥FIRE<span id="cheat-emoji" title="Copy Cheat Emoji"
+                                                                         class="cursor-pointer">🔥</span> Heist Game
+            <span id="version-display" class="text-lg align-middle"></span></h1>
+        <p class="text-gray-500 mt-1">Heist your way to financial independence!</p>
+    </header>
 
-        <main class="grid grid-cols-1 lg:col-span-2 lg:grid-cols-3 gap-8">
-            <div id="control-panel-container" class="lg:col-span-1 p-6 bg-white rounded-xl shadow-lg h-full">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-semibold text-gray-700">Heist Control Panel</h2>
-                    <span id="info-icon" class="text-2xl cursor-pointer">ℹ️</span>
-                </div>
+    <main class="grid grid-cols-1 lg:col-span-2 lg:grid-cols-3 gap-8">
+        <div id="control-panel-container" class="lg:col-span-1 p-6 bg-white rounded-xl shadow-lg h-full">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-700">Heist Control Panel</h2>
+                <span id="info-icon" class="text-2xl cursor-pointer">ℹ️</span>
+            </div>
 
-                <div id="info-panel" class="hidden bg-gray-100 p-4 rounded-lg mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Gameplay Controls</h3>
-                    <div id="keyboard-controls" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-                        <div>
-                            <h4 class="font-semibold mb-1">Keyboard Controls:</h4>
-                            <ul class="list-disc list-inside">
-                                <li><strong>Jump:</strong> Spacebar</li>
-                                <li><strong>Hurdle:</strong> 'J' key</li>
-                                <li><strong>Special Move:</strong> 'K' key</li>
-                                <li><strong>Dive:</strong> 'D' key</li>
-                                <li><strong>Frontflip:</strong> 'F' key</li>
-                                <li><strong>Backflip:</strong> 'B' key</li>
-                                <li><strong>Houdini:</strong> 'I' key</li>
-                                <li><strong>Meteor Strike:</strong> 'T' key</li>
-                                <li><strong>Scissor Kick:</strong> 'S' key</li>
-                                <li><strong>Fire Dash:</strong> 'V' key</li>
-                                <li><strong>Hover:</strong> 'H' key</li>
-                                <li><strong>Ground Pound:</strong> 'G' key</li>
-                                <li><strong>Cartoon Scramble:</strong> 'Z' key</li>
-                                <li><strong>Moonwalk:</strong> 'M' key</li>
-                                <li><strong>Shockwave:</strong> 'N' key</li>
-                                <li><strong>Fire Spinner:</strong> 'R' key</li>
-                                <li><strong>Firestorm:</strong> 'Y' key</li>
-                                <li><strong>Mage Spinner / Cast Fireball:</strong> 'U' key</li>
-                                <li><strong>Pause:</strong> 'P' key</li>
-                                <li><strong>Exit/Reset Game:</strong> 'Escape' key</li>
-                                <li><strong>CHEAT: Max Energy:</strong> 'Ctrl + Alt + E'</li>
-                                <li><strong>DEBUG: Theme Effect:</strong> 'Q' key</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold mb-1">Mobile Gestures:</h4>
-                            <ul class="list-disc list-inside">
-                                <li><strong>Jump:</strong> 1-Finger Tap</li>
-                                <li><strong>Frontflip:</strong> Swipe Up</li>
-                                <li><strong>Backflip:</strong> Swipe Right</li>
-                                <li><strong>Ground Pound:</strong> Swipe Down</li>
-                                <li><strong>Dive:</strong> 2-Finger Tap</li>
-                                <li><strong>Houdini:</strong> 3-Finger Tap</li>
-                                <li><strong>Moonwalk:</strong> Swipe Left</li>
-                                <li><strong>Special Move:</strong> Double Tap</li>
-                                <li><strong>Hover:</strong> Long Press</li>
-                                <li><strong>Cartoon Scramble:</strong> 4-Finger Tap</li>
-                                <li><strong>Shockwave:</strong> 5-Finger Tap</li>
-                            </ul>
-                        </div>
+            <div id="info-panel" class="hidden bg-gray-100 p-4 rounded-lg mb-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Gameplay Controls</h3>
+                <div id="keyboard-controls" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                    <div>
+                        <h4 class="font-semibold mb-1">Keyboard Controls:</h4>
+                        <ul class="list-disc list-inside">
+                            <li><strong>Jump:</strong> Spacebar</li>
+                            <li><strong>Hurdle:</strong> 'J' key</li>
+                            <li><strong>Special Move:</strong> 'K' key</li>
+                            <li><strong>Dive:</strong> 'D' key</li>
+                            <li><strong>Frontflip:</strong> 'F' key</li>
+                            <li><strong>Backflip:</strong> 'B' key</li>
+                            <li><strong>Houdini:</strong> 'I' key</li>
+                            <li><strong>Meteor Strike:</strong> 'T' key</li>
+                            <li><strong>Scissor Kick:</strong> 'S' key</li>
+                            <li><strong>Fire Dash:</strong> 'V' key</li>
+                            <li><strong>Hover:</strong> 'H' key</li>
+                            <li><strong>Ground Pound:</strong> 'G' key</li>
+                            <li><strong>Cartoon Scramble:</strong> 'Z' key</li>
+                            <li><strong>Moonwalk:</strong> 'M' key</li>
+                            <li><strong>Shockwave:</strong> 'N' key</li>
+                            <li><strong>Fire Spinner:</strong> 'R' key</li>
+                            <li><strong>Firestorm:</strong> 'Y' key</li>
+                            <li><strong>Mage Spinner / Cast Fireball:</strong> 'U' key</li>
+                            <li><strong>Pause:</strong> 'P' key</li>
+                            <li><strong>Exit/Reset Game:</strong> 'Escape' key</li>
+                            <li><strong>CHEAT: Max Energy:</strong> 'Ctrl + Alt + E'</li>
+                            <li><strong>DEBUG: Theme Effect:</strong> 'Q' key</li>
+                        </ul>
                     </div>
-                    <div id="gamepad-controls" class="hidden text-sm text-gray-700">
-                        <h4 class="font-semibold mb-1">Gamepad Controls:</h4>
-                        <ul class="list-disc list-inside grid grid-cols-1 md:grid-cols-2 gap-x-4">
-                            <li><strong>Jump:</strong> A Button</li>
-                            <li><strong>Special Move:</strong> B Button</li>
-                            <li><strong>Meteor Strike:</strong> X Button</li>
-                            <li><strong>Firestorm:</strong> Y Button</li>
-                            <li><strong>Backflip:</strong> Left Bumper</li>
-                            <li><strong>Frontflip:</strong> Right Bumper</li>
-                            <li><strong>Houdini:</strong> Left Trigger</li>
-                            <li><strong>Fiery Ground Pound:</strong> Right Trigger</li>
-                            <li><strong>Exit/Reset Game:</strong> Back Button</li>
-                            <li><strong>Pause Game:</strong> Start Button</li>
-                            <li><strong>Cartoon Scramble:</strong> Left Stick Click</li>
-                            <li><strong>Shockwave:</strong> Right Stick Click</li>
-                            <li><strong>UI Navigation:</strong> D-Pad</li>
-                            <li><strong>CHEAT: Max Energy:</strong> Left + Right Bumper</li>
+                    <div>
+                        <h4 class="font-semibold mb-1">Mobile Gestures:</h4>
+                        <ul class="list-disc list-inside">
+                            <li><strong>Jump:</strong> 1-Finger Tap</li>
+                            <li><strong>Frontflip:</strong> Swipe Up</li>
+                            <li><strong>Backflip:</strong> Swipe Right</li>
+                            <li><strong>Ground Pound:</strong> Swipe Down</li>
+                            <li><strong>Dive:</strong> 2-Finger Tap</li>
+                            <li><strong>Houdini:</strong> 3-Finger Tap</li>
+                            <li><strong>Moonwalk:</strong> Swipe Left</li>
+                            <li><strong>Special Move:</strong> Double Tap</li>
+                            <li><strong>Hover:</strong> Long Press</li>
+                            <li><strong>Cartoon Scramble:</strong> 4-Finger Tap</li>
+                            <li><strong>Shockwave:</strong> 5-Finger Tap</li>
                         </ul>
                     </div>
                 </div>
+                <div id="gamepad-controls" class="hidden text-sm text-gray-700">
+                    <h4 class="font-semibold mb-1">Gamepad Controls:</h4>
+                    <ul class="list-disc list-inside grid grid-cols-1 md:grid-cols-2 gap-x-4">
+                        <li><strong>Jump:</strong> A Button</li>
+                        <li><strong>Special Move:</strong> B Button</li>
+                        <li><strong>Meteor Strike:</strong> X Button</li>
+                        <li><strong>Firestorm:</strong> Y Button</li>
+                        <li><strong>Backflip:</strong> Left Bumper</li>
+                        <li><strong>Frontflip:</strong> Right Bumper</li>
+                        <li><strong>Houdini:</strong> Left Trigger</li>
+                        <li><strong>Fiery Ground Pound:</strong> Right Trigger</li>
+                        <li><strong>Exit/Reset Game:</strong> Back Button</li>
+                        <li><strong>Pause Game:</strong> Start Button</li>
+                        <li><strong>Cartoon Scramble:</strong> Left Stick Click</li>
+                        <li><strong>Shockwave:</strong> Right Stick Click</li>
+                        <li><strong>UI Navigation:</strong> D-Pad</li>
+                        <li><strong>CHEAT: Max Energy:</strong> Left + Right Bumper</li>
+                    </ul>
+                </div>
+            </div>
 
-                <div id="tab-buttons-container" class="flex flex-wrap items-center border-b border-gray-200 mb-4">
-                    <button class="tab-button tab-button-active" data-tab="player">👤 Player</button>
-                    <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="gameplay">🎮 Gameplay</button>
-                    <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="data">🛠️ Data</button>
-                    <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="hallOfFame">🏆 Hall of Fame</button>
-                    <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="armory">⚔️ Armory <span id="armory-new-indicator" class="hidden ml-1 px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">NEW</span></button>
+            <div id="tab-buttons-container" class="flex flex-wrap items-center border-b border-gray-200 mb-4">
+                <button class="tab-button tab-button-active" data-tab="player">👤 Player</button>
+                <span class="text-gray-300 mx-2">|</span>
+                <button class="tab-button tab-button-inactive" data-tab="gameplay">🎮 Gameplay</button>
+                <span class="text-gray-300 mx-2">|</span>
+                <button class="tab-button tab-button-inactive" data-tab="data">🛠️ Data</button>
+                <span class="text-gray-300 mx-2">|</span>
+                <button class="tab-button tab-button-inactive" data-tab="hallOfFame">🏆 Hall of Fame</button>
+                <span class="text-gray-300 mx-2">|</span>
+                <button class="tab-button tab-button-inactive" data-tab="armory">⚔️ Armory <span
+                        id="armory-new-indicator"
+                        class="hidden ml-1 px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">NEW</span>
+                </button>
+            </div>
+
+            <div id="playerTab" class="tab-content space-y-4">
+                <div id="daily-challenge-placeholder" class="mb-4">
+                    <!-- Daily Challenge UI will be injected here -->
+                </div>
+                <div>
+                    <label for="personaSelector" class="block text-sm font-medium text-gray-700">Choose your
+                        Persona</label>
+                    <select id="personaSelector"
+                            class="mt-1 blocthek w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        <!-- JavaScript will populate options -->
+                    </select>
                 </div>
 
-                <div id="playerTab" class="tab-content space-y-4">
-                    <div id="daily-challenge-placeholder" class="mb-4">
-                        <!-- Daily Challenge UI will be injected here -->
-                    </div>
+                <div id="personaDetailsContainer" class="hidden bg-gray-50 p-3 rounded-lg text-sm space-y-1">
+                    <!-- JavaScript will populate persona details -->
+                </div>
+
+                <div id="custom-persona-controls" class="space-y-4">
                     <div>
-                        <label for="personaSelector" class="block text-sm font-medium text-gray-700">Choose your Persona</label>
-                        <select id="personaSelector" class="mt-1 blocthek w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                            <!-- JavaScript will populate options -->
+                        <label for="emojiInput" class="block text-sm font-medium text-gray-700">Select your Runner, or
+                            paste your own Emoji</label>
+                        <input type="text" id="emojiInput" value="🦹‍♂️" maxlength="2"
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
+                        <div id="suggestedEmojis" class="mt-2 flex space-x-2 justify-center">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Skill Level</label>
+                        <div id="skillLevelSelector" class="flex justify-between space-x-2">
+                            <label class="flex items-center space-x-1 p-2 bg-green-100 rounded-lg cursor-pointer flex-1 justify-center">
+                                <input type="radio" name="gameSkillLevel" value="Rookie" checked>
+                                <span class="text-sm text-green-700 font-semibold">Rookie</span>
+                            </label>
+                            <label class="flex items-center space-x-1 p-2 bg-yellow-100 rounded-lg cursor-pointer flex-1 justify-center">
+                                <input type="radio" name="gameSkillLevel" value="Novice">
+                                <span class="text-sm text-yellow-700 font-semibold">Novice</span>
+                            </label>
+                            <label class="flex items-center space-x-1 p-2 bg-red-100 rounded-lg cursor-pointer flex-1 justify-center">
+                                <input type="radio" name="gameSkillLevel" value="Pro">
+                                <span class="text-sm text-red-700 font-semibold">Pro</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="themeSelector" class="block text-sm font-medium text-gray-700">Select a
+                            Theme</label>
+                        <select id="themeSelector"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                            <!-- Options will be populated by JavaScript -->
                         </select>
                     </div>
+                </div>
+            </div>
 
-                    <div id="personaDetailsContainer" class="hidden bg-gray-50 p-3 rounded-lg text-sm space-y-1">
-                        <!-- JavaScript will populate persona details -->
-                    </div>
+            <div id="gameplayTab" class="tab-content space-y-4 hidden">
 
-                    <div id="custom-persona-controls" class="space-y-4">
-                        <div>
-                            <label for="emojiInput" class="block text-sm font-medium text-gray-700">Select your Runner, or paste your own Emoji</label>
-                            <input type="text" id="emojiInput" value="🦹‍♂️" maxlength="2"
-                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
-                            <div id="suggestedEmojis" class="mt-2 flex space-x-2 justify-center">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Skill Level</label>
-                            <div id="skillLevelSelector" class="flex justify-between space-x-2">
-                                <label class="flex items-center space-x-1 p-2 bg-green-100 rounded-lg cursor-pointer flex-1 justify-center">
-                                    <input type="radio" name="gameSkillLevel" value="Rookie" checked>
-                                    <span class="text-sm text-green-700 font-semibold">Rookie</span>
-                                </label>
-                                <label class="flex items-center space-x-1 p-2 bg-yellow-100 rounded-lg cursor-pointer flex-1 justify-center">
-                                    <input type="radio" name="gameSkillLevel" value="Novice">
-                                    <span class="text-sm text-yellow-700 font-semibold">Novice</span>
-                                </label>
-                                <label class="flex items-center space-x-1 p-2 bg-red-100 rounded-lg cursor-pointer flex-1 justify-center">
-                                    <input type="radio" name="gameSkillLevel" value="Pro">
-                                    <span class="text-sm text-red-700 font-semibold">Pro</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="themeSelector" class="block text-sm font-medium text-gray-700">Select a Theme</label>
-                            <select id="themeSelector" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                                <!-- Options will be populated by JavaScript -->
-                            </select>
-                        </div>
-                    </div>
+                <div>
+                    <label for="obstacleEmojiInput" class="block text-sm font-medium text-gray-700">Obstacle Emoji
+                        (Default: 🐌)</label>
+                    <input type="text" id="obstacleEmojiInput" value="🐌" maxlength="2"
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="obstacleFrequency" class="block text-sm font-medium text-gray-700">Obstacle Frequency:
+                        <span id="frequencyValue">20%</span></label>
+                    <input type="range" id="obstacleFrequency" min="0" max="100" value="20"
+                           class="mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
                 </div>
 
-                <div id="gameplayTab" class="tab-content space-y-4 hidden">
+                <div class="mt-4 bg-gray-50 p-3 rounded-lg">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" id="enablePowerUps"
+                               class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                        <span class="text-sm font-medium text-gray-700">Enable Random 🔥 Power-ups</span>
+                    </label>
+                </div>
 
-                    <div>
-                        <label for="obstacleEmojiInput" class="block text-sm font-medium text-gray-700">Obstacle Emoji (Default: 🐌)</label>
-                        <input type="text" id="obstacleEmojiInput" value="🐌" maxlength="2"
-                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="obstacleFrequency" class="block text-sm font-medium text-gray-700">Obstacle Frequency: <span id="frequencyValue">20%</span></label>
-                        <input type="range" id="obstacleFrequency" min="0" max="100" value="20"
-                               class="mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
-                    </div>
+                <div class="mt-4 bg-gray-50 p-3 rounded-lg">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" id="enableAutoHurdle"
+                               class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm font-medium text-gray-700">Enable auto-hurdle</span>
+                    </label>
+                </div>
 
-                    <div class="mt-4 bg-gray-50 p-3 rounded-lg">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" id="enablePowerUps" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
-                            <span class="text-sm font-medium text-gray-700">Enable Random 🔥 Power-ups</span>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Game Speed</label>
+                    <div id="speedSelector" class="flex justify-between space-x-2">
+                        <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
+                            <input type="radio" name="gameSpeed" value="0.5" data-speed="Slow (0.5x)">
+                            <span class="text-sm">Slow (0.5x)</span>
+                        </label>
+                        <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
+                            <input type="radio" name="gameSpeed" value="1.0" data-speed="Normal (1.0x)" checked>
+                            <span class="text-sm">Normal (1.0x)</span>
+                        </label>
+                        <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
+                            <input type="radio" name="gameSpeed" value="2.0" data-speed="Fast (2.0x)">
+                            <span class="text-sm">Fast (2.0x)</span>
                         </label>
                     </div>
-
-                    <div class="mt-4 bg-gray-50 p-3 rounded-lg">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" id="enableAutoHurdle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium text-gray-700">Enable auto-hurdle</span>
-                        </label>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Game Speed</label>
-                        <div id="speedSelector" class="flex justify-between space-x-2">
-                            <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
-                                <input type="radio" name="gameSpeed" value="0.5" data-speed="Slow (0.5x)">
-                                <span class="text-sm">Slow (0.5x)</span>
-                            </label>
-                            <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer" >
-                                <input type="radio" name="gameSpeed" value="1.0" data-speed="Normal (1.0x)" checked>
-                                <span class="text-sm">Normal (1.0x)</span>
-                            </label>
-                            <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
-                                <input type="radio" name="gameSpeed" value="2.0" data-speed="Fast (2.0x)">
-                                <span class="text-sm">Fast (2.0x)</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="dataTab" class="tab-content space-y-4 hidden">
-                    <div class="mt-6">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Milestone Data (MM/DD/YYYY: Value)</h3>
-                        <label for="dataInput"></label><textarea id="dataInput" rows="10" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
-                        <button id="loadButton" class="control-btn secondary-btn mt-2 w-full">Load Custom Data</button>
-                        <p id="dataMessage" class="mt-2 text-sm h-5"></p>
-                    </div>
-
-                    <div class="mt-6">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Custom Event Data (MM/DD/YYYY: Emoji : TYPE)</h3>
-                        <label for="eventDataInput"></label><textarea id="eventDataInput" rows="5" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">TYPE must be: **ACCELERATOR** or **DECELERATOR**</p>
-                    </div>
-
-                    <div class="mt-6 bg-gray-50 p-3 rounded-lg">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" id="disableSaveSettings" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium text-gray-700">Disable Saved Settings</span>
-                        </label>
-                        <p class="text-xs text-gray-500 mt-1">
-                            Check this box to prevent game settings and data from being saved in your browser.
-                        </p>
-                    </div>
-                </div>
-
-                <div id="hallOfFameTab" class="tab-content space-y-4 hidden">
-                    <div class="text-center">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Best Runs</h3>
-                        <p class="text-xs text-gray-500 mb-4">Fastest times with the fewest hits.</p>
-                    </div>
-                    <div id="highScoresContainer" class="space-y-3">
-                        <!-- High scores will be dynamically inserted here -->
-                    </div>
-
-                    <div class="text-center mt-8">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Persona Leaderboard</h3>
-                        <p class="text-xs text-gray-500 mb-4">Best runs by each persona.</p>
-                    </div>
-                    <div id="personaLeaderboardContainer" class="space-y-3">
-                        <!-- Persona leaderboard scores will be dynamically inserted here -->
-                    </div>
-                </div>
-
-                <div id="armoryTab" class="tab-content space-y-4 hidden">
-                    <div class="text-center mb-4">
-                        <h3 class="text-xl font-semibold text-gray-700">Total Cash: <span id="totalCashDisplay" class="text-green-600">$0</span></h3>
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Unlocked Skills</h3>
-                        <p class="text-xs text-gray-500 mb-4">Select your active skills.</p>
-                    </div>
-                    <div id="armoryItemsContainer" class="grid grid-cols-2 gap-4">
-                        <!-- Armory items will be dynamically inserted here by JavaScript -->
-                    </div>
                 </div>
             </div>
-            <div id="game-results-area" class="lg:col-span-2 space-y-6">
-                <div class="bg-white p-2 rounded-xl shadow-lg relative">
-                    <canvas id="gameCanvas" width="800" height="400"></canvas>
-                    <div id="gamepad-indicator" style="display: none; position: absolute; bottom: 10px; right: 10px; background-color: rgba(0,0,0,0.5); color: white; padding: 5px 10px; border-radius: 5px; font-family: sans-serif; font-size: 0.8em;">🎮 Gamepad Connected</div>
-                    <div id="turbo-boost-animation"></div>
+
+            <div id="dataTab" class="tab-content space-y-4 hidden">
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Milestone Data (MM/DD/YYYY: Value)</h3>
+                    <label for="dataInput"></label><textarea id="dataInput" rows="10"
+                                                             class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                    <button id="loadButton" class="control-btn secondary-btn mt-2 w-full">Load Custom Data</button>
+                    <p id="dataMessage" class="mt-2 text-sm h-5"></p>
                 </div>
 
-                <div id="actionButtons" class="bg-white p-4 rounded-xl shadow-lg">
-                    <div class="flex flex-col sm:flex-row gap-3 justify-center w-full">
-                        <button id="startButton" class="control-btn primary-btn flex-1">▶️ Start the Heist!</button>
-                        <button id="stopButton" class="control-btn bg-red-500 text-white hover:bg-red-600 flex-1" disabled>🔄 Reset Game</button>
-                        <button id="soundToggleButton" class="control-btn bg-gray-400 text-white hover:bg-gray-500 flex-1">🔇 Mute</button>
-                        <button id="fullscreenToggleButton" class="control-btn bg-gray-700 text-white hover:bg-gray-800 flex-1">↗️ Fullscreen</button>
-                    </div>
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Custom Event Data (MM/DD/YYYY: Emoji :
+                        TYPE)</h3>
+                    <label for="eventDataInput"></label><textarea id="eventDataInput" rows="5"
+                                                                  class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                    <p class="text-xs text-gray-500 mt-1">TYPE must be: **ACCELERATOR** or **DECELERATOR**</p>
                 </div>
 
-                <div id="chartContainer" class="bg-white p-6 rounded-xl shadow-lg" style="display:none;">
-                    <canvas id="milestoneChart" class="w-full h-96"></canvas>
-                </div>
-
-                <div id="tableContainer" class="bg-white p-6 rounded-xl shadow-lg" style="display:none;">
-                    <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Heist Summary</h3>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days to Reach</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Milestone Value</th>
-                                </tr>
-                            </thead>
-                            <tbody id="milestoneTableBody" class="bg-white divide-y divide-gray-200">
-                                </tbody>
-                        </table>
-                    </div>
+                <div class="mt-6 bg-gray-50 p-3 rounded-lg">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" id="disableSaveSettings"
+                               class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm font-medium text-gray-700">Disable Saved Settings</span>
+                    </label>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Check this box to prevent game settings and data from being saved in your browser.
+                    </p>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <!-- Skill Upgrade Modal -->
-    <div id="skillUpgradeModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-xl shadow-lg max-w-md w-full">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="skillModalTitle" class="text-2xl font-semibold text-gray-700">Upgrade Skill</h2>
-                <button id="closeSkillModalBtn" class="text-2xl font-bold">&times;</button>
+            <div id="hallOfFameTab" class="tab-content space-y-4 hidden">
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Best Runs</h3>
+                    <p class="text-xs text-gray-500 mb-4">Fastest times with the fewest hits.</p>
+                </div>
+                <div id="highScoresContainer" class="space-y-3">
+                    <!-- High scores will be dynamically inserted here -->
+                </div>
+
+                <div class="text-center mt-8">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Persona Leaderboard</h3>
+                    <p class="text-xs text-gray-500 mb-4">Best runs by each persona.</p>
+                </div>
+                <div id="personaLeaderboardContainer" class="space-y-3">
+                    <!-- Persona leaderboard scores will be dynamically inserted here -->
+                </div>
             </div>
-            <div id="skillModalContent" class="space-y-4">
-                <!-- Dynamic content will be injected here by armory.js -->
+
+            <div id="armoryTab" class="tab-content space-y-4 hidden">
+                <div class="text-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-700">Total Cash: <span id="totalCashDisplay"
+                                                                                      class="text-green-600">$0</span>
+                    </h3>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Unlocked Skills</h3>
+                    <p class="text-xs text-gray-500 mb-4">Select your active skills.</p>
+                </div>
+                <div id="armoryItemsContainer" class="grid grid-cols-2 gap-4">
+                    <!-- Armory items will be dynamically inserted here by JavaScript -->
+                </div>
             </div>
+        </div>
+        <div id="game-results-area" class="lg:col-span-2 space-y-6">
+            <div class="bg-white p-2 rounded-xl shadow-lg relative">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+                <div id="gamepad-indicator"
+                     style="display: none; position: absolute; bottom: 10px; right: 10px; background-color: rgba(0,0,0,0.5); color: white; padding: 5px 10px; border-radius: 5px; font-family: sans-serif; font-size: 0.8em;">
+                    🎮 Gamepad Connected
+                </div>
+                <div id="turbo-boost-animation"></div>
+            </div>
+
+            <div id="actionButtons" class="bg-white p-4 rounded-xl shadow-lg">
+                <div class="flex flex-col sm:flex-row gap-3 justify-center w-full">
+                    <button id="startButton" class="control-btn primary-btn flex-1">▶️ Start the Heist!</button>
+                    <button id="stopButton" class="control-btn bg-red-500 text-white hover:bg-red-600 flex-1" disabled>
+                        🔄 Reset Game
+                    </button>
+                    <button id="soundToggleButton" class="control-btn bg-gray-400 text-white hover:bg-gray-500 flex-1">
+                        🔇 Mute
+                    </button>
+                    <button id="fullscreenToggleButton"
+                            class="control-btn bg-gray-700 text-white hover:bg-gray-800 flex-1">↗️ Fullscreen
+                    </button>
+                </div>
+            </div>
+
+            <div id="chartContainer" class="bg-white p-6 rounded-xl shadow-lg" style="display:none;">
+                <canvas id="milestoneChart" class="w-full h-96"></canvas>
+            </div>
+
+            <div id="tableContainer" class="bg-white p-6 rounded-xl shadow-lg" style="display:none;">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Heist Summary</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Days to Reach
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Milestone Value
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="milestoneTableBody" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Skill Upgrade Modal -->
+<div id="skillUpgradeModal"
+     class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-lg max-w-md w-full">
+        <div class="flex justify-between items-center mb-4">
+            <h2 id="skillModalTitle" class="text-2xl font-semibold text-gray-700">Upgrade Skill</h2>
+            <button id="closeSkillModalBtn" class="text-2xl font-bold">&times;</button>
+        </div>
+        <div id="skillModalContent" class="space-y-4">
+            <!-- Dynamic content will be injected here by armory.js -->
         </div>
     </div>
+</div>
 
-    <!-- Mini-Game Overlay -->
-    <div id="miniGameOverlay" class="hidden fixed inset-0 bg-gray-900 bg-opacity-80 flex flex-col items-center justify-center z-50 text-white p-8">
-        <!-- Blow That Dough Mini-Game Content -->
-        <div id="miniGameContent" class="hidden text-center">
-            <h2 class="text-5xl font-extrabold mb-4">Blow That Dough: The Reinvestment Race</h2>
-            <div class="flex justify-around w-full max-w-2xl mx-auto text-3xl font-bold mb-8">
-                <p>Time: <span id="miniGameTimerDisplay">15s</span></p>
-                <p>Cash: <span id="miniGameCashDisplay">$0</span></p>
-            </div>
-            <div id="investmentOpportunityDisplay" class="bg-gray-800 p-8 rounded-2xl mb-8 min-h-[200px] flex flex-col items-center justify-center">
-                <!-- Investment opportunities will be injected here -->
-            </div>
-            <div class="flex justify-center gap-8">
-                <button id="investButton" class="control-btn text-4xl font-bold bg-green-600 hover:bg-green-700 px-12 py-6">Invest</button>
-                <button id="passButton" class="control-btn text-4xl font-bold bg-red-600 hover:bg-red-700 px-12 py-6">Pass</button>
-            </div>
+<!-- Mini-Game Overlay -->
+<div id="miniGameOverlay"
+     class="hidden fixed inset-0 bg-gray-900 bg-opacity-80 flex flex-col items-center justify-center z-50 text-white p-8">
+    <!-- Blow That Dough Mini-Game Content -->
+    <div id="miniGameContent" class="hidden text-center">
+        <h2 class="text-5xl font-extrabold mb-4">Blow That Dough: The Reinvestment Race</h2>
+        <div class="flex justify-around w-full max-w-2xl mx-auto text-3xl font-bold mb-8">
+            <p>Time: <span id="miniGameTimerDisplay">15s</span></p>
+            <p>Cash: <span id="miniGameCashDisplay">$0</span></p>
         </div>
-
-        <!-- Prediction Addiction Mini-Game Content -->
-        <div id="predictionAddictionContent" class="hidden text-center">
-            <h2 class="text-5xl font-extrabold mb-4">Prediction Addiction</h2>
-            <p class="text-2xl text-gray-300 mb-8">Predict the market's next move!</p>
-            <div class="relative flex flex-col items-center justify-center mb-8">
-                <span id="crystalBall" class="text-9xl">🔮</span>
-                <div id="predictionOutcome" class="absolute text-4xl font-bold hidden"></div>
-            </div>
-            <div class="flex justify-center gap-8 mb-8">
-                <button id="predictUpButton" class="control-btn text-4xl font-bold bg-green-600 hover:bg-green-700 px-12 py-6">🔼 UP</button>
-                <button id="predictDownButton" class="control-btn text-4xl font-bold bg-red-600 hover:bg-red-700 px-12 py-6">🔽 DOWN</button>
-            </div>
-            <div id="predictionReward" class="text-3xl font-bold hidden"></div>
+        <div id="investmentOpportunityDisplay"
+             class="bg-gray-800 p-8 rounded-2xl mb-8 min-h-[200px] flex flex-col items-center justify-center">
+            <!-- Investment opportunities will be injected here -->
         </div>
-
-        <!-- Generic Mini-Game Results -->
-        <div id="miniGameResults" class="hidden text-center">
-            <h2 id="miniGameTitle" class="text-6xl font-extrabold mb-4"></h2>
-            <p class="text-4xl"><span id="miniGameScoreDisplay" class="font-bold text-green-400"></span></p>
-            <button id="closeMiniGameResults" class="control-btn text-2xl mt-8 px-8 py-4">Return to Heist</button>
+        <div class="flex justify-center gap-8">
+            <button id="investButton" class="control-btn text-4xl font-bold bg-green-600 hover:bg-green-700 px-12 py-6">
+                Invest
+            </button>
+            <button id="passButton" class="control-btn text-4xl font-bold bg-red-600 hover:bg-red-700 px-12 py-6">Pass
+            </button>
         </div>
     </div>
 
-    <script type="module" src="js/main.js?v=1.5.08"></script>
+    <!-- Prediction Addiction Mini-Game Content -->
+    <div id="predictionAddictionContent" class="hidden text-center">
+        <h2 class="text-5xl font-extrabold mb-4">Prediction Addiction</h2>
+        <p class="text-2xl text-gray-300 mb-8">Predict the market's next move!</p>
+        <div class="relative flex flex-col items-center justify-center mb-8">
+            <span id="crystalBall" class="text-9xl">🔮</span>
+            <div id="predictionOutcome" class="absolute text-4xl font-bold hidden"></div>
+        </div>
+        <div class="flex justify-center gap-8 mb-8">
+            <button id="predictUpButton"
+                    class="control-btn text-4xl font-bold bg-green-600 hover:bg-green-700 px-12 py-6">🔼 UP
+            </button>
+            <button id="predictDownButton"
+                    class="control-btn text-4xl font-bold bg-red-600 hover:bg-red-700 px-12 py-6">🔽 DOWN
+            </button>
+        </div>
+        <div id="predictionReward" class="text-3xl font-bold hidden"></div>
+    </div>
+
+    <!-- Generic Mini-Game Results -->
+    <div id="miniGameResults" class="hidden text-center">
+        <h2 id="miniGameTitle" class="text-6xl font-extrabold mb-4"></h2>
+        <p class="text-4xl"><span id="miniGameScoreDisplay" class="font-bold text-green-400"></span></p>
+        <button id="closeMiniGameResults" class="control-btn text-2xl mt-8 px-8 py-4">Return to Heist</button>
+    </div>
+</div>
+
+<script src="js/vendor/tailwindcss.js"></script>
+<script type="module" src="js/main.js?v=1.5.08"></script>
 </body>
 </html>
