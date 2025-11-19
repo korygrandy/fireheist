@@ -268,6 +268,61 @@ export function drawHurdle(hurdleData, isFinalHurdle) {
     }
 }
 
+function drawFireWall(hurdleData, drawX, groundY, angleRad) {
+    ctx.save();
+    ctx.translate(drawX, groundY);
+    ctx.rotate(-angleRad);
+
+    const letters = ['E', 'R', 'I', 'F'];
+    const letterHeight = 60; // Reduced from 80
+    const totalHeight = letterHeight * letters.length;
+    
+    ctx.font = 'bold 80px Impact, sans-serif'; // Reduced from 100px
+    ctx.textAlign = 'center';
+    
+    // Draw each letter stacked, starting from the bottom
+    for (let i = 0; i < letters.length; i++) {
+        const yPos = -(i * letterHeight) - (letterHeight / 2);
+
+        // Pulsating glow for the fire
+        const glowIntensity = 0.6 + Math.sin(performance.now() / 200 + i) * 0.4;
+        ctx.shadowColor = `rgba(255, 100, 0, ${glowIntensity})`;
+        ctx.shadowBlur = 25;
+
+        // Draw the letter
+        ctx.fillStyle = 'rgba(255, 200, 0, 1)';
+        ctx.fillText(letters[i], 0, yPos);
+    }
+
+    // Add rising sparks effect as the player approaches
+    if (Math.random() < 0.3) { // 30% chance per frame
+        const letterIndex = Math.floor(Math.random() * 4);
+        const relativeY = -(letterIndex * letterHeight) - (letterHeight / 2);
+        const relativeX = (Math.random() - 0.5) * 80;
+
+        for (let i = 0; i < 2; i++) {
+            gameState.fireWall.sparks.push({
+                x: drawX + relativeX, // Absolute X position
+                y: groundY + relativeY, // Absolute Y position
+                vx: (Math.random() - 0.5) * 1,   // Slow horizontal drift
+                vy: -Math.random() * 2 - 0.5, // Gentle upward float
+                life: 1.0,
+                color: `rgba(255, ${180 + Math.random() * 75}, 0, 0.8)`
+            });
+        }
+    }
+    
+    // Draw the milestone labels above the wall
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 18px Arial';
+    ctx.fillText(hurdleData.label, 0, -totalHeight - 40);
+    ctx.font = '14px Arial';
+    ctx.fillText(hurdleData.dateLabel, 0, -totalHeight - 20);
+
+    ctx.restore();
+}
+
 function drawPhoenixArchway(hurdleData, drawX, groundY, angleRad) {
     let finalDrawX = drawX;
     let finalGroundY = groundY;
@@ -338,21 +393,26 @@ function drawPhoenixArchway(hurdleData, drawX, groundY, angleRad) {
 }
 
 function drawFinalMilestoneAnchor(hurdleData) {
-    const anchorType = finalMilestoneAnchors[gameState.selectedTheme] || 'phoenix'; // Default to phoenix
     const drawX = canvas.width - 100 - gameState.backgroundOffset;
     const angleRad = gameState.raceSegments[gameState.currentSegmentIndex]?.angleRad || 0;
     const groundY = GROUND_Y - drawX * Math.tan(angleRad);
-
+    
+    // Daily Challenge: Draw the FIRE wall
+    if (gameState.isDailyChallengeActive) {
+        if (!gameState.fireWall.shattered) {
+            drawFireWall(hurdleData, drawX, groundY, angleRad);
+        }
+        return; // Stop here for daily challenge
+    }
+    
+    // Default: Draw the Phoenix archway for other game modes
+    const anchorType = finalMilestoneAnchors[gameState.selectedTheme] || 'phoenix';
     if (drawX < -100 || drawX > canvas.width + 100) return;
 
     switch (anchorType) {
         case 'phoenix':
             drawPhoenixArchway(hurdleData, drawX, groundY, angleRad);
             break;
-        // Add cases for other anchor types here in the future
-        // case 'pyramid':
-        //     drawPyramid(hurdleData, drawX, groundY, angleRad);
-        //     break;
     }
 }
 

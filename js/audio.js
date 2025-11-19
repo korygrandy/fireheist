@@ -394,57 +394,33 @@ export function toggleSound(soundToggleButton) {
     if (Tone.context.state !== 'running') { Tone.start(); }
     isMuted = !isMuted;
 
-    // Save the new setting to localStorage only if saving is enabled
     if (!disableSaveSettings.checked) {
         localStorage.setItem(MUTE_STORAGE_KEY, isMuted);
     }
 
     if (isMuted) {
-        if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
-        chaChingSynth.mute = true;
-        collisionSounds.forEach(sound => sound.mute = true);
-        debuffSynth.mute = true;
-        quackSound.mute = true;
-        powerUpSound.mute = true;
-        winnerSound.mute = true;
-        loserSound.mute = true;
-        gameStartSound.mute = true;
-        pauseGameSound.mute = true;
-        if (ambientMusic) { ambientMusic.mute = true; }
-        for (const key in animationPlayers) {
-            animationPlayers[key].mute = true;
-        }
+        musicBus.volume.value = -Infinity;
+        ambientBus.volume.value = -Infinity;
+        playerActionsBus.volume.value = -Infinity;
+        uiBus.volume.value = -Infinity;
         soundToggleButton.textContent = "🔊 Unmute";
     } else {
-        chaChingSynth.mute = false;
-        collisionSounds.forEach(sound => sound.mute = false);
-        debuffSynth.mute = false;
-        quackSound.mute = false;
-        powerUpSound.mute = false;
-        winnerSound.mute = false;
-        loserSound.mute = false;
-        gameStartSound.mute = false;
-        pauseGameSound.mute = false;
-        if (ambientMusic) {
-            ambientMusic.mute = false;
-            if (ambientMusic.state === 'stopped') {
-                ambientMusic.start();
-            }
+        musicBus.volume.value = -18;
+        ambientBus.volume.value = 0;
+        playerActionsBus.volume.value = -10;
+        uiBus.volume.value = -10;
+
+        // Ensure looping sounds resume if they were stopped by muting
+        if (backgroundMusic && backgroundMusic.loaded && backgroundMusic.state !== 'started') {
+            backgroundMusic.start();
         }
-        ambientBus.volume.value = 0; // Restore bus volume to 0 dB
-        for (const key in animationPlayers) {
-            animationPlayers[key].mute = false;
-        }
-        if (backgroundMusic) {
-            backgroundMusic.volume.value = -18;
-            if (backgroundMusic.state === 'stopped') {
-                backgroundMusic.start();
-            }
+        if (ambientMusic && ambientMusic.loaded && ambientMusic.state !== 'started') {
+            ambientMusic.start();
         }
         soundToggleButton.textContent = "🔇 Mute";
     }
-        console.log(`-> toggleSound: Mute toggled. isMuted: ${isMuted}`);
-    }
+    console.log(`-> toggleSound: Mute toggled via busses. isMuted: ${isMuted}`);
+}
     
     // =================================================================
     // DEBUGGING FUNCTIONS

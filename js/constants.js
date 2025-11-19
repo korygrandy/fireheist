@@ -203,7 +203,7 @@ export const THEME_MUSIC_MAP = {
     'space': 'fx/alien.mp3',
     'city': 'fx/city-night-theme.mp3',
     'volcano': 'fx/rocket.mp3',
-    'snow': 'fx/shatter.mp3',
+    'snow': 'fx/snow-theme-music.mp3',
 };
 
 export const THEME_AMBIENT_SOUND_MAP = {

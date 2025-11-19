@@ -6,245 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/daily-challenge.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/daily-challenge.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/leaderboard-initials.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/leaderboard-initials.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/audio.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/audio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/renderer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/lifecycle.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/lifecycle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/score.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/score.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/state-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state-manager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/world.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/world.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/daily-challenge-ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/daily-challenge-ui.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ui-modules/input-handlers.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ui-modules/input-handlers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--01227-game-canvas-during-gameplay/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--01227-game-canvas-during-gameplay/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0620e-ould-display-action-buttons/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0662c-ect-Normal-speed-by-default/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0662c-ect-Normal-speed-by-default/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0a217-ble-Saved-Settings-checkbox/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0a217-ble-Saved-Settings-checkbox/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0baf5--should-display-Mute-button/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0c678-ld-display-Hall-of-Fame-tab/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0c678-ld-display-Hall-of-Fame-tab/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--0e608-ould-change-theme-selection/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1321b-lay-Load-Custom-Data-button/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1321b-lay-Load-Custom-Data-button/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--157e0-ay-after-skill-interactions/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--157e0-ay-after-skill-interactions/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--183f2-high-scores-list-gracefully/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--183f2-high-scores-list-gracefully/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--19b17-ent-is-scrollable-if-needed/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--19b17-ent-is-scrollable-if-needed/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1ac4f--NEW-indicator-if-available/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1ac4f--NEW-indicator-if-available/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1ad79-ould-have-Fullscreen-button/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1b4af-ponsive-Hall-of-Fame-layout/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1b4af-ponsive-Hall-of-Fame-layout/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1ba4d-t-game-without-audio-issues/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1c010-d-toggle-auto-hurdle-on-off/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1c010-d-toggle-auto-hurdle-on-off/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1c161-able-Reset-button-initially/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1d73e-y-persona-details-container/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--1e8bd--reset-game-with-Escape-key/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2006c-e-skill-level-radio-buttons/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--217fd-ce-maxlength-on-emoji-input/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--23206-rsistence-checkbox-behavior/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--23206-rsistence-checkbox-behavior/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--23575-d-display-Best-Runs-heading/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--23575-d-display-Best-Runs-heading/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--260fc--all-action-buttons-visible/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2703b-visually-when-starting-game/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2703b-visually-when-starting-game/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2bd64-auto-hurdle-toggle-checkbox/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2bd64-auto-hurdle-toggle-checkbox/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2d31b-ce-should-clear-data-inputs/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2d31b-ce-should-clear-data-inputs/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2d53f-to-navigate-to-Hall-of-Fame/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--2d53f-to-navigate-to-Hall-of-Fame/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--342c1-uction-text-for-leaderboard/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--342c1-uction-text-for-leaderboard/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--34d38-ll-upgrade-modal-if-visible/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--34d38-ll-upgrade-modal-if-visible/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3517c--obstacle-emoji-input-field/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3517c--obstacle-emoji-input-field/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--37595-e-tab-click-during-gameplay/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--37595-e-tab-click-during-gameplay/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--383ff-ory-content-after-page-load/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--383ff-ory-content-after-page-load/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--38732-settings-after-page-refresh/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--38732-settings-after-page-refresh/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3b195-ame-with-Reset-button-click/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3c50c-hould-pause-game-with-P-key/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3d5fb-clickable-Armory-tab-button/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3d5fb-clickable-Armory-tab-button/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3e14d-accept-milestone-data-input/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--3e14d-accept-milestone-data-input/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--42533-te-state-after-page-refresh/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--42a2f-ntered-Hall-of-Fame-content/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--42a2f-ntered-Hall-of-Fame-content/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--42c8b-ute-I-key-for-Houdini-skill/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4508d-dicator-with-proper-styling/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4508d-dicator-with-proper-styling/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--47bab-responsive-button-container/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4a9c9-play-speed-labels-correctly/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4a9c9-play-speed-labels-correctly/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4c805-ould-display-grid-of-skills/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4c805-ould-display-grid-of-skills/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4cc47-n-focus-on-Hall-of-Fame-tab/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4cc47-n-focus-on-Hall-of-Fame-tab/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4cfa0-ory-layout-on-small-screens/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4cfa0-ory-layout-on-small-screens/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--4f444-ame-elements-after-starting/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--51811-oper-Armory-section-heading/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--51811-oper-Armory-section-heading/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--53673-uld-accept-event-data-input/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--53673-uld-accept-event-data-input/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--56343-play-armory-items-container/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--56343-play-armory-items-container/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--5826a-xtarea-placeholder-or-label/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--5826a-xtarea-placeholder-or-label/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--594f4--should-execute-jump-J-key-/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--5bc64-e-loop-during-extended-play/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--5cc52-erlay-during-initialization/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--61725-y-persona-selector-dropdown/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--63b45-ld-change-persona-selection/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--63b45-ld-change-persona-selection/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--644f7-tween-tabs-including-Armory/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--644f7-tween-tabs-including-Armory/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--64527-version-number-if-available/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--6ca4b-play-label-on-slider-change/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--6ca4b-play-label-on-slider-change/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--6d063-lay-event-type-instructions/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--6d063-lay-event-type-instructions/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--6e7ef-uld-have-Mute-button-toggle/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--6eb66--state-during-tab-switching/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--6eb66--state-during-tab-switching/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--70513-andle-multi-line-data-input/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--70513-andle-multi-line-data-input/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--7c434-d-display-Fullscreen-button/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--7f17a-lay-Milestone-Data-textarea/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--7f17a-lay-Milestone-Data-textarea/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--7fd0d-ve-correct-input-area-sizes/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--7fd0d-ve-correct-input-area-sizes/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--81e0a-per-spacing-in-Hall-of-Fame/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--81e0a-per-spacing-in-Hall-of-Fame/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--83e39-in-cash-display-consistency/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--83e39-in-cash-display-consistency/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--84eba-y-obstacle-frequency-slider/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--84eba-y-obstacle-frequency-slider/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--87d17-requency-slider-adjustments/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--87d17-requency-slider-adjustments/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--8a164-om-persona-controls-section/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--8bb19-e-formats-in-milestone-data/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--8bb19-e-formats-in-milestone-data/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--8f94f-isable-settings-persistence/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--8f94f-isable-settings-persistence/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--8fcea-splay-game-in-running-state/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--92893-leading-trailing-whitespace/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--92893-leading-trailing-whitespace/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--93bba-Mute-button-with-audio-icon/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--93bba-Mute-button-with-audio-icon/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--93ca2-me-scores-in-visible-format/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--93ca2-me-scores-in-visible-format/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--968d3-buttons-in-action-container/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--979ed-ould-have-no-console-errors/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--9ce15-oji-with-clear-reset-action/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--9ce15-oji-with-clear-reset-action/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a1437-t-custom-runner-emoji-input/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a2c18--upgrade-modal-when-present/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a2c18--upgrade-modal-when-present/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a2d6e-change-game-speed-selection/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a2d6e-change-game-speed-selection/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a6259-lay-Unlocked-Skills-heading/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a6259-lay-Unlocked-Skills-heading/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a6a18-audio-state-during-gameplay/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a92ba-ut-affecting-other-settings/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a92ba-ut-affecting-other-settings/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a9553-ter-audio-preload-completes/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a9a14-settings-after-page-refresh/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a9a14-settings-after-page-refresh/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--a9ea1-ve-accessible-button-labels/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ab085-otal-Cash-display-in-Armory/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ab085-otal-Cash-display-in-Armory/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ae0b3--mute-state-on-button-click/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--aea68-utton-while-game-is-running/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b0593-hange-skill-level-selection/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b0593-hange-skill-level-selection/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b0ddf-y-power-ups-toggle-checkbox/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b0ddf-y-power-ups-toggle-checkbox/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b16d5-per-Armory-instruction-text/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b16d5-per-Armory-instruction-text/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b2b95-splay-data-tab-message-area/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b2b95-splay-data-tab-message-area/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b335e-ll-of-Fame-content-centered/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b335e-ll-of-Fame-content-centered/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b52ce-d-allow-emoji-in-event-data/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b52ce-d-allow-emoji-in-event-data/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b6ff7-ould-display-Armory-heading/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b6ff7-ould-display-Armory-heading/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b830c-l-of-Fame-tab-with-keyboard/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b830c-l-of-Fame-tab-with-keyboard/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b88f7--armory-with-proper-spacing/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--b88f7--armory-with-proper-spacing/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--bf378-ve-responsive-Armory-layout/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--bf378-ve-responsive-Armory-layout/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--c06be-buttons-with-proper-styling/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--c5407--page-with-title-and-header/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--c59a8-ovide-feedback-on-data-load/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--c59a8-ovide-feedback-on-data-load/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--c62c6-state-during-tab-navigation/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--c62c6-state-during-tab-navigation/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ca54f-uld-toggle-power-ups-on-off/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ca54f-uld-toggle-power-ups-on-off/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--cad14-overlay-on-START-GAME-click/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--cad14-overlay-on-START-GAME-click/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--cf5af-llow-pause-and-resume-cycle/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--d04c0-iple-skill-keys-in-sequence/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--d0d67-s-should-display-Armory-tab/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--d0d67-s-should-display-Armory-tab/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--d4b67-ay-all-gameplay-tab-content/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--d4b67-ay-all-gameplay-tab-content/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--d8c25-y-suggested-emojis-carousel/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e05b3--to-click-Fullscreen-button/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e1195-display-Event-Data-textarea/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e1195-display-Event-Data-textarea/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e383e-ccept-custom-obstacle-emoji/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e383e-ccept-custom-obstacle-emoji/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e6683-ll-of-Fame-layout-structure/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e6683-ll-of-Fame-layout-structure/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e6e92-Fullscreen-button-with-icon/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e6e92-Fullscreen-button-with-icon/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--e77a6-ecute-spacebar-jump-command/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ecd0d-okie-skill-level-by-default/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ed3f7-quency-values-from-0-to-100/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ed3f7-quency-values-from-0-to-100/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ee464--game-on-Start-button-click/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ee464--game-on-Start-button-click/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ef00e-ultiple-mute-unmute-toggles/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f0002-ctivations-without-crashing/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f0ed7-splay-high-scores-container/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f0ed7-splay-high-scores-container/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f1f47-lay-theme-selector-dropdown/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f2adf-e-event-data-textarea-label/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f2adf-e-event-data-textarea-label/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f5bcb-ee-game-speed-radio-buttons/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f5bcb-ee-game-speed-radio-buttons/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f6a0b-input-across-tab-navigation/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f6a0b-input-across-tab-navigation/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f6ee2--in-Hall-of-Fame-tab-button/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f6ee2--in-Hall-of-Fame-tab-button/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f8e85-tate-or-scores-in-container/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--f8e85-tate-or-scores-in-container/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--fb0ab-play-all-control-panel-tabs/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--fb3e2-ute-T-key-for-Meteor-Strike/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--fc4d5-ons-in-accessible-container/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--fced7-on-interactions-in-sequence/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--fcf25--content-when-clicking-tabs/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--fcf25--content-when-clicking-tabs/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--fe0a9-ayer-tab-content-by-default/trace.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ffcb2--should-display-game-canvas/error-context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-results/e2e.tests-tests-fireheist--ffcb2--should-display-game-canvas/trace.zip" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -296,7 +63,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/canvas-enhancement-add-bonus-cash-box",
+    "git-widget-placeholder": "feature/fire-wall-animation",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -321,7 +88,7 @@
       <updated>1763064864972</updated>
       <workItem from="1763064867591" duration="7872000" />
       <workItem from="1763410316063" duration="15809000" />
-      <workItem from="1763491212101" duration="18001000" />
+      <workItem from="1763491212101" duration="23537000" />
     </task>
     <servers />
   </component>

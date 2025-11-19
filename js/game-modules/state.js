@@ -135,6 +135,11 @@ const state = {
     molotovCocktails: [],
     phoenixSparks: [],
     activeImpactSparks: [],
+    fireWall: {
+        letterParticles: [],
+        smokeParticles: [],
+        sparks: []
+    },
     isFirestormActive: false,
     isFireShieldActive: false,
     isShotgunBlastActive: false,

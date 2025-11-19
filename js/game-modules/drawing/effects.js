@@ -67,10 +67,131 @@ export function drawGroundPoundParticles() {
     }
 }
         
-        export function createImpactSpark(x, y) {
-            const sparkCount = 10;
-            const sparks = [];
-            for (let i = 0; i < sparkCount; i++) {
+export function createFireWallShatterEffect(x, y) {
+    gameState.fireWall.shattered = true;
+    const letters = ['F', 'I', 'R', 'E'];
+    const letterHeight = 60; // Match the new size
+
+    // Add initial spark burst for impact
+    const sparkCount = 30;
+    for (let i = 0; i < sparkCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 10 + 5;
+        gameState.fireWall.sparks.push({
+            x: x,
+            y: y - 120, // Center of the wall
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1.0,
+            color: `rgba(255, ${180 + Math.random() * 75}, 0, 1)`
+        });
+    }
+
+    // Create shattering letter particles (with a slight delay)
+    setTimeout(() => {
+        letters.forEach((letter, i) => {
+            const yPos = y - (3 - i) * letterHeight; // Position from top to bottom
+            for (let j = 0; j < 5; j++) { // 5 fragments per letter
+                gameState.fireWall.letterParticles.push({
+                    x: x + (Math.random() - 0.5) * 50,
+                    y: yPos + (Math.random() - 0.5) * 20,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 0.5) * 15,
+                    rotation: 0,
+                    vr: (Math.random() - 0.5) * 0.5,
+                    life: 1.0,
+                    text: letter
+                });
+            }
+        });
+    }, 50); // 50ms delay
+
+    // Create black smoke cloud (with a slightly longer delay)
+    setTimeout(() => {
+        for (let i = 0; i < 40; i++) {
+            gameState.fireWall.smokeParticles.push({
+                x: x + (Math.random() - 0.5) * 100,
+                y: y - 150 + (Math.random() - 0.5) * 100,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                size: Math.random() * 40 + 20,
+                life: 1.0
+            });
+        }
+    }, 100); // 100ms delay
+}
+
+export function drawFireWallShatterEffect() {
+    // Draw and update spark particles
+    for (let i = gameState.fireWall.sparks.length - 1; i >= 0; i--) {
+        const p = gameState.fireWall.sparks[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.05; // Sparks fade quickly
+
+        if (p.life <= 0) {
+            gameState.fireWall.sparks.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.life * 3, 0, Math.PI * 2); // Size shrinks with life
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    // Draw and update letter particles
+    for (let i = gameState.fireWall.letterParticles.length - 1; i >= 0; i--) {
+        const p = gameState.fireWall.letterParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.vr;
+        p.life -= 0.02;
+
+        if (p.life <= 0) {
+            gameState.fireWall.letterParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life;
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.font = 'bold 40px Impact';
+            ctx.fillStyle = `rgba(255, ${150 * p.life}, 0, ${p.life})`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(p.text, 0, 0);
+            ctx.restore();
+        }
+    }
+
+    // Draw and update smoke particles
+    for (let i = gameState.fireWall.smokeParticles.length - 1; i >= 0; i--) {
+        const p = gameState.fireWall.smokeParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.size *= 1.02; // Smoke expands
+        p.life -= 0.015;
+
+        if (p.life <= 0) {
+            gameState.fireWall.smokeParticles.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = p.life * 0.5; // Make smoke semi-transparent and fade with life
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+        
+export function createImpactSpark(x, y) {
+    const sparkCount = 10;
+    const sparks = [];
+    for (let i = 0; i < sparkCount; i++) {
                 sparks.push({
                     x,
                     y,
