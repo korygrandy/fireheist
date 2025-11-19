@@ -2,6 +2,7 @@ import { themeSelector } from '../dom-elements.js';
 import { themes, setTheme } from '../theme.js';
 import { saveSettings } from './settings.js';
 import { setSelectedTheme } from '../game-modules/state-manager.js';
+import { playAmbientSound } from '../audio.js';
 
 export function populateThemeSelector() {
     for (const key in themes) {
@@ -16,5 +17,6 @@ export function handleThemeChange(event) {
     const themeName = event.target.value;
     setSelectedTheme(themeName);
     setTheme(themeName);
+    playAmbientSound(themeName); // Update the ambient sound to match the new theme
     saveSettings();
 }

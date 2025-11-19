@@ -5,6 +5,7 @@ import { getDailyChallengeConfig } from './dailyChallengeService.js';
 import { hideSandboxControls } from './ui-modules/ui-helpers.js';
 import { showCountdown } from './ui-modules/daily-challenge-ui.js';
 import { applySkillLevelSettings } from './ui-modules/input-handlers.js';
+import { playAmbientSound } from './audio.js';
 
 const WIN_STREAK_KEY = 'dailyChallengeWinStreak';
 
@@ -80,6 +81,7 @@ export function startDailyChallengeGame() {
 
         // Apply theme FIRST so it's available in the game state for music selection
         setTheme(config.theme);
+        playAmbientSound(config.theme);
 
         // Update global state with daily challenge parameters
         setDailyChallengeActive(true);
