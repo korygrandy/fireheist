@@ -1189,6 +1189,14 @@ export function setIntendedSpeedMultiplier(multiplier) {
     state.intendedSpeedMultiplier = multiplier;
 }
 
+export function setManualJumpHeight(height) {
+    state.manualJumpHeight = height;
+}
+
+export function setManualJumpDurationMs(duration) {
+    state.manualJumpDurationMs = duration;
+}
+
 export function setSelectedPersona(personaKey) {
     state.selectedPersona = personaKey;
 }

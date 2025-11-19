@@ -4,6 +4,7 @@ import { setTheme } from './theme.js';
 import { getDailyChallengeConfig } from './dailyChallengeService.js';
 import { hideSandboxControls } from './ui-modules/ui-helpers.js';
 import { showCountdown } from './ui-modules/daily-challenge-ui.js';
+import { applySkillLevelSettings } from './ui-modules/input-handlers.js';
 
 const WIN_STREAK_KEY = 'dailyChallengeWinStreak';
 
@@ -53,8 +54,7 @@ export function getDailyChallengeResults() {
     }
 }
 
-export function markDailyChallengeAsPlayed(stats, winStreak) {
-    const results = { ...stats, winStreak };
+export function markDailyChallengeAsPlayed(results) {
     localStorage.setItem(getDailyChallengeKey(), JSON.stringify(results));
     console.log("-> Daily Challenge: Marked as played for today with results.");
 }
@@ -88,6 +88,7 @@ export function startDailyChallengeGame() {
         setObstacleEmoji(config.obstacleEmoji);
         setObstacleFrequency(config.obstacleFrequency);
         setSkillLevel(config.skillLevel);
+        applySkillLevelSettings(config.skillLevel); // Apply all settings for the level
 
         // Hide sandbox controls
         hideSandboxControls();

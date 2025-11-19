@@ -147,22 +147,24 @@ export function drawVictoryOverlay(elapsedTime) {
 
 export function drawMoneyCounter() {
     const formattedCash = Math.round(gameState.displayCash).toLocaleString();
-    const displayString = `Total Haul: $${formattedCash}`;
+    const labelString = 'Total Haul: ';
+    const valueString = `$${formattedCash}`;
+    const fullString = labelString + valueString;
     const boxHeight = 40;
     const boxX = 10;
     const boxY = 10;
     const PADDING_X = 15;
     let fontSize = 24;
 
-    if (displayString.length > 25) {
+    if (fullString.length > 25) {
         fontSize = 14;
-    } else if (displayString.length > 20) {
+    } else if (fullString.length > 20) {
         fontSize = 18;
     }
 
     ctx.font = `bold ${fontSize}px Arial`;
-    const textMetrics = ctx.measureText(displayString);
-    const dynamicBoxWidth = textMetrics.width + (PADDING_X * 2);
+    const fullTextMetrics = ctx.measureText(fullString);
+    const dynamicBoxWidth = fullTextMetrics.width + (PADDING_X * 2);
     const textX = boxX + PADDING_X;
     const textY = boxY + boxHeight / 2;
 
@@ -174,7 +176,59 @@ export function drawMoneyCounter() {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(displayString, textX, textY);
+    
+    // Draw the label
+    ctx.fillText(labelString, textX, textY);
+    
+    // Measure the label and draw the value in green
+    const labelMetrics = ctx.measureText(labelString);
+    const valueX = textX + labelMetrics.width;
+    ctx.fillStyle = '#28a745'; // Green color for money
+    ctx.fillText(valueString, valueX, textY);
+}
+
+export function drawBonusHaul() {
+    if (!gameState.isBonusGameComplete) return;
+
+    const formattedCash = Math.round(gameState.bonusGameHaul).toLocaleString();
+    const labelString = 'Bonus Haul: ';
+    const valueString = `$${formattedCash}`;
+    const fullString = labelString + valueString;
+    const boxHeight = 40;
+    const boxX = 10;
+    const boxY = 60; // Position below the Total Haul box
+    const PADDING_X = 15;
+    let fontSize = 24;
+
+    if (fullString.length > 25) {
+        fontSize = 14;
+    } else if (fullString.length > 20) {
+        fontSize = 18;
+    }
+
+    ctx.font = `bold ${fontSize}px Arial`;
+    const fullTextMetrics = ctx.measureText(fullString);
+    const dynamicBoxWidth = fullTextMetrics.width + (PADDING_X * 2);
+    const textX = boxX + PADDING_X;
+    const textY = boxY + boxHeight / 2;
+
+    ctx.fillStyle = 'white';
+    ctx.fillRect(boxX, boxY, dynamicBoxWidth, boxHeight);
+    ctx.strokeStyle = '#333';
+    ctx.strokeRect(boxX, boxY, dynamicBoxWidth, boxHeight);
+
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+
+    // Draw the label
+    ctx.fillText(labelString, textX, textY);
+
+    // Measure the label and draw the value in green
+    const labelMetrics = ctx.measureText(labelString);
+    const valueX = textX + labelMetrics.width;
+    ctx.fillStyle = '#28a745'; // Green color for money
+    ctx.fillText(valueString, valueX, textY);
 }
 
 export function drawGameCounters() {
@@ -214,9 +268,23 @@ export function drawGameCounters() {
 
     ctx.fillText(daysString, BOX_X + PADDING, BOX_Y + PADDING);
 
-    ctx.fillStyle = gameState.hitsCounter > 0 ? '#dc3545' : '#28a745';
+    // Draw 'Hits: ' label in black
+    ctx.fillStyle = 'black';
     ctx.font = 'bold 14px Inter, sans-serif';
-    ctx.fillText(hitsString, BOX_X + PADDING, BOX_Y + PADDING + LINE_HEIGHT);
+    const hitsLabel = 'Hits: ';
+    ctx.fillText(hitsLabel, BOX_X + PADDING, BOX_Y + PADDING + LINE_HEIGHT);
+
+    // Draw hits counter in red
+    const hitsValueX = BOX_X + PADDING + ctx.measureText(hitsLabel).width;
+    ctx.fillStyle = '#dc3545'; // Red color for hits
+    const hitsValue = `${gameState.hitsCounter}`;
+    ctx.fillText(hitsValue, hitsValueX, BOX_Y + PADDING + LINE_HEIGHT);
+
+    // Draw the rest of the string (fire emoji and skill level) in the original color
+    const incineratedAndSkillText = ` | 🔥: ${gameState.playerStats.obstaclesIncinerated} (${gameState.currentSkillLevel} Skill)`;
+    const incineratedAndSkillTextX = hitsValueX + ctx.measureText(hitsValue).width;
+    ctx.fillStyle = gameState.hitsCounter > 0 ? '#dc3545' : '#28a745'; // Original color logic
+    ctx.fillText(incineratedAndSkillText, incineratedAndSkillTextX, BOX_Y + PADDING + LINE_HEIGHT);
 
     if (gameState.isAccelerating || gameState.isColliding || gameState.isDecelerating) {
         let speedTextColor = '#000000';

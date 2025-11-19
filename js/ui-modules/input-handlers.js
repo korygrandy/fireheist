@@ -1,7 +1,7 @@
 import { playAnimationSound } from '../audio.js';
 import { emojiInput, obstacleEmojiInput, frequencyValueSpan, suggestedEmojisContainer } from '../dom-elements.js';
 import { saveSettings } from './settings.js';
-import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setEnableRandomPowerUps, setAutoHurdleEnabled, setCurrentSkillLevel, setMaxPlayerEnergy, setPassiveDrainRate, setAcceleratorFrequencyPercent, setIntendedSpeedMultiplier } from '../game-modules/state-manager.js';
+import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setEnableRandomPowerUps, setAutoHurdleEnabled, setCurrentSkillLevel, setMaxPlayerEnergy, setPassiveDrainRate, setAcceleratorFrequencyPercent, setIntendedSpeedMultiplier, setManualJumpHeight, setManualJumpDurationMs } from '../game-modules/state-manager.js';
 import { DIFFICULTY_SETTINGS, suggestedEmojiList } from '../constants.js';
 import { debugUnlockAllAchievements } from '../ui-modules/debug.js';
 import { populatePersonaSelector } from './persona.js';
@@ -53,6 +53,8 @@ export function applySkillLevelSettings(level) {
         setMaxPlayerEnergy(settings.maxPlayerEnergy);
         setPassiveDrainRate(settings.passiveDrainRate);
         setAcceleratorFrequencyPercent(settings.ACCELERATOR_FREQUENCY_PERCENT); // Set state here
+        setManualJumpHeight(settings.manualJumpHeight);
+        setManualJumpDurationMs(settings.manualJumpDurationMs);
         console.log(`-> applySkillLevelSettings: Jump Height: ${settings.manualJumpHeight}, Duration: ${settings.manualJumpDurationMs}ms, Collision Range: ${settings.COLLISION_RANGE_X}, Accelerator Freq: ${settings.ACCELERATOR_FREQUENCY_PERCENT}%`);
     } else {
         console.error(`Unknown skill level: ${level}.`);

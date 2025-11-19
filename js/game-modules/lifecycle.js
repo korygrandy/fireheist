@@ -251,10 +251,10 @@ export function animate(timestamp) {
             }
             setGameOverSequence(true);
             setGameOverSequenceStartTime(timestamp);
-            console.log(`-> GAME OVER: Incinerations: ${gameState.obstaclesIncinerated}`);
+            console.log(`-> GAME OVER: Incinerations: ${gameState.playerStats.obstaclesIncinerated}`);
             console.log(`-> GAME OVER: Starting sequence. Victory: ${gameState.isVictory}`);
             setGameRunning(false);
-            updateHighScore();
+            updateHighScore(gameState);
             savePlayerStats();
             checkForNewUnlocks(gameState.playerStats);
 

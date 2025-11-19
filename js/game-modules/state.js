@@ -107,6 +107,8 @@ const state = {
     isGameOverSequence: false,
     gameOverSequenceStartTime: 0,
     screenFlash: { opacity: 0, duration: 0, startTime: 0 },
+    manualJumpHeight: DIFFICULTY_SETTINGS.Rookie.manualJumpHeight,
+    manualJumpDurationMs: DIFFICULTY_SETTINGS.Rookie.manualJumpDurationMs,
     turboBoost: { active: false, frame: 0, lastFrameTime: 0 },
     stickFigureBurst: { active: false, duration: 200, startTime: 0, progress: 0, maxOffset: 150 },
     grassAnimationState: { blades: [], lastUpdateTime: 0 },
@@ -215,7 +217,9 @@ const state = {
     miniGameResultsDisplayed: false,
     miniGameBonus: 0,
     gamepad: null,
-    showDailyChallengeCompletedOverlay: false
+    showDailyChallengeCompletedOverlay: false,
+    isBonusGameComplete: false,
+    bonusGameHaul: 0,
 };
 
 export default state;

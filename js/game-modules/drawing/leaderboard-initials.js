@@ -67,7 +67,7 @@ export function confirmInitialSelection() {
             days: Math.round(gameState.daysElapsedTotal),
             hits: gameState.hitsCounter,
             persona: gameState.selectedPersona,
-            totalIncinerated: gameState.obstaclesIncinerated
+            totalIncinerated: gameState.playerStats.obstaclesIncinerated
         };
         console.log('-> leaderboard-initials: scoreData:', scoreData);
 
@@ -86,8 +86,8 @@ export function confirmInitialSelection() {
                 gameState.showDailyChallengeCompletedOverlay = false;
                 const newWinStreak = updateDailyChallengeWinStreak(gameState.isVictory);
                 const results = { ...scoreData, winStreak: newWinStreak };
-                markDailyChallengeAsPlayed(scoreData, newWinStreak);
-                saveLeaderboardScore(initials.join(''), scoreData);
+                markDailyChallengeAsPlayed(results);
+                saveLeaderboardScore(initials.join(''), results);
 
                 // Stop the game, which will show the main UI panels
                 stopGame(false);

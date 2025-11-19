@@ -5,7 +5,7 @@ import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProxi
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks, drawImpactSparks } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure } from './player.js';
-import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay } from './overlays.js';
+import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay, drawBonusHaul } from './overlays.js';
 import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
 import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
@@ -158,6 +158,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
 export function drawUIOverlaysAndEffects(gameState, isInitialLoad, collisionDurationMs) {
     drawCashBags(); // Draw the animating cash bags
     drawMoneyCounter();
+    drawBonusHaul();
     drawGameCounters();
     drawEnergyBar();
     if (gameState.daysCounter) drawDaysCounter();

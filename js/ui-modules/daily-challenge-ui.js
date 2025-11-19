@@ -50,7 +50,7 @@ function createChallengeHTML(config, results = null) {
             <p class="text-sm text-gray-600 mb-4">Here's how you did today. Come back tomorrow for a new challenge!</p>
             <div class="flex justify-around items-center space-x-4 mb-4">
                 <div>
-                    <p class="text-3xl font-bold text-gray-800">${results ? results.days.toLocaleString() : ''}</p>
+                    <p class="text-4xl font-bold text-gray-800">${results ? results.days.toLocaleString() : ''}</p>
                     <p class="text-xs text-gray-500">Days Survived</p>
                 </div>
                 <div>

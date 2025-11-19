@@ -8,7 +8,7 @@ export function updateHighScore(state) {
         emoji: state.stickFigureEmoji,
         days: Math.round(state.daysElapsedTotal),
         hits: state.hitsCounter,
-        totalIncinerated: state.obstaclesIncinerated,
+        totalIncinerated: state.playerStats.obstaclesIncinerated,
         date: new Date().toISOString()
     };
 

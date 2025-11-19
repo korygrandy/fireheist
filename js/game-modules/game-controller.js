@@ -164,6 +164,7 @@ export function resetGameState() {
     setDecelerating(false);
     setDecelerationDuration(0);
     setGameSpeedMultiplier(gameState.intendedSpeedMultiplier);
+    gameState.intendedSpeedMultiplier = 1.0; // Reset to default
     setFireSpinnerOnCooldown(false);
     setFireMageActive(false);
     setFireMageEndTime(0);
@@ -215,6 +216,7 @@ export function startGame() {
     console.log("-> START GAME: Initiating game start sequence.");
 
     resetGameState();
+    setObstaclesIncinerated(0); // Explicitly reset for the new game session
     gameState.miniGameBonus = 0; // Reset the bonus for the new run
 
     setGameRunning(true);
