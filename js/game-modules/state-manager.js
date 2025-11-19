@@ -974,6 +974,14 @@ export function setStickFigureY(y) {
     state.stickFigureY = y;
 }
 
+export function setSunAnchorImage(image) {
+    state.sunAnchorImage = image;
+}
+
+export function setSunAnchor(sunAnchor) {
+    state.sunAnchor = sunAnchor;
+}
+
 /**
  * Sets the fire spinner status.
  * @param {boolean} isFireSpinner

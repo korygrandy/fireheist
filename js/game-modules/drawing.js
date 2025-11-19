@@ -5,27 +5,23 @@ import { gameState } from './state-manager.js';
 
 import { drawClouds } from './drawing/world.js';
 import { createFireExplosion } from './drawing/effects.js'; // Only keep creation functions here
-import { drawParticlesAndEffects, clearCanvas, drawBackground, drawGameObjects, drawUIOverlaysAndEffects } from './drawing/renderer.js';
+import { drawParticlesAndEffects, clearCanvas, drawBackground, drawGameObjects, drawUIOverlaysAndEffects, drawBackgroundElements } from './drawing/renderer.js';
 import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 import { molotovSkill } from './skills/molotov.js';
 import { shotgunSkill } from './skills/shotgun.js';
-
 export let isInitialLoad = true;
 export function setInitialLoad(value) {
     isInitialLoad = value;
 }
-
-
-
-
-
 export function draw(playerY) {
     // 1. Clear canvas with sky color
     clearCanvas(currentTheme.sky);
 
+    // 2. Draw background elements (sun, etc.)
+    drawBackgroundElements(gameState.selectedTheme);
+
     const currentSegment = gameState.raceSegments[Math.min(gameState.currentSegmentIndex, gameState.raceSegments.length - 1)];
     const groundAngleRad = currentSegment ? currentSegment.angleRad : 0;
-
     // Draw cityscape and ground
     if (gameState.currentSegmentIndex < gameState.raceSegments.length || gameState.isGameOverSequence) {
         drawBackground(gameState.selectedTheme, groundAngleRad);

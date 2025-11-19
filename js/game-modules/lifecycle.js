@@ -148,10 +148,12 @@ import {
     addMolotovCocktail,
     removeMolotovCocktail,
     clearMolotovCocktails,
-    setObstacleHit,
+    setSixShooterAmmo,
+    setSunAnchor
 } from './state-manager.js';
 import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
+import { drawClouds } from './drawing/world.js';
 import { castMageSpinnerFireball } from './actions.js';
 import { updateEnvironmentalEffects } from './drawing/environmental-effects.js';
 import { createShatterEffect, createHoudiniPoof, createGroundPoundEffect, createFireTrail, createJetstreamParticle, createImpactSpark } from './drawing/effects.js';
@@ -205,6 +207,18 @@ export function animate(timestamp) {
     if (gameState.isPaused) {
         requestAnimationFrame(animate);
         return;
+    }
+
+    // --- Sun Anchor Fade-in Animation ---
+    if (gameState.sunAnchor.fadingIn) {
+        const elapsed = timestamp - gameState.sunAnchor.fadeStartTime;
+        if (elapsed < gameState.sunAnchor.fadeDuration) {
+            const progress = elapsed / gameState.sunAnchor.fadeDuration;
+            const newOpacity = Math.min(1, progress); // Ensure opacity doesn't exceed 1
+            setSunAnchor({ ...gameState.sunAnchor, opacity: newOpacity });
+        } else {
+            setSunAnchor({ ...gameState.sunAnchor, opacity: 1, fadingIn: false });
+        }
     }
 
     if (gameState.isInvincible && timestamp > gameState.invincibilityEndTime) {
@@ -792,6 +806,16 @@ export function animate(timestamp) {
         gameState.currentSegmentIndex++;
         setSegmentProgress(0);
         setBackgroundOffset(0);
+
+        // --- Trigger Sun Anchor Fade-in on Final Segment ---
+        if (gameState.selectedTheme === 'grass' && gameState.currentSegmentIndex === gameState.raceSegments.length - 2) {
+            setSunAnchor({
+                ...gameState.sunAnchor,
+                image: gameState.sunAnchorImage,
+                fadingIn: true,
+                fadeStartTime: timestamp
+            });
+        }
 
         setAccelerating(false);
         setAccelerationDuration(0);

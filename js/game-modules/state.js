@@ -1,4 +1,4 @@
-import { DIFFICULTY_SETTINGS } from '../constants.js';
+import { DIFFICULTY_SETTINGS, SIX_SHOOTER_AMMO_CAPACITY } from '../constants.js';
 
 export const HIGH_SCORE_KEY = 'fireHeistHighScores';
 export const PLAYER_STATS_KEY = 'fireHeistPlayerStats'; // New constant
@@ -83,8 +83,18 @@ const state = {
     fireballRollDrainEndTime: 0, // For Fireball Roll energy drain
 
     // Six Shooter Pistol State
-    sixShooterAmmo: 6,
+    sixShooterAmmo: SIX_SHOOTER_AMMO_CAPACITY,
     isSixShooterReloading: false,
+    sunAnchor: {
+        image: null,
+        opacity: 0,
+        fadingIn: false,
+        fadeStartTime: 0,
+        fadeDuration: 2000 // 2 seconds to fade in
+    },
+    
+    // Game progression
+    gameRunning: false,
 
     // Six Shooter Pistol Bullets
     activeSixShooterBullets: [],

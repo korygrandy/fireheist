@@ -4,6 +4,7 @@ import { currentTheme, finalMilestoneAnchors } from '../../theme.js';
 import { gameState, GRASS_ANIMATION_INTERVAL_MS } from '../state-manager.js';
 import { createAshParticle } from './effects.js';
 
+
 export function drawAccelerator(accelerator, angleRad) {
     if (!accelerator) return;
 

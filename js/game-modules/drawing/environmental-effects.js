@@ -400,6 +400,19 @@ export function drawCityscape() {
     }
 }
 
+export function drawSunAnchor() {
+    if (state.sunAnchor && state.sunAnchor.image) {
+        ctx.save();
+        ctx.globalAlpha = state.sunAnchor.opacity;
+        const margin = 50;
+        const x = canvas.width - state.sunAnchor.image.width - margin;
+        const y = margin;
+        ctx.drawImage(state.sunAnchor.image, x, y);
+        ctx.restore();
+    }
+}
+
+
 
 // --- Snowfall Effect (Snow Theme) ---
 

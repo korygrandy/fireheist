@@ -1,6 +1,6 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { GROUND_Y, OBSTACLE_EMOJI_Y_OFFSET, FIREBALL_SIZE, STICK_FIGURE_FIXED_X, JUMP_HEIGHT_RATIO, STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS } from '../../constants.js';
-import { drawCityscape } from './environmental-effects.js';
+import { drawCityscape, drawSunAnchor } from './environmental-effects.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks, drawImpactSparks, drawFireWallShatterEffect, createFireWallShatterEffect } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
@@ -17,6 +17,12 @@ import { sixShooterPistolSkill } from '../skills/sixShooterPistol.js';
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+export function drawBackgroundElements(theme) {
+    if (theme === 'grass') {
+        drawSunAnchor();
+    }
 }
 
 export function drawBackground(theme, groundAngleRad) {

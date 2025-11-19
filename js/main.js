@@ -38,6 +38,7 @@ import { mageSpinnerSkill } from './game-modules/skills/mageSpinner.js';
 import { fireballRollSkill } from './game-modules/skills/fireballRoll.js';
 import { sixShooterPistolSkill } from './game-modules/skills/sixShooterPistol.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
+import { loadSunAnchorImage } from './game-modules/assets.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -489,11 +490,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-        await initializeUIData();
+                await initializeUIData();
 
 
 
-        initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
+        
+
+
+
+                loadSunAnchorImage();
+
+
+
+        
+
+
+
+                initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
 
     initializeDailyChallengeUI(); // Initialize the Daily Challenge UI after all other UI is ready
 
