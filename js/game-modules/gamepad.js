@@ -18,7 +18,8 @@ import {
     startBackflip, startFrontflip, startGroundPound, startHover, 
     startCartoonScramble, startShockwave, startHurdle, startDive,
     startMeteorStrike, startHoudini, startBlinkStrike, startJetstreamDash,
-    startEchoSlam
+    startEchoSlam,
+    handleSpecialMove
 } from './actions.js';
 import { 
     cycleInitialLetter, 
@@ -40,34 +41,6 @@ let gamepadConnected = false;
 let focusableElements = [];
 let currentFocusIndex = -1;
 let buttonStates = {};
-
-
-// --- Game Action Mapping ---
-const skillActionMap = {
-    firestorm: () => firestormSkill.activate(gameState),
-    fireSpinner: () => fireSpinnerSkill.activate(gameState),
-    fieryGroundPound: () => fieryGroundPoundSkill.activate(gameState),
-    fireStomper: startFireStomper,
-    mageSpinner: () => mageSpinnerSkill.activate(gameState),
-    fieryHoudini: () => fieryHoudiniSkill.activate(gameState),
-    blinkStrike: startBlinkStrike,
-    jetstreamDash: startJetstreamDash,
-    echoSlam: startEchoSlam,
-    fireballRoll: () => fireballRollSkill.activate(gameState)
-};
-
-function handleSpecialMove() {
-    const activeSkill = gameState.playerStats.activeArmorySkill;
-    if (activeSkill && skillActionMap[activeSkill]) {
-        skillActionMap[activeSkill](gameState);
-    } else {
-        if (gameState.isFireMageActive) {
-            castFireball(gameState);
-        } else {
-            fireMageSkill.activate(gameState);
-        }
-    }
-}
 
 
 // --- Gamepad Connection Handling ---
@@ -264,9 +237,9 @@ function updateGamepadState() {
 
         const buttonMap = {
             0: { action: startManualJump, name: 'A_BUTTON_GAME' },
-            1: { action: handleSpecialMove, name: 'B_BUTTON_GAME' },
-            2: { action: startMeteorStrike, name: 'X_BUTTON_GAME' },
-            3: { action: () => firestormSkill.activate(gameState), name: 'Y_BUTTON_GAME' },
+            1: { action: handleSpecialMove, name: 'B_BUTTON_GAME' }, // Armory skill
+            2: { action: startMeteorStrike, name: 'X_BUTTON_GAME' }, // Dedicated skill
+            3: { action: () => firestormSkill.activate(gameState), name: 'Y_BUTTON_GAME' }, // Dedicated skill
             4: { action: startBackflip, name: 'LB_BUTTON_GAME' },
             5: { action: startFrontflip, name: 'RB_BUTTON_GAME' },
             6: { action: startHoudini, name: 'LT_BUTTON_GAME' },

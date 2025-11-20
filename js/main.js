@@ -20,7 +20,7 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireStomper, castFireball, startBlinkStrike, startJetstreamDash, startEchoSlam } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireStomper, castFireball, startBlinkStrike, startJetstreamDash, startEchoSlam, handleSpecialMove } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { spawnEasterEgg } from './game-modules/spawning.js';
@@ -660,60 +660,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-        const skillActionMap = {
-    firestorm: () => firestormSkill.activate(gameState),
-    fireSpinner: () => fireSpinnerSkill.activate(gameState),
-    fieryGroundPound: () => fieryGroundPoundSkill.activate(gameState),
-    fireStomper: startFireStomper,
-    mageSpinner: () => mageSpinnerSkill.activate(gameState),
-    fieryHoudini: () => fieryHoudiniSkill.activate(gameState),
-    blinkStrike: startBlinkStrike,
-    jetstreamDash: startJetstreamDash,
-    echoSlam: startEchoSlam,
-    fireballRoll: () => fireballRollSkill.activate(gameState),
-    shotgunBlast: () => shotgunSkill.activate(gameState),
-    molotovCocktail: () => molotovSkill.activate(gameState),
-    sixShooterPistol: () => sixShooterPistolSkill.activate(gameState),
-};
-
-
-
-            function handleSpecialMove() {
-
-
-
-                const activeSkill = gameState.playerStats.activeArmorySkill;
-
-
-
-                if (activeSkill && skillActionMap[activeSkill]) {
-
-
-
-                    skillActionMap[activeSkill](gameState);
-
-
-
-                } else {
-
-                        // Default action if no skill is selected or if the skill is not in the map
-
-                        if (gameState.isFireMageActive) {
-
-                            castFireball(gameState);
-
-                        } else {
-
-                            fireMageSkill.activate(gameState);
-
-                        }
-
-        }
-
-    }
-
-
-
         document.addEventListener('keydown', (e) => {
 
 
@@ -766,13 +712,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyK' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyK' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            handleSpecialMove();
+                    handleSpecialMove(gameState);
 
-        }
+                }
 
         if (e.code === 'KeyD' && gameState.gameRunning && !gameState.isPaused) {
 

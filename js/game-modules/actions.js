@@ -3,6 +3,46 @@ import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST,
 import { playAnimationSound } from '../audio.js';
 import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, setScreenFlash } from './state-manager.js';
 import { fieryGroundPoundUpgradeEffects, fireSpinnerUpgradeEffects, fieryHoudiniUpgradeEffects, firestormUpgradeEffects } from './skill-upgrades.js';
+import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
+import { fireSpinnerSkill } from './skills/fireSpinner.js';
+import { firestormSkill } from './skills/firestorm.js';
+import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
+import { fireMageSkill } from './skills/fireMage.js';
+import { mageSpinnerSkill } from './skills/mageSpinner.js';
+import { fireballRollSkill } from './skills/fireballRoll.js';
+import { shotgunSkill } from './skills/shotgun.js';
+import { molotovSkill } from './skills/molotov.js';
+import { sixShooterPistolSkill } from './skills/sixShooterPistol.js';
+
+const skillActionMap = {
+    firestorm: (state) => firestormSkill.activate(state),
+    fireSpinner: (state) => fireSpinnerSkill.activate(state),
+    fieryGroundPound: (state) => fieryGroundPoundSkill.activate(state),
+    fireStomper: startFireStomper,
+    mageSpinner: (state) => mageSpinnerSkill.activate(state),
+    fieryHoudini: (state) => fieryHoudiniSkill.activate(state),
+    blinkStrike: startBlinkStrike,
+    jetstreamDash: startJetstreamDash,
+    echoSlam: startEchoSlam,
+    fireballRoll: (state) => fireballRollSkill.activate(state),
+    shotgunBlast: (state) => shotgunSkill.activate(state),
+    molotovCocktail: (state) => molotovSkill.activate(state),
+    sixShooterPistol: (state) => sixShooterPistolSkill.activate(state),
+};
+
+export function handleSpecialMove(gameState) {
+    const activeSkill = gameState.playerStats.activeArmorySkill;
+    if (activeSkill && skillActionMap[activeSkill]) {
+        skillActionMap[activeSkill](gameState);
+    } else {
+        // Default action if no skill is selected or if the skill is not in the map
+        if (gameState.isFireMageActive) {
+            castFireball(gameState);
+        } else {
+            fireMageSkill.activate(gameState);
+        }
+    }
+}
 
 
 
