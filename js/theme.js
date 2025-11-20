@@ -42,7 +42,8 @@ export const themes = {
             fill: '#808080',
             stroke: '#FFFF00'
         },
-        obstacleEmojis: ['-1', '🚧', '🚗', '🚲']
+        obstacleEmojis: ['-1', '🚧', '🚗', '🚲'],
+        anchorImage: 'images/skyline-anchor.png'
     },
     'snow': {
         name: '🗻 White Snowpeaks',
@@ -67,7 +68,8 @@ export const themes = {
             fill: '#556B2F',
             stroke: '#F0E68C'
         },
-        obstacleEmojis: ['🌵', '🏜️', '🐍', '🦂']
+        obstacleEmojis: ['🌵', '🏜️', '🐍', '🦂'],
+        anchorImage: 'images/pyramid-anchor.png'
     },
     'volcano': {
         name: '🌋 Island Volcano',
@@ -79,7 +81,8 @@ export const themes = {
             fill: 'white',
             stroke: 'white'
         },
-        obstacleEmojis: ['🌋', '🔥', '💣', '💥']
+        obstacleEmojis: ['🌋', '🔥', '💣', '💥'],
+        anchorImage: 'images/volcano-anchor.png'
     },
     'outerspace': {
         name: '🌑 Outer Space',
@@ -92,7 +95,8 @@ export const themes = {
             fill: '#A020F0',
             stroke: '#FFFFFF'
         },
-        obstacleEmojis: ['☄️', '🪐', '🛰️', '👽']
+        obstacleEmojis: ['☄️', '🪐', '🛰️', '👽'],
+        anchorImage: 'images/spaceship-anchor.png'
     },
     'night': {
         name: '🌙 Deep Night',
@@ -104,7 +108,8 @@ export const themes = {
             fill: '#4A4A6A',
             stroke: '#BBBBBB'
         },
-        obstacleEmojis: ['🦉', '🦇', '👻']
+        obstacleEmojis: ['🦉', '🦇', '👻'],
+        anchorImage: 'images/moon-anchor.png'
     }
 };
 
