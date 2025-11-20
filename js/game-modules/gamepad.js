@@ -128,8 +128,8 @@ function updateGamepadState() {
     }
 
     // --- Global Actions (Pause/Unpause, Reset) ---
-    const startButton = currentGamepad.buttons[9].pressed;
-    const backButton = currentGamepad.buttons[8].pressed;
+    const startButton = currentGamepad.buttons[9] ? currentGamepad.buttons[9].pressed : false;
+    const backButton = currentGamepad.buttons[8] ? currentGamepad.buttons[8].pressed : false;
 
     if (startButton && !buttonStates['START_BUTTON']) {
         if (gameState.gameRunning) {
