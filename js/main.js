@@ -20,7 +20,7 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startMeteorStrike, startFireStomper, castFireball, startBlinkStrike, startJetstreamDash, startEchoSlam, handleSpecialMove } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, startFireStomper, castFireball, startBlinkStrike, startJetstreamDash, startEchoSlam, handleSpecialMove } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { spawnEasterEgg } from './game-modules/spawning.js';
@@ -808,21 +808,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyI' && gameState.gameRunning && !gameState.isPaused) {
+                        if (e.code === 'KeyI' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                            e.preventDefault();
 
-            startHoudini(gameState);
+                            startHoudini(gameState);
 
-        }
+                        }
 
-        if (e.code === 'KeyT' && gameState.gameRunning && !gameState.isPaused) {
+                
 
-            e.preventDefault();
+                        if (e.code === 'KeyT' && gameState.gameRunning && !gameState.isPaused) {
 
-            startMeteorStrike(gameState);
+                            e.preventDefault();
 
-        }
+                            startJetPack(gameState);
+
+                        }
+
+                
 
                         if (e.code === 'KeyR' && gameState.gameRunning && !gameState.isPaused) {
 

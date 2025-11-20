@@ -68,13 +68,13 @@ export const SKILL_UPGRADE_PATHS = {
             { cost: 4860000, description: "Brief invincibility after reappearing." } // -> Level 4
         ]
     },
-    meteorStrike: {
-        name: 'Meteor Strike',
+    jetPack: {
+        name: 'Jet Pack',
         maxLevel: 3,
         levels: [
-            { cost: 0, description: "Default: Calls down a meteor to destroy the current obstacle." }, // Level 1
-            { cost: 1350000, description: "Meteor destroys the target obstacle and one other." },    // -> Level 2
-            { cost: 4050000, description: "Meteor destroys all on-screen obstacles." }             // -> Level 3
+            { cost: 0, description: "Default: Launches a rocket to destroy the current obstacle." }, // Level 1
+            { cost: 1350000, description: "Rocket destroys the target obstacle and one other." },    // -> Level 2
+            { cost: 4050000, description: "Rocket destroys all on-screen obstacles." }             // -> Level 3
         ]
     },
     // NOTE: Add other skills here as they become upgradeable

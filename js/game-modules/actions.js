@@ -1,4 +1,4 @@
-import { createHoudiniPoof, createFieryHoudiniPoof, createMeteorStrikeEffect, createGroundPoundEffect, createShatterEffect } from './drawing/effects.js';
+import { createHoudiniPoof, createFieryHoudiniPoof, createJetPackEffect, createGroundPoundEffect, createShatterEffect } from './drawing/effects.js';
 import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS, OBSTACLE_WIDTH, JUMP_DURATIONS } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, setScreenFlash } from './state-manager.js';
@@ -318,15 +318,15 @@ export function startHoudini(state) {
 
 
 
-export function startMeteorStrike(state) {
+export function startJetPack(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'meteorStrike')) return;
+    if (!consumeEnergy(state, 'jetPack')) return;
 
-    const skillLevel = state.playerStats.skillLevels.meteorStrike || 1;
+    const skillLevel = state.playerStats.skillLevels.jetPack || 1;
 
     if (skillLevel === 1) {
         if (state.currentObstacle) {
-            createMeteorStrikeEffect(state.currentObstacle, skillLevel);
+            createJetPackEffect(state.currentObstacle, skillLevel);
             state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
             state.currentObstacle = null;
             state.playerStats.obstaclesIncinerated++;
@@ -334,7 +334,7 @@ export function startMeteorStrike(state) {
     } else if (skillLevel === 2) {
         const obstaclesToIncinerate = [state.currentObstacle, ...state.ignitedObstacles, ...state.vanishingObstacles].filter(Boolean).slice(0, 2);
         obstaclesToIncinerate.forEach(ob => {
-            createMeteorStrikeEffect(ob, skillLevel);
+            createJetPackEffect(ob, skillLevel);
             state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: performance.now() });
             state.playerStats.obstaclesIncinerated++;
         });
@@ -344,7 +344,7 @@ export function startMeteorStrike(state) {
     } else if (skillLevel >= 3) {
         const allObstacles = [state.currentObstacle, ...state.ignitedObstacles, ...state.vanishingObstacles].filter(Boolean);
         allObstacles.forEach(ob => {
-            createMeteorStrikeEffect(ob, skillLevel);
+            createJetPackEffect(ob, skillLevel);
             state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: performance.now() });
             state.playerStats.obstaclesIncinerated++;
         });
@@ -353,11 +353,11 @@ export function startMeteorStrike(state) {
         state.vanishingObstacles = [];
     }
 
-    state.jumpState.isMeteorStrike = true;
-    state.jumpState.meteorStrikeDuration = 800; // A longer duration for a dramatic effect
+    state.jumpState.isJetPack = true;
+    state.jumpState.jetPackDuration = 800; // A longer duration for a dramatic effect
     initiateJump(state, 800);
-    playAnimationSound('meteorStrike'); // Play sound for Meteor Strike
-    console.log("-> startMeteorStrike: Meteor Strike initiated.");
+    playAnimationSound('jetPack'); // Play sound for Jet Pack
+    console.log("-> startJetPack: Jet Pack initiated.");
 }
 
 export function startBlinkStrike(state) {

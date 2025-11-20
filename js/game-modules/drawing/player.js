@@ -354,8 +354,8 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         // Keep the stick figure static during the effect
         legMovementX1 = 10; armMovementY1 = headY + 15;
         armMovementX2 = -10; armMovementY2 = headY + 15;
-    } else if (jumpState.isMeteorStrike) {
-        const t = (800 - jumpState.meteorStrikeDuration) / 800;
+    } else if (jumpState.isJetPack) {
+        const t = (800 - jumpState.jetPackDuration) / 800;
         animationRotation = t * Math.PI * 1.5; // Rotate into a downward arc
 
         // Engulf in flames

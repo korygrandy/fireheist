@@ -17,7 +17,7 @@ import {
     castFireball, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
     startCartoonScramble, startShockwave, startHurdle, startDive,
-    startMeteorStrike, startHoudini, startBlinkStrike, startJetstreamDash,
+    startJetPack, startHoudini, startBlinkStrike, startJetstreamDash,
     startEchoSlam,
     handleSpecialMove
 } from './actions.js';
@@ -238,7 +238,7 @@ function updateGamepadState() {
         const buttonMap = {
             0: { action: startManualJump, name: 'A_BUTTON_GAME' },
             1: { action: handleSpecialMove, name: 'B_BUTTON_GAME' }, // Armory skill
-            2: { action: startMeteorStrike, name: 'X_BUTTON_GAME' }, // Dedicated skill
+            2: { action: startJetPack, name: 'X_BUTTON_GAME' }, // Dedicated skill
             3: { action: () => firestormSkill.activate(gameState), name: 'Y_BUTTON_GAME' }, // Dedicated skill
             4: { action: startBackflip, name: 'LB_BUTTON_GAME' },
             5: { action: startFrontflip, name: 'RB_BUTTON_GAME' },

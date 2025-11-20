@@ -132,7 +132,7 @@ export const ENERGY_SETTINGS = {
         backflip: 10,
         frontflip: 10,
         houdini: 30,
-        meteorStrike: 50,
+        jetPack: 50,
         firestorm: 0, // No initial cost, drains over time
         fireMage: 25,
         fireballCast: 10,
@@ -229,7 +229,7 @@ export const suggestedEmojiList = ['🧟', '🥷', '🦁', '💃', '🐶', '🚀
 export const ANIMATION_SOUND_MAP = {
     manualJump: 'fx/default-hurdle.mp3',
     hurdle: 'fx/default-hurdle.mp3',
-    meteorStrike: 'fx/meteor-strike.mp3',
+    jetPack: 'fx/jet-pack.mp3',
     moonwalk: 'fx/moonwalk.mp3',
     'shatter': 'fx/shatter.mp3',
     'incinerate': 'fx/incinerate.mp3',

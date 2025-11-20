@@ -787,7 +787,8 @@ export function drawAshParticles() {
     }
 }
 
-export function createMeteorStrikeEffect(targetObstacle, skillLevel) {
+// --- Jet Pack Effect ---
+export function createJetPackEffect(targetObstacle, skillLevel) {
     if (!targetObstacle) return;
 
     const particleCount = 50 + 25 * (skillLevel - 1);

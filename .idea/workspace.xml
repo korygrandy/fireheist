@@ -6,7 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/meteor-strike.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/effects.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/player.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/game-modules/gamepad.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/gamepad.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/skill-upgrades.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/skill-upgrades.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/skills/meteorStrike.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +66,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "fix/gamepad-type-error",
+    "git-widget-placeholder": "feature/rename-meteor-strike-to-jetpack",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
