@@ -343,7 +343,8 @@ export function drawEnergyBar() {
 
     // Draw the energy fill
     ctx.fillStyle = '#00FF88';
-    ctx.fillRect(x, y, barWidth * energyPercentage, barHeight);
+    const fillWidth = Math.round(Math.min(barWidth, barWidth * energyPercentage));
+    ctx.fillRect(x, y, fillWidth, barHeight);
 
     // Draw the border
     ctx.strokeStyle = '#FFF';
