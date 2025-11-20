@@ -376,6 +376,10 @@ export function stopGame(shouldReset = true) {
             }
         }
     } else if (shouldReset) {
+        const infoPanel = document.getElementById('info-panel');
+        if (infoPanel) {
+            infoPanel.classList.add('hidden');
+        }
         drawing.setInitialLoad(true);
         resetGameState();
         drawing.draw();
