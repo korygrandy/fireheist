@@ -1,5 +1,6 @@
 import state from '../state.js';
 import { canvas, ctx } from '../../dom-elements.js';
+import { CITYSCAPE_PARALLAX_FACTOR, THEME_ANCHOR_PARALLAX_FACTOR } from '../../constants.js';
 
 const RAIN_DENSITY = 100; // Number of raindrops
 const RAIN_DURATION = 5000; // 5 seconds
@@ -385,16 +386,29 @@ export function drawCityscape() {
     const buildings = state.environmentalEffects.cityscape.buildings;
     if (buildings.length === 0) return;
 
+    const parallaxOffset = state.backgroundOffset * CITYSCAPE_PARALLAX_FACTOR;
+
     for (const building of buildings) {
+        // The building's original x is its position in the whole cityscape "reel".
+        // We subtract the parallaxOffset to find its current position on the canvas.
+        const drawX = building.x - parallaxOffset;
+
+        // Simple culling: if the building is entirely off-screen, don't draw it.
+        if (drawX + building.width < 0 || drawX > canvas.width) {
+            continue;
+        }
+
         // Draw building silhouette
         ctx.fillStyle = 'rgba(26, 26, 42, 0.2)'; // Dark blue/purple with 20% opacity
-        ctx.fillRect(building.x, building.y, building.width, building.height);
+        ctx.fillRect(drawX, building.y, building.width, building.height);
 
         // Draw windows
         for (const window of building.windows) {
             if (window.opacity > 0) {
+                // Window's x is absolute, so we need to calculate its position relative to the building's current drawX
+                const windowDrawX = drawX + (window.x - building.x);
                 ctx.fillStyle = `rgba(255, 220, 100, ${window.opacity * 0.2})`; // Warm yellow light with reduced base opacity
-                ctx.fillRect(window.x, window.y, WINDOW_SIZE, WINDOW_SIZE);
+                ctx.fillRect(windowDrawX, window.y, WINDOW_SIZE, WINDOW_SIZE);
             }
         }
     }
@@ -407,7 +421,9 @@ export function drawThemeAnchor() {
         ctx.globalAlpha = state.themeAnchor.opacity;
         const img = state.currentThemeAnchorImage;
         const margin = 50;
-        const x = canvas.width - img.width - margin;
+        // Apply the slowest parallax factor to make it seem very distant
+        const parallaxOffset = state.backgroundOffset * THEME_ANCHOR_PARALLAX_FACTOR;
+        const x = canvas.width - img.width - margin - parallaxOffset;
         const y = margin;
         ctx.drawImage(img, x, y);
         ctx.restore();

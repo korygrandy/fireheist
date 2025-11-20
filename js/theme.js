@@ -29,7 +29,8 @@ export const themes = {
             fill: '#654321',
             stroke: '#D2B48C'
         },
-        obstacleEmojis: ['🏔️', '🌲', '🪨']
+        obstacleEmojis: ['🏔️', '🌲', '🪨'],
+        anchorImage: 'images/mountain-anchor.png'
     },
     'roadway': {
         name: '🌃 City Night',

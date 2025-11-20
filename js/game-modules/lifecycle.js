@@ -152,7 +152,6 @@ import {
     setSixShooterAmmo,
     setThemeAnchor
 } from './state-manager.js';
-import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
 import { drawClouds } from './drawing/world.js';
 import { castMageSpinnerFireball } from './actions.js';
@@ -1016,7 +1015,6 @@ for (let i = gameState.molotovCocktails.length - 1; i >= 0; i--) {
     incrementFrameCount();
 
     setLastTime(timestamp);
-    updateClouds(); 
     drawing.draw(runnerY);
     requestAnimationFrame(animate);
 }

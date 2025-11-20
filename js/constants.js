@@ -178,8 +178,14 @@ export const DIFFICULTY_SETTINGS = {
     }
 };
 
-export const NUM_CLOUDS = 5;
-export const CLOUD_SPEED_FACTOR = 0.05;
+export const NUM_CLOUDS = 10;
+export const CLOUD_SPEED_FACTOR = 0.1;
+export const CLOUD_PARALLAX_FACTOR = 0.3;
+export const CITYSCAPE_PARALLAX_FACTOR = 0.5;
+export const THEME_ANCHOR_PARALLAX_FACTOR = 0.1;
+
+// Stick Figure
+export const STICK_FIGURE_WIDTH = 20;
 
 // MUSIC CONSTANTS & MAPPING
 export const DEFAULT_MUSIC_URL = "fx/funk.mp3";
