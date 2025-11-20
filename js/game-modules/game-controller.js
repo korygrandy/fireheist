@@ -75,7 +75,8 @@ import {
     setBackgroundOffset,
     setSegmentProgress,
     setObstaclesIncinerated,
-    setSixShooterAmmo
+    setSixShooterAmmo,
+    setCurrentThemeAnchorImage
 } from './state-manager.js';
 import { initializeClouds, generateGrassBlades } from './drawing/world.js';
 import * as drawing from './drawing.js';
@@ -83,6 +84,7 @@ import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from '../
 import { markDailyChallengeAsPlayed, updateDailyChallengeWinStreak } from '../daily-challenge.js';
 import { animate } from './lifecycle.js';
 import { updateArmoryCashDisplay } from '../ui-modules/armory.js';
+import { loadThemeAnchorImage } from './assets.js';
 
 export function togglePauseGame() {
     if (!gameState.gameRunning) return;
@@ -121,6 +123,17 @@ export function resetGameState() {
     setBackgroundOffset(0);
     gameState.frameCount = 0; 
     setAccumulatedCash(0);
+
+    // Reset theme anchor state
+    gameState.themeAnchor = {
+        image: null,
+        opacity: 0,
+        fadingIn: false,
+        fadeStartTime: 0,
+        fadeDuration: 2000
+    };
+    setCurrentThemeAnchorImage(null); // Explicitly clear the loaded image
+    loadThemeAnchorImage(gameState.selectedTheme);
 
     clearActiveCashBags();
     clearFireTrail();
@@ -189,6 +202,8 @@ export function resetGameState() {
     setVictory(false);
     setGameOverSequence(false);
     setGameOverSequenceStartTime(0);
+
+    loadThemeAnchorImage(gameState.selectedTheme);
 
     Tone.Transport.stop();
     Tone.Transport.cancel();
@@ -323,6 +338,9 @@ export function stopGame(shouldReset = true) {
         dataTabButton.classList.remove('disabled-tab');
     }
 
+    if (backgroundMusic && backgroundMusic.state === 'started') {
+        backgroundMusic.unsync();
+    }
     Tone.Transport.stop();
 
     if (gameState.isDailyChallengeActive) {

@@ -33,6 +33,7 @@ import {
     FIREBALL_ROLL_DURATION_MS,
     SIX_SHOOTER_HITS_TO_DESTROY,
 } from '../constants.js';
+import { themes } from '../theme.js';
 import {
     playWinnerSound,
     playLoserSound,
@@ -149,7 +150,7 @@ import {
     removeMolotovCocktail,
     clearMolotovCocktails,
     setSixShooterAmmo,
-    setSunAnchor
+    setThemeAnchor
 } from './state-manager.js';
 import { updateClouds } from './drawing/world.js';
 import * as drawing from './drawing.js';
@@ -209,15 +210,15 @@ export function animate(timestamp) {
         return;
     }
 
-    // --- Sun Anchor Fade-in Animation ---
-    if (gameState.sunAnchor.fadingIn) {
-        const elapsed = timestamp - gameState.sunAnchor.fadeStartTime;
-        if (elapsed < gameState.sunAnchor.fadeDuration) {
-            const progress = elapsed / gameState.sunAnchor.fadeDuration;
+    // --- Theme Anchor Fade-in Animation ---
+    if (gameState.themeAnchor.fadingIn) {
+        const elapsed = timestamp - gameState.themeAnchor.fadeStartTime;
+        if (elapsed < gameState.themeAnchor.fadeDuration) {
+            const progress = elapsed / gameState.themeAnchor.fadeDuration;
             const newOpacity = Math.min(1, progress); // Ensure opacity doesn't exceed 1
-            setSunAnchor({ ...gameState.sunAnchor, opacity: newOpacity });
+            setThemeAnchor({ ...gameState.themeAnchor, opacity: newOpacity });
         } else {
-            setSunAnchor({ ...gameState.sunAnchor, opacity: 1, fadingIn: false });
+            setThemeAnchor({ ...gameState.themeAnchor, opacity: 1, fadingIn: false });
         }
     }
 
@@ -807,11 +808,11 @@ export function animate(timestamp) {
         setSegmentProgress(0);
         setBackgroundOffset(0);
 
-        // --- Trigger Sun Anchor Fade-in on Final Segment ---
-        if (gameState.selectedTheme === 'grass' && gameState.currentSegmentIndex === gameState.raceSegments.length - 2) {
-            setSunAnchor({
-                ...gameState.sunAnchor,
-                image: gameState.sunAnchorImage,
+        // --- Trigger Theme Anchor Fade-in on Final Segment ---
+        const theme = themes[gameState.selectedTheme];
+        if (theme.anchorImage && gameState.currentSegmentIndex === gameState.raceSegments.length - 2) {
+            setThemeAnchor({
+                ...gameState.themeAnchor,
                 fadingIn: true,
                 fadeStartTime: timestamp
             });

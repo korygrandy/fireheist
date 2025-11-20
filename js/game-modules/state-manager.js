@@ -974,12 +974,12 @@ export function setStickFigureY(y) {
     state.stickFigureY = y;
 }
 
-export function setSunAnchorImage(image) {
-    state.sunAnchorImage = image;
+export function setCurrentThemeAnchorImage(image) {
+    state.currentThemeAnchorImage = image;
 }
 
-export function setSunAnchor(sunAnchor) {
-    state.sunAnchor = sunAnchor;
+export function setThemeAnchor(themeAnchor) {
+    state.themeAnchor = themeAnchor;
 }
 
 /**

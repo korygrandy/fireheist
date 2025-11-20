@@ -38,7 +38,7 @@ import { mageSpinnerSkill } from './game-modules/skills/mageSpinner.js';
 import { fireballRollSkill } from './game-modules/skills/fireballRoll.js';
 import { sixShooterPistolSkill } from './game-modules/skills/sixShooterPistol.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
-import { loadSunAnchorImage } from './game-modules/assets.js';
+import { loadThemeAnchorImage } from './game-modules/assets.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -226,7 +226,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     unlockAllBtn.addEventListener('click', debugUnlockAllAchievements);
 
                 }
-
                 if (setShowDailyResultsBtn) {
 
                     setShowDailyResultsBtn.addEventListener('click', () => {
@@ -236,25 +235,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
 
                 }
-
                 if (debugWinBtn) {
 
                     debugWinBtn.addEventListener('click', () => debugEndGame(true));
 
                 }
-
                 if (debugLoseBtn) {
 
                     debugLoseBtn.addEventListener('click', () => debugEndGame(false));
 
                 }
-
                 if (debugCycleThemeBtn) {
 
                     debugCycleThemeBtn.addEventListener('click', debugCycleDailyTheme);
 
                 }
-
                 if (setIncinerateCountBtn && incinerateCountInput) {
 
                     setIncinerateCountBtn.addEventListener('click', () => {
@@ -274,7 +269,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
 
                 }
-
                 if (addCashBtn) {
 
                     addCashBtn.addEventListener('click', () => {
@@ -302,7 +296,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
 
                 }
-
                 // Debug Audio Controls
                 const debugMuteThemeMusicBtn = document.getElementById('debugMuteThemeMusicBtn');
                 const debugUnmuteThemeMusicBtn = document.getElementById('debugUnmuteThemeMusicBtn');
@@ -491,14 +484,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
                 await initializeUIData();
-
-
-
-        
-
-
-
-                loadSunAnchorImage();
+                loadThemeAnchorImage(gameState.selectedTheme);
 
 
 

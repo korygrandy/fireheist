@@ -400,14 +400,16 @@ export function drawCityscape() {
     }
 }
 
-export function drawSunAnchor() {
-    if (state.sunAnchor && state.sunAnchor.image) {
+export function drawThemeAnchor() {
+    // Only draw if the anchor should be visible and the image for the current theme is loaded.
+    if (state.themeAnchor.opacity > 0 && state.currentThemeAnchorImage) {
         ctx.save();
-        ctx.globalAlpha = state.sunAnchor.opacity;
+        ctx.globalAlpha = state.themeAnchor.opacity;
+        const img = state.currentThemeAnchorImage;
         const margin = 50;
-        const x = canvas.width - state.sunAnchor.image.width - margin;
+        const x = canvas.width - img.width - margin;
         const y = margin;
-        ctx.drawImage(state.sunAnchor.image, x, y);
+        ctx.drawImage(img, x, y);
         ctx.restore();
     }
 }

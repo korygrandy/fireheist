@@ -16,7 +16,8 @@ export const themes = {
             fill: 'white',
             stroke: '#cccccc'
         },
-        obstacleEmojis: ['🌳', '🍄', '🪵', '🌲']
+        obstacleEmojis: ['🌳', '🍄', '🪵', '🌲'],
+        anchorImage: 'images/sun-anchor.png'
     },
     'mountains': {
         name: '⛰️ Mt. Brown',
@@ -53,7 +54,8 @@ export const themes = {
             fill: '#A9A9A9',
             stroke: '#FFFFFF'
         },
-        obstacleEmojis: ['🏔️', '🌲', '🥶', '⛄']
+        obstacleEmojis: ['🏔️', '🌲', '🥶', '⛄'],
+        anchorImage: 'images/igloo-anchor.png'
     },
     'desert': {
         name: '🏜️ Desert Dunes',

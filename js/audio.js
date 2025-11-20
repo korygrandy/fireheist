@@ -337,14 +337,11 @@ export function playAmbientSound(themeName) {
             volume: -25,
             onload: () => {
                 console.log(`-> AUDIO.SUCCESS: Ambient sound for '${themeName}' loaded.`);
-                // Use a short timeout to work around a race condition where the buffer
-                // is not yet ready for playback immediately after onload.
-                setTimeout(() => {
-                    if (!isMuted && ambientMusic && ambientMusic.loaded) {
-                        ambientMusic.start();
-                        console.log(`-> playAmbientSound: Started newly loaded ambient sound for '${themeName}'.`);
-                    }
-                }, 50);
+                if (!isMuted && ambientMusic && ambientMusic.loaded) {
+                    // Schedule the start slightly in the future to avoid scheduling conflicts
+                    ambientMusic.start(Tone.now() + 0.1);
+                    console.log(`-> playAmbientSound: Started newly loaded ambient sound for '${themeName}'.`);
+                }
             },
             onerror: (e) => console.error(`-> AUDIO.ERROR: Error loading ambient sound for '${themeName}':`, e)
         }).connect(ambientBus);

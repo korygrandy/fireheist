@@ -85,7 +85,8 @@ const state = {
     // Six Shooter Pistol State
     sixShooterAmmo: SIX_SHOOTER_AMMO_CAPACITY,
     isSixShooterReloading: false,
-    sunAnchor: {
+    currentThemeAnchorImage: null,
+    themeAnchor: {
         image: null,
         opacity: 0,
         fadingIn: false,
