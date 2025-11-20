@@ -63,6 +63,9 @@ export function initializeClouds() {
 }
 
 export function drawClouds() {
+    if (gameState.selectedTheme === 'outerspace' || gameState.selectedTheme === 'night' || gameState.selectedTheme === 'roadway') {
+        return; // Do not draw clouds for these themes
+    }
     ctx.fillStyle = 'white';
     gameState.clouds.forEach(cloud => {
         const parallaxOffset = gameState.backgroundOffset * CLOUD_PARALLAX_FACTOR;

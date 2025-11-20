@@ -27,10 +27,7 @@ export function draw(playerY) {
         drawBackground(gameState.selectedTheme, groundAngleRad);
     }
 
-    // 3. Draw Clouds
-    drawClouds();
-
-    // 5. Draw Environmental & Particle Effects on top of the ground
+    // 3. Draw Environmental & Particle Effects
     drawParticlesAndEffects(
         gameState,
         gameState.activeFireballs,
@@ -40,6 +37,9 @@ export function draw(playerY) {
         groundAngleRad,
         playerY
     );
+
+    // 4. Draw Clouds on top of the shimmered background
+    drawClouds();
 
     // 6. Draw Game Objects (Player, Obstacles, etc.)
     if (gameState.currentSegmentIndex < gameState.raceSegments.length || gameState.isGameOverSequence) {

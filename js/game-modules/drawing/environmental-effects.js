@@ -1315,7 +1315,7 @@ function drawVolcanoThemeEffects() {
     if (state.environmentalEffects.heatShimmer.active) {
         const waveY = state.environmentalEffects.heatShimmer.waveY;
         for (let y = 0; y < canvas.height; y += 20) {
-            const xOffset = Math.sin((y + waveY) * 0.1) * 5;
+            const xOffset = Math.sin((y + waveY) * 0.1) * 1;
             ctx.drawImage(canvas, 0, y, canvas.width, 20, xOffset, y, canvas.width, 20);
         }
     }
