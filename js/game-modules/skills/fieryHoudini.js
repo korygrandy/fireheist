@@ -1,7 +1,7 @@
-import { STICK_FIGURE_FIXED_X, GROUND_Y, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE } from '../../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, EASTER_EGG_EMOJI } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { createFieryHoudiniPoof } from '../drawing/effects.js';
-import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, setFieryHoudini, setFieryHoudiniDuration, setFieryHoudiniPhase, setFieryHoudiniOnCooldown, setPlayerIsInvisible, setInvincible, setInvincibilityEndTime } from '../state-manager.js';
+import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementTotalInGameIncinerations, incrementConsecutiveIncinerations, setFieryHoudini, setFieryHoudiniDuration, setFieryHoudiniPhase, setFieryHoudiniOnCooldown, setPlayerIsInvisible, setInvincible, setInvincibilityEndTime } from '../state-manager.js';
 import { fieryHoudiniUpgradeEffects } from '../skill-upgrades.js';
 
 // Fiery Houdini Skill Module
@@ -47,9 +47,14 @@ export const fieryHoudiniSkill = {
 
         // Find and incinerate the current obstacle if it's in range
         if (state.currentObstacle && state.currentObstacle.x < STICK_FIGURE_FIXED_X + range) {
-            addIncineratingObstacle({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
+            const obstacleToIncinerate = state.currentObstacle;
+            addIncineratingObstacle({ ...obstacleToIncinerate, animationProgress: 0, startTime: performance.now() });
             setCurrentObstacle(null);
-            incrementObstaclesIncinerated();
+            if (obstacleToIncinerate.emoji !== EASTER_EGG_EMOJI) {
+                incrementObstaclesIncinerated();
+                incrementTotalInGameIncinerations();
+                incrementConsecutiveIncinerations();
+            }
         }
 
         initiateJump(state, FIERY_HOUDINI_DURATION_MS);

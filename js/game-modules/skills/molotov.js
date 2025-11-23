@@ -5,9 +5,11 @@ import {
     setObstacleHit,
     addIncineratingObstacle,
     setCurrentObstacle,
-    incrementObstaclesIncinerated
+    incrementObstaclesIncinerated,
+    incrementTotalInGameIncinerations,
+    incrementConsecutiveIncinerations
 } from '../state-manager.js';
-import { OBSTACLE_WIDTH, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, GROUND_Y } from '../../constants.js';
+import { OBSTACLE_WIDTH, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, GROUND_Y, EASTER_EGG_EMOJI } from '../../constants.js';
 import { checkMolotovCollision } from '../collision.js';
 import { playAnimationSound } from '../../audio.js';
 import { canvas } from '../../dom-elements.js';
@@ -76,7 +78,11 @@ export const molotovSkill = {
                 if (obstacle === gameState.currentObstacle) {
                     setCurrentObstacle(null);
                 }
-                incrementObstaclesIncinerated();
+                if (obstacle.emoji !== EASTER_EGG_EMOJI) {
+                    incrementObstaclesIncinerated();
+                    incrementTotalInGameIncinerations();
+                    incrementConsecutiveIncinerations();
+                }
             }
 
             if (cocktail.burstParticles.length === 0) {
@@ -127,7 +133,11 @@ export const molotovSkill = {
                 if (obstacle === gameState.currentObstacle) {
                     setCurrentObstacle(null);
                 }
-                incrementObstaclesIncinerated();
+                if (obstacle.emoji !== EASTER_EGG_EMOJI) {
+                    incrementObstaclesIncinerated();
+                    incrementTotalInGameIncinerations();
+                    incrementConsecutiveIncinerations();
+                }
                 break; // Stop checking after first collision
             }
         }

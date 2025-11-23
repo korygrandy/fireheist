@@ -1,80 +1,73 @@
 [
     {
-        "version": "1.5.25",
-        "date": "2025-11-18",
+        "version": "1.5.38",
+        "date": "2025-11-22",
         "changes": [
-            "fix(skill): Corrected an off-by-one error in the Six Shooter Pistol's ammo logic that caused it to fire only 5 shots instead of 6. The reload condition is now checked correctly, ensuring the full cylinder is spent before reloading."
+            "fix(persistence): Ensured the 'All-time incinerations' counter persists across browser refreshes by saving it to localStorage whenever it's updated."
         ]
     },
     {
-        "version": "1.5.24",
-        "date": "2025-11-18",
+        "version": "1.5.37",
+        "date": "2025-11-22",
         "changes": [
-            "fix(collision): Resolved a critical bug where players would collide with an obstacle before all six bullets from the Six Shooter could land. Obstacles now become 'passable' to the player after taking the first bullet hit, preventing a physical collision while allowing the remaining bullets to register and destroy the obstacle.",
-            "fix(vfx): Corrected a rendering order issue where the Six Shooter's bullet impact sparks were being drawn behind the obstacle. The sparks are now drawn in the UI overlay layer, ensuring they are always visible on top of all game objects."
+            "fix(initialization): Corrected the initialization order in `main.js` and added defensive coding in `armory.js` to prevent crashes when `playerStats` are not yet loaded. This ensures that `loadSettings` and `loadPlayerStats` are called and completed before any UI components dependent on player stats are rendered."
         ]
     },
     {
-        "version": "1.5.23",
-        "date": "2025-11-18",
+        "version": "1.5.36",
+        "date": "2025-11-22",
         "changes": [
-            "feat(skill): Implemented Phase 3 (now Phase 4) of the 'Six Shooter Pistol' skill: bullet-obstacle collision detection, visual impact spark effects on every hit, and difficulty-based damage (2/4/6 hits for Rookie/Novice/Pro).",
-            "fix(audio): Corrected the Six Shooter Pistol's sound effects to use 'six-shooter-firing.mp3' and 'six-shooter-reload.mp3' by mapping them in `constants.js`.",
-            "fix(bug): Centralized `SIX_SHOOTER_AMMO_CAPACITY` in `constants.js` and updated `sixShooterPistol.js` and `game-controller.js` to import it, resolving a `SyntaxError` and ensuring correct ammo reset on game restart.",
-            "fix(bug): Fixed a `SyntaxError` in `js/game-modules/drawing/effects.js` caused by an extra closing brace."
+            "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."
         ]
     },
     {
-        "version": "1.5.22",
-        "date": "2025-11-18",
+        "version": "1.5.35",
+        "date": "2025-11-22",
         "changes": [
-            "fix(skill): Corrected the Six Shooter Pistol's bullet trajectory to align with the ground's angle. Inverted Y-axis movement and drawing rotation to prevent bullets from firing in the wrong direction on angled planes.",
-            "feat(skill): Adjusted the Six Shooter Pistol's bullet spawn position by an additional 5 pixels upwards for better visual alignment with the player."
+            "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."
         ]
     },
     {
-        "version": "1.5.21",
-        "date": "2025-11-18",
+        "version": "1.5.34",
+        "date": "2025-11-22",
         "changes": [
-            "feat(skill): Implemented Phase 1 & 2 of the 'Six Shooter Pistol' skill. This includes its definition in the armory, unlock conditions, state management for ammo/reloading, and integration into the game's core action system to make it functional."
+            "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."
         ]
     },
     {
-        "version": "1.5.20",
-        "date": "2025-11-18",
+        "version": "1.5.33",
+        "date": "2025-11-22",
         "changes": [
-            "feat(skill): Implemented Phase 1 of the 'Six Shooter Pistol' skill, including its definition in the armory UI, initialization of Fire Mage incineration tracking, and logic to increment Fire Mage incinerations for unlock progression."
+            "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."
         ]
     },
     {
-        "version": "1.5.18",
-        "date": "2025-11-16",
+        "version": "1.5.32",
+        "date": "2025-11-22",
         "changes": [
-            "feat(easter-egg): Implemented an easter egg obstacle ("🥚") that has a small chance to spawn instead of a regular obstacle. Colliding with the easter egg triggers a special console log message and prevents normal collision penalties, serving as a placeholder for future mini-game integration."
+            "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."
         ]
     },
     {
-        "version": "1.5.17",
-        "date": "2025-11-16",
+        "version": "1.5.31",
+        "date": "2025-11-22",
         "changes": [
-            "fix(shotgun): Resolved a critical bug where the shotgun blast particle animation was not rendering. The fix involved centralizing the skill's `draw` logic, ensuring its `update` function is called in the main game loop, and correcting state management function signatures."
+            "fix(state-management): Corrected an initialization bug where the in-game incineration counter would fail to update on the first run after clearing the browser cache. The `loadPlayerStats` function now correctly merges saved data with default state to ensure all properties are properly initialized."
         ]
     },
     {
-        "version": "1.5.16",
-        "date": "2025-11-16",
+        "version": "1.5.30",
+        "date": "2025-11-22",
         "changes": [
-            "fix(gamepad): Resolved a series of complex bugs related to the gamepad's interaction with the new audio preloader and fullscreen mode. This includes fixing unresponsive in-game controls, ensuring the pause/unpause and reset functions work reliably in all states (including fullscreen), and preventing the gamepad from losing focus after re-entering fullscreen mode.",
-            "feat(audio): Added a sound effect to the 'Start Game' button on the preloader.",
-            "feat(audio): Added a 'beep' sound effect to the 'Load Custom Data' button and the skill upgrade modal's close button.",
-            "feat(ui): Implemented a favicon for the game."
+            "fix(leaderboard): Corrected the leaderboard saving logic to save the session-specific incineration count (`consecutiveIncinerations`) instead of the all-time count (`obstaclesIncinerated`).",
+            "fix(incineration-counter): Corrected the in-game UI to display the session-specific incineration count (`consecutiveIncinerations`) instead of the all-time count (`obstaclesIncinerated`)."
         ]
     },
     {
-        "version": "1.5.15",
-        "date": "2025-11-16",
+        "version": "1.5.29",
+        "date": "2025-11-22",
         "changes": [
-            "feat(cheat): Added an emoji-based cheat mode. Clicking the second fire emoji in the main title copies it to the clipboard. Pasting this emoji into the player emoji input field unlocks all personas, skills, and grants 1,000,000,000 cash for upgrades."
+            "fix(hall-of-fame): Corrected a JavaScript module import error that was causing a console error when loading the page."
         ]
     }
 ]

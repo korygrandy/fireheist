@@ -14,7 +14,8 @@ import { playAnimationSound } from '../audio.js';
  */
 export function updateArmoryCashDisplay() {
     if (totalCashDisplay) {
-        totalCashDisplay.textContent = `$${gameState.playerStats.totalAccumulatedCash.toLocaleString()}`;
+        const cash = gameState.playerStats?.totalAccumulatedCash || 0;
+        totalCashDisplay.textContent = `$${cash.toLocaleString()}`;
     }
 }
 
@@ -47,10 +48,15 @@ export function handleArmorySkillDeselection() {
  * current level, and available actions (select, unselect, upgrade).
  */
 export function populateArmoryItems() {
+    if (!gameState.playerStats) {
+        console.error("populateArmoryItems called before playerStats was initialized. Aborting.");
+        return;
+    }
     armoryItemsContainer.innerHTML = ''; // Clear existing items
 
     if (totalCashDisplay) {
-        totalCashDisplay.textContent = `$${gameState.playerStats.totalAccumulatedCash.toLocaleString()}`;
+        const cash = gameState.playerStats?.totalAccumulatedCash || 0;
+        totalCashDisplay.textContent = `$${cash.toLocaleString()}`;
     }
 
     for (const skillKey in ARMORY_ITEMS) {

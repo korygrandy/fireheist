@@ -219,6 +219,7 @@ const state = {
         consecutiveGroundPounds: 0, // New: To track consecutive ground pounds for an achievement
         totalGroundPoundCollisions: 0,
         consecutiveIncinerations: 0,
+        totalInGameIncinerations: 0,
         hasSeenNewArmoryIndicator: false // New: To track if the user has seen the new armory indicator
     },
 

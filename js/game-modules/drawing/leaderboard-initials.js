@@ -67,7 +67,7 @@ export function confirmInitialSelection() {
             days: Math.round(gameState.daysElapsedTotal),
             hits: gameState.hitsCounter,
             persona: gameState.selectedPersona,
-            totalIncinerated: gameState.playerStats.obstaclesIncinerated
+            totalIncinerated: gameState.playerStats.consecutiveIncinerations
         };
         console.log('-> leaderboard-initials: scoreData:', scoreData);
 

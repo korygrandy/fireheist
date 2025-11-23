@@ -32,6 +32,7 @@ import {
     JETSTREAM_DASH_DURATION_MS,
     FIREBALL_ROLL_DURATION_MS,
     SIX_SHOOTER_HITS_TO_DESTROY,
+    EASTER_EGG_EMOJI,
 } from '../constants.js';
 import { themes } from '../theme.js';
 import {
@@ -75,6 +76,7 @@ import {
     removeFireball,
     incrementObstaclesIncinerated,
     incrementConsecutiveIncinerations,
+    incrementTotalInGameIncinerations,
     setColliding,
     setCollisionDuration,
     setCurrentAccelerator,
@@ -498,9 +500,13 @@ export function animate(timestamp) {
                         break;
                 }
 
-                setCurrentObstacle(null); 
-                incrementObstaclesIncinerated(); 
-                incrementConsecutiveIncinerations();
+                const obstacleToIncinerate = gameState.currentObstacle;
+                setCurrentObstacle(null);
+                if (obstacleToIncinerate.emoji !== EASTER_EGG_EMOJI) {
+                    incrementObstaclesIncinerated();
+                    incrementTotalInGameIncinerations();
+                    incrementConsecutiveIncinerations();
+                }
                 resetStreaks(); 
                 console.log(`-> FIRE MAGE: Obstacle destroyed with type ${destructionType}!`);
                 removeFireball(i); 
@@ -559,12 +565,13 @@ export function animate(timestamp) {
 
         
 
+                            const obstacleToIncinerate = gameState.currentObstacle;
                             setCurrentObstacle(null);
-
-                            incrementObstaclesIncinerated();
-
-                            incrementConsecutiveIncinerations();
-
+                            if (obstacleToIncinerate.emoji !== EASTER_EGG_EMOJI) {
+                                incrementObstaclesIncinerated();
+                                incrementTotalInGameIncinerations();
+                                incrementConsecutiveIncinerations();
+                            }
                             resetStreaks();
 
                             console.log("-> SIX SHOOTER: Obstacle destroyed!");
@@ -594,8 +601,11 @@ export function animate(timestamp) {
                 startTime: performance.now()
             });
             playAnimationSound('incinerate');
-            incrementObstaclesIncinerated(); 
-            incrementConsecutiveIncinerations();
+            if (obstacle.emoji !== EASTER_EGG_EMOJI) {
+                incrementObstaclesIncinerated(); 
+                incrementTotalInGameIncinerations();
+                incrementConsecutiveIncinerations();
+            }
             removeIgnitedObstacle(i);
         } else if (obstacle.x < -OBSTACLE_WIDTH) {
             removeIgnitedObstacle(i);

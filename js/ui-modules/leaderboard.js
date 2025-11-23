@@ -1,4 +1,4 @@
-// js/ui-modules/leaderboard.js
+import { gameState } from '../game-modules/state-manager.js';
 
 const LEADERBOARD_KEY = 'fireHeistLeaderboard';
 
@@ -34,9 +34,21 @@ export function saveLeaderboardScore(initials, scoreData) {
 }
 
 /**
+ * Displays the all-time incinerations count.
+ */
+function displayAllTimeIncinerations() {
+    const container = document.getElementById('allTimeIncinerationsContainer');
+    if (!container) return;
+
+    const allTimeIncinerations = gameState.playerStats.obstaclesIncinerated || 0;
+    container.innerHTML = `<h3 class="text-xl font-semibold text-gray-700 mb-2">All-time incinerations 🔥: ${allTimeIncinerations.toLocaleString()}</h3>`;
+}
+
+/**
  * Displays the leaderboard in the Hall of Fame tab.
  */
 export function displayLeaderboard() {
+    displayAllTimeIncinerations();
     const container = document.getElementById('highScoresContainer');
     if (!container) return;
 

@@ -8,7 +8,7 @@ import { initializeUIData, loadCustomData } from './ui-modules/data.js';
 import { switchTab, toggleFullScreen, updateControlPanelState } from './ui-modules/ui-helpers.js';
 import { setupSuggestedEmojis, updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, handleSpeedChange, handlePowerUpToggle, handleAutoHurdleToggle, applySkillLevelSettings } from './ui-modules/input-handlers.js';
 import { debugUnlockAllAchievements, debugEndGame, debugCycleDailyTheme } from './ui-modules/debug.js';
-import { savePlayerStats } from './ui-modules/settings.js';
+import { savePlayerStats, loadPlayerStats, loadSettings } from './ui-modules/settings.js';
 import { checkForNewUnlocks } from './ui-modules/unlocks.js';
 import { populateThemeSelector, handleThemeChange } from './ui-modules/theme.js';
 import { populatePersonaSelector, handlePersonaChange } from './ui-modules/persona.js';
@@ -19,7 +19,7 @@ import { displayLeaderboard } from './ui-modules/leaderboard.js';
 import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
-import { startGame, stopGame, togglePauseGame, handleExitOrReset } from './game-modules/game-controller.js';
+import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
 import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, startFireStomper, castFireball, startBlinkStrike, startJetstreamDash, startEchoSlam, handleSpecialMove } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
@@ -47,6 +47,15 @@ function initializeDailyChallengeUI() {
     } else {
         displayDailyChallenge();
     }
+}
+
+async function initializeApp() {
+    console.log("-> Initializing application state...");
+    loadSettings();
+    loadPlayerStats();
+    await initializeUIData();
+    loadThemeAnchorImage(gameState.selectedTheme);
+    console.log("-> Application state initialized.");
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -122,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         controlPanelContainer.addEventListener('click', (event) => {
 
             if (event.target.id === 'startDailyChallengeBtn') {
-
+                resetGameState();
                 playAnimationSound('start-daily-challenge'); // Play sound on daily challenge start
 
                 startDailyChallengeGame();
@@ -479,12 +488,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-        // 2. Load initial UI data, then initialize debug panel
-
-
-
-                await initializeUIData();
-                loadThemeAnchorImage(gameState.selectedTheme);
+        // 2. Load player stats FIRST, then initialize UI
+        await initializeApp();
 
 
 

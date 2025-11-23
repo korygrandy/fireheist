@@ -1,6 +1,6 @@
 import { playAnimationSound } from '../../audio.js';
-import { STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
-import { addShotgunParticle, consumeEnergy, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementConsecutiveIncinerations } from '../state-manager.js';
+import { STICK_FIGURE_TOTAL_HEIGHT, EASTER_EGG_EMOJI } from '../../constants.js';
+import { addShotgunParticle, consumeEnergy, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, incrementTotalInGameIncinerations } from '../state-manager.js';
 import { checkShotgunCollision } from '../collision.js';
 
 // Shotgun Skill Module
@@ -72,9 +72,11 @@ export const shotgunSkill = {
                         setCurrentObstacle(null);
                     }
                     
-                    playAnimationSound('shatter');
-                    incrementObstaclesIncinerated();
-                    incrementConsecutiveIncinerations();
+                    if (obstacle.emoji !== EASTER_EGG_EMOJI) {
+                        incrementObstaclesIncinerated();
+                        incrementTotalInGameIncinerations();
+                        incrementConsecutiveIncinerations();
+                    }
 
                     gameState.shotgunParticles.splice(i, 1);
                     particleRemoved = true;

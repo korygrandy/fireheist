@@ -13,7 +13,7 @@ import { parseData, parseEventData, prepareRaceData } from '../utils.js';
 import { setTheme } from '../theme.js';
 import { applyPersona } from './persona.js'; // This will be created later
 import { gameState, setStickFigureEmoji, setObstacleEmoji, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setCurrentSkillLevel, setIntendedSpeedMultiplier, setEnableRandomPowerUps, setAutoHurdleEnabled, setSelectedTheme, setSelectedPersona, setPlayerStats, setFinancialMilestones, setRaceSegments, setCustomEvents } from '../game-modules/state-manager.js';
-import { PLAYER_STATS_KEY } from '../game-modules/state.js';
+import defaultState, { PLAYER_STATS_KEY } from '../game-modules/state.js';
 
 const LOCAL_STORAGE_KEY = 'fireHeistSettings';
 
@@ -123,48 +123,27 @@ export function savePlayerStats() {
     if (disableSaveSettings.checked || gameState.isDailyChallengeActive) {
         return;
     }
-    // Read the latest from storage first to prevent overwriting with a stale object
-    const savedStatsRaw = localStorage.getItem(PLAYER_STATS_KEY);
-    const savedStats = savedStatsRaw ? JSON.parse(savedStatsRaw) : {};
-
-    // Merge the current in-memory state onto the saved state
-    const mergedStats = {
-        ...savedStats,
-        ...gameState.playerStats,
-        totalGroundPoundCollisions: (savedStats.totalGroundPoundCollisions || 0) + gameState.playerStats.totalGroundPoundCollisions,
-        obstaclesIncinerated: (savedStats.obstaclesIncinerated || 0) + gameState.playerStats.obstaclesIncinerated
-    };
-
-    localStorage.setItem(PLAYER_STATS_KEY, JSON.stringify(mergedStats));
-    console.log("-> savePlayerStats: Player stats merged and saved to localStorage.");
+    localStorage.setItem(PLAYER_STATS_KEY, JSON.stringify(gameState.playerStats));
+    console.log("-> savePlayerStats: Player stats saved to localStorage.");
 }
 
 export function loadPlayerStats() {
     if (disableSaveSettings.checked) {
-        setPlayerStats({ flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], consecutiveGroundPounds: 0 }); // Reset if disabled
+        setPlayerStats(defaultState.playerStats); // Reset to default if disabled
         return;
     }
     const savedStats = localStorage.getItem(PLAYER_STATS_KEY);
     if (savedStats) {
         const loadedStats = JSON.parse(savedStats);
-        // Ensure all properties are present
-        setPlayerStats({
-            flawlessRuns: loadedStats.flawlessRuns || {},
-            obstaclesIncinerated: loadedStats.obstaclesIncinerated || 0,
-            notifiedArmoryUnlocks: loadedStats.notifiedArmoryUnlocks || [],
-            unlockedArmoryItems: loadedStats.unlockedArmoryItems || [],
-            notifiedUnlocks: loadedStats.notifiedUnlocks || [],
-            activeArmorySkill: loadedStats.activeArmorySkill || null,
-            consecutiveGroundPounds: loadedStats.consecutiveGroundPounds || 0,
-            totalGroundPoundCollisions: loadedStats.totalGroundPoundCollisions || 0,
-            consecutiveIncinerations: loadedStats.consecutiveIncinerations || 0,
-            totalAccumulatedCash: loadedStats.totalAccumulatedCash || 0,
-            skillLevels: loadedStats.skillLevels || {},
-            hasSeenNewArmoryIndicator: loadedStats.hasSeenNewArmoryIndicator || false
-        });
-        console.log("-> loadPlayerStats: Player stats loaded and assigned to state.");
+        // Merge loaded stats with defaults to ensure all properties are present
+        const mergedStats = {
+            ...defaultState.playerStats,
+            ...loadedStats
+        };
+        setPlayerStats(mergedStats);
+        console.log("-> loadPlayerStats: Player stats loaded and merged with defaults.");
     } else {
-        setPlayerStats({ flawlessRuns: {}, obstaclesIncinerated: 0, notifiedArmoryUnlocks: [], unlockedArmoryItems: [], notifiedUnlocks: [], activeArmorySkill: null, consecutiveGroundPounds: 0, totalGroundPoundCollisions: 0, consecutiveIncinerations: 0, totalAccumulatedCash: 0, skillLevels: {}, hasSeenNewArmoryIndicator: false });
+        setPlayerStats(defaultState.playerStats);
         console.log("-> loadPlayerStats: No player stats found. Initializing defaults.");
     }
 }

@@ -113,7 +113,6 @@ export function resetGameState() {
     gameState.showDailyChallengeCompletedOverlay = false;
     gameState.leaderboardInitials.isActive = false;
     gameState.leaderboardInitials.submitted = false;
-    setObstaclesIncinerated(0);
     console.log("-> RESET GAME: Initiated.");
     setGameRunning(false);
     setPaused(false);
@@ -197,6 +196,7 @@ export function resetGameState() {
     });
 
     gameState.hitsCounter = 0;
+    gameState.playerStats.totalInGameIncinerations = 0;
     setDaysElapsedTotal(0);
     gameState.daysAccumulatedAtSegmentStart = 0;
     setVictory(false);
@@ -231,7 +231,7 @@ export function startGame() {
     console.log("-> START GAME: Initiating game start sequence.");
 
     resetGameState();
-    setObstaclesIncinerated(0); // Explicitly reset for the new game session
+    
     gameState.miniGameBonus = 0; // Reset the bonus for the new run
 
     setGameRunning(true);

@@ -17,7 +17,7 @@ function createChallengeHTML(config, results = null) {
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-xl font-bold text-gray-800">Daily Challenge</h3>
                 <div class="text-sm font-semibold text-orange-500">
-                    🔥 Current Win Streak: ${winStreak}
+                    🏅 Current Win Streak: ${winStreak}
                 </div>
             </div>
             <p class="text-sm text-gray-600 mb-4">A unique, deterministic challenge every day. Good luck!</p>
@@ -135,11 +135,11 @@ export function showCountdown(button, callback) {
         count--;
         if (count > 0) {
             button.textContent = count;
-        } else if (count === 0) {
-            button.textContent = "Go!";
         } else {
+            button.textContent = "Go!";
             clearInterval(interval);
-            callback();
+            // Wait a very short moment for the "Go!" text to be visible, then start.
+            setTimeout(callback, 2000); 
         }
     }, 1000);
 }

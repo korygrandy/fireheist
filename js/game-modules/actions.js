@@ -1,7 +1,7 @@
 import { createHoudiniPoof, createFieryHoudiniPoof, createJetPackEffect, createGroundPoundEffect, createShatterEffect } from './drawing/effects.js';
 import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIRE_MAGE_COOLDOWN_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS, OBSTACLE_WIDTH, JUMP_DURATIONS } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
-import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, setScreenFlash } from './state-manager.js';
+import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, setScreenFlash } from './state-manager.js';
 import { fieryGroundPoundUpgradeEffects, fireSpinnerUpgradeEffects, fieryHoudiniUpgradeEffects, firestormUpgradeEffects } from './skill-upgrades.js';
 import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
 import { fireSpinnerSkill } from './skills/fireSpinner.js';
@@ -330,6 +330,7 @@ export function startJetPack(state) {
             state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
             state.currentObstacle = null;
             state.playerStats.obstaclesIncinerated++;
+            incrementConsecutiveIncinerations();
         }
     } else if (skillLevel === 2) {
         const obstaclesToIncinerate = [state.currentObstacle, ...state.ignitedObstacles, ...state.vanishingObstacles].filter(Boolean).slice(0, 2);
@@ -337,6 +338,7 @@ export function startJetPack(state) {
             createJetPackEffect(ob, skillLevel);
             state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: performance.now() });
             state.playerStats.obstaclesIncinerated++;
+            incrementConsecutiveIncinerations();
         });
         if (obstaclesToIncinerate.includes(state.currentObstacle)) state.currentObstacle = null;
         state.ignitedObstacles = state.ignitedObstacles.filter(ob => !obstaclesToIncinerate.includes(ob));
@@ -347,6 +349,7 @@ export function startJetPack(state) {
             createJetPackEffect(ob, skillLevel);
             state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: performance.now() });
             state.playerStats.obstaclesIncinerated++;
+            incrementConsecutiveIncinerations();
         });
         state.currentObstacle = null;
         state.ignitedObstacles = [];
@@ -388,6 +391,7 @@ export function startBlinkStrike(state) {
             state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now(), animationType: 'shatter' });
             state.currentObstacle = null;
             state.playerStats.obstaclesIncinerated++; // Count as incinerated for now
+            incrementConsecutiveIncinerations();
             playAnimationSound('shatter'); // Shatter sound
         }
         // Make player visible again after the strike
@@ -456,6 +460,7 @@ export function startEchoSlam(state) {
                 state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now(), animationType: 'shatter' });
                 state.currentObstacle = null;
                 state.playerStats.obstaclesIncinerated++;
+                incrementConsecutiveIncinerations();
                 playAnimationSound('shatter');
             }
         }

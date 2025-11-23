@@ -90,9 +90,9 @@ export async function initializeUIData() {
     }
 
     // Then, load the saved settings
-    const settingsLoaded = loadSettings();
-    loadPlayerStats(); // Load player stats here
+
     
+
     // Ensure the game state's cash reflects the total saved stats for the upgrade system
     if (gameState.playerStats.totalAccumulatedCash !== undefined) {
         setTotalAccumulatedCash(gameState.playerStats.totalAccumulatedCash);
@@ -108,6 +108,8 @@ export async function initializeUIData() {
             savePlayerStats(); // Re-save the corrected stats
         }
     }
+
+    populateArmoryItems(); // Refresh armory UI
 
     // Directly parse and prepare the initial data based on what loadSettings() has put into the inputs
     const financialMilestones = parseData(dataInput.value);
@@ -129,5 +131,4 @@ export async function initializeUIData() {
     }
 
     displayLeaderboard(); // Display leaderboard on startup
-    populateArmoryItems(); // Refresh armory UI
 }

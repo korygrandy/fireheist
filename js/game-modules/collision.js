@@ -1,11 +1,12 @@
-import { gameState, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, resetStreaks, incrementConsecutiveGroundPounds, incrementTotalGroundPoundCollisions, setCurrentAccelerator, setOnScreenCustomEvent } from './state-manager.js';
+import { gameState, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, incrementTotalInGameIncinerations, resetStreaks, resetGroundPoundStreak, incrementConsecutiveGroundPounds, incrementTotalGroundPoundCollisions, setCurrentAccelerator, setOnScreenCustomEvent } from './state-manager.js';
 import {
     GROUND_Y,
     STICK_FIGURE_TOTAL_HEIGHT,
     OBSTACLE_EMOJI_Y_OFFSET,
     OBSTACLE_HEIGHT,
     STICK_FIGURE_FIXED_X,
-    OBSTACLE_WIDTH
+    OBSTACLE_WIDTH,
+    EASTER_EGG_EMOJI
 } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
@@ -27,17 +28,20 @@ export function checkCollision(runnerY, angleRad) {
 
         // Check if the center of the fireball is within the collision window of the obstacle's center
         if (Math.abs(runnerX - obstacleCenterX) < collisionWindow) {
+            const obstacleToIncinerate = gameState.currentObstacle;
             addIncineratingObstacle({
-                ...gameState.currentObstacle,
+                ...obstacleToIncinerate,
                 animationProgress: 0,
                 startTime: performance.now(),
                 animationType: 'incinerate-ash-blow'
             });
             setCurrentObstacle(null);
             playAnimationSound('incinerate');
-            incrementObstaclesIncinerated();
-            incrementConsecutiveIncinerations();
-            resetStreaks();
+            if (obstacleToIncinerate.emoji !== EASTER_EGG_EMOJI) {
+                incrementObstaclesIncinerated();
+                incrementTotalInGameIncinerations();
+                incrementConsecutiveIncinerations();
+            }
             console.log("-> FIREBALL ROLL: Obstacle incinerated by centered collision!");
             return false; // No penalty
         }
@@ -91,16 +95,19 @@ export function checkCollision(runnerY, angleRad) {
     if (horizontalDistance < gameState.COLLISION_RANGE_X) {
         // Priority 1: Check for active Firestorm first, as it overrides all other collision types.
         if (gameState.isFirestormActive) {
+            const obstacleToIncinerate = gameState.currentObstacle;
             addIncineratingObstacle({
-                ...gameState.currentObstacle,
+                ...obstacleToIncinerate,
                 animationProgress: 0,
                 startTime: performance.now()
             });
             setCurrentObstacle(null);
             playAnimationSound('incinerate');
-            incrementObstaclesIncinerated();
-            incrementConsecutiveIncinerations();
-            resetStreaks(); // Reset streak
+            if (obstacleToIncinerate.emoji !== EASTER_EGG_EMOJI) {
+                incrementObstaclesIncinerated();
+                incrementTotalInGameIncinerations();
+                incrementConsecutiveIncinerations();
+            }
             console.log("-> FIRESTORM V2: Obstacle incinerated by collision!");
             return false; // No penalty
         }
@@ -121,28 +128,36 @@ export function checkCollision(runnerY, angleRad) {
 
         // Priority 2: Check for destructive jump moves.
         if (gameState.jumpState.isFireSpinner) {
+            const obstacleToIncinerate = gameState.currentObstacle;
             addIncineratingObstacle({
-                ...gameState.currentObstacle,
+                ...obstacleToIncinerate,
                 animationProgress: 0,
                 startTime: performance.now()
             });
             setCurrentObstacle(null);
             playAnimationSound('fireball');
-            incrementObstaclesIncinerated();
-            incrementConsecutiveIncinerations();
+            if (obstacleToIncinerate.emoji !== EASTER_EGG_EMOJI) {
+                incrementObstaclesIncinerated();
+                incrementTotalInGameIncinerations();
+                incrementConsecutiveIncinerations();
+            }
             if (gameState.playerStats.consecutiveGroundPounds > 0) {
                 console.log(`[DEBUG] Streak RESET by Fire Spinner. Was: ${gameState.playerStats.consecutiveGroundPounds}`);
-                resetStreaks(); // Reset streak
+                resetGroundPoundStreak(); // Reset streak
             }
             console.log("-> FIRE SPINNER: Obstacle incinerated!");
             return false; // No penalty
         }
         if (gameState.jumpState.isGroundPound && gameState.jumpState.progress > 0.5) { // Shatter on the way down
-            createShatterEffect(gameState.currentObstacle.x, obstacleTopY, gameState.currentObstacle.emoji);
+            const obstacleToIncinerate = gameState.currentObstacle;
+            createShatterEffect(obstacleToIncinerate.x, obstacleTopY, obstacleToIncinerate.emoji);
             setCurrentObstacle(null);
             playAnimationSound('shatter');
-            incrementObstaclesIncinerated();
-            incrementConsecutiveIncinerations();
+            if (obstacleToIncinerate.emoji !== EASTER_EGG_EMOJI) {
+                incrementObstaclesIncinerated();
+                incrementTotalInGameIncinerations();
+                incrementConsecutiveIncinerations();
+            }
             
             // Check for unlocks BEFORE incrementing, so we unlock based on the NEXT count
             checkForNewUnlocks(gameState.playerStats); 
@@ -159,7 +174,7 @@ export function checkCollision(runnerY, angleRad) {
         if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {
             if (gameState.playerStats.consecutiveGroundPounds > 0) {
                 console.log(`[DEBUG] Streak RESET by standard collision. Was: ${gameState.playerStats.consecutiveGroundPounds}`);
-                resetStreaks(); // Reset on standard collision
+                resetGroundPoundStreak(); // Reset on standard collision
             }
             resetStreaks(); // Reset incineration streak
             return true; // This is a standard, damaging hit.

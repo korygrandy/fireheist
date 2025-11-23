@@ -1,6 +1,7 @@
 import state from './state.js';
 import { ENERGY_SETTINGS } from '../constants.js';
 import { SKILL_UPGRADE_PATHS } from './skill-upgrades.js';
+import { savePlayerStats } from '../ui-modules/settings.js';
 
 export const GRASS_ANIMATION_INTERVAL_MS = 100;
 
@@ -111,6 +112,13 @@ export function resetStreaks() {
     }
     if (state.playerStats.consecutiveIncinerations > 0) {
         state.playerStats.consecutiveIncinerations = 0;
+    }
+}
+
+export function resetGroundPoundStreak() {
+    if (state.playerStats.consecutiveGroundPounds > 0) {
+        console.log(`[DEBUG] Ground Pound Streak RESET. Was: ${state.playerStats.consecutiveGroundPounds}`);
+        state.playerStats.consecutiveGroundPounds = 0;
     }
 }
 
@@ -390,6 +398,7 @@ export function removeFireball(index) {
  */
 export function incrementObstaclesIncinerated() {
     state.playerStats.obstaclesIncinerated++;
+    savePlayerStats();
 }
 
 /**
@@ -405,6 +414,13 @@ export function setObstaclesIncinerated(count) {
  */
 export function incrementConsecutiveIncinerations() {
     state.playerStats.consecutiveIncinerations++;
+}
+
+/**
+ * Increments the total in-game incinerations count.
+ */
+export function incrementTotalInGameIncinerations() {
+    state.playerStats.totalInGameIncinerations++;
 }
 
 /**
