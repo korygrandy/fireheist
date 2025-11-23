@@ -5,7 +5,7 @@ import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProxi
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks, drawImpactSparks, drawFireWallShatterEffect, createFireWallShatterEffect } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure } from './player.js';
-import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay, drawBonusHaul } from './overlays.js';
+import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay, drawBonusHaul, drawCooldownIndicator } from './overlays.js';
 import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
 import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
@@ -51,6 +51,7 @@ export function drawParticlesAndEffects(gameState, activeFireballs, ignitedObsta
     drawFireTrail();
     drawShatteredObstacles();
     drawAshParticles();
+    firestormSkill.draw(ctx, gameState, playerY);
     drawFireballs(activeFireballs);
 
     ignitedObstacles.forEach(obstacle => drawIgnitedObstacle(obstacle, groundAngleRad));
@@ -63,6 +64,18 @@ export function drawParticlesAndEffects(gameState, activeFireballs, ignitedObsta
         if (obstacle.animationProgress >= 1) flippingObstacles.splice(i, 1);
         else drawFlipAndCrumble(obstacle, groundAngleRad);
     }
+}
+
+function drawActiveSkills(ctx, gameState, currentX, currentY) {
+    fireSpinnerSkill.draw(ctx, gameState, currentX, currentY);
+    fieryGroundPoundSkill.draw(ctx, gameState, currentX, currentY);
+    fireMageSkill.draw(ctx, gameState, currentX, currentY);
+    mageSpinnerSkill.draw(ctx, gameState, currentX, currentY);
+    fireballRollSkill.draw(ctx, gameState, currentX, currentY);
+    fireAxeSkill.draw(ctx, gameState);
+    tarzanSkill.draw(ctx, gameState);
+    firestormSkill.draw(ctx, gameState, currentY);
+    sixShooterPistolSkill.draw(ctx, gameState);
 }
 
 export function drawGameObjects(gameState, currentSegment, groundAngleRad, playerY) {
@@ -133,21 +146,23 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
     const currentX = STICK_FIGURE_FIXED_X + stickFigureOffsetX;
     let currentY = stickFigureGroundY + stickFigureOffsetY;
 
-    if (gameState.jumpState.isJumping) {
-        const jumpProgress = gameState.jumpState.progress;
-        const maxJumpHeight = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentSegment.hurdleHeight * JUMP_HEIGHT_RATIO;
-        const jumpOffset = -4 * maxJumpHeight * (jumpProgress - jumpProgress * jumpProgress);
-        currentY += jumpOffset;
+    if (!gameState.tarzanState.isAttached) {
+        if (gameState.jumpState.isJumping) {
+            let maxJumpHeightForSegment = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentSegment.hurdleHeight * JUMP_HEIGHT_RATIO;
+            const jumpProgress = gameState.jumpState.progress;
+            const jumpOffset = -4 * maxJumpHeightForSegment * (jumpProgress - jumpProgress * jumpProgress);
+            currentY += jumpOffset;
+        }
+        gameState.stickFigureY = currentY; // Update the global state with the new Y position
     }
 
-    fireMageSkill.draw(ctx, gameState, currentX, currentY);
-    mageSpinnerSkill.draw(ctx, gameState, currentX, currentY);
-    fireballRollSkill.draw(ctx, gameState, currentX, currentY);
-    fireAxeSkill.draw(ctx, gameState);
+
+    // Centralized skill drawing
+    drawActiveSkills(ctx, gameState, currentX, currentY);
+
     if (!gameState.jumpState.isFireballRolling && !gameState.tarzanState.isAttached) {
         drawStickFigure(currentX, currentY, gameState.jumpState, currentSegment.angleRad);
     }
-    tarzanSkill.draw(ctx, gameState);
 
 
 
@@ -168,6 +183,7 @@ export function drawUIOverlaysAndEffects(gameState, isInitialLoad, collisionDura
     drawBonusHaul();
     drawGameCounters();
     drawEnergyBar();
+    drawCooldownIndicator();
     if (gameState.daysCounter) drawDaysCounter();
     drawImpactSparks();
 

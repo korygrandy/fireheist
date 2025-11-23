@@ -360,6 +360,36 @@ export function drawEnergyBar() {
     ctx.restore();
 }
 
+export function drawCooldownIndicator() {
+    const now = performance.now();
+    const cooldownEndTime = gameState.tarzanState.cooldownEndTime || 0;
+    const cooldownDuration = 5000; // 5 seconds for Tarzan Swing
+
+    if (now < cooldownEndTime) {
+        const remainingTime = cooldownEndTime - now;
+        const progress = 1 - (remainingTime / cooldownDuration);
+
+        const indicatorX = (canvas.width / 2) + 120; // Position next to the energy bar
+        const indicatorY = 20;
+        const radius = 15;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(indicatorX, indicatorY, radius, -Math.PI / 2, (Math.PI * 2 * progress) - Math.PI / 2, false);
+        ctx.strokeStyle = '#00FF88';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.fillStyle = '#FFF';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${(remainingTime / 1000).toFixed(1)}s`, indicatorX, indicatorY);
+
+        ctx.restore();
+    }
+}
+
 export function drawDailyChallengeCompletedOverlay() {
     if (!gameState.showDailyChallengeCompletedOverlay) return;
 
