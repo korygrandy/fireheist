@@ -13,6 +13,7 @@ import { fireMageSkill } from '../skills/fireMage.js';
 import { mageSpinnerSkill } from '../skills/mageSpinner.js';
 import { fireballRollSkill } from '../skills/fireballRoll.js';
 import { sixShooterPistolSkill } from '../skills/sixShooterPistol.js';
+import { fireAxeSkill } from '../skills/fireAxe.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -147,6 +148,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
     fireMageSkill.draw(ctx, gameState, currentX, currentY);
     mageSpinnerSkill.draw(ctx, gameState, currentX, currentY);
     fireballRollSkill.draw(ctx, gameState, currentX, currentY);
+    fireAxeSkill.draw(ctx, gameState);
     if (!gameState.jumpState.isFireballRolling) {
         drawStickFigure(currentX, currentY, gameState.jumpState, currentSegment.angleRad);
     }

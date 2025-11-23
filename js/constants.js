@@ -144,7 +144,8 @@ export const ENERGY_SETTINGS = {
         echoSlam: 30,
         fireballRoll: 0, // Drains over time
         shotgunBlast: 35,
-        molotovCocktail: 40
+        molotovCocktail: 40,
+        fireAxe: 30,
     }
 };
 

@@ -82,6 +82,16 @@ const state = {
     jetstreamDashDrainEndTime: 0, // For Jetstream Dash energy drain
     fireballRollDrainEndTime: 0, // For Fireball Roll energy drain
 
+    // Fire Axe State
+    fireAxeState: {
+        isActive: false,
+        swingProgress: 0,
+        isThrown: false,
+        x: 0,
+        y: 0,
+        hasHit: false,
+    },
+
     // Six Shooter Pistol State
     sixShooterAmmo: SIX_SHOOTER_AMMO_CAPACITY,
     isSixShooterReloading: false,

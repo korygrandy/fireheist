@@ -177,6 +177,7 @@ import { fireMageSkill } from './skills/fireMage.js';
 import { mageSpinnerSkill } from './skills/mageSpinner.js';
 import { fireballRollSkill } from './skills/fireballRoll.js';
 import { sixShooterPistolSkill } from './skills/sixShooterPistol.js';
+import { fireAxeSkill } from './skills/fireAxe.js';
 import { init as initMiniGame, update as updateMiniGame, draw as drawMiniGame } from './mini-games/blowThatDough.js';
 import { init as initPredictionAddiction, update as updatePredictionAddiction, draw as drawPredictionAddiction } from './mini-games/predictionAddiction.js';
 
@@ -964,6 +965,7 @@ export function animate(timestamp) {
     fireballRollSkill.update(gameState, deltaTime);
     shotgunSkill.update(gameState, deltaTime);
     sixShooterPistolSkill.update(gameState, deltaTime);
+    fireAxeSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);

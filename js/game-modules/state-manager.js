@@ -1241,4 +1241,7 @@ export function setSixShooterReloading(isReloading) {
     state.isSixShooterReloading = isReloading;
 }
 
+export function setFireAxeState(newState) {
+    state.fireAxeState = { ...state.fireAxeState, ...newState };
+}
 

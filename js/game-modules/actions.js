@@ -13,6 +13,7 @@ import { fireballRollSkill } from './skills/fireballRoll.js';
 import { shotgunSkill } from './skills/shotgun.js';
 import { molotovSkill } from './skills/molotov.js';
 import { sixShooterPistolSkill } from './skills/sixShooterPistol.js';
+import { fireAxeSkill } from './skills/fireAxe.js';
 
 const skillActionMap = {
     firestorm: (state) => firestormSkill.activate(state),
@@ -28,6 +29,7 @@ const skillActionMap = {
     shotgunBlast: (state) => shotgunSkill.activate(state),
     molotovCocktail: (state) => molotovSkill.activate(state),
     sixShooterPistol: (state) => sixShooterPistolSkill.activate(state),
+    fireAxe: (state) => fireAxeSkill.activate(state),
 };
 
 export function handleSpecialMove(gameState) {

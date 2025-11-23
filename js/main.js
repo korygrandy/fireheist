@@ -37,6 +37,7 @@ import { fireMageSkill } from './game-modules/skills/fireMage.js';
 import { mageSpinnerSkill } from './game-modules/skills/mageSpinner.js';
 import { fireballRollSkill } from './game-modules/skills/fireballRoll.js';
 import { sixShooterPistolSkill } from './game-modules/skills/sixShooterPistol.js';
+import { fireAxeSkill } from './game-modules/skills/fireAxe.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
 import { loadThemeAnchorImage } from './game-modules/assets.js';
 

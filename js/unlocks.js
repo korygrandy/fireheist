@@ -171,6 +171,17 @@ export const ARMORY_ITEMS = {
         },
         unlockText: 'Incinerate 50 obstacles using Fire Mage'
     },
+    fireAxe: {
+        name: 'Fire Axe',
+        description: 'A flaming axe that chops down obstacles. Upgrades allow it to be thrown for a short distance.',
+        emoji: '🪓',
+        tier: 'Common',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'fireAxe'
+        },
+        unlockText: 'Unlock condition to be determined.'
+    },
     bigHeadMode: {
         name: 'Big Head Mode',
         description: 'Your head is now 2x bigger. A purely cosmetic change for bragging rights.',

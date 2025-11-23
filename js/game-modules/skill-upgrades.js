@@ -77,6 +77,15 @@ export const SKILL_UPGRADE_PATHS = {
             { cost: 4050000, description: "Rocket destroys all on-screen obstacles." }             // -> Level 3
         ]
     },
+    fireAxe: {
+        name: 'Fire Axe',
+        maxLevel: 3,
+        levels: [
+            { cost: 0, description: "Default: A flaming axe that chops down obstacles." }, // Level 1
+            { cost: 50000, description: "Throw the axe a short distance to hit obstacles." }, // -> Level 2
+            { cost: 150000, description: "Increased throw distance." } // -> Level 3
+        ]
+    },
     // NOTE: Add other skills here as they become upgradeable
 };
 
