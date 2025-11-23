@@ -109,6 +109,10 @@ const state = {
         swingStartTime: 0,
     },
 
+    reaperDroneState: {
+        isActive: false
+    },
+
     // Six Shooter Pistol State
     sixShooterAmmo: SIX_SHOOTER_AMMO_CAPACITY,
     isSixShooterReloading: false,

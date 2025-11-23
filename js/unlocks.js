@@ -204,6 +204,19 @@ export const ARMORY_ITEMS = {
             skillKey: 'bigHeadMode'
         },
         unlockText: 'Survive a total of 100,000 days'
+    },
+    reaperDrone: {
+        name: 'Reaper Drone',
+        description: 'A drone that fires a missile at the first obstacle in its path.',
+        imageLocked: 'images/reaper-drone.svg',
+        imageUnlocked: 'images/reaper-drone.svg',
+        tier: 'Legendary',
+        unlockCondition: {
+            type: 'totalIncinerateCount',
+            count: 10000,
+            skillKey: 'reaperDrone'
+        },
+        unlockText: 'Incinerate 10,000 total obstacles'
     }
 };
 
@@ -214,6 +227,11 @@ export function getSkillUnlockProgress(condition, stats) {
         case 'incinerateCount':
             return {
                 current: stats.obstaclesIncinerated || 0,
+                target: condition.count
+            };
+        case 'totalIncinerateCount':
+            return {
+                current: stats.totalObstaclesIncinerated || 0,
                 target: condition.count
             };
         case 'flawlessRun':
@@ -251,6 +269,8 @@ export function checkSkillUnlockStatus(condition, stats) {
     switch (condition.type) {
         case 'incinerateCount':
             return stats.obstaclesIncinerated >= condition.count;
+        case 'totalIncinerateCount':
+            return stats.totalObstaclesIncinerated >= condition.count;
         case 'flawlessRun':
             return stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
         case 'consecutiveGroundPounds':

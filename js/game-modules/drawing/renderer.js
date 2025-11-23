@@ -15,6 +15,7 @@ import { fireballRollSkill } from '../skills/fireballRoll.js';
 import { sixShooterPistolSkill } from '../skills/sixShooterPistol.js';
 import { fireAxeSkill } from '../skills/fireAxe.js';
 import { tarzanSkill } from '../skills/tarzan.js';
+import { reaperDroneSkill } from '../skills/reaperDrone.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -74,6 +75,7 @@ function drawActiveSkills(ctx, gameState, currentX, currentY) {
     fireballRollSkill.draw(ctx, gameState, currentX, currentY);
     fireAxeSkill.draw(ctx, gameState);
     tarzanSkill.draw(ctx, gameState);
+    reaperDroneSkill.draw(ctx, gameState);
     firestormSkill.draw(ctx, gameState, currentY);
     sixShooterPistolSkill.draw(ctx, gameState);
 }
