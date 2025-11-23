@@ -92,6 +92,22 @@ const state = {
         hasHit: false,
     },
 
+    // Tarzan State
+    tarzanState: {
+        isActive: false,
+        isSwinging: false,
+        isAttached: false,
+        ropeLength: 150,
+        angle: 0,
+        angularVelocity: 0,
+        anchorX: 0,
+        anchorY: 0,
+        swingDirection: 1,
+        playerReleaseTime: 0,
+        cooldownEndTime: 0,
+        hasSwungForward: false,
+    },
+
     // Six Shooter Pistol State
     sixShooterAmmo: SIX_SHOOTER_AMMO_CAPACITY,
     isSixShooterReloading: false,

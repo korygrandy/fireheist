@@ -38,7 +38,7 @@ export function applySpeedEffect(type) {
         setDecelerating(true);
         setDecelerationDuration(DECELERATOR_DURATION_MS);
         setGameSpeedMultiplier(gameState.intendedSpeedMultiplier * DECELERATOR_BASE_SPEED_DEBUFF);
-        playDebuffSound();
+        setTimeout(() => playDebuffSound(), 10);
         console.warn("-> APPLY SPEED: Decelerator (0.5x) applied!");
     }
 }

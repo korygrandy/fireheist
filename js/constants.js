@@ -146,6 +146,7 @@ export const ENERGY_SETTINGS = {
         shotgunBlast: 35,
         molotovCocktail: 40,
         fireAxe: 30,
+        tarzanSwing: 50,
     }
 };
 
@@ -264,7 +265,8 @@ export const ANIMATION_SOUND_MAP = {
     'submit-chime': 'fx/submit-chime.mp3',
     'ignited-flame': 'fx/ignited-flame.mp3',
     'six-shooter-firing': 'fx/six-shooter-firing.mp3',
-    'six-shooter-reload': 'fx/six-shooter-reload.mp3'
+    'six-shooter-reload': 'fx/six-shooter-reload.mp3',
+    'tarzanSwing': 'fx/tarzan.mp3'
     // Other animations will be added here
 };
 

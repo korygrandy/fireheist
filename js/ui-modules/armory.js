@@ -1,6 +1,7 @@
 import { armoryItemsContainer, skillUpgradeModal, skillModalTitle, skillModalContent, closeSkillModalBtn, totalCashDisplay } from '../dom-elements.js';
 import { getSkillUnlockProgress, checkSkillUnlockStatus, ARMORY_ITEMS } from '../unlocks.js';
 import { fireAxeSkill } from '../game-modules/skills/fireAxe.js';
+import { tarzanSkill } from '../game-modules/skills/tarzan.js';
 import { savePlayerStats } from './settings.js';
 import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash, setScreenFlash } from '../game-modules/state-manager.js';
 import { SKILL_UPGRADE_PATHS } from '../game-modules/skill-upgrades.js';

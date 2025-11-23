@@ -76,7 +76,8 @@ import {
     setSegmentProgress,
     setObstaclesIncinerated,
     setSixShooterAmmo,
-    setCurrentThemeAnchorImage
+    setCurrentThemeAnchorImage,
+    resetTarzanState
 } from './state-manager.js';
 import { initializeClouds, generateGrassBlades } from './drawing/world.js';
 import * as drawing from './drawing.js';
@@ -153,6 +154,7 @@ export function resetGameState() {
 
     resetJumpState();
     resetManualJumpOverride();
+    resetTarzanState();
     setSixShooterAmmo(SIX_SHOOTER_AMMO_CAPACITY);
 
     setFirestormActive(false);

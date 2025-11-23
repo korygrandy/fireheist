@@ -1245,3 +1245,22 @@ export function setFireAxeState(newState) {
     state.fireAxeState = { ...state.fireAxeState, ...newState };
 }
 
+export function setTarzanState(newState) {
+    state.tarzanState = { ...state.tarzanState, ...newState };
+}
+
+export function resetTarzanState() {
+    state.tarzanState = {
+        isActive: false,
+        isSwinging: false,
+        isAttached: false,
+        ropeLength: 150,
+        angle: 0,
+        angularVelocity: 0,
+        anchorX: 0,
+        anchorY: 0,
+        swingDirection: 1,
+        playerReleaseTime: 0,
+        cooldownEndTime: 0, // Reset cooldown
+    };
+}

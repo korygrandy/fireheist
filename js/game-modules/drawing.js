@@ -10,6 +10,7 @@ import { FIREBALL_SIZE, OBSTACLE_EMOJI_Y_OFFSET } from '../constants.js';
 import { molotovSkill } from './skills/molotov.js';
 import { shotgunSkill } from './skills/shotgun.js';
 import { fireAxeSkill } from './skills/fireAxe.js';
+import { tarzanSkill } from './skills/tarzan.js';
 export let isInitialLoad = true;
 export function setInitialLoad(value) {
     isInitialLoad = value;

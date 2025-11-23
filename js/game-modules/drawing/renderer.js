@@ -14,6 +14,7 @@ import { mageSpinnerSkill } from '../skills/mageSpinner.js';
 import { fireballRollSkill } from '../skills/fireballRoll.js';
 import { sixShooterPistolSkill } from '../skills/sixShooterPistol.js';
 import { fireAxeSkill } from '../skills/fireAxe.js';
+import { tarzanSkill } from '../skills/tarzan.js';
 
 export function clearCanvas(skyColor) {
     ctx.fillStyle = skyColor;
@@ -141,17 +142,14 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
         currentY += jumpOffset;
     }
 
-    drawStickFigure(currentX, currentY, gameState.jumpState, groundAngleRad);
-    drawFireShield(currentX, currentY);
-    fireSpinnerSkill.draw(ctx, gameState, currentX, currentY);
-    fieryGroundPoundSkill.draw(ctx, gameState, currentX, currentY);
     fireMageSkill.draw(ctx, gameState, currentX, currentY);
     mageSpinnerSkill.draw(ctx, gameState, currentX, currentY);
     fireballRollSkill.draw(ctx, gameState, currentX, currentY);
     fireAxeSkill.draw(ctx, gameState);
-    if (!gameState.jumpState.isFireballRolling) {
+    if (!gameState.jumpState.isFireballRolling && !gameState.tarzanState.isAttached) {
         drawStickFigure(currentX, currentY, gameState.jumpState, currentSegment.angleRad);
     }
+    tarzanSkill.draw(ctx, gameState);
 
 
 

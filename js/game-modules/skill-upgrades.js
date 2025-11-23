@@ -86,6 +86,15 @@ export const SKILL_UPGRADE_PATHS = {
             { cost: 150000, description: "Increased throw distance." } // -> Level 3
         ]
     },
+    tarzanSwing: {
+        name: 'Tarzan Swing',
+        maxLevel: 3,
+        levels: [
+            { cost: 0, description: "Default: Grab a swinging rope to clear obstacles and gain momentum." }, // Level 1
+            { cost: 75000, description: "Increased swing duration." }, // -> Level 2
+            { cost: 200000, description: "Reduced energy cost." } // -> Level 3
+        ]
+    },
     // NOTE: Add other skills here as they become upgradeable
 };
 

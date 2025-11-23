@@ -182,6 +182,17 @@ export const ARMORY_ITEMS = {
         },
         unlockText: 'Unlock condition to be determined.'
     },
+    tarzanSwing: {
+        name: 'Tarzan Swing',
+        description: 'Swing from a rope to clear obstacles and gain momentum.',
+        emoji: '🐒',
+        tier: 'Adept',
+        unlockCondition: {
+            type: 'placeholder',
+            skillKey: 'tarzanSwing'
+        },
+        unlockText: 'Unlock condition to be determined.'
+    },
     bigHeadMode: {
         name: 'Big Head Mode',
         description: 'Your head is now 2x bigger. A purely cosmetic change for bragging rights.',

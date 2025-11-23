@@ -1,5 +1,17 @@
 [
     {
+        "version": "1.5.39",
+        "date": "2025-11-22",
+        "changes": [
+            "feat(skill): introduce Tarzan Swing skill",
+            "Implemented the Tarzan Swing skill as an unlockable Armory item.",
+            "Features an automated out-and-back pendulum swing, allowing the player to jump, grab a rope from the top-middle of the canvas, swing forward and back, and then release with a momentum boost.",
+            "Includes a 5-second cooldown after use to balance gameplay.",
+            "Visually, the rope dynamically draws from the anchor point to the player, with the player figure appearing to hold and swing on the rope, and the ground runner disappearing during the swing.",
+            "Fixed multiple bugs related to physics, rendering, and state management that caused incorrect swing behavior, disappearing players, and dual-rendering issues."
+        ]
+    },
+    {
         "version": "1.5.38",
         "date": "2025-11-22",
         "changes": [
@@ -61,13 +73,6 @@
         "changes": [
             "fix(leaderboard): Corrected the leaderboard saving logic to save the session-specific incineration count (`consecutiveIncinerations`) instead of the all-time count (`obstaclesIncinerated`).",
             "fix(incineration-counter): Corrected the in-game UI to display the session-specific incineration count (`consecutiveIncinerations`) instead of the all-time count (`obstaclesIncinerated`)."
-        ]
-    },
-    {
-        "version": "1.5.29",
-        "date": "2025-11-22",
-        "changes": [
-            "fix(hall-of-fame): Corrected a JavaScript module import error that was causing a console error when loading the page."
         ]
     }
 ]

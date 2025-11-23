@@ -178,6 +178,7 @@ import { mageSpinnerSkill } from './skills/mageSpinner.js';
 import { fireballRollSkill } from './skills/fireballRoll.js';
 import { sixShooterPistolSkill } from './skills/sixShooterPistol.js';
 import { fireAxeSkill } from './skills/fireAxe.js';
+import { tarzanSkill } from './skills/tarzan.js';
 import { init as initMiniGame, update as updateMiniGame, draw as drawMiniGame } from './mini-games/blowThatDough.js';
 import { init as initPredictionAddiction, update as updatePredictionAddiction, draw as drawPredictionAddiction } from './mini-games/predictionAddiction.js';
 
@@ -442,13 +443,15 @@ export function animate(timestamp) {
     const stickFigureGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentHurdle.angleRad);
     let runnerY = stickFigureGroundY - STICK_FIGURE_TOTAL_HEIGHT;
 
-    if (gameState.jumpState.isJumping) {
-        let maxJumpHeightForSegment = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentHurdle.hurdleHeight * JUMP_HEIGHT_RATIO;
-        const jumpProgress = gameState.jumpState.progress;
-        const jumpOffset = -4 * maxJumpHeightForSegment * (jumpProgress - jumpProgress * jumpProgress);
-        runnerY += jumpOffset;
+    if (!gameState.tarzanState.isAttached) {
+        if (gameState.jumpState.isJumping) {
+            let maxJumpHeightForSegment = gameState.manualJumpOverride.isActive ? gameState.manualJumpHeight : currentHurdle.hurdleHeight * JUMP_HEIGHT_RATIO;
+            const jumpProgress = gameState.jumpState.progress;
+            const jumpOffset = -4 * maxJumpHeightForSegment * (jumpProgress - jumpProgress * jumpProgress);
+            runnerY += jumpOffset;
+        }
+        setStickFigureY(runnerY); // Update the global state with the new Y position
     }
-    setStickFigureY(runnerY); // Update the global state with the new Y position
 
     const objectMovementDelta = deltaTime * OBSTACLE_BASE_VELOCITY_PX_MS * gameState.gameSpeedMultiplier;
     if (gameState.currentObstacle) setCurrentObstacle({ ...gameState.currentObstacle, x: gameState.currentObstacle.x - objectMovementDelta });
@@ -966,6 +969,7 @@ export function animate(timestamp) {
     shotgunSkill.update(gameState, deltaTime);
     sixShooterPistolSkill.update(gameState, deltaTime);
     fireAxeSkill.update(gameState, deltaTime);
+    tarzanSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);
