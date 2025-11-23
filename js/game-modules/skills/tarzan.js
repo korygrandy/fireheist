@@ -1,6 +1,6 @@
 // js/game-modules/skills/tarzan.js
 
-import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { consumeEnergy, initiateJump, setInvincible, setInvincibilityEndTime } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
 import { canvas } from '../../dom-elements.js';
 import { drawStickFigure } from '../drawing/player.js';
@@ -27,13 +27,14 @@ export const tarzanSkill = {
         tarzanState.isActive = true;
         tarzanState.isSwinging = false;
         tarzanState.isAttached = false;
-        tarzanState.ropeLength = 216; // Increased by 20%
-        tarzanState.angle = -Math.PI / 3; // Even wider initial arc (60 degrees)
-        tarzanState.angularVelocity = 0; // Start with no velocity
+        tarzanState.ropeLength = 216; 
+        tarzanState.angle = -Math.PI / 2.75; // Even wider initial arc (approx 65 degrees)
+        tarzanState.angularVelocity = 0;
         tarzanState.anchorX = canvas.width / 2; // Centered
         tarzanState.anchorY = 0;
         tarzanState.hasAutoJumped = false;
         tarzanState.hasSwungForward = false;
+        tarzanState.swingStartTime = 0; // Reset swing start time
 
         playAnimationSound('swoosh');
     },
@@ -52,6 +53,8 @@ export const tarzanSkill = {
                     if (!tarzanState.isActive) return;
                     tarzanState.isAttached = true;
                     tarzanState.isSwinging = true;
+                    tarzanState.swingStartTime = performance.now(); // Record swing start time
+                    setInvincible(true); // Become invincible
                     playAnimationSound('tarzanSwing');
                 }, 150);
             }
@@ -67,13 +70,15 @@ export const tarzanSkill = {
                 tarzanState.hasSwungForward = true;
             }
 
-            // Release condition: after swinging forward and then back
-            if (tarzanState.hasSwungForward && tarzanState.angularVelocity > -0.001 && tarzanState.angle < 0) {
+            // Release condition: after swinging forward and then back, AND after minimum duration
+            const minSwingDurationMet = (performance.now() - tarzanState.swingStartTime) > 1500; // 1.5 seconds minimum
+            if (tarzanState.hasSwungForward && tarzanState.angularVelocity > -0.001 && tarzanState.angle < 0 && minSwingDurationMet) {
                 tarzanState.isActive = false;
                 tarzanState.isAttached = false;
                 tarzanState.isSwinging = false;
                 state.jumpState.isJumping = false; // Land the player
-                tarzanState.cooldownEndTime = performance.now() + 3000; // Reduced cooldown to 3 seconds
+                tarzanState.cooldownEndTime = performance.now() + 3000;
+                setInvincible(false); // End invincibility
 
                 state.gameSpeedMultiplier *= 1.5;
                 setTimeout(() => {

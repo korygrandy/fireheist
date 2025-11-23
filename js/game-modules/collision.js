@@ -16,6 +16,7 @@ import { init as initMiniGame } from './mini-games/blowThatDough.js';
 import { init as initPredictionAddiction } from './mini-games/predictionAddiction.js';
 
 export function checkCollision(runnerY, angleRad) {
+    if (gameState.tarzanState.isAttached) return false; // Player is immune while swinging
     if (!gameState.currentObstacle || gameState.currentObstacle.hasBeenHit || gameState.isColliding) return false;
 
     const obstacleX = gameState.currentObstacle.x;

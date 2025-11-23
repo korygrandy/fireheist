@@ -106,6 +106,7 @@ const state = {
         playerReleaseTime: 0,
         cooldownEndTime: 0,
         hasSwungForward: false,
+        swingStartTime: 0,
     },
 
     // Six Shooter Pistol State

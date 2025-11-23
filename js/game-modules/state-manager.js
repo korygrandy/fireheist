@@ -1261,6 +1261,8 @@ export function resetTarzanState() {
         anchorY: 0,
         swingDirection: 1,
         playerReleaseTime: 0,
-        cooldownEndTime: 0, // Reset cooldown
+        cooldownEndTime: 0,
+        hasSwungForward: false,
+        swingStartTime: 0,
     };
 }
