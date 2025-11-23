@@ -842,13 +842,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                         }
 
-                if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
+                                if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+                                    e.preventDefault();
 
-                    handleSpecialMove();
+                                    firestormSkill.activate(gameState);
 
-                }
+                                }
 
                 if (e.code === 'KeyU' && gameState.gameRunning && !gameState.isPaused) {
 

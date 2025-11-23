@@ -17,16 +17,17 @@ export const shotgunSkill = {
         playAnimationSound('shotgun-blast');
         state.isShotgunBlastActive = true;
 
-        const playerY = state.stickFigureY + STICK_FIGURE_TOTAL_HEIGHT / 2;
+        const playerY = (state.stickFigureY + STICK_FIGURE_TOTAL_HEIGHT * 0.1) - 20; // Adjusted 10 pixels higher
         const particleCount = 15;
         const speed = 5;
-        const spread = Math.PI / 12;
+        const spread = Math.PI / 24; // Narrower spread
+        const upwardAngleOffset = -1 * (Math.PI / 180); // 6 degrees upward
 
         const currentSegment = state.raceSegments[state.currentSegmentIndex];
         const groundAngle = currentSegment ? currentSegment.angleRad : 0;
 
         for (let i = 0; i < particleCount; i++) {
-            const angle = -groundAngle + (Math.random() * spread - spread / 2);
+            const angle = -groundAngle + (Math.random() * spread - spread / 2) + upwardAngleOffset;
             const velocityX = Math.cos(angle) * speed;
             const velocityY = Math.sin(angle) * speed;
 
