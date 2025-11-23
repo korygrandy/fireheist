@@ -51,8 +51,6 @@ export function drawParticlesAndEffects(gameState, activeFireballs, ignitedObsta
     drawFireTrail();
     drawShatteredObstacles();
     drawAshParticles();
-    firestormSkill.draw(ctx, gameState, playerY);
-    sixShooterPistolSkill.draw(ctx, gameState);
     drawFireballs(activeFireballs);
 
     ignitedObstacles.forEach(obstacle => drawIgnitedObstacle(obstacle, groundAngleRad));
