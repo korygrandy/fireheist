@@ -1,12 +1,16 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
 import { createFireStomperEffect } from '../drawing/effects.js';
 
 export const fireStomperSkill = {
+    config: {
+        name: 'fireStomper',
+        energyCost: 35,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.isPaused || state.jumpState.isJumping) return;
-        if (!consumeEnergy(state, 'fireStomper')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         state.jumpState.isFireStomper = true;
         state.jumpState.fireStomperDuration = JUMP_DURATIONS.fireStomper;

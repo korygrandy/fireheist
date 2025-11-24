@@ -1291,6 +1291,14 @@ export function drawShotgunBlast() {
             
 
             
+                        }
+            
+
+            
+        
+            
+
+            
                     }
             
 
@@ -1299,7 +1307,7 @@ export function drawShotgunBlast() {
             
 
             
-                }
+                    
             
 
             
@@ -1307,7 +1315,7 @@ export function drawShotgunBlast() {
             
 
             
-                
+                    export function createFireStomperEffect() {
             
 
             
@@ -1315,7 +1323,7 @@ export function drawShotgunBlast() {
             
 
             
-                export function drawEchoSlamParticles() {
+                        const particleCount = 100;
             
 
             
@@ -1323,7 +1331,7 @@ export function drawShotgunBlast() {
             
 
             
-                    for (let i = gameState.echoSlamParticles.length - 1; i >= 0; i--) {
+                        const fireColors = [
             
 
             
@@ -1331,7 +1339,7 @@ export function drawShotgunBlast() {
             
 
             
-                        const p = gameState.echoSlamParticles[i];
+                            'rgba(255, 80, 0, 0.9)',
             
 
             
@@ -1339,7 +1347,7 @@ export function drawShotgunBlast() {
             
 
             
-                        p.life -= 0.05;
+                            'rgba(255, 165, 0, 1)',
             
 
             
@@ -1347,7 +1355,7 @@ export function drawShotgunBlast() {
             
 
             
-                        if (p.life <= 0) {
+                            'rgba(255, 100, 0, 0.9)',
             
 
             
@@ -1355,7 +1363,7 @@ export function drawShotgunBlast() {
             
 
             
-                            gameState.echoSlamParticles.splice(i, 1);
+                        ];
             
 
             
@@ -1363,7 +1371,191 @@ export function drawShotgunBlast() {
             
 
             
-                        } else {
+                    
+            
+
+            
+        
+            
+
+            
+                        for (let i = 0; i < particleCount; i++) {
+            
+
+            
+        
+            
+
+            
+                            const angle = (Math.random() * Math.PI * 2);
+            
+
+            
+        
+            
+
+            
+                            const speed = (Math.random() * 5 + 3);
+            
+
+            
+        
+            
+
+            
+                            gameState.groundPoundParticles.push({
+            
+
+            
+        
+            
+
+            
+                                x: STICK_FIGURE_FIXED_X,
+            
+
+            
+        
+            
+
+            
+                                y: GROUND_Y,
+            
+
+            
+        
+            
+
+            
+                                vx: Math.cos(angle) * speed,
+            
+
+            
+        
+            
+
+            
+                                vy: Math.sin(angle) * speed,
+            
+
+            
+        
+            
+
+            
+                                size: Math.random() * 5 + 3,
+            
+
+            
+        
+            
+
+            
+                                life: 1,
+            
+
+            
+        
+            
+
+            
+                                gravity: 0,
+            
+
+            
+        
+            
+
+            
+                                color: fireColors[Math.floor(Math.random() * fireColors.length)]
+            
+
+            
+        
+            
+
+            
+                            });
+            
+
+            
+        
+            
+
+            
+                        }
+            
+
+            
+        
+            
+
+            
+                    }
+            
+
+            
+        
+            
+
+            
+                    
+            
+
+            
+        
+            
+
+            
+                    export function drawEchoSlamParticles() {
+            
+
+            
+        
+            
+
+            
+                        for (let i = gameState.echoSlamParticles.length - 1; i >= 0; i--) {
+            
+
+            
+        
+            
+
+            
+                            const p = gameState.echoSlamParticles[i];
+            
+
+            
+        
+            
+
+            
+                            p.life -= 0.05;
+            
+
+            
+        
+            
+
+            
+                            if (p.life <= 0) {
+            
+
+            
+        
+            
+
+            
+                                gameState.echoSlamParticles.splice(i, 1);
+            
+
+            
+        
+            
+
+            
+                            } else {
             
 
             

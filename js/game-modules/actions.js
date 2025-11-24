@@ -17,12 +17,13 @@ import { fireAxeSkill } from './skills/fireAxe.js';
 import { tarzanSkill } from './skills/tarzan.js';
 import { reaperDroneSkill } from './skills/reaperDrone.js';
 import { echoSlamSkill } from './skills/echoSlam.js';
+import { fireStomperSkill } from './skills/fireStomper.js';
 
 const skillActionMap = {
     firestorm: (state) => firestormSkill.activate(state),
     fireSpinner: (state) => fireSpinnerSkill.activate(state),
     fieryGroundPound: (state) => fieryGroundPoundSkill.activate(state),
-    fireStomper: startFireStomper,
+    fireStomper: (state) => fireStomperSkill.activate(state),
     mageSpinner: (state) => mageSpinnerSkill.activate(state),
     fieryHoudini: (state) => fieryHoudiniSkill.activate(state),
     blinkStrike: startBlinkStrike,
@@ -150,45 +151,6 @@ export function startSpecialMove(state) {
 }
 
 
-
-export function startFireStomper(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'fireStomper')) return;
-
-    state.jumpState.isFireStomper = true;
-    state.jumpState.fireStomperDuration = JUMP_DURATIONS.fireStomper;
-    state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
-    initiateJump(state, JUMP_DURATIONS.fireStomper, 'groundPound'); // Use regular ground pound sound for now
-
-    // Mark all active obstacles for the new flip-and-crumble animation
-    let now = performance.now();
-    const timeIncrement = 0.0001;
-
-    const allObstacles = [
-        ...(state.currentObstacle ? [state.currentObstacle] : []),
-        ...state.ignitedObstacles,
-        ...state.vanishingObstacles
-    ];
-
-    allObstacles.forEach(ob => {
-        state.flippingObstacles.push({
-            ...ob,
-            animationProgress: 0,
-            startTime: now,
-            animationType: 'flip-and-crumble'
-        });
-        now += timeIncrement;
-    });
-
-    if (state.currentObstacle) {
-        state.playerStats.obstaclesDestroyed++; // Or a more specific counter
-        state.currentObstacle = null;
-    }
-    state.ignitedObstacles.length = 0;
-    state.vanishingObstacles.length = 0;
-
-    console.log("-> startFireStomper: Fire Stomper initiated. All obstacles marked for destruction!");
-}
 
 export function startCartoonScramble(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;

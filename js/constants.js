@@ -116,7 +116,6 @@ export const ENERGY_SETTINGS = {
     ENERGY_COSTS: {
         default: 10,
         specialMove: 20,
-        fireStomper: 35,
         cartoonScramble: 30,
         moonwalk: 10,
         shockwave: 25,

@@ -15,7 +15,6 @@ import { togglePauseGame, handleExitOrReset } from './game-controller.js';
 import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
-    startFireStomper, 
     castFireball, startMoonwalk, 
     startBackflip, startFrontflip, 
     startCartoonScramble, startShockwave,
