@@ -19,6 +19,7 @@ import { reaperDroneSkill } from './skills/reaperDrone.js';
 import { echoSlamSkill } from './skills/echoSlam.js';
 import { fireStomperSkill } from './skills/fireStomper.js';
 import { specialMoveSkill } from './skills/specialMove.js';
+import { blinkStrikeSkill } from './skills/blinkStrike.js';
 
 const skillActionMap = {
     firestorm: (state) => firestormSkill.activate(state),
@@ -27,7 +28,7 @@ const skillActionMap = {
     fireStomper: (state) => fireStomperSkill.activate(state),
     mageSpinner: (state) => mageSpinnerSkill.activate(state),
     fieryHoudini: (state) => fieryHoudiniSkill.activate(state),
-    blinkStrike: startBlinkStrike,
+    blinkStrike: (state) => blinkStrikeSkill.activate(state),
     jetstreamDash: startJetstreamDash,
     echoSlam: (state) => echoSlamSkill.activate(state),
     fireballRoll: (state) => fireballRollSkill.activate(state),

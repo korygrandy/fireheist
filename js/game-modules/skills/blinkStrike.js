@@ -1,12 +1,16 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS, STICK_FIGURE_FIXED_X, GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../../constants.js';
+import { JUMP_DURATIONS, STICK_FIGURE_FIXED_X, GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT } from '../../constants.js';
 import { consumeEnergy, initiateJump, setScreenFlash } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
 import { createShatterEffect } from '../drawing/effects.js';
 
 export const blinkStrikeSkill = {
+    config: {
+        name: 'blinkStrike',
+        energyCost: 40,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'blinkStrike')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         state.jumpState.isBlinkStrike = true;
         state.jumpState.blinkStrikeDuration = JUMP_DURATIONS.blinkStrike;

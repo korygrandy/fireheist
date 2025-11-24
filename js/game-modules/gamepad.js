@@ -16,9 +16,9 @@ import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
     castFireball, 
-    startBlinkStrike, startJetstreamDash,
     handleSpecialMove
 } from './actions.js';
+import { blinkStrikeSkill } from './skills/blinkStrike.js';
 import { jetPackSkill } from './skills/jetPack.js';
 import { houdiniSkill } from './skills/houdini.js';
 import { frontflipSkill } from './skills/frontflip.js';
