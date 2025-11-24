@@ -92,19 +92,8 @@ import {
     handleExitOrReset,
     resetGameState
 } from './game-modules/game-controller.js';
-import {
-    startManualJump,
-    startHurdle,
-    startShockwave,
-    startBackflip,
-    startFrontflip,
-    startHoudini,
-    startJetPack,
-    castFireball,
-    handleSpecialMove,
-    startBlinkStrike,
-    startJetstreamDash
-} from './game-modules/actions.js';
+import { startManualJump, startHurdle, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { shockwaveSkill } from './game-modules/skills/shockwave.js';
 import {
     moonwalkSkill
 } from './game-modules/skills/moonwalk.js';
@@ -785,7 +774,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             e.preventDefault();
 
-            startShockwave(gameState);
+            shockwaveSkill.activate(gameState);
 
         }
 
@@ -990,7 +979,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.touches.length === 5) {
 
 
-            startShockwave(gameState);
+            shockwaveSkill.activate(gameState);
 
 
             return;

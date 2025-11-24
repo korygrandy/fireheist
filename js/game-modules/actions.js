@@ -144,15 +144,6 @@ export function startHurdle(state) {
 
 
 
-export function startShockwave(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'shockwave')) return;
-    state.jumpState.isShockwave = true;
-    state.jumpState.shockwaveDuration = JUMP_DURATIONS.shockwave;
-    initiateJump(state, JUMP_DURATIONS.shockwave);
-    console.log("-> startShockwave: Shockwave initiated.");
-}
-
 export function startBackflip(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'backflip')) return;

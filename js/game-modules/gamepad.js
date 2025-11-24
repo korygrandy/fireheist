@@ -17,10 +17,10 @@ import { playAnimationSound } from '../audio.js';
 import { 
     castFireball, 
     startBackflip, startFrontflip, 
-    startShockwave,
     startJetPack, startHoudini, startBlinkStrike, startJetstreamDash,
     handleSpecialMove
 } from './actions.js';
+import { shockwaveSkill } from './skills/shockwave.js';
 import { cartoonScrambleSkill } from './skills/cartoonScramble.js';
 import { 
     cycleInitialLetter, 
@@ -248,7 +248,7 @@ function updateGamepadState() {
             // 8 is now handled globally
             // 9 is now handled globally
             10: { action: () => cartoonScrambleSkill.activate(gameState), name: 'LSTICK_CLICK_GAME' },
-            11: { action: startShockwave, name: 'RSTICK_CLICK_GAME' }
+            11: { action: () => shockwaveSkill.activate(gameState), name: 'RSTICK_CLICK_GAME' }
         };
 
         let newButtonStates = {};

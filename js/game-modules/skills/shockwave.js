@@ -1,10 +1,14 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 
 export const shockwaveSkill = {
+    config: {
+        name: 'shockwave',
+        energyCost: 25,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'shockwave')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
         state.jumpState.isShockwave = true;
         state.jumpState.shockwaveDuration = JUMP_DURATIONS.shockwave;
         initiateJump(state, JUMP_DURATIONS.shockwave);
