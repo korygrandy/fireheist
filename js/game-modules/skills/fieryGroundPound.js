@@ -5,9 +5,13 @@ import { consumeEnergy, initiateJump, setFieryGroundPound, setFieryGroundPoundDu
 import { createGroundPoundEffect, createFireTrail, createHurdleJumpSpikes } from '../drawing/effects.js';
 
 export const fieryGroundPoundSkill = {
+    config: {
+        name: 'fieryGroundPound',
+        energyCost: 40,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'fieryGroundPound')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         // Trigger the large spike explosion at the start of the move
         const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(state.raceSegments[state.currentSegmentIndex].angleRad);
