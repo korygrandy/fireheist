@@ -66,7 +66,6 @@ export function handleSpecialMove(gameState) {
 
 export function castFireball(state) {
     if (!state.gameRunning || state.isPaused || (!state.isFireMageActive && !state.isMageSpinnerActive)) return;
-    if (!consumeEnergy(state, 'fireballCast', FIREBALL_CAST_ENERGY_COST)) return;
 
     // Correctly calculate player's current Y position based on the ground angle
     const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
