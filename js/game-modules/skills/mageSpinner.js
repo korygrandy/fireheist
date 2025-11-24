@@ -1,5 +1,5 @@
 // js/game-modules/skills/mageSpinner.js
-import { MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
+import { MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { consumeEnergy, setMageSpinnerActive, setMageSpinnerEndTime, setMageSpinnerOnCooldown, setMageSpinnerFireballTimer, incrementMageSpinnerFireballsSpawned, setPlayerEnergy } from '../state-manager.js';
 import { castMageSpinnerFireball } from '../actions.js';
@@ -7,6 +7,10 @@ import { castMageSpinnerFireball } from '../actions.js';
 const COOLDOWN = 15000; // 15 seconds cooldown
 
 export const mageSpinnerSkill = {
+    config: {
+        name: 'mageSpinner',
+        energyCost: 80,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive || state.isMageSpinnerOnCooldown) return;
 
@@ -16,7 +20,7 @@ export const mageSpinnerSkill = {
             return;
         }
 
-        if (!consumeEnergy(state, 'mageSpinner', MAGE_SPINNER_ENERGY_COST)) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         state.isMageSpinnerActive = true;
         state.mageSpinnerEndTime = now + MAGE_SPINNER_DURATION_MS;

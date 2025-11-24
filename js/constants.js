@@ -64,7 +64,6 @@ export const FIREBALL_VELOCITY_PX_MS = 0.8; // Fireball moves faster than obstac
 export const FIREBALL_SIZE = 20; // Size of the fireball for drawing and collision
 
 // Mage Spinner Constants
-export const MAGE_SPINNER_ENERGY_COST = 80; // Higher cost for a powerful skill
 export const MAGE_SPINNER_DURATION_MS = 7000; // Lasts 7 seconds
 export const MAGE_SPINNER_FIREBALL_INTERVAL_MS = 500; // Shoots a fireball every 0.5 seconds
 export const MAGE_SPINNER_FIREBALL_COUNT = 14; // 14 fireballs over the duration
