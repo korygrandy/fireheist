@@ -150,15 +150,6 @@ export function startSpecialMove(state) {
     console.log("-> startSpecialMove: Special Move initiated.");
 }
 
-export function startPhaseDash(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'phaseDash')) return;
-    state.jumpState.isPhaseDash = true;
-    state.jumpState.phaseDashDuration = JUMP_DURATIONS.phaseDash;
-    initiateJump(state, JUMP_DURATIONS.phaseDash);
-    console.log("-> startPhaseDash: Phase Dash initiated.");
-}
-
 export function startHover(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'hover')) return;
