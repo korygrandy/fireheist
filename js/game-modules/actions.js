@@ -150,15 +150,6 @@ export function startSpecialMove(state) {
     console.log("-> startSpecialMove: Special Move initiated.");
 }
 
-export function startCorkscrewSpin(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'corkscrewSpin')) return;
-    state.jumpState.isCorkscrewSpin = true;
-    state.jumpState.corkscrewSpinDuration = JUMP_DURATIONS.corkscrewSpin;
-    initiateJump(state, JUMP_DURATIONS.corkscrewSpin);
-    console.log("-> startCorkscrewSpin: Corkscrew Spin initiated.");
-}
-
 export function startScissorKick(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'scissorKick')) return;

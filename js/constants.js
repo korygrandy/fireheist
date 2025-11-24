@@ -116,7 +116,6 @@ export const ENERGY_SETTINGS = {
     ENERGY_COSTS: {
         default: 10,
         specialMove: 20,
-        corkscrewSpin: 15,
         scissorKick: 15,
         phaseDash: 25,
         hover: 5, // Lower cost, but drains over time
