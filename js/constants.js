@@ -119,7 +119,6 @@ export const ENERGY_SETTINGS = {
         jetstreamDash: 0, // Drains over time
         fireballRoll: 0, // Drains over time
         shotgunBlast: 35,
-        molotovCocktail: 40,
         fireAxe: 30,
         tarzanSwing: 50,
     }
