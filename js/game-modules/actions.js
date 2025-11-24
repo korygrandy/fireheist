@@ -148,15 +148,6 @@ export function startSpecialMove(state) {
     console.log("-> startSpecialMove: Special Move initiated.");
 }
 
-export function startHover(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'hover')) return;
-    state.jumpState.isHover = true;
-    state.jumpState.hoverDuration = JUMP_DURATIONS.hover;
-    initiateJump(state, JUMP_DURATIONS.hover);
-    console.log("-> startHover: Hover initiated.");
-}
-
 export function startGroundPound(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'groundPound')) return;

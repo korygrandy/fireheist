@@ -10,13 +10,14 @@
 import { gameState, setPlayerEnergy } from './state-manager.js';
 import { startSpecialMove, startHurdle, startManualJump } from './actions.js';
 import { phaseDashSkill } from './skills/phaseDash.js';
+import { hoverSkill } from './skills/hover.js';
 import { togglePauseGame, handleExitOrReset } from './game-controller.js';
 import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
     startFireStomper, 
     castFireball, startMoonwalk, 
-    startBackflip, startFrontflip, startGroundPound, startHover, 
+    startBackflip, startFrontflip, startGroundPound, 
     startCartoonScramble, startShockwave,
     startJetPack, startHoudini, startBlinkStrike, startJetstreamDash,
     startEchoSlam,

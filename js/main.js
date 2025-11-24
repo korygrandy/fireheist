@@ -20,7 +20,7 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { spawnEasterEgg } from './game-modules/spawning.js';
@@ -42,6 +42,7 @@ import { diveSkill } from './game-modules/skills/dive.js';
 import { corkscrewSpinSkill } from './game-modules/skills/corkscrewSpin.js';
 import { scissorKickSkill } from './game-modules/skills/scissorKick.js';
 import { phaseDashSkill } from './game-modules/skills/phaseDash.js';
+import { hoverSkill } from './game-modules/skills/hover.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
 import { loadThemeAnchorImage } from './game-modules/assets.js';
 
@@ -766,7 +767,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             e.preventDefault();
 
-            startHover(gameState);
+            hoverSkill.activate(gameState);
 
         }
 
@@ -1044,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         longPressTimer = setTimeout(() => {
 
-            startHover(gameState);
+            hoverSkill.activate(gameState);
 
         }, 500); // 500ms for long press
 

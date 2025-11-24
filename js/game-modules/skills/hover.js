@@ -1,23 +1,24 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 
 export const hoverSkill = {
+    config: {
+        name: 'hover',
+        energyCost: 5,
+    },
+
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'hover')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+
         state.jumpState.isHover = true;
         state.jumpState.hoverDuration = JUMP_DURATIONS.hover;
         initiateJump(state, JUMP_DURATIONS.hover);
-        console.log("-> startHover: Hover initiated.");
+        console.log("-> hoverSkill: Hover initiated.");
     },
 
     update: function(state, deltaTime) {
-        if (state.jumpState.isHover) {
-            state.jumpState.hoverDuration -= deltaTime;
-            if (state.jumpState.hoverDuration <= 0) {
-                state.jumpState.isHover = false;
-            }
-        }
+        // No special update logic for hover
     },
 
     draw: function(ctx, state) {
