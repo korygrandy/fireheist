@@ -142,67 +142,6 @@ export function startHurdle(state) {
     initiateJump(state, JUMP_DURATIONS.hurdle, 'hurdle');
     console.log("-> startHurdle: Hurdle initiated.");
 }
-
-export function startHoudini(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'houdini')) return;
-    state.jumpState.isHoudini = true;
-    state.jumpState.houdiniDuration = 800;
-    state.jumpState.houdiniPhase = 'disappearing';
-
-    // Create the initial poof at the player's location
-    const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
-    createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
-
-    initiateJump(state, 800, 'houdini');
-    console.log("-> startHoudini: Houdini initiated.");
-}
-
-
-
-export function startBlinkStrike(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'blinkStrike')) return;
-
-    state.jumpState.isBlinkStrike = true;
-    state.jumpState.blinkStrikeDuration = JUMP_DURATIONS.blinkStrike;
-    initiateJump(state, JUMP_DURATIONS.blinkStrike);
-
-    // Make player invisible
-    state.playerIsInvisible = true;
-    playAnimationSound('houdini'); // Disappearance sound
-
-    // Teleport and shatter obstacle after a very short delay
-    setTimeout(() => {
-        if (state.currentObstacle) {
-            // Calculate obstacle's ground Y to place player correctly
-            const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
-            const obstacleGroundY = GROUND_Y - state.currentObstacle.x * Math.tan(currentSegment.angleRad);
-            const playerTeleportY = obstacleGroundY - STICK_FIGURE_TOTAL_HEIGHT;
-
-            // Move player to obstacle's X and calculated Y
-            state.stickFigureFixedX = state.currentObstacle.x; // Temporarily move player's X
-            state.stickFigureY = playerTeleportY; // Temporarily move player's Y
-
-            createShatterEffect(state.currentObstacle.x, obstacleGroundY + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT, state.currentObstacle.emoji);
-            state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now(), animationType: 'shatter' });
-            state.currentObstacle = null;
-            state.playerStats.obstaclesIncinerated++; // Count as incinerated for now
-            incrementConsecutiveIncinerations();
-            playAnimationSound('shatter'); // Shatter sound
-        }
-        // Make player visible again after the strike
-        state.playerIsInvisible = false;
-        state.stickFigureFixedX = STICK_FIGURE_FIXED_X; // Reset player X
-        state.stickFigureY = undefined; // Reset player Y
-
-        // Add a screen flash for impact
-        setScreenFlash(0.7, 200, performance.now());
-
-    }, JUMP_DURATIONS.blinkStrike / 2); // Halfway through the jump duration
-
-    console.log("-> startBlinkStrike: Blink Strike initiated.");
-}
     
 
     
