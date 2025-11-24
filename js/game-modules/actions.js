@@ -127,8 +127,7 @@ export function castMageSpinnerFireball(state, targetObstacle) {
 
 export function startManualJump(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    initiateJump(state, state.manualJumpDurationMs);
-    playAnimationSound('manualJump'); // Play sound for manual jump
+    initiateJump(state, state.manualJumpDurationMs, 'manualJump');
     console.log("-> startManualJump: Manual jump initiated.");
 }
 
@@ -136,8 +135,7 @@ export function startHurdle(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     state.jumpState.isHurdle = true;
     state.jumpState.hurdleDuration = JUMP_DURATIONS.hurdle;
-    initiateJump(state, JUMP_DURATIONS.hurdle);
-    playAnimationSound('hurdle'); // Play sound for hurdle
+    initiateJump(state, JUMP_DURATIONS.hurdle, 'hurdle');
     console.log("-> startHurdle: Hurdle initiated.");
 }
 
@@ -165,8 +163,7 @@ export function startGroundPound(state) {
     state.jumpState.isGroundPound = true;
     state.jumpState.groundPoundDuration = JUMP_DURATIONS.groundPound;
     state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
-    initiateJump(state, JUMP_DURATIONS.groundPound);
-    playAnimationSound('groundPound');
+    initiateJump(state, JUMP_DURATIONS.groundPound, 'groundPound');
     console.log("-> startGroundPound: Ground Pound initiated.");
 }
 
@@ -179,8 +176,7 @@ export function startFireStomper(state) {
     state.jumpState.isFireStomper = true;
     state.jumpState.fireStomperDuration = JUMP_DURATIONS.fireStomper;
     state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
-    initiateJump(state, JUMP_DURATIONS.fireStomper);
-    playAnimationSound('groundPound'); // Use regular ground pound sound for now
+    initiateJump(state, JUMP_DURATIONS.fireStomper, 'groundPound'); // Use regular ground pound sound for now
 
     // Mark all active obstacles for the new flip-and-crumble animation
     let now = performance.now();
@@ -217,8 +213,7 @@ export function startCartoonScramble(state) {
     if (!consumeEnergy(state, 'cartoonScramble')) return;
     state.jumpState.isCartoonScramble = true;
     state.jumpState.cartoonScrambleDuration = JUMP_DURATIONS.cartoonScramble;
-    initiateJump(state, JUMP_DURATIONS.cartoonScramble);
-    playAnimationSound('cartoon-running');
+    initiateJump(state, JUMP_DURATIONS.cartoonScramble, 'cartoon-running');
     console.log("-> startCartoonScramble: Cartoon Scramble initiated.");
 }
 
@@ -238,8 +233,7 @@ export function startMoonwalk(state) {
 
     state.jumpState.isMoonwalking = true;
     state.jumpState.moonwalkDuration = JUMP_DURATIONS.moonwalk;
-    initiateJump(state, JUMP_DURATIONS.moonwalk);
-    playAnimationSound('moonwalk'); // Play sound for Moonwalk
+    initiateJump(state, JUMP_DURATIONS.moonwalk, 'moonwalk'); // Play sound for Moonwalk
     console.log("-> startMoonwalk: Moonwalk initiated.");
 }
 
@@ -281,8 +275,7 @@ export function startHoudini(state) {
     const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
     createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
 
-    initiateJump(state, 800);
-    playAnimationSound('houdini');
+    initiateJump(state, 800, 'houdini');
     console.log("-> startHoudini: Houdini initiated.");
 }
 
@@ -328,8 +321,7 @@ export function startJetPack(state) {
 
     state.jumpState.isJetPack = true;
     state.jumpState.jetPackDuration = 800; // A longer duration for a dramatic effect
-    initiateJump(state, 800);
-    playAnimationSound('jetPack'); // Play sound for Jet Pack
+    initiateJump(state, 800, 'jetPack'); // Play sound for Jet Pack
     console.log("-> startJetPack: Jet Pack initiated.");
 }
 

@@ -2,6 +2,7 @@ import state from './state.js';
 import { ENERGY_SETTINGS } from '../constants.js';
 import { SKILL_UPGRADE_PATHS } from './skill-upgrades.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
+import { playAnimationSound } from '../audio.js';
 
 export const GRASS_ANIMATION_INTERVAL_MS = 100;
 
@@ -52,7 +53,7 @@ export function getSkillModifiedValue(baseValue, skillKey, upgradeEffects, state
                 modifiedValue /= (1 - effect.value);
             } else if (effect.type === 'additive') {
                 modifiedValue += effect.value; // e.g., value: 1 for 1 second increase
-            }
+            } 
         }
     }
 
@@ -63,15 +64,16 @@ export function getSkillModifiedValue(baseValue, skillKey, upgradeEffects, state
  * Initiates a jump for the stick figure with a specified duration.
  * @param {object} state - The current game state.
  * @param {number} duration - The duration of the jump in milliseconds.
+ * @param {string} [soundName] - Optional name of the sound to play.
  */
-export function initiateJump(state, duration) {
+export function initiateJump(state, duration, soundName) {
     state.manualJumpOverride.duration = duration;
     state.jumpState.isJumping = true;
     state.jumpState.progress = 0;
     state.manualJumpOverride.isActive = true;
     state.manualJumpOverride.startTime = Date.now();
+    playAnimationSound(soundName || 'hurdle'); // Play specified sound or default
 }
-
 /**
  * =================================================================
  * STATE MUTATION FUNCTIONS
