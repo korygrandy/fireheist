@@ -39,9 +39,9 @@ export const reaperDroneSkill = {
             const playerHeadY = playerGroundY - STICK_FIGURE_TOTAL_HEIGHT;
             
             const droneX = STICK_FIGURE_FIXED_X - 50;
-            const droneY = playerHeadY - 70; // Position above head
-            const droneWidth = 100; // Example size
-            const droneHeight = 100; // Example size
+            const droneY = playerHeadY - 120; // Position 50 pixels higher
+            const droneWidth = 50; // Half size
+            const droneHeight = 50; // Half size
 
             ctx.drawImage(droneImage, droneX, droneY, droneWidth, droneHeight);
         }
