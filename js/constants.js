@@ -115,7 +115,6 @@ export const ENERGY_SETTINGS = {
     HOVER_DRAIN_RATE: 5, // Energy points per second for hover
     ENERGY_COSTS: {
         default: 10,
-        backflip: 10,
         frontflip: 10,
         houdini: 30,
         jetPack: 50,
@@ -156,7 +155,7 @@ export const DIFFICULTY_SETTINGS = {
     },
     'Pro': { // Formerly Hard
         COLLISION_RANGE_X: 50,
-        manualJumpHeight: 60,
+        manualJumpHeight: 90,
         manualJumpDurationMs: 450,
         ACCELERATOR_FREQUENCY_PERCENT: 10, // Less frequent
         energyRegenMultiplier: 0.5,
