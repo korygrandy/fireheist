@@ -117,7 +117,6 @@ export const ENERGY_SETTINGS = {
         default: 10,
         firestorm: 0, // No initial cost, drains over time
         fireMage: 25,
-        fireballCast: 10,
         fireSpinner: 0, // No initial cost, drains over time
         mageSpinner: MAGE_SPINNER_ENERGY_COST,
         fieryHoudini: FIERY_HOUDINI_ENERGY_COST,
