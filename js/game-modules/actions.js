@@ -150,15 +150,6 @@ export function startSpecialMove(state) {
     console.log("-> startSpecialMove: Special Move initiated.");
 }
 
-export function startScissorKick(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'scissorKick')) return;
-    state.jumpState.isScissorKick = true;
-    state.jumpState.scissorKickDuration = JUMP_DURATIONS.scissorKick;
-    initiateJump(state, JUMP_DURATIONS.scissorKick);
-    console.log("-> startScissorKick: Scissor Kick initiated.");
-}
-
 export function startPhaseDash(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'phaseDash')) return;

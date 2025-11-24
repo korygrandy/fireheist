@@ -20,7 +20,7 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { spawnEasterEgg } from './game-modules/spawning.js';
@@ -40,6 +40,7 @@ import { sixShooterPistolSkill } from './game-modules/skills/sixShooterPistol.js
 import { fireAxeSkill } from './game-modules/skills/fireAxe.js';
 import { diveSkill } from './game-modules/skills/dive.js';
 import { corkscrewSpinSkill } from './game-modules/skills/corkscrewSpin.js';
+import { scissorKickSkill } from './game-modules/skills/scissorKick.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
 import { loadThemeAnchorImage } from './game-modules/assets.js';
 
@@ -748,7 +749,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             e.preventDefault();
 
-            startScissorKick(gameState);
+            scissorKickSkill.activate(gameState);
 
         }
 
