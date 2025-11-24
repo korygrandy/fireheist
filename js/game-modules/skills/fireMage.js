@@ -1,11 +1,15 @@
 // js/game-modules/skills/fireMage.js
-import { FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
+import { FIRE_MAGE_DURATION_MS, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { consumeEnergy, setFireMageActive, setFireMageEndTime, setFireMageOnCooldown } from '../state-manager.js';
 
 const COOLDOWN = 10000; // Cooldown of 10 seconds
 
 export const fireMageSkill = {
+    config: {
+        name: 'fireMage',
+        energyCost: 60,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.isPaused || state.isFireMageActive || state.isFireMageOnCooldown) return;
 
@@ -15,7 +19,7 @@ export const fireMageSkill = {
             return;
         }
 
-        if (!consumeEnergy(state, 'fireMage', FIRE_MAGE_ENERGY_COST)) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         setFireMageActive(true);
         setFireMageEndTime(now + FIRE_MAGE_DURATION_MS);

@@ -59,9 +59,7 @@ export const DECELERATOR_BASE_SPEED_DEBUFF = 0.5; // 0.5x speed debuff
 export const DECELERATOR_DURATION_MS = 2500; // Debuff lasts 2.5 seconds
 
 // Fire Mage Constants
-export const FIRE_MAGE_ENERGY_COST = 60; // Cost to activate Fire Mage mode
 export const FIRE_MAGE_DURATION_MS = 5000; // Fire Mage mode lasts 5 seconds
-export const FIREBALL_CAST_ENERGY_COST = 10; // Cost per fireball while in Fire Mage mode
 export const FIREBALL_VELOCITY_PX_MS = 0.8; // Fireball moves faster than obstacles
 export const FIREBALL_SIZE = 20; // Size of the fireball for drawing and collision
 
