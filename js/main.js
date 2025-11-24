@@ -21,6 +21,7 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
 import { startManualJump, startHurdle, startSpecialMove, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
+import { diveSkill } from './game-modules/skills/dive.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { spawnEasterEgg } from './game-modules/spawning.js';
