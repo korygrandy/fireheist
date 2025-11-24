@@ -92,7 +92,9 @@ import {
     handleExitOrReset,
     resetGameState
 } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startHoudini, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { frontflipSkill } from './game-modules/skills/frontflip.js';
+import { backflipSkill } from './game-modules/skills/backflip.js';
 import { shockwaveSkill } from './game-modules/skills/shockwave.js';
 import {
     moonwalkSkill
@@ -766,7 +768,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             e.preventDefault();
 
-            startBackflip(gameState);
+            backflipSkill.activate(gameState);
 
         }
 
@@ -1072,7 +1074,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (deltaX > 0) {
 
-                    startBackflip(gameState); // Swipe Right
+                    backflipSkill.activate(gameState); // Swipe Right
 
                 } else {
 
@@ -1088,7 +1090,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 } else {
 
-                    startFrontflip(gameState); // Swipe Up
+                    frontflipSkill.activate(gameState); // Swipe Up
 
                 }
 

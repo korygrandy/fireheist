@@ -142,8 +142,6 @@ export function startHurdle(state) {
     console.log("-> startHurdle: Hurdle initiated.");
 }
 
-
-
 export function startBackflip(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'backflip')) return;
@@ -151,15 +149,6 @@ export function startBackflip(state) {
     state.jumpState.backflipDuration = 500;
     initiateJump(state, 500);
     console.log("-> startBackflip: Backflip initiated.");
-}
-
-export function startFrontflip(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'frontflip')) return;
-    state.jumpState.isFrontflip = true;
-    state.jumpState.frontflipDuration = 500;
-    initiateJump(state, 500);
-    console.log("-> startFrontflip: Frontflip initiated.");
 }
 
 export function startHoudini(state) {

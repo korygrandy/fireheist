@@ -1,10 +1,14 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 
 export const backflipSkill = {
+    config: {
+        name: 'backflip',
+        energyCost: 10,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'backflip')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
         state.jumpState.isBackflip = true;
         state.jumpState.backflipDuration = 500;
         initiateJump(state, 500);

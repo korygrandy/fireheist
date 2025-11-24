@@ -115,7 +115,6 @@ export const ENERGY_SETTINGS = {
     HOVER_DRAIN_RATE: 5, // Energy points per second for hover
     ENERGY_COSTS: {
         default: 10,
-        frontflip: 10,
         houdini: 30,
         jetPack: 50,
         firestorm: 0, // No initial cost, drains over time
@@ -138,7 +137,7 @@ export const DIFFICULTY_SETTINGS = {
     'Rookie': { // Formerly Easy
         COLLISION_RANGE_X: 25,
         manualJumpHeight: 120,
-        manualJumpDurationMs: 350,
+        manualJumpDurationMs: 550,
         ACCELERATOR_FREQUENCY_PERCENT: 50, // More frequent
         energyRegenMultiplier: 2.0,
         maxPlayerEnergy: 200,
@@ -156,7 +155,7 @@ export const DIFFICULTY_SETTINGS = {
     'Pro': { // Formerly Hard
         COLLISION_RANGE_X: 50,
         manualJumpHeight: 90,
-        manualJumpDurationMs: 450,
+        manualJumpDurationMs: 350,
         ACCELERATOR_FREQUENCY_PERCENT: 10, // Less frequent
         energyRegenMultiplier: 0.5,
         maxPlayerEnergy: 50,
@@ -257,7 +256,8 @@ export const ANIMATION_SOUND_MAP = {
     
     export const REAPER_DRONE_COOLDOWN_MS = 4000; // 4 seconds cooldown
     
-    export const defaultDataString = `12/15/2000: 001/01/2001: 5000
+    export const defaultDataString = `12/15/2000: 0
+01/01/2001: 5000
 01/01/2011: 100000
 07/01/2011: 125000
 01/01/2018: 500000
