@@ -92,7 +92,8 @@ import {
     handleExitOrReset,
     resetGameState
 } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startHoudini, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { houdiniSkill } from './game-modules/skills/houdini.js';
 import { frontflipSkill } from './game-modules/skills/frontflip.js';
 import { backflipSkill } from './game-modules/skills/backflip.js';
 import { shockwaveSkill } from './game-modules/skills/shockwave.js';
@@ -808,7 +809,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             e.preventDefault();
 
-            startHoudini(gameState);
+            houdiniSkill.activate(gameState);
 
         }
 
@@ -1003,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (e.touches.length === 3) {
 
-            startHoudini(gameState);
+            houdiniSkill.activate(gameState);
 
             return;
 

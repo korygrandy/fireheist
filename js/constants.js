@@ -115,7 +115,6 @@ export const ENERGY_SETTINGS = {
     HOVER_DRAIN_RATE: 5, // Energy points per second for hover
     ENERGY_COSTS: {
         default: 10,
-        houdini: 30,
         jetPack: 50,
         firestorm: 0, // No initial cost, drains over time
         fireMage: 25,

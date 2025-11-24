@@ -1,12 +1,16 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS, STICK_FIGURE_FIXED_X, GROUND_Y } from '../../constants.js';
+import { JUMP_DURATIONS, STICK_FIGURE_FIXED_X, GROUND_Y } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
 import { createHoudiniPoof } from '../drawing/effects.js';
 
 export const houdiniSkill = {
+    config: {
+        name: 'houdini',
+        energyCost: 30,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'houdini')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
         state.jumpState.isHoudini = true;
         state.jumpState.houdiniDuration = 800;
         state.jumpState.houdiniPhase = 'disappearing';

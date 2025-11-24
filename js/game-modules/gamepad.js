@@ -16,9 +16,10 @@ import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
     castFireball, 
-    startJetPack, startHoudini, startBlinkStrike, startJetstreamDash,
+    startJetPack, startBlinkStrike, startJetstreamDash,
     handleSpecialMove
 } from './actions.js';
+import { houdiniSkill } from './skills/houdini.js';
 import { frontflipSkill } from './skills/frontflip.js';
 import { backflipSkill } from './skills/backflip.js';
 import { shockwaveSkill } from './skills/shockwave.js';
@@ -244,7 +245,7 @@ function updateGamepadState() {
             3: { action: () => firestormSkill.activate(gameState), name: 'Y_BUTTON_GAME' }, // Dedicated skill
             4: { action: () => backflipSkill.activate(gameState), name: 'LB_BUTTON_GAME' },
             5: { action: () => frontflipSkill.activate(gameState), name: 'RB_BUTTON_GAME' },
-            6: { action: startHoudini, name: 'LT_BUTTON_GAME' },
+            6: { action: () => houdiniSkill.activate(gameState), name: 'LT_BUTTON_GAME' },
             7: { action: () => fieryGroundPoundSkill.activate(gameState), name: 'RT_BUTTON_GAME' },
             // 8 is now handled globally
             // 9 is now handled globally

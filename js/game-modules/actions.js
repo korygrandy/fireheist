@@ -142,28 +142,13 @@ export function startHurdle(state) {
     console.log("-> startHurdle: Hurdle initiated.");
 }
 
-export function startBackflip(state) {
+export function startFrontflip(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'backflip')) return;
-    state.jumpState.isBackflip = true;
-    state.jumpState.backflipDuration = 500;
+    if (!consumeEnergy(state, 'frontflip')) return;
+    state.jumpState.isFrontflip = true;
+    state.jumpState.frontflipDuration = 500;
     initiateJump(state, 500);
-    console.log("-> startBackflip: Backflip initiated.");
-}
-
-export function startHoudini(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'houdini')) return;
-    state.jumpState.isHoudini = true;
-    state.jumpState.houdiniDuration = 800;
-    state.jumpState.houdiniPhase = 'disappearing';
-
-    // Create the initial poof at the player's location
-    const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
-    createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
-
-    initiateJump(state, 800, 'houdini');
-    console.log("-> startHoudini: Houdini initiated.");
+    console.log("-> startFrontflip: Frontflip initiated.");
 }
 
 
