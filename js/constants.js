@@ -116,7 +116,6 @@ export const ENERGY_SETTINGS = {
     ENERGY_COSTS: {
         default: 10,
         specialMove: 20,
-        groundPound: 20,
         fieryGroundPound: 40,
         fireStomper: 35,
         cartoonScramble: 30,

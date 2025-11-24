@@ -148,16 +148,6 @@ export function startSpecialMove(state) {
     console.log("-> startSpecialMove: Special Move initiated.");
 }
 
-export function startGroundPound(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'groundPound')) return;
-    state.jumpState.isGroundPound = true;
-    state.jumpState.groundPoundDuration = JUMP_DURATIONS.groundPound;
-    state.jumpState.groundPoundEffectTriggered = false; // Reset the trigger flag
-    initiateJump(state, JUMP_DURATIONS.groundPound, 'groundPound');
-    console.log("-> startGroundPound: Ground Pound initiated.");
-}
-
 
 
 export function startFireStomper(state) {

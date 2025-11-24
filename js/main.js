@@ -20,7 +20,8 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
+import { groundPoundSkill } from './game-modules/skills/groundPound.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { spawnEasterEgg } from './game-modules/spawning.js';
@@ -771,13 +772,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyG' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyG' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            startGroundPound(gameState);
+                    groundPoundSkill.activate(gameState);
 
-        }
+                }
 
                 if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
 
@@ -1107,19 +1108,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 }
 
-            } else { // Vertical swipe
+                        } else { // Vertical swipe
 
-                if (deltaY > 0) {
+                            if (deltaY > 0) {
 
-                    startGroundPound(gameState); // Swipe Down
+                                groundPoundSkill.activate(gameState); // Swipe Down
 
-                } else {
+                            } else {
 
-                    startFrontflip(gameState); // Swipe Up
+                                startFrontflip(gameState); // Swipe Up
 
-                }
+                            }
 
-            }
+                        }
 
         } else { // It's a tap
 

@@ -17,7 +17,7 @@ import { playAnimationSound } from '../audio.js';
 import { 
     startFireStomper, 
     castFireball, startMoonwalk, 
-    startBackflip, startFrontflip, startGroundPound, 
+    startBackflip, startFrontflip, 
     startCartoonScramble, startShockwave,
     startJetPack, startHoudini, startBlinkStrike, startJetstreamDash,
     startEchoSlam,
