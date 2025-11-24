@@ -265,13 +265,15 @@ export const ANIMATION_SOUND_MAP = {
     'submit-chime': 'fx/submit-chime.mp3',
     'ignited-flame': 'fx/ignited-flame.mp3',
     'six-shooter-firing': 'fx/six-shooter-firing.mp3',
-    'six-shooter-reload': 'fx/six-shooter-reload.mp3',
-    'tarzanSwing': 'fx/tarzan.mp3'
-    // Other animations will be added here
-};
-
-export const defaultDataString = `12/15/2000: 0
-01/01/2001: 5000
+        'six-shooter-reload': 'fx/six-shooter-reload.mp3',
+        'tarzanSwing': 'fx/tarzan.mp3',
+        'reaperDroneCooldown': 'fx/beep.mp3', // Placeholder sound for cooldown
+        // Other animations will be added here
+    };
+    
+    export const REAPER_DRONE_COOLDOWN_MS = 4000; // 4 seconds cooldown
+    
+    export const defaultDataString = `12/15/2000: 001/01/2001: 5000
 01/01/2011: 100000
 07/01/2011: 125000
 01/01/2018: 500000

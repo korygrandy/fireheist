@@ -1,14 +1,23 @@
 import { STICK_FIGURE_FIXED_X, GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 
 let droneImage = null; // To hold the loaded SVG image
+const FADE_IN_DURATION = 200; // Milliseconds for the drone to fade in
+const COOLDOWN = 4000; // 4 seconds in milliseconds
 
 export const reaperDroneSkill = {
     activate(state) {
         const droneState = state.reaperDroneState;
-        if (droneState.isActive) return;
+        const now = performance.now();
+
+        if (droneState.isActive || now < droneState.cooldownEndTime) {
+            console.log(`Reaper Drone activation failed. Active: ${droneState.isActive}, Cooldown remaining: ${Math.max(0, droneState.cooldownEndTime - now).toFixed(0)}ms`);
+            return;
+        }
         
         console.log("Reaper Drone Activated (UI Only)");
         droneState.isActive = true;
+        droneState.spawnTime = now; // Record activation time
+        droneState.cooldownEndTime = now + COOLDOWN;
     },
 
     update(state, deltaTime) {
@@ -38,12 +47,19 @@ export const reaperDroneSkill = {
             const playerGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentSegment.angleRad);
             const playerHeadY = playerGroundY - STICK_FIGURE_TOTAL_HEIGHT;
             
-            const droneX = STICK_FIGURE_FIXED_X - 50;
-            const droneY = playerHeadY - 120; // Position 50 pixels higher
-            const droneWidth = 50; // Half size
-            const droneHeight = 50; // Half size
+            const droneX = STICK_FIGURE_FIXED_X - 100;
+            const droneY = playerHeadY - 120;
+            const droneWidth = 50;
+            const droneHeight = 50;
 
+            // Calculate fade-in opacity
+            const elapsedTime = performance.now() - droneState.spawnTime;
+            const opacity = Math.min(1, elapsedTime / FADE_IN_DURATION);
+            
+            ctx.save();
+            ctx.globalAlpha = opacity;
             ctx.drawImage(droneImage, droneX, droneY, droneWidth, droneHeight);
+            ctx.restore();
         }
     }
 };

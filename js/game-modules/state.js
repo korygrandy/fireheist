@@ -110,7 +110,8 @@ const state = {
     },
 
     reaperDroneState: {
-        isActive: false
+        isActive: false,
+        cooldownEndTime: 0
     },
 
     // Six Shooter Pistol State
