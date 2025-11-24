@@ -16,9 +16,10 @@ import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
 import { 
     castFireball, 
-    startJetPack, startBlinkStrike, startJetstreamDash,
+    startBlinkStrike, startJetstreamDash,
     handleSpecialMove
 } from './actions.js';
+import { jetPackSkill } from './skills/jetPack.js';
 import { houdiniSkill } from './skills/houdini.js';
 import { frontflipSkill } from './skills/frontflip.js';
 import { backflipSkill } from './skills/backflip.js';
@@ -241,7 +242,7 @@ function updateGamepadState() {
         const buttonMap = {
             0: { action: startManualJump, name: 'A_BUTTON_GAME' },
             1: { action: handleSpecialMove, name: 'B_BUTTON_GAME' }, // Armory skill
-            2: { action: startJetPack, name: 'X_BUTTON_GAME' }, // Dedicated skill
+            2: { action: () => jetPackSkill.activate(gameState), name: 'X_BUTTON_GAME' }, // Dedicated skill
             3: { action: () => firestormSkill.activate(gameState), name: 'Y_BUTTON_GAME' }, // Dedicated skill
             4: { action: () => backflipSkill.activate(gameState), name: 'LB_BUTTON_GAME' },
             5: { action: () => frontflipSkill.activate(gameState), name: 'RB_BUTTON_GAME' },

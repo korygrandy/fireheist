@@ -92,7 +92,8 @@ import {
     handleExitOrReset,
     resetGameState
 } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { startManualJump, startHurdle, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { jetPackSkill } from './game-modules/skills/jetPack.js';
 import { houdiniSkill } from './game-modules/skills/houdini.js';
 import { frontflipSkill } from './game-modules/skills/frontflip.js';
 import { backflipSkill } from './game-modules/skills/backflip.js';
@@ -818,7 +819,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             e.preventDefault();
 
-            startJetPack(gameState);
+            jetPackSkill.activate(gameState);
 
         }
 

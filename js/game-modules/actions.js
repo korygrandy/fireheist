@@ -142,60 +142,22 @@ export function startHurdle(state) {
     console.log("-> startHurdle: Hurdle initiated.");
 }
 
-export function startFrontflip(state) {
+export function startHoudini(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'frontflip')) return;
-    state.jumpState.isFrontflip = true;
-    state.jumpState.frontflipDuration = 500;
-    initiateJump(state, 500);
-    console.log("-> startFrontflip: Frontflip initiated.");
+    if (!consumeEnergy(state, 'houdini')) return;
+    state.jumpState.isHoudini = true;
+    state.jumpState.houdiniDuration = 800;
+    state.jumpState.houdiniPhase = 'disappearing';
+
+    // Create the initial poof at the player's location
+    const playerY = GROUND_Y - state.jumpState.progress * 200; // Approximate player Y
+    createHoudiniPoof(STICK_FIGURE_FIXED_X, playerY - 50);
+
+    initiateJump(state, 800, 'houdini');
+    console.log("-> startHoudini: Houdini initiated.");
 }
 
 
-
-export function startJetPack(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'jetPack')) return;
-
-    const skillLevel = state.playerStats.skillLevels.jetPack || 1;
-
-    if (skillLevel === 1) {
-        if (state.currentObstacle) {
-            createJetPackEffect(state.currentObstacle, skillLevel);
-            state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now() });
-            state.currentObstacle = null;
-            state.playerStats.obstaclesIncinerated++;
-            incrementConsecutiveIncinerations();
-        }
-    } else if (skillLevel === 2) {
-        const obstaclesToIncinerate = [state.currentObstacle, ...state.ignitedObstacles, ...state.vanishingObstacles].filter(Boolean).slice(0, 2);
-        obstaclesToIncinerate.forEach(ob => {
-            createJetPackEffect(ob, skillLevel);
-            state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: performance.now() });
-            state.playerStats.obstaclesIncinerated++;
-            incrementConsecutiveIncinerations();
-        });
-        if (obstaclesToIncinerate.includes(state.currentObstacle)) state.currentObstacle = null;
-        state.ignitedObstacles = state.ignitedObstacles.filter(ob => !obstaclesToIncinerate.includes(ob));
-        state.vanishingObstacles = state.vanishingObstacles.filter(ob => !obstaclesToIncinerate.includes(ob));
-    } else if (skillLevel >= 3) {
-        const allObstacles = [state.currentObstacle, ...state.ignitedObstacles, ...state.vanishingObstacles].filter(Boolean);
-        allObstacles.forEach(ob => {
-            createJetPackEffect(ob, skillLevel);
-            state.incineratingObstacles.push({ ...ob, animationProgress: 0, startTime: performance.now() });
-            state.playerStats.obstaclesIncinerated++;
-            incrementConsecutiveIncinerations();
-        });
-        state.currentObstacle = null;
-        state.ignitedObstacles = [];
-        state.vanishingObstacles = [];
-    }
-
-    state.jumpState.isJetPack = true;
-    state.jumpState.jetPackDuration = 800; // A longer duration for a dramatic effect
-    initiateJump(state, 800, 'jetPack'); // Play sound for Jet Pack
-    console.log("-> startJetPack: Jet Pack initiated.");
-}
 
 export function startBlinkStrike(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;

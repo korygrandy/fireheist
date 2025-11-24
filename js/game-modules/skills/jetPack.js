@@ -4,9 +4,13 @@ import { playAnimationSound } from '../../audio.js';
 import { createJetPackEffect } from '../drawing/effects.js';
 
 export const jetPackSkill = {
+    config: {
+        name: 'jetPack',
+        energyCost: 50,
+    },
     activate(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'jetPack')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         const skillLevel = state.playerStats.skillLevels.jetPack || 1;
 
