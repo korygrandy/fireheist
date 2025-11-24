@@ -1,10 +1,14 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 
 export const specialMoveSkill = {
+    config: {
+        name: 'specialMove',
+        energyCost: 20,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'specialMove')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
         state.jumpState.isSpecialMove = true;
         state.jumpState.specialMoveDuration = JUMP_DURATIONS.specialMove;
         initiateJump(state, JUMP_DURATIONS.specialMove);

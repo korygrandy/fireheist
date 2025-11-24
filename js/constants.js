@@ -115,7 +115,6 @@ export const ENERGY_SETTINGS = {
     HOVER_DRAIN_RATE: 5, // Energy points per second for hover
     ENERGY_COSTS: {
         default: 10,
-        specialMove: 20,
         moonwalk: 10,
         shockwave: 25,
         backflip: 10,

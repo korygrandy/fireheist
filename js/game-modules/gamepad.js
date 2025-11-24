@@ -8,7 +8,7 @@
  */
 
 import { gameState, setPlayerEnergy } from './state-manager.js';
-import { startSpecialMove, startHurdle, startManualJump } from './actions.js';
+import { startHurdle, startManualJump } from './actions.js';
 import { phaseDashSkill } from './skills/phaseDash.js';
 import { hoverSkill } from './skills/hover.js';
 import { togglePauseGame, handleExitOrReset } from './game-controller.js';

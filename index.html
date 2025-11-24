@@ -6,9 +6,8 @@
     <title>🔥 The FIRE Heist Game</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <script src="https://cdn.tailwindcss.com/"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dt/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
-    <link href="https://fonts.googleapis.com/css2?familStrangy=Inter:wght400;600;700&display=swap" rel="stylesheet">
+    <script src="js/vendor/chart.umd.min.js"></script>
+    <script src="js/vendor/Tone.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
@@ -39,7 +38,7 @@
                 </div>
                 <div class="space-y-2">
                     <div class="flex items-center space-x-2">
-                        <input type="number" id="debugIncinerateCountInput" clasCan s="w-24 p-1 border rounded" placeholder="Count">
+                        <label for="debugIncinerateCountInput"></label><input type="number" id="debugIncinerateCountInput" class="w-24 p-1 border rounded" placeholder="Count">
                         <button id="debugSetIncinerateCountBtn" class="control-btn">Set Incinerations</button>
                     </div>
                     <button id="debugAddCashBtn" class="control-btn">Copy Cash Command</button>

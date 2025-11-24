@@ -18,6 +18,7 @@ import { tarzanSkill } from './skills/tarzan.js';
 import { reaperDroneSkill } from './skills/reaperDrone.js';
 import { echoSlamSkill } from './skills/echoSlam.js';
 import { fireStomperSkill } from './skills/fireStomper.js';
+import { specialMoveSkill } from './skills/specialMove.js';
 
 const skillActionMap = {
     firestorm: (state) => firestormSkill.activate(state),
@@ -139,15 +140,6 @@ export function startHurdle(state) {
     state.jumpState.hurdleDuration = JUMP_DURATIONS.hurdle;
     initiateJump(state, JUMP_DURATIONS.hurdle, 'hurdle');
     console.log("-> startHurdle: Hurdle initiated.");
-}
-
-export function startSpecialMove(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'specialMove')) return;
-    state.jumpState.isSpecialMove = true;
-    state.jumpState.specialMoveDuration = JUMP_DURATIONS.specialMove;
-    initiateJump(state, JUMP_DURATIONS.specialMove);
-    console.log("-> startSpecialMove: Special Move initiated.");
 }
 
 
