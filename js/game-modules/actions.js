@@ -152,15 +152,6 @@ export function startSpecialMove(state) {
 
 
 
-export function startCartoonScramble(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'cartoonScramble')) return;
-    state.jumpState.isCartoonScramble = true;
-    state.jumpState.cartoonScrambleDuration = JUMP_DURATIONS.cartoonScramble;
-    initiateJump(state, JUMP_DURATIONS.cartoonScramble, 'cartoon-running');
-    console.log("-> startCartoonScramble: Cartoon Scramble initiated.");
-}
-
 export function startMoonwalk(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'moonwalk')) return;

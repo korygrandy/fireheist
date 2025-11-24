@@ -20,7 +20,8 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
+import { cartoonScrambleSkill } from './game-modules/skills/cartoonScramble.js';
 import { groundPoundSkill } from './game-modules/skills/groundPound.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
@@ -805,13 +806,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                                 }
 
-        if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            startCartoonScramble(gameState);
+                    cartoonScrambleSkill.activate(gameState);
 
-        }
+                }
 
         if (e.code === 'KeyF' && gameState.gameRunning && !gameState.isPaused) {
 
@@ -1007,23 +1008,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-        // Multi-finger taps
+                // Multi-finger taps
 
-        if (e.touches.length === 5) {
 
-            startShockwave(gameState);
 
-            return;
+                if (e.touches.length === 5) {
 
-        }
 
-        if (e.touches.length === 4) {
 
-            startCartoonScramble(gameState);
+                    startShockwave(gameState);
 
-            return;
 
-        }
+
+                    return;
+
+
+
+                }
+
+
+
+                if (e.touches.length === 4) {
+
+
+
+                    cartoonScrambleSkill.activate(gameState);
+
+
+
+                    return;
+
+
+
+                }
 
         if (e.touches.length === 3) {
 
