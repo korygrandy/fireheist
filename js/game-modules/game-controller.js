@@ -86,6 +86,7 @@ import { markDailyChallengeAsPlayed, updateDailyChallengeWinStreak } from '../da
 import { animate } from './lifecycle.js';
 import { updateArmoryCashDisplay } from '../ui-modules/armory.js';
 import { loadThemeAnchorImage } from './assets.js';
+import { fireMageSkill } from './skills/fireMage.js';
 
 export function togglePauseGame() {
     if (!gameState.gameRunning) return;
@@ -183,6 +184,7 @@ export function resetGameState() {
     setFireMageActive(false);
     setFireMageEndTime(0);
     setFireMageOnCooldown(false);
+    fireMageSkill.reset(gameState);
     resetStreaks();
 
     gameState.activeCustomEvents = Object.values(gameState.customEvents).flat().map(event => ({

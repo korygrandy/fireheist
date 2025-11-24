@@ -52,5 +52,11 @@ export const fireMageSkill = {
             ctx.fill();
             ctx.restore();
         }
+    },
+
+    reset: function(state) {
+        state.fireMageLastActivationTime = 0;
+        setFireMageOnCooldown(false);
+        setFireMageActive(false);
     }
 };
