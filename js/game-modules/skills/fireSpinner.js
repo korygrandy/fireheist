@@ -3,6 +3,8 @@ import { getSkillModifiedValue, initiateJump, setFireSpinner, setFireSpinnerDura
 import { fireSpinnerUpgradeEffects } from '../skill-upgrades.js';
 import { JUMP_DURATIONS, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 
+const COOLDOWN = 30000; // 30 seconds cooldown
+
 // Fire Spinner Skill Module
 export const fireSpinnerSkill = {
     activate: function(state) {
@@ -13,7 +15,7 @@ export const fireSpinnerSkill = {
         }
 
         const now = Date.now();
-        if (now - state.fireSpinnerLastActivationTime < state.fireSpinnerCooldown) {
+        if (now - state.fireSpinnerLastActivationTime < COOLDOWN) {
             console.log("-> fireSpinnerSkill.activate: Fire Spinner is on cooldown.");
             return;
         }
@@ -55,7 +57,7 @@ export const fireSpinnerSkill = {
 
         if (gameState.isFireSpinnerOnCooldown) {
             const now = Date.now();
-            if (now - gameState.fireSpinnerLastActivationTime > gameState.fireSpinnerCooldown) {
+            if (now - gameState.fireSpinnerLastActivationTime > COOLDOWN) {
                 setFireSpinnerOnCooldown(false);
                 console.log("-> FIRE SPINNER: Cooldown finished. Ready.");
             }
@@ -81,5 +83,12 @@ export const fireSpinnerSkill = {
             ctx.fillText('🔥', x, y);
             ctx.restore();
         }
+    },
+
+    reset: function(state) {
+        state.fireSpinnerLastActivationTime = 0;
+        setFireSpinnerOnCooldown(false);
+        setFireSpinner(false);
+        setFireSpinnerDrainingEnergy(false);
     }
 };

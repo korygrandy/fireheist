@@ -89,6 +89,7 @@ import { loadThemeAnchorImage } from './assets.js';
 import { fireMageSkill } from './skills/fireMage.js';
 import { mageSpinnerSkill } from './skills/mageSpinner.js';
 import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
+import { fireSpinnerSkill } from './skills/fireSpinner.js';
 
 export function togglePauseGame() {
     if (!gameState.gameRunning) return;
@@ -166,6 +167,7 @@ export function resetGameState() {
     setFirestormDrainEndTime(0);
     setFireSpinnerDrainingEnergy(false);
     setFireSpinnerDrainEndTime(0);
+    fireSpinnerSkill.reset(gameState);
     setMageSpinnerActive(false);
     setMageSpinnerEndTime(0);
     setMageSpinnerOnCooldown(false);
