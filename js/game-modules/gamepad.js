@@ -16,7 +16,7 @@ import {
     startFireStomper, 
     castFireball, startMoonwalk, startPhaseDash, 
     startBackflip, startFrontflip, startGroundPound, startHover, 
-    startCartoonScramble, startShockwave, startHurdle, startDive,
+    startCartoonScramble, startShockwave, startHurdle,
     startJetPack, startHoudini, startBlinkStrike, startJetstreamDash,
     startEchoSlam,
     handleSpecialMove

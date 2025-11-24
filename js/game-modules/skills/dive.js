@@ -1,26 +1,31 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { createDiveParticle } from '../drawing/effects.js';
 
 export const diveSkill = {
+    config: {
+        name: 'dive',
+        energyCost: 15,
+    },
+
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'dive')) return;
+        if (!consumeEnergy(state, this.config.name)) return;
+
         state.jumpState.isDive = true;
         state.jumpState.diveDuration = JUMP_DURATIONS.dive;
         initiateJump(state, JUMP_DURATIONS.dive);
-        console.log("-> startDive: Dive initiated.");
+        console.log("-> diveSkill: Dive initiated.");
     },
 
     update: function(state, deltaTime) {
         if (state.jumpState.isDive) {
-            state.jumpState.diveDuration -= deltaTime;
-            if (state.jumpState.diveDuration <= 0) {
-                state.jumpState.isDive = false;
-            }
+            // Emit particles during the dive
+            createDiveParticle(state.stickFigureFixedX, state.stickFigureY - STICK_FIGURE_TOTAL_HEIGHT / 2);
         }
     },
 
     draw: function(ctx, state) {
-        // No special drawing for dive
+        // The visual effect is handled by the particle system in update()
     }
 };

@@ -20,7 +20,7 @@ import { displayPersonaLeaderboard } from './persona-leaderboard.js';
 
 import { draw, setInitialLoad } from './game-modules/drawing.js';
 import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, startFireStomper, castFireball, startBlinkStrike, startJetstreamDash, startEchoSlam, handleSpecialMove } from './game-modules/actions.js';
+import { startManualJump, startHurdle, startSpecialMove, startDive, startCorkscrewSpin, startScissorKick, startPhaseDash, startHover, startGroundPound, startCartoonScramble, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove } from './game-modules/actions.js';
 import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
 import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
 import { spawnEasterEgg } from './game-modules/spawning.js';
@@ -38,6 +38,7 @@ import { mageSpinnerSkill } from './game-modules/skills/mageSpinner.js';
 import { fireballRollSkill } from './game-modules/skills/fireballRoll.js';
 import { sixShooterPistolSkill } from './game-modules/skills/sixShooterPistol.js';
 import { fireAxeSkill } from './game-modules/skills/fireAxe.js';
+import { diveSkill } from './game-modules/skills/dive.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
 import { loadThemeAnchorImage } from './game-modules/assets.js';
 
@@ -730,7 +731,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             e.preventDefault();
 
-            startDive(gameState);
+            diveSkill.activate(gameState);
 
         }
 

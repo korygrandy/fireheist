@@ -150,15 +150,6 @@ export function startSpecialMove(state) {
     console.log("-> startSpecialMove: Special Move initiated.");
 }
 
-export function startDive(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'dive')) return;
-    state.jumpState.isDive = true;
-    state.jumpState.diveDuration = JUMP_DURATIONS.dive;
-    initiateJump(state, JUMP_DURATIONS.dive);
-    console.log("-> startDive: Dive initiated.");
-}
-
 export function startCorkscrewSpin(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'corkscrewSpin')) return;
