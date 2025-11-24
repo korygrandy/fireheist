@@ -959,7 +959,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
             for (let i = gameState.phoenixSparks.length - 1; i >= 0; i--) {
+            
+
+            
+        
             
 
             
@@ -967,7 +975,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
                 p.vy += p.gravity;
+            
+
+            
+        
             
 
             
@@ -975,7 +991,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
                 p.y += p.vy;
+            
+
+            
+        
             
 
             
@@ -987,7 +1011,19 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
+        
+            
+
+            
                 if (p.life <= 0) {
+            
+
+            
+        
             
 
             
@@ -995,7 +1031,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
                 } else {
+            
+
+            
+        
             
 
             
@@ -1003,7 +1047,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
                     ctx.globalAlpha = p.life;
+            
+
+            
+        
             
 
             
@@ -1011,7 +1063,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
                     ctx.shadowColor = 'white';
+            
+
+            
+        
             
 
             
@@ -1019,7 +1079,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
                     ctx.beginPath();
+            
+
+            
+        
             
 
             
@@ -1027,7 +1095,15 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
                     ctx.fill();
+            
+
+            
+        
             
 
             
@@ -1035,15 +1111,371 @@ export function drawShotgunBlast() {
             
 
             
+        
+            
+
+            
+                        }
+            
+
+            
+        
+            
+
+            
+                    }
+            
+
+            
+        
+            
+
+            
                 }
             
 
             
-            }
+        
             
 
             
-        }
+                
+            
+
+            
+        
+            
+
+            
+                export function createEchoSlamEffect() {
+            
+
+            
+        
+            
+
+            
+                    const ringCount = 3;
+            
+
+            
+        
+            
+
+            
+                    const ringSpacing = 50;
+            
+
+            
+        
+            
+
+            
+                    const particlePerRing = 50;
+            
+
+            
+        
+            
+
+            
+                
+            
+
+            
+        
+            
+
+            
+                    for (let i = 0; i < ringCount; i++) {
+            
+
+            
+        
+            
+
+            
+                        const radius = (i + 1) * ringSpacing;
+            
+
+            
+        
+            
+
+            
+                        for (let j = 0; j < particlePerRing; j++) {
+            
+
+            
+        
+            
+
+            
+                            const angle = (j / particlePerRing) * Math.PI * 2;
+            
+
+            
+        
+            
+
+            
+                            gameState.echoSlamParticles.push({
+            
+
+            
+        
+            
+
+            
+                                x: STICK_FIGURE_FIXED_X + Math.cos(angle) * radius,
+            
+
+            
+        
+            
+
+            
+                                y: GROUND_Y - STICK_FIGURE_TOTAL_HEIGHT / 2 + Math.sin(angle) * radius,
+            
+
+            
+        
+            
+
+            
+                                life: 1,
+            
+
+            
+        
+            
+
+            
+                                initialRadius: radius,
+            
+
+            
+        
+            
+
+            
+                                angle: angle,
+            
+
+            
+        
+            
+
+            
+                                speed: 1 + i * 0.5,
+            
+
+            
+        
+            
+
+            
+                            });
+            
+
+            
+        
+            
+
+            
+                        }
+            
+
+            
+        
+            
+
+            
+                    }
+            
+
+            
+        
+            
+
+            
+                }
+            
+
+            
+        
+            
+
+            
+                
+            
+
+            
+        
+            
+
+            
+                export function drawEchoSlamParticles() {
+            
+
+            
+        
+            
+
+            
+                    for (let i = gameState.echoSlamParticles.length - 1; i >= 0; i--) {
+            
+
+            
+        
+            
+
+            
+                        const p = gameState.echoSlamParticles[i];
+            
+
+            
+        
+            
+
+            
+                        p.life -= 0.05;
+            
+
+            
+        
+            
+
+            
+                        if (p.life <= 0) {
+            
+
+            
+        
+            
+
+            
+                            gameState.echoSlamParticles.splice(i, 1);
+            
+
+            
+        
+            
+
+            
+                        } else {
+            
+
+            
+        
+            
+
+            
+                            const currentRadius = p.initialRadius + (1 - p.life) * 50;
+            
+
+            
+        
+            
+
+            
+                            p.x = STICK_FIGURE_FIXED_X + Math.cos(p.angle) * currentRadius;
+            
+
+            
+        
+            
+
+            
+                            p.y = GROUND_Y - STICK_FIGURE_TOTAL_HEIGHT / 2 + Math.sin(p.angle) * currentRadius;
+            
+
+            
+        
+            
+
+            
+                
+            
+
+            
+        
+            
+
+            
+                            ctx.save();
+            
+
+            
+        
+            
+
+            
+                            ctx.globalAlpha = p.life;
+            
+
+            
+        
+            
+
+            
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            
+
+            
+        
+            
+
+            
+                            ctx.beginPath();
+            
+
+            
+        
+            
+
+            
+                            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            
+
+            
+        
+            
+
+            
+                            ctx.fill();
+            
+
+            
+        
+            
+
+            
+                            ctx.restore();
+            
+
+            
+        
+            
+
+            
+                        }
+            
+
+            
+        
+            
+
+            
+                    }
+            
+
+            
+        
+            
+
+            
+                }
             
 
             

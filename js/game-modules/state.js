@@ -176,6 +176,7 @@ const state = {
     shotgunParticles: [],
     molotovCocktails: [],
     phoenixSparks: [],
+    echoSlamParticles: [],
     activeImpactSparks: [],
     fireWall: {
         letterParticles: [],

@@ -16,6 +16,7 @@ import { sixShooterPistolSkill } from './skills/sixShooterPistol.js';
 import { fireAxeSkill } from './skills/fireAxe.js';
 import { tarzanSkill } from './skills/tarzan.js';
 import { reaperDroneSkill } from './skills/reaperDrone.js';
+import { echoSlamSkill } from './skills/echoSlam.js';
 
 const skillActionMap = {
     firestorm: (state) => firestormSkill.activate(state),
@@ -26,7 +27,7 @@ const skillActionMap = {
     fieryHoudini: (state) => fieryHoudiniSkill.activate(state),
     blinkStrike: startBlinkStrike,
     jetstreamDash: startJetstreamDash,
-    echoSlam: startEchoSlam,
+    echoSlam: (state) => echoSlamSkill.activate(state),
     fireballRoll: (state) => fireballRollSkill.activate(state),
     shotgunBlast: (state) => shotgunSkill.activate(state),
     molotovCocktail: (state) => molotovSkill.activate(state),
@@ -372,44 +373,6 @@ export function startJetstreamDash(state) {
     initiateJump(state, JUMP_DURATIONS.jetstreamDash);
     playAnimationSound('jetstreamDash'); // Play sound for Jetstream Dash
     console.log("-> startJetstreamDash: Jetstream Dash initiated.");
-}
-
-export function startEchoSlam(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'echoSlam')) return;
-
-    state.jumpState.isEchoSlam = true;
-    state.jumpState.echoSlamDuration = JUMP_DURATIONS.echoSlam;
-    state.jumpState.groundPoundEffectTriggered = false; // Reset for primary effect
-    state.jumpState.echoSlamSecondaryTriggered = false; // Reset for secondary effect
-
-    initiateJump(state, JUMP_DURATIONS.echoSlam);
-    playAnimationSound('groundPound'); // Primary ground pound sound
-
-    // Trigger secondary shockwave after a delay
-    setTimeout(() => {
-        if (state.gameRunning && !state.isPaused) {
-            const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
-            const groundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentSegment.angleRad);
-            const echoX = STICK_FIGURE_FIXED_X + 150; // Position of the echo slam
-
-            // Create a secondary, smaller ground pound effect
-            createGroundPoundEffect(echoX, groundY, 0.5); // Smaller effect, slightly ahead
-            playAnimationSound('shockwave'); // Secondary shockwave sound
-            state.jumpState.echoSlamSecondaryTriggered = true;
-
-            // Check for obstacle collision with the echo
-            if (state.currentObstacle && Math.abs(state.currentObstacle.x - echoX) < 50) {
-                state.incineratingObstacles.push({ ...state.currentObstacle, animationProgress: 0, startTime: performance.now(), animationType: 'shatter' });
-                state.currentObstacle = null;
-                state.playerStats.obstaclesIncinerated++;
-                incrementConsecutiveIncinerations();
-                playAnimationSound('shatter');
-            }
-        }
-    }, JUMP_DURATIONS.echoSlam / 2); // Halfway through the primary effect
-
-    console.log("-> startEchoSlam: Echo Slam initiated.");
 }
 
 

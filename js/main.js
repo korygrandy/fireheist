@@ -44,6 +44,7 @@ import { corkscrewSpinSkill } from './game-modules/skills/corkscrewSpin.js';
 import { scissorKickSkill } from './game-modules/skills/scissorKick.js';
 import { phaseDashSkill } from './game-modules/skills/phaseDash.js';
 import { hoverSkill } from './game-modules/skills/hover.js';
+import { echoSlamSkill } from './game-modules/skills/echoSlam.js';
 import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
 import { loadThemeAnchorImage } from './game-modules/assets.js';
 
@@ -888,13 +889,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyO' && gameState.gameRunning && !gameState.isPaused) {
+                if (e.code === 'KeyO' && gameState.gameRunning && !gameState.isPaused) {
 
-            e.preventDefault();
+                    e.preventDefault();
 
-            startEchoSlam(gameState);
+                    echoSlamSkill.activate(gameState);
 
-        }
+                }
 
                 if (e.code === 'KeyW' && gameState.gameRunning && !gameState.isPaused) {
 

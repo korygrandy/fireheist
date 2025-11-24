@@ -20,7 +20,6 @@ import {
     startBackflip, startFrontflip, 
     startCartoonScramble, startShockwave,
     startJetPack, startHoudini, startBlinkStrike, startJetstreamDash,
-    startEchoSlam,
     handleSpecialMove
 } from './actions.js';
 import { 

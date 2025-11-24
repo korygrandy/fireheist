@@ -1,12 +1,16 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
 import { createEchoSlamEffect } from '../drawing/effects.js';
 
 export const echoSlamSkill = {
+    config: {
+        name: 'echoSlam',
+        energyCost: 30,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.isPaused || state.jumpState.isJumping) return;
-        if (!consumeEnergy(state, 'echoSlam')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         state.jumpState.isEchoSlam = true;
         state.jumpState.echoSlamDuration = JUMP_DURATIONS.echoSlam;

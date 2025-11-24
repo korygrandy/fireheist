@@ -132,7 +132,6 @@ export const ENERGY_SETTINGS = {
         fieryHoudini: FIERY_HOUDINI_ENERGY_COST,
         blinkStrike: 40,
         jetstreamDash: 0, // Drains over time
-        echoSlam: 30,
         fireballRoll: 0, // Drains over time
         shotgunBlast: 35,
         molotovCocktail: 40,
