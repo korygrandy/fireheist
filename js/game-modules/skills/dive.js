@@ -10,7 +10,7 @@ export const diveSkill = {
 
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, this.config.name)) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         state.jumpState.isDive = true;
         state.jumpState.diveDuration = JUMP_DURATIONS.dive;

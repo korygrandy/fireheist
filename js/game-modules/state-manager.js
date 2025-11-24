@@ -17,10 +17,10 @@ export const gameState = state;
  * @param {string} skillName - The name of the skill to consume energy for.
  * @returns {boolean} - True if energy was consumed, false otherwise.
  */
-export function consumeEnergy(state, skillName) {
-    const energyCost = ENERGY_SETTINGS.ENERGY_COSTS[skillName];
-    if (state.playerEnergy >= energyCost) {
-        state.playerEnergy -= energyCost;
+export function consumeEnergy(state, skillName, energyCost) {
+    const cost = energyCost !== undefined ? energyCost : ENERGY_SETTINGS.ENERGY_COSTS[skillName];
+    if (state.playerEnergy >= cost) {
+        state.playerEnergy -= cost;
         return true;
     }
     return false;
