@@ -1,11 +1,15 @@
-import { JUMP_DURATIONS, ENERGY_SETTINGS } from '../../constants.js';
+import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
 
 export const moonwalkSkill = {
+    config: {
+        name: 'moonwalk',
+        energyCost: 10,
+    },
     activate: function(state) {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, 'moonwalk')) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         const skillLevel = state.playerStats.skillLevels.moonwalk || 1;
 

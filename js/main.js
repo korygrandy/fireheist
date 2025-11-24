@@ -2,52 +2,183 @@
 // MAIN APPLICATION ENTRY POINT
 // =================================================================
 
-import { startButton, stopButton, loadButton, emojiInput, obstacleEmojiInput, frequencyRange, speedSelector, soundToggleButton, skillLevelSelector, disableSaveSettings, enablePowerUps, themeSelector, personaSelector, fullscreenToggleButton, header, controlPanel, mainElement, armoryItemsContainer, armoryNewIndicator } from './dom-elements.js';
+import {
+    startButton,
+    stopButton,
+    loadButton,
+    emojiInput,
+    obstacleEmojiInput,
+    frequencyRange,
+    speedSelector,
+    soundToggleButton,
+    skillLevelSelector,
+    disableSaveSettings,
+    enablePowerUps,
+    themeSelector,
+    personaSelector,
+    fullscreenToggleButton,
+    header,
+    controlPanel,
+    mainElement,
+    armoryItemsContainer,
+    armoryNewIndicator
+} from './dom-elements.js';
 
-import { initializeUIData, loadCustomData } from './ui-modules/data.js';
-import { switchTab, toggleFullScreen, updateControlPanelState } from './ui-modules/ui-helpers.js';
-import { setupSuggestedEmojis, updateEmoji, updateObstacleEmoji, handleFrequencyChange, handleSkillLevelChange, handleSpeedChange, handlePowerUpToggle, handleAutoHurdleToggle, applySkillLevelSettings } from './ui-modules/input-handlers.js';
-import { debugUnlockAllAchievements, debugEndGame, debugCycleDailyTheme } from './ui-modules/debug.js';
-import { savePlayerStats, loadPlayerStats, loadSettings } from './ui-modules/settings.js';
-import { checkForNewUnlocks } from './ui-modules/unlocks.js';
-import { populateThemeSelector, handleThemeChange } from './ui-modules/theme.js';
-import { populatePersonaSelector, handlePersonaChange } from './ui-modules/persona.js';
-import { handleArmorySkillSelection, handleArmorySkillDeselection, populateArmoryItems } from './ui-modules/armory.js';
-import { startDailyChallengeGame, getDailyChallengeResults } from './daily-challenge.js';
-import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from './ui-modules/daily-challenge-ui.js';
-import { displayLeaderboard } from './ui-modules/leaderboard.js';
-import { displayPersonaLeaderboard } from './persona-leaderboard.js';
+import {
+    initializeUIData,
+    loadCustomData
+} from './ui-modules/data.js';
+import {
+    switchTab,
+    toggleFullScreen,
+    updateControlPanelState
+} from './ui-modules/ui-helpers.js';
+import {
+    setupSuggestedEmojis,
+    updateEmoji,
+    updateObstacleEmoji,
+    handleFrequencyChange,
+    handleSkillLevelChange,
+    handleSpeedChange,
+    handlePowerUpToggle
+} from './ui-modules/input-handlers.js';
+import {
+    debugUnlockAllAchievements,
+    debugEndGame,
+    debugCycleDailyTheme
+} from './ui-modules/debug.js';
+import {
+    savePlayerStats,
+    loadPlayerStats,
+    loadSettings
+} from './ui-modules/settings.js';
+import {
+    checkForNewUnlocks
+} from './ui-modules/unlocks.js';
+import {
+    handleThemeChange
+} from './ui-modules/theme.js';
+import {
+    populatePersonaSelector,
+    handlePersonaChange
+} from './ui-modules/persona.js';
+import {
+    handleArmorySkillSelection,
+    handleArmorySkillDeselection,
+    populateArmoryItems
+} from './ui-modules/armory.js';
+import {
+    startDailyChallengeGame,
+    getDailyChallengeResults
+} from './daily-challenge.js';
+import {
+    displayDailyChallenge,
+    displayDailyChallengeCompletedScreen
+} from './ui-modules/daily-challenge-ui.js';
+import {
+    displayLeaderboard
+} from './ui-modules/leaderboard.js';
+import {
+    displayPersonaLeaderboard
+} from './persona-leaderboard.js';
 
-import { draw, setInitialLoad } from './game-modules/drawing.js';
-import { startGame, stopGame, togglePauseGame, handleExitOrReset, resetGameState } from './game-modules/game-controller.js';
-import { startManualJump, startHurdle, startMoonwalk, startShockwave, startBackflip, startFrontflip, startHoudini, startJetPack, castFireball, handleSpecialMove, startBlinkStrike, startJetstreamDash } from './game-modules/actions.js';
-import { cartoonScrambleSkill } from './game-modules/skills/cartoonScramble.js';
-import { groundPoundSkill } from './game-modules/skills/groundPound.js';
-import { startThemeEffect } from './game-modules/drawing/environmental-effects.js';
-import { handleLeaderboardInitialsInput } from './game-modules/drawing/leaderboard-initials.js';
-import { spawnEasterEgg } from './game-modules/spawning.js';
-import { gameState, setObstaclesIncinerated, setPlayerEnergy } from './game-modules/state-manager.js';
-import { toggleSound, loadMuteSetting, preloadGameStartSound, playGameStartSound, preloadAnimationSounds, playAnimationSound, ambientBus, isMuted, preloadCriticalAudio, preloadSecondaryAudio, playAmbientSound, ambientMusic } from './audio.js';
-import { initGamepad, reinitializeUINavigation } from './game-modules/gamepad.js';
-import { molotovSkill } from './game-modules/skills/molotov.js';
-import { shotgunSkill } from './game-modules/skills/shotgun.js';
-import { fieryHoudiniSkill } from './game-modules/skills/fieryHoudini.js';
-import { fireSpinnerSkill } from './game-modules/skills/fireSpinner.js';
-import { firestormSkill } from './game-modules/skills/firestorm.js';
-import { fieryGroundPoundSkill } from './game-modules/skills/fieryGroundPound.js';
-import { fireMageSkill } from './game-modules/skills/fireMage.js';
-import { mageSpinnerSkill } from './game-modules/skills/mageSpinner.js';
-import { fireballRollSkill } from './game-modules/skills/fireballRoll.js';
-import { sixShooterPistolSkill } from './game-modules/skills/sixShooterPistol.js';
-import { fireAxeSkill } from './game-modules/skills/fireAxe.js';
-import { diveSkill } from './game-modules/skills/dive.js';
-import { corkscrewSpinSkill } from './game-modules/skills/corkscrewSpin.js';
-import { scissorKickSkill } from './game-modules/skills/scissorKick.js';
-import { phaseDashSkill } from './game-modules/skills/phaseDash.js';
-import { hoverSkill } from './game-modules/skills/hover.js';
-import { echoSlamSkill } from './game-modules/skills/echoSlam.js';
-import { closeResults as closeMiniGameResults } from './game-modules/mini-games/blowThatDough.js';
-import { loadThemeAnchorImage } from './game-modules/assets.js';
+import {
+    draw
+} from './game-modules/drawing.js';
+import {
+    startGame,
+    stopGame,
+    togglePauseGame,
+    handleExitOrReset,
+    resetGameState
+} from './game-modules/game-controller.js';
+import {
+    startManualJump,
+    startHurdle,
+    startShockwave,
+    startBackflip,
+    startFrontflip,
+    startHoudini,
+    startJetPack,
+    castFireball,
+    handleSpecialMove,
+    startBlinkStrike,
+    startJetstreamDash
+} from './game-modules/actions.js';
+import {
+    moonwalkSkill
+} from './game-modules/skills/moonwalk.js';
+import {
+    cartoonScrambleSkill
+} from './game-modules/skills/cartoonScramble.js';
+import {
+    groundPoundSkill
+} from './game-modules/skills/groundPound.js';
+import {
+    startThemeEffect
+} from './game-modules/drawing/environmental-effects.js';
+import {
+    handleLeaderboardInitialsInput
+} from './game-modules/drawing/leaderboard-initials.js';
+import {
+    spawnEasterEgg
+} from './game-modules/spawning.js';
+import {
+    gameState,
+    setObstaclesIncinerated,
+    setPlayerEnergy
+} from './game-modules/state-manager.js';
+import {
+    toggleSound,
+    loadMuteSetting,
+    playGameStartSound,
+    playAnimationSound,
+    ambientBus,
+    isMuted,
+    preloadCriticalAudio,
+    preloadSecondaryAudio,
+    playAmbientSound
+} from './audio.js';
+import {
+    initGamepad,
+    reinitializeUINavigation
+} from './game-modules/gamepad.js';
+import {
+    fireSpinnerSkill
+} from './game-modules/skills/fireSpinner.js';
+import {
+    firestormSkill
+} from './game-modules/skills/firestorm.js';
+import {
+    mageSpinnerSkill
+} from './game-modules/skills/mageSpinner.js';
+import {
+    fireballRollSkill
+} from './game-modules/skills/fireballRoll.js';
+import {
+    diveSkill
+} from './game-modules/skills/dive.js';
+import {
+    corkscrewSpinSkill
+} from './game-modules/skills/corkscrewSpin.js';
+import {
+    scissorKickSkill
+} from './game-modules/skills/scissorKick.js';
+import {
+    phaseDashSkill
+} from './game-modules/skills/phaseDash.js';
+import {
+    hoverSkill
+} from './game-modules/skills/hover.js';
+import {
+    echoSlamSkill
+} from './game-modules/skills/echoSlam.js';
+import {
+    closeResults as closeMiniGameResults
+} from './game-modules/mini-games/blowThatDough.js';
+import {
+    loadThemeAnchorImage
+} from './game-modules/assets.js';
 
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
@@ -110,7 +241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     preloaderStartButton.addEventListener('click', async () => {
         playAnimationSound('ignited-flame'); // Play ignited-flame sound on click
         preloaderOverlay.classList.add('hidden');
-        
+
         // Also expand the daily challenge container
         const challengeContainer = document.querySelector('.daily-challenge-container');
         if (challengeContainer) {
@@ -136,55 +267,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     const controlPanelContainer = document.getElementById('control-panel-container');
 
     if (controlPanelContainer) {
-
         controlPanelContainer.addEventListener('click', (event) => {
-
             if (event.target.id === 'startDailyChallengeBtn') {
                 resetGameState();
                 playAnimationSound('start-daily-challenge'); // Play sound on daily challenge start
-
                 startDailyChallengeGame();
-
             }
-
         });
-
     }
-
-
 
     async function loadVersion() {
 
         try {
 
             const response = await fetch('version.py');
-
             const text = await response.text();
-
             const match = text.match(/APP_VERSION = "(.+)"/);
-
             if (match) {
-
                 const version = match[1];
-
                 const versionDisplay = document.getElementById('version-display');
-
                 if (versionDisplay) {
-
                     versionDisplay.textContent = `v${version}`;
-
                 }
-
             }
 
         } catch (error) {
-
             console.error('Error loading version:', error);
-
         }
 
     }
-
 
 
     function initializeDebugPanel() {
@@ -201,94 +312,60 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 debugPanel.classList.remove('hidden');
 
-
-
                 const unlockAllBtn = document.getElementById('debugUnlockAllBtn');
-
                 const setShowDailyResultsBtn = document.getElementById('debugShowDailyResultsBtn');
-
                 const debugWinBtn = document.getElementById('debugWinBtn');
-
                 const debugLoseBtn = document.getElementById('debugLoseBtn');
-
                 const debugCycleThemeBtn = document.getElementById('debugCycleThemeBtn');
-
                 const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
-
                 const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
-
                 const addCashBtn = document.getElementById('debugAddCashBtn');
-
-
 
                 function debugSetIncinerationCount(count) {
 
                     setObstaclesIncinerated(count);
-
                     checkForNewUnlocks(gameState.playerStats); // Check for unlocks first
-
                     savePlayerStats(); // Then save the updated stats
-
                     populatePersonaSelector(); // Re-populate in case this unlocks a persona
-
                     populateArmoryItems(); // Also refresh the armory view
-
                     alert(`Obstacle incineration count set to ${count}.`);
 
                 }
 
 
-
                 if (unlockAllBtn) {
-
                     unlockAllBtn.addEventListener('click', debugUnlockAllAchievements);
-
                 }
                 if (setShowDailyResultsBtn) {
-
                     setShowDailyResultsBtn.addEventListener('click', () => {
-
-                        displayDailyChallengeResults({ days: 1234, hits: 5 });
-
+                        displayDailyChallengeResults({
+                            days: 1234,
+                            hits: 5
+                        });
                     });
 
                 }
                 if (debugWinBtn) {
-
                     debugWinBtn.addEventListener('click', () => debugEndGame(true));
-
                 }
                 if (debugLoseBtn) {
-
                     debugLoseBtn.addEventListener('click', () => debugEndGame(false));
-
                 }
                 if (debugCycleThemeBtn) {
-
                     debugCycleThemeBtn.addEventListener('click', debugCycleDailyTheme);
-
                 }
                 if (setIncinerateCountBtn && incinerateCountInput) {
-
                     setIncinerateCountBtn.addEventListener('click', () => {
 
                         const count = parseInt(incinerateCountInput.value, 10);
-
                         if (!isNaN(count) && count >= 0) {
-
                             debugSetIncinerationCount(count);
-
                         } else {
-
                             alert('Please enter a valid number.');
-
                         }
-
                     });
-
                 }
                 if (addCashBtn) {
-
                     addCashBtn.addEventListener('click', () => {
 
                         const command = 'window.gameState.playerStats.totalAccumulatedCash = 1000000000;';
@@ -296,23 +373,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                         navigator.clipboard.writeText(command).then(() => {
 
                             const originalText = addCashBtn.textContent;
-
                             addCashBtn.textContent = 'Copied!';
 
                             setTimeout(() => {
-
                                 addCashBtn.textContent = originalText;
-
                             }, 2000);
 
                         }).catch(err => {
-
                             console.error('Failed to copy text: ', err);
-
                         });
-
                     });
-
                 }
                 // Debug Audio Controls
                 const debugMuteThemeMusicBtn = document.getElementById('debugMuteThemeMusicBtn');
@@ -348,113 +418,69 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-
-    loadVersion();
-
+    await loadVersion();
     loadMuteSetting(); // Load mute setting on startup
 
-
-
     // 1. Set up event listeners
-
     const tabButtons = document.querySelectorAll('.tab-button');
 
-        tabButtons.forEach(button => {
+    tabButtons.forEach(button => {
 
-            button.addEventListener('click', () => {
+        button.addEventListener('click', () => {
 
-                const tab = button.getAttribute('data-tab');
+            const tab = button.getAttribute('data-tab');
 
-                                if (tab === 'hallOfFame') {
-
-                                    displayLeaderboard();
-
-                                    displayPersonaLeaderboard();
-
-                                } else if (tab === 'player') {
-                                    initializeDailyChallengeUI();
-                                    const dailyChallengePlaceholder = document.getElementById('daily-challenge-placeholder');
-                                    if (dailyChallengePlaceholder) {
-                                        dailyChallengePlaceholder.classList.remove('hidden');
-                                    }
-                                }
-
-                switchTab(tab);
-
-            });
-
+            if (tab === 'hallOfFame') {
+                displayLeaderboard();
+                displayPersonaLeaderboard();
+            } else if (tab === 'player') {
+                initializeDailyChallengeUI();
+                const dailyChallengePlaceholder = document.getElementById('daily-challenge-placeholder');
+                if (dailyChallengePlaceholder) {
+                    dailyChallengePlaceholder.classList.remove('hidden');
+                }
+            }
+            switchTab(tab);
         });
-
+    });
 
 
     const infoIcon = document.getElementById('info-icon');
-
     const infoPanel = document.getElementById('info-panel');
 
     if (infoIcon && infoPanel) {
-
         infoIcon.addEventListener('click', () => {
-
             infoPanel.classList.toggle('hidden');
-
             playAnimationSound('beep'); // Play beep sound on info icon click
-
         });
-
     }
-
-
 
     if (emojiInput && speedSelector && obstacleEmojiInput && frequencyRange && skillLevelSelector) {
-
         setupSuggestedEmojis();
-
         emojiInput.addEventListener('input', updateEmoji);
-
         obstacleEmojiInput.addEventListener('input', updateObstacleEmoji);
-
         speedSelector.addEventListener('change', handleSpeedChange);
-
         frequencyRange.addEventListener('input', handleFrequencyChange);
-
         skillLevelSelector.addEventListener('change', handleSkillLevelChange);
-
         themeSelector.addEventListener('change', handleThemeChange);
-
         personaSelector.addEventListener('change', (event) => {
-
             handlePersonaChange(event);
-
             if (gameState.gameRunning) {
-
                 stopGame(true);
-
             }
-
         });
-
     }
-
-
 
     if (enablePowerUps) {
-
         enablePowerUps.addEventListener('change', handlePowerUpToggle);
-
     }
-
 
 
     if (disableSaveSettings) {
-
         disableSaveSettings.addEventListener('change', () => {
-
             if (disableSaveSettings.checked) {
-
                 localStorage.removeItem('fireHeistSettings');
-
                 localStorage.removeItem('fireHeistMuteSetting');
-
                 console.log("-> All settings cleared from localStorage.");
 
             }
@@ -462,7 +488,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
     }
-
 
 
     // Armory item selection
@@ -474,7 +499,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const button = event.target.closest('button');
 
             if (!button) return;
-
 
 
             const action = button.dataset.action;
@@ -496,26 +520,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-
-        // 2. Load player stats FIRST, then initialize UI
-        await initializeApp();
-
+    // 2. Load player stats FIRST, then initialize UI
+    await initializeApp();
 
 
-        
-
-
-
-                initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
+    initializeDebugPanel(); // Initialize the debug panel AFTER UI data is loaded
 
     initializeDailyChallengeUI(); // Initialize the Daily Challenge UI after all other UI is ready
 
 
-
-    if (Tone.context.state !== 'running') { Tone.start(); }
+    if (Tone.context.state !== 'running') {
+        Tone.start();
+    }
 
     Tone.Destination.volume.value = 3; // Increase master volume by 3dB
-
 
 
     // Show "NEW" indicator on Armory tab if not seen yet
@@ -525,7 +543,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         armoryNewIndicator.classList.remove('hidden');
 
     }
-
 
 
     // 3. Set up main buttons and controls
@@ -550,41 +567,47 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
-        if (stopButton) { stopButton.addEventListener('click', () => stopGame(true)); }
+    if (stopButton) {
+        stopButton.addEventListener('click', () => stopGame(true));
+    }
 
-        if (loadButton) {
+    if (loadButton) {
 
-            loadButton.addEventListener('click', () => {
+        loadButton.addEventListener('click', () => {
 
-                playAnimationSound('beep');
+            playAnimationSound('beep');
 
-                loadCustomData();
+            loadCustomData();
 
-            });
+        });
 
-        }
+    }
 
-        if (soundToggleButton) { soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton)); }
+    if (soundToggleButton) {
+        soundToggleButton.addEventListener('click', () => toggleSound(soundToggleButton));
+    }
 
-        if (fullscreenToggleButton) { fullscreenToggleButton.addEventListener('click', toggleFullScreen); }
+    if (fullscreenToggleButton) {
+        fullscreenToggleButton.addEventListener('click', toggleFullScreen);
+    }
 
-    
 
-        // Mini-Game Event Listeners
+    // Mini-Game Event Listeners
 
-        const closeMiniGameBtn = document.getElementById('closeMiniGameResults');
+    const closeMiniGameBtn = document.getElementById('closeMiniGameResults');
 
-        if (closeMiniGameBtn) { closeMiniGameBtn.addEventListener('click', closeMiniGameResults); }
+    if (closeMiniGameBtn) {
+        closeMiniGameBtn.addEventListener('click', closeMiniGameResults);
+    }
 
-    
 
-        // Listen for fullscreen changes to update button text and apply immersive class
+    // Listen for fullscreen changes to update button text and apply immersive class
 
-        document.addEventListener('fullscreenchange', () => {
+    document.addEventListener('fullscreenchange', () => {
 
-            updateControlPanelState(gameState.gameRunning, gameState.isPaused);
+        updateControlPanelState(gameState.gameRunning, gameState.isPaused);
 
-            const actionButtons = document.getElementById('actionButtons');
+        const actionButtons = document.getElementById('actionButtons');
 
         if (document.fullscreenElement && gameState.gameRunning) {
             document.body.classList.add('game-active-fullscreen');
@@ -605,108 +628,76 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
 
-
-        // --- PAUSE GAME ON TAB UNFOCUSED ---
-
+    // --- PAUSE GAME ON TAB UNFOCUSED ---
 
 
-            document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', () => {
 
 
-
-                if (document.hidden) {
-
+        if (document.hidden) {
 
 
-                    if (gameState.gameRunning && !gameState.isPaused) {
+            if (gameState.gameRunning && !gameState.isPaused) {
 
 
-
-                        togglePauseGame();
-
-
-
-                    }
-
-
-
-                    // Mute ambient bus regardless of game state if tab is hidden
-
-
-
-                    ambientBus.volume.value = -Infinity;
-
-
-
-                } else {
-
-
-
-                    // Only unmute if the game is not globally muted AND not paused
-
-
-
-                    if (!isMuted && !gameState.isPaused) {
-
-
-
-                        ambientBus.volume.value = 0;
-
-
-
-                    }
-
-
-
-                }
-
-
-
-            });
-
-
-
-        // --- JUMP & PAUSE CONTROLS ---
-
-
-
-    
-
-
-
-        document.addEventListener('keydown', (e) => {
-
-
-
-            if (gameState.leaderboardInitials.isActive) {
-
-
-
-                handleLeaderboardInitialsInput(e.code);
-
-
-
-                return; // Prevent other game actions while entering initials
-
+                togglePauseGame();
 
 
             }
 
 
-
-    
-
+            // Mute ambient bus regardless of game state if tab is hidden
 
 
-            if (e.code === 'Space' && gameState.gameRunning && !gameState.isPaused) {
+            ambientBus.volume.value = -Infinity;
 
 
-
-                e.preventDefault();
-
+        } else {
 
 
-                startManualJump(gameState);
+            // Only unmute if the game is not globally muted AND not paused
+
+
+            if (!isMuted && !gameState.isPaused) {
+
+
+                ambientBus.volume.value = 0;
+
+
+            }
+
+
+        }
+
+
+    });
+
+
+    // --- JUMP & PAUSE CONTROLS ---
+
+
+    document.addEventListener('keydown', (e) => {
+
+
+        if (gameState.leaderboardInitials.isActive) {
+
+
+            handleLeaderboardInitialsInput(e.code);
+
+
+            return; // Prevent other game actions while entering initials
+
+
+        }
+
+
+        if (e.code === 'Space' && gameState.gameRunning && !gameState.isPaused) {
+
+
+            e.preventDefault();
+
+
+            startManualJump(gameState);
 
         }
 
@@ -726,13 +717,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-                if (e.code === 'KeyK' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyK' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+            e.preventDefault();
 
-                    handleSpecialMove(gameState);
+            handleSpecialMove(gameState);
 
-                }
+        }
 
         if (e.code === 'KeyD' && gameState.gameRunning && !gameState.isPaused) {
 
@@ -774,45 +765,45 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-                if (e.code === 'KeyG' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyG' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+            e.preventDefault();
 
-                    groundPoundSkill.activate(gameState);
+            groundPoundSkill.activate(gameState);
 
-                }
+        }
 
-                if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyB' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+            e.preventDefault();
 
-                    startBackflip(gameState);
+            startBackflip(gameState);
 
-                }
+        }
 
-                                if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
 
-                                    e.preventDefault();
+            e.preventDefault();
 
-                                    startShockwave(gameState);
+            startShockwave(gameState);
 
-                                }
+        }
 
-                                if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
 
-                                    e.preventDefault();
+            e.preventDefault();
 
-                                    startMoonwalk(gameState);
+            moonwalkSkill.activate(gameState);
 
-                                }
+        }
 
-                if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+            e.preventDefault();
 
-                    cartoonScrambleSkill.activate(gameState);
+            cartoonScrambleSkill.activate(gameState);
 
-                }
+        }
 
         if (e.code === 'KeyF' && gameState.gameRunning && !gameState.isPaused) {
 
@@ -822,57 +813,55 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-                        if (e.code === 'KeyI' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyI' && gameState.gameRunning && !gameState.isPaused) {
 
-                            e.preventDefault();
+            e.preventDefault();
 
-                            startHoudini(gameState);
+            startHoudini(gameState);
 
-                        }
+        }
 
-                
 
-                        if (e.code === 'KeyT' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyT' && gameState.gameRunning && !gameState.isPaused) {
 
-                            e.preventDefault();
+            e.preventDefault();
 
-                            startJetPack(gameState);
+            startJetPack(gameState);
 
-                        }
+        }
 
-                
 
-                        if (e.code === 'KeyR' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyR' && gameState.gameRunning && !gameState.isPaused) {
 
-                            e.preventDefault();
+            e.preventDefault();
 
-                            fireSpinnerSkill.activate(gameState);
+            fireSpinnerSkill.activate(gameState);
 
-                        }
+        }
 
-                                if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
 
-                                    e.preventDefault();
+            e.preventDefault();
 
-                                    firestormSkill.activate(gameState);
+            firestormSkill.activate(gameState);
 
-                                }
+        }
 
-                if (e.code === 'KeyU' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyU' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+            e.preventDefault();
 
-                    if (gameState.isMageSpinnerActive) {
+            if (gameState.isMageSpinnerActive) {
 
-                        castFireball(gameState);
+                castFireball(gameState);
 
-                    } else {
+            } else {
 
-                        mageSpinnerSkill.activate(gameState);
+                mageSpinnerSkill.activate(gameState);
 
-                    }
+            }
 
-                }
+        }
 
         if (e.code === 'KeyX' && gameState.gameRunning && !gameState.isPaused) {
 
@@ -890,22 +879,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-                if (e.code === 'KeyO' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyO' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+            e.preventDefault();
 
-                    echoSlamSkill.activate(gameState);
+            echoSlamSkill.activate(gameState);
 
-                }
+        }
 
-                if (e.code === 'KeyW' && gameState.gameRunning && !gameState.isPaused) {
+        if (e.code === 'KeyW' && gameState.gameRunning && !gameState.isPaused) {
 
-                    e.preventDefault();
+            e.preventDefault();
 
-                    fireballRollSkill.activate(gameState);
+            fireballRollSkill.activate(gameState);
 
-                }
-
+        }
 
 
         // Cheat code for max energy
@@ -916,52 +904,44 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 e.preventDefault();
 
-                                setPlayerEnergy(gameState.maxPlayerEnergy);
+                setPlayerEnergy(gameState.maxPlayerEnergy);
 
-                                console.log("-> CHEAT: Max energy granted!");
+                console.log("-> CHEAT: Max energy granted!");
 
-                            }
+            }
 
-                        }
-
-                
-
-                        // Debug hotkey for spawning easter egg
-
-                        if (e.code === 'KeyE' && gameState.gameRunning && !gameState.isPaused) {
-
-                            e.preventDefault();
-
-                            spawnEasterEgg();
-
-                        }
-
-                
-
-                                // Debug hotkey for environmental effects
-
-                
-
-                                if (e.code === 'KeyQ' && gameState.gameRunning && !gameState.isPaused) {
-
-                
-
-                                    e.preventDefault();
+        }
 
 
+        // Debug hotkey for spawning easter egg
 
-                    console.log("-> DEBUG: 'E' key pressed, calling startThemeEffect...");
+        if (e.code === 'KeyE' && gameState.gameRunning && !gameState.isPaused) {
+
+            e.preventDefault();
+
+            spawnEasterEgg();
+
+        }
 
 
-
-                    startThemeEffect();
-
+        // Debug hotkey for environmental effects
 
 
-                }
+        if (e.code === 'KeyQ' && gameState.gameRunning && !gameState.isPaused) {
+
+
+            e.preventDefault();
+
+
+            console.log("-> DEBUG: 'E' key pressed, calling startThemeEffect...");
+
+
+            startThemeEffect();
+
+
+        }
 
     });
-
 
 
     document.addEventListener('keydown', (e) => {
@@ -977,7 +957,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
 
-
     const gameCanvas = document.getElementById('gameCanvas');
 
     let touchStartTime = 0;
@@ -991,13 +970,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let longPressTimer;
 
 
-
     gameCanvas.addEventListener('touchstart', (e) => {
 
         e.preventDefault();
 
         if (!gameState.gameRunning || gameState.isPaused) return;
-
 
 
         touchStartTime = new Date().getTime();
@@ -1007,40 +984,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         touchStartY = e.touches[0].clientY;
 
 
-
-                // Multi-finger taps
-
+        // Multi-finger taps
 
 
-                if (e.touches.length === 5) {
+        if (e.touches.length === 5) {
 
 
-
-                    startShockwave(gameState);
-
+            startShockwave(gameState);
 
 
-                    return;
+            return;
 
 
-
-                }
-
+        }
 
 
-                if (e.touches.length === 4) {
+        if (e.touches.length === 4) {
 
 
-
-                    cartoonScrambleSkill.activate(gameState);
-
+            cartoonScrambleSkill.activate(gameState);
 
 
-                    return;
+            return;
 
 
-
-                }
+        }
 
         if (e.touches.length === 3) {
 
@@ -1059,7 +1027,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
 
-
         // Long press timer
 
         longPressTimer = setTimeout(() => {
@@ -1069,9 +1036,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 500); // 500ms for long press
 
 
-
-    }, { passive: false });
-
+    }, {
+        passive: false
+    });
 
 
     gameCanvas.addEventListener('touchmove', (e) => {
@@ -1080,8 +1047,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         clearTimeout(longPressTimer); // Cancel long press if finger moves
 
-    }, { passive: false });
-
+    }, {
+        passive: false
+    });
 
 
     gameCanvas.addEventListener('touchend', (e) => {
@@ -1093,7 +1061,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!gameState.gameRunning || gameState.isPaused) return;
 
 
-
         const touchEndTime = new Date().getTime();
 
         const touchEndX = e.changedTouches[0].clientX;
@@ -1103,11 +1070,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const touchDuration = touchEndTime - touchStartTime;
 
 
-
         const deltaX = touchEndX - touchStartX;
 
         const deltaY = touchEndY - touchStartY;
-
 
 
         // It's a swipe if moved more than 30px and for less than 500ms
@@ -1122,23 +1087,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 } else {
 
-                    startMoonwalk(gameState); // Swipe Left
+                    moonwalkSkill.activate(gameState); // Swipe Left
 
                 }
 
-                        } else { // Vertical swipe
+            } else { // Vertical swipe
 
-                            if (deltaY > 0) {
+                if (deltaY > 0) {
 
-                                groundPoundSkill.activate(gameState); // Swipe Down
+                    groundPoundSkill.activate(gameState); // Swipe Down
 
-                            } else {
+                } else {
 
-                                startFrontflip(gameState); // Swipe Up
+                    startFrontflip(gameState); // Swipe Up
 
-                            }
+                }
 
-                        }
+            }
 
         } else { // It's a tap
 
@@ -1166,20 +1131,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-    }, { passive: false });
+    }, {
+        passive: false
+    });
 
 
-
-            // --- END JUMP & PAUSE CONTROLS ---
-
+    // --- END JUMP & PAUSE CONTROLS ---
 
 
-        
-
-
-
-            frequencyRange.dispatchEvent(new Event('input')); // Trigger initial display of frequency value
-
+    frequencyRange.dispatchEvent(new Event('input')); // Trigger initial display of frequency value
 
 
     // Use a timeout to ensure the DOM is fully painted before we try to manipulate it
@@ -1191,17 +1151,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 0);
 
 
-
     // Initial draw to show tips overlay
 
     draw();
 
 
-
     // Initialize the dedicated gamepad polling loop
 
     initGamepad();
-
 
 
     console.log("-> DOMContentLoaded: Initialization complete. Ready to start.");

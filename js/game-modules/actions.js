@@ -144,26 +144,6 @@ export function startHurdle(state) {
 
 
 
-export function startMoonwalk(state) {
-    if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-    if (!consumeEnergy(state, 'moonwalk')) return;
-
-    const skillLevel = state.playerStats.skillLevels.moonwalk || 1;
-
-    if (skillLevel >= 2) {
-        state.playerEnergy = Math.min(state.maxPlayerEnergy, state.playerEnergy + 10);
-    }
-    if (skillLevel >= 3) {
-        state.isInvincible = true;
-        state.invincibilityEndTime = Date.now() + 200; // 200ms of invincibility
-    }
-
-    state.jumpState.isMoonwalking = true;
-    state.jumpState.moonwalkDuration = JUMP_DURATIONS.moonwalk;
-    initiateJump(state, JUMP_DURATIONS.moonwalk, 'moonwalk'); // Play sound for Moonwalk
-    console.log("-> startMoonwalk: Moonwalk initiated.");
-}
-
 export function startShockwave(state) {
     if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
     if (!consumeEnergy(state, 'shockwave')) return;
