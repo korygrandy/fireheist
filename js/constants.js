@@ -69,7 +69,6 @@ export const MAGE_SPINNER_FIREBALL_INTERVAL_MS = 500; // Shoots a fireball every
 export const MAGE_SPINNER_FIREBALL_COUNT = 14; // 14 fireballs over the duration
 
 // Fiery Houdini Constants
-export const FIERY_HOUDINI_ENERGY_COST = 60;
 export const FIERY_HOUDINI_DURATION_MS = 800;
 export const FIERY_HOUDINI_COOLDOWN_MS = 12000; // 12 seconds cooldown
 export const SIX_SHOOTER_HITS_TO_DESTROY = {

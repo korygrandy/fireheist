@@ -1,4 +1,4 @@
-import { STICK_FIGURE_FIXED_X, GROUND_Y, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_RANGE, EASTER_EGG_EMOJI } from '../../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_RANGE, EASTER_EGG_EMOJI } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { createFieryHoudiniPoof } from '../drawing/effects.js';
 import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementTotalInGameIncinerations, incrementConsecutiveIncinerations, setFieryHoudini, setFieryHoudiniDuration, setFieryHoudiniPhase, setFieryHoudiniOnCooldown, setPlayerIsInvisible, setInvincible, setInvincibilityEndTime } from '../state-manager.js';
@@ -26,7 +26,7 @@ export const fieryHoudiniSkill = {
         }
 
         const skillLevel = state.playerStats.skillLevels.fieryHoudini || 1;
-        const energyCost = getSkillModifiedValue(FIERY_HOUDINI_ENERGY_COST, 'fieryHoudini', fieryHoudiniUpgradeEffects, state);
+        const energyCost = getSkillModifiedValue(this.config.energyCost, 'fieryHoudini', fieryHoudiniUpgradeEffects, state);
 
         if (!consumeEnergy(state, 'fieryHoudini', energyCost)) return;
 
