@@ -1,8 +1,10 @@
-import { STICK_FIGURE_FIXED_X, GROUND_Y, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, EASTER_EGG_EMOJI } from '../../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_RANGE, EASTER_EGG_EMOJI } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { createFieryHoudiniPoof } from '../drawing/effects.js';
 import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementTotalInGameIncinerations, incrementConsecutiveIncinerations, setFieryHoudini, setFieryHoudiniDuration, setFieryHoudiniPhase, setFieryHoudiniOnCooldown, setPlayerIsInvisible, setInvincible, setInvincibilityEndTime } from '../state-manager.js';
 import { fieryHoudiniUpgradeEffects } from '../skill-upgrades.js';
+
+const COOLDOWN = 12000; // 12 seconds cooldown
 
 // Fiery Houdini Skill Module
 export const fieryHoudiniSkill = {
@@ -10,7 +12,7 @@ export const fieryHoudiniSkill = {
         name: 'fieryHoudini',
         energyCost: 60,
         durationMs: 800,
-        cooldownMs: 12000,
+        cooldownMs: COOLDOWN,
         range: 300,
     },
 
@@ -18,7 +20,7 @@ export const fieryHoudiniSkill = {
         if (!state.gameRunning || state.jumpState.isJumping || state.isPaused || state.isFieryHoudiniOnCooldown) return;
 
         const now = Date.now();
-        if (now - state.fieryHoudiniLastActivationTime < FIERY_HOUDINI_COOLDOWN_MS) {
+        if (now - state.fieryHoudiniLastActivationTime < COOLDOWN) {
             console.log("-> fieryHoudiniSkill.activate: Fiery Houdini is on cooldown.");
             return;
         }
@@ -65,7 +67,7 @@ export const fieryHoudiniSkill = {
     update: function(gameState, deltaTime) {
         if (gameState.isFieryHoudiniOnCooldown) {
             const now = Date.now();
-            if (now - gameState.fieryHoudiniLastActivationTime > FIERY_HOUDINI_COOLDOWN_MS) {
+            if (now - gameState.fieryHoudiniLastActivationTime > COOLDOWN) {
                 setFieryHoudiniOnCooldown(false);
                 console.log("-> Fiery Houdini: Cooldown finished. Ready.");
             }
@@ -90,5 +92,11 @@ export const fieryHoudiniSkill = {
 
     draw: function(ctx, gameState) {
         // Drawing logic will be moved here
+    },
+
+    reset: function(state) {
+        state.fieryHoudiniLastActivationTime = 0;
+        setFieryHoudiniOnCooldown(false);
+        setFieryHoudini(false);
     }
 };
