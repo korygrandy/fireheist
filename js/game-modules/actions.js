@@ -20,6 +20,7 @@ import { echoSlamSkill } from './skills/echoSlam.js';
 import { fireStomperSkill } from './skills/fireStomper.js';
 import { specialMoveSkill } from './skills/specialMove.js';
 import { blinkStrikeSkill } from './skills/blinkStrike.js';
+import { jetstreamDashSkill } from './skills/jetstreamDash.js';
 
 const skillActionMap = {
     firestorm: (state) => firestormSkill.activate(state),
@@ -29,7 +30,7 @@ const skillActionMap = {
     mageSpinner: (state) => mageSpinnerSkill.activate(state),
     fieryHoudini: (state) => fieryHoudiniSkill.activate(state),
     blinkStrike: (state) => blinkStrikeSkill.activate(state),
-    jetstreamDash: startJetstreamDash,
+    jetstreamDash: (state) => jetstreamDashSkill.activate(state),
     echoSlam: (state) => echoSlamSkill.activate(state),
     fireballRoll: (state) => fireballRollSkill.activate(state),
     shotgunBlast: (state) => shotgunSkill.activate(state),
@@ -203,33 +204,6 @@ export function startBlinkStrike(state) {
 
     console.log("-> startBlinkStrike: Blink Strike initiated.");
 }
-
-
-
-
-
-export function startJetstreamDash(state) {
-    if (!state.gameRunning || state.isPaused || state.jumpState.isJumping || state.isJetstreamDashing) return;
-
-    // No initial energy cost, but will drain over time
-    if (state.playerEnergy <= 0) {
-        console.log("-> startJetstreamDash: Not enough energy to activate.");
-        return;
-    }
-
-    state.jumpState.isJetstreamDashing = true;
-    state.jumpState.jetstreamDashDuration = JUMP_DURATIONS.jetstreamDash;
-    state.isInvincible = true; // Grant invincibility during the dash
-    state.invincibilityEndTime = Date.now() + JUMP_DURATIONS.jetstreamDash;
-    state.jetstreamDashDrainEndTime = Date.now() + JUMP_DURATIONS.jetstreamDash; // Energy drains for the duration
-
-    initiateJump(state, JUMP_DURATIONS.jetstreamDash);
-    playAnimationSound('jetstreamDash'); // Play sound for Jetstream Dash
-    console.log("-> startJetstreamDash: Jetstream Dash initiated.");
-}
-
-
-
     
 
     
