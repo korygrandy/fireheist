@@ -87,87 +87,17 @@ import { animate } from './lifecycle.js';
 import { updateArmoryCashDisplay } from '../ui-modules/armory.js';
 import { loadThemeAnchorImage } from './assets.js';
 import { fireMageSkill } from './skills/fireMage.js';
+import { mageSpinnerSkill } from './skills/mageSpinner.js';
 
 export function togglePauseGame() {
     if (!gameState.gameRunning) return;
     setPaused(!gameState.isPaused);
-    playPauseGameSound();
-    const startButton = document.getElementById('startButton');
-    if (gameState.isPaused) {
-        Tone.Transport.pause();
-        ambientBus.volume.value = -Infinity; // Mute ambient sound
-        startButton.textContent = "Unpause";
-        console.log("-> GAME PAUSED");
-    } else {
-        Tone.Transport.start();
-        if (!isMuted) {
-            ambientBus.volume.value = 0; // Restore ambient sound
-        }
-        startButton.textContent = "Pause";
-        console.log("-> GAME RESUMED");
-        gameState.lastTime = performance.now();
-    }
-    updateControlPanelState(gameState.gameRunning, gameState.isPaused);
-    drawing.draw();
-}
-
-export function resetGameState() {
-    gameState.showDailyChallengeCompletedOverlay = false;
-    gameState.leaderboardInitials.isActive = false;
-    gameState.leaderboardInitials.submitted = false;
-    console.log("-> RESET GAME: Initiated.");
-    setGameRunning(false);
-    setPaused(false);
-    gameState.currentSegmentIndex = 0;
-    setSegmentProgress(0);
-    setLastTime(0);
-    setBackgroundOffset(0);
-    gameState.frameCount = 0; 
-    setAccumulatedCash(0);
-
-    // Reset theme anchor state
-    gameState.themeAnchor = {
-        image: null,
-        opacity: 0,
-        fadingIn: false,
-        fadeStartTime: 0,
-        fadeDuration: 2000
-    };
-    setCurrentThemeAnchorImage(null); // Explicitly clear the loaded image
-    loadThemeAnchorImage(gameState.selectedTheme);
-
-    clearActiveCashBags();
-    clearFireTrail();
-    clearIncineratingObstacles();
-    clearVanishingObstacles();
-    clearHoudiniParticles();
-    clearGroundPoundParticles();
-    clearFlipTrail();
-    clearMoonwalkParticles();
-    clearHoverParticles();
-    clearScrambleParticles();
-    clearDiveParticles();
-    clearSwooshParticles();
-    clearCorkscrewTrail();
-    clearShatteredObstacles();
-    clearIgnitedObstacles();
-    clearActiveFireballs();
-
-    resetJumpState();
-    resetManualJumpOverride();
-    resetTarzanState();
-    setSixShooterAmmo(SIX_SHOOTER_AMMO_CAPACITY);
-
-    setFirestormActive(false);
-    setFirestormEndTime(0);
-    setFirestormDrainingEnergy(false);
-    setFirestormDrainEndTime(0);
-    setFireSpinnerDrainingEnergy(false);
-    setFireSpinnerDrainEndTime(0);
+...
     setMageSpinnerActive(false);
     setMageSpinnerEndTime(0);
     setMageSpinnerOnCooldown(false);
     setMageSpinnerFireballTimer(0);
+    mageSpinnerSkill.reset(gameState);
     gameState.mageSpinnerFireballsSpawned = 0; 
     setPlayerEnergy(gameState.maxPlayerEnergy);
     setCurrentObstacle(null);

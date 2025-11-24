@@ -1,15 +1,17 @@
 // js/game-modules/skills/mageSpinner.js
-import { MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_COOLDOWN_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
+import { MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { consumeEnergy, setMageSpinnerActive, setMageSpinnerEndTime, setMageSpinnerOnCooldown, setMageSpinnerFireballTimer, incrementMageSpinnerFireballsSpawned, setPlayerEnergy } from '../state-manager.js';
 import { castMageSpinnerFireball } from '../actions.js';
+
+const COOLDOWN = 15000; // 15 seconds cooldown
 
 export const mageSpinnerSkill = {
     activate: function(state) {
         if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive || state.isMageSpinnerOnCooldown) return;
 
         const now = Date.now();
-        if (now - state.mageSpinnerLastActivationTime < MAGE_SPINNER_COOLDOWN_MS) {
+        if (now - state.mageSpinnerLastActivationTime < COOLDOWN) {
             console.log("-> startMageSpinner: Mage Spinner is on cooldown.");
             return;
         }
@@ -59,7 +61,7 @@ export const mageSpinnerSkill = {
 
         if (gameState.isMageSpinnerOnCooldown) {
             const now = Date.now();
-            if (now - gameState.mageSpinnerLastActivationTime > MAGE_SPINNER_COOLDOWN_MS) {
+            if (now - gameState.mageSpinnerLastActivationTime > COOLDOWN) {
                 setMageSpinnerOnCooldown(false);
                 console.log("-> Mage Spinner: Cooldown finished. Ready.");
             }
@@ -72,5 +74,13 @@ export const mageSpinnerSkill = {
             ctx.shadowBlur = 20;
             ctx.restore();
         }
+    },
+
+    reset: function(state) {
+        state.mageSpinnerLastActivationTime = 0;
+        setMageSpinnerOnCooldown(false);
+        setMageSpinnerActive(false);
+        setMageSpinnerFireballTimer(0);
+        incrementMageSpinnerFireballsSpawned(0);
     }
 };
