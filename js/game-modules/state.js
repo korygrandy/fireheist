@@ -55,7 +55,6 @@ const state = {
         isEchoSlam: false, echoSlamDuration: 0, echoSlamSecondaryTriggered: false,
         isFireballRolling: false, fireballRollDuration: 0
     },
-    fireSpinnerCooldown: 30000, // 30 seconds
     isFireSpinnerOnCooldown: false,
     fireSpinnerLastActivationTime: 0,
     isFireMageActive: false, // Is Fire Mage mode currently active?
