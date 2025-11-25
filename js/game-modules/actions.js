@@ -52,6 +52,9 @@ export function handleSpecialMove(gameState) {
             castFireball(gameState);
         } else {
             fireMageSkill.activate(gameState);
+            if (gameState.isFireMageActive) { // Check if activation was successful before casting
+                castFireball(gameState);
+            }
         }
     }
 }

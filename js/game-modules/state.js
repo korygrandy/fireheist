@@ -269,6 +269,7 @@ const state = {
     showDailyChallengeCompletedOverlay: false,
     isBonusGameComplete: false,
     bonusGameHaul: 0,
+    skillCooldowns: {}, // e.g., { fieryHoudini: 1678886400000, mageSpinner: 1678886405000 }
 };
 
 export default state;

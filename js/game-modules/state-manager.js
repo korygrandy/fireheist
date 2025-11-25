@@ -132,6 +132,10 @@ export function setPlayerEnergy(newEnergy) {
     state.playerEnergy = Math.max(0, Math.min(state.maxPlayerEnergy, newEnergy));
 }
 
+export function setSkillCooldown(skillName, endTime) {
+    state.skillCooldowns[skillName] = endTime;
+}
+
 /**
  * Sets the game over sequence status.
  * @param {boolean} isGameOver
