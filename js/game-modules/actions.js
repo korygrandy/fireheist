@@ -44,6 +44,7 @@ const skillActionMap = {
 
 export function handleSpecialMove(gameState) {
     const activeSkill = gameState.playerStats.activeArmorySkill;
+    console.log(`[DEBUG] handleSpecialMove: activeSkill is ${activeSkill}`);
     if (activeSkill && skillActionMap[activeSkill]) {
         skillActionMap[activeSkill](gameState);
     } else {
@@ -145,24 +146,3 @@ export function startHurdle(state) {
     initiateJump(state, JUMP_DURATIONS.hurdle, 'hurdle');
     console.log("-> startHurdle: Hurdle initiated.");
 }
-    
-
-    
-
-    
-
-    
-
-    
-
-        
-
-    
-
-    
-
-    
-
-        
-
-    
