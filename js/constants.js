@@ -114,13 +114,9 @@ export const ENERGY_SETTINGS = {
         firestorm: 0, // No initial cost, drains over time
         fireMage: 25,
         fireSpinner: 0, // No initial cost, drains over time
-        mageSpinner: MAGE_SPINNER_ENERGY_COST,
-        fieryHoudini: FIERY_HOUDINI_ENERGY_COST,
         jetstreamDash: 0, // Drains over time
         fireballRoll: 0, // Drains over time
-        shotgunBlast: 35,
         fireAxe: 30,
-        tarzanSwing: 50,
     }
 };
 

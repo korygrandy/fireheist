@@ -1,5 +1,5 @@
 import { createHoudiniPoof, createFieryHoudiniPoof, createJetPackEffect, createGroundPoundEffect, createShatterEffect } from './drawing/effects.js';
-import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_ENERGY_COST, FIRE_MAGE_DURATION_MS, FIREBALL_CAST_ENERGY_COST, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_ENERGY_COST, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_ENERGY_COST, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS, OBSTACLE_WIDTH, JUMP_DURATIONS } from '../constants.js';
+import { STICK_FIGURE_FIXED_X, GROUND_Y, ENERGY_SETTINGS, FIRE_MAGE_DURATION_MS, FIREBALL_VELOCITY_PX_MS, FIREBALL_SIZE, MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_Y_OFFSET, OBSTACLE_HEIGHT, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDINI_COOLDOWN_MS, FIERY_HOUDINI_RANGE, BLINK_STRIKE_DURATION_MS, JETSTREAM_DASH_DURATION_MS, ECHO_SLAM_DURATION_MS, FIREBALL_ROLL_DURATION_MS, OBSTACLE_WIDTH, JUMP_DURATIONS } from '../constants.js';
 import { playAnimationSound } from '../audio.js';
 import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementConsecutiveIncinerations, setScreenFlash } from './state-manager.js';
 import { fieryGroundPoundUpgradeEffects, fireSpinnerUpgradeEffects, fieryHoudiniUpgradeEffects, firestormUpgradeEffects } from './skill-upgrades.js';
@@ -21,6 +21,7 @@ import { fireStomperSkill } from './skills/fireStomper.js';
 import { specialMoveSkill } from './skills/specialMove.js';
 import { blinkStrikeSkill } from './skills/blinkStrike.js';
 import { jetstreamDashSkill } from './skills/jetstreamDash.js';
+import { fireballSkill } from './skills/fireball.js';
 
 const skillActionMap = {
     firestorm: (state) => firestormSkill.activate(state),
@@ -65,7 +66,8 @@ export function handleSpecialMove(gameState) {
 
 
 export function castFireball(state) {
-    if (!state.gameRunning || state.isPaused || (!state.isFireMageActive && !state.isMageSpinnerActive)) return;
+    if (!state.gameRunning || state.isPaused || !state.isFireMageActive) return;
+    if (!consumeEnergy(state, 'fireballCast', fireballSkill.config.energyCost)) return;
 
     // Correctly calculate player's current Y position based on the ground angle
     const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];
