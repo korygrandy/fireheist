@@ -4,7 +4,7 @@ import { drawCityscape, drawThemeAnchor } from './environmental-effects.js';
 import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProximityEvent, drawIncineration, drawIgnitedObstacle, drawFlipAndCrumble } from './world.js';
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks, drawImpactSparks, drawFireWallShatterEffect, createFireWallShatterEffect, drawEchoSlamParticles } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
-import { drawStickFigure } from './player.js';
+import { drawStickFigure, drawHourglassCooldown } from './player.js';
 import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay, drawBonusHaul, drawCooldownIndicator } from './overlays.js';
 import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
@@ -162,6 +162,7 @@ export function drawGameObjects(gameState, currentSegment, groundAngleRad, playe
 
     // Centralized skill drawing
     drawActiveSkills(ctx, gameState, currentX, currentY);
+    drawHourglassCooldown(ctx, gameState); // Draw hourglass cooldown for active skill
 
     if (!gameState.jumpState.isFireballRolling && !gameState.tarzanState.isAttached) {
         drawStickFigure(currentX, currentY, gameState.jumpState, currentSegment.angleRad);

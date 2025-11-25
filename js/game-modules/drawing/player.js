@@ -423,48 +423,62 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     ctx.restore();
 }
 
-export function drawCooldownMeter(ctx, state) {
+export function drawHourglassCooldown(ctx, state) {
     const activeSkillKey = state.playerStats.activeArmorySkill;
     const now = Date.now();
 
     if (!activeSkillKey || !state.skillCooldowns[activeSkillKey] || now > state.skillCooldowns[activeSkillKey]) {
-        // No active skill with cooldown, or cooldown expired
         return;
     }
 
     const cooldownEndTime = state.skillCooldowns[activeSkillKey];
     const activeSkillConfig = getSkillConfig(activeSkillKey);
-    let totalCooldownDuration = activeSkillConfig && activeSkillConfig.cooldownMs ? activeSkillConfig.cooldownMs : 1000; // Fallback to 1000ms
+    let totalCooldownDuration = activeSkillConfig && activeSkillConfig.cooldownMs ? activeSkillConfig.cooldownMs : 1000;
 
     const timeRemaining = cooldownEndTime - now;
-    const cooldownProgress = 1 - (timeRemaining / totalCooldownDuration); // 0 to 1
+    const cooldownProgress = 1 - (timeRemaining / totalCooldownDuration);
 
     const playerX = state.stickFigureFixedX;
-    const playerY = state.stickFigureY || (400 - 10 - STICK_FIGURE_TOTAL_HEIGHT); // Use stickFigureY or default ground position
-    const meterRadius = 30;
-    const meterYOffset = -STICK_FIGURE_TOTAL_HEIGHT - 20; // Above the player's head
+    const playerY = state.stickFigureY || (400 - 10 - STICK_FIGURE_TOTAL_HEIGHT);
+    const hourglassWidth = 10; // Halved
+    const hourglassHeight = 15; // Halved
+    const yOffset = -STICK_FIGURE_TOTAL_HEIGHT - 60;
 
     ctx.save();
-    ctx.translate(playerX, playerY + meterYOffset);
+    ctx.translate(playerX, playerY + yOffset);
 
-    // Background of the cooldown meter (faded out)
+    // Draw hourglass frame
     ctx.beginPath();
-    ctx.arc(0, 0, meterRadius, 0, Math.PI, true); // Full semi-circle
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.moveTo(-hourglassWidth / 2, -hourglassHeight / 2);
+    ctx.lineTo(hourglassWidth / 2, -hourglassHeight / 2);
+    ctx.lineTo(-hourglassWidth / 2, hourglassHeight / 2);
+    ctx.lineTo(hourglassWidth / 2, hourglassHeight / 2);
+    ctx.closePath();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 1; // Thinner for smaller size
+    ctx.stroke();
+
+    // Draw sand
+    ctx.fillStyle = 'sandybrown';
+
+    // Top sand (disappearing)
+    const topSandHeight = (hourglassHeight / 2) * (1 - cooldownProgress);
+    const topSandWidth = (hourglassWidth / 2) * (1 - cooldownProgress);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-topSandWidth, -topSandHeight);
+    ctx.lineTo(topSandWidth, -topSandHeight);
+    ctx.closePath();
     ctx.fill();
 
-    // Cooldown arc
+    // Bottom sand (appearing)
+    const bottomSandHeight = (hourglassHeight / 2) * cooldownProgress;
+    const bottomSandWidth = (hourglassWidth / 2) * cooldownProgress;
     ctx.beginPath();
-    // Start angle is at the left (Math.PI) and sweep towards the right (0) as cooldown depletes
-    const startAngle = Math.PI;
-    const endAngle = Math.PI - (Math.PI * cooldownProgress); // Depletes clockwise
-    ctx.arc(0, 0, meterRadius, startAngle, endAngle, true);
-
-    // Color transition from red to white
-    const red = 255;
-    const green = Math.round(255 * cooldownProgress);
-    const blue = Math.round(255 * cooldownProgress);
-    ctx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-bottomSandWidth, bottomSandHeight);
+    ctx.lineTo(bottomSandWidth, bottomSandHeight);
+    ctx.closePath();
     ctx.fill();
 
     ctx.restore();

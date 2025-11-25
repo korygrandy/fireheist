@@ -172,7 +172,6 @@ export function resetGameState() {
     setMageSpinnerEndTime(0);
     setMageSpinnerOnCooldown(false);
     setMageSpinnerFireballTimer(0);
-    mageSpinnerSkill.reset(gameState);
     gameState.mageSpinnerFireballsSpawned = 0; 
     setPlayerEnergy(gameState.maxPlayerEnergy);
     setCurrentObstacle(null);
@@ -189,8 +188,6 @@ export function resetGameState() {
     setFireMageActive(false);
     setFireMageEndTime(0);
     setFireMageOnCooldown(false);
-    fireMageSkill.reset(gameState);
-    fieryHoudiniSkill.reset(gameState);
     resetStreaks();
 
     gameState.activeCustomEvents = Object.values(gameState.customEvents).flat().map(event => ({
