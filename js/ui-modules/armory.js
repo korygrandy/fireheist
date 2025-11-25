@@ -1,5 +1,6 @@
 import { armoryItemsContainer, skillUpgradeModal, skillModalTitle, skillModalContent, closeSkillModalBtn, totalCashDisplay } from '../dom-elements.js';
 import { getSkillUnlockProgress, checkSkillUnlockStatus, ARMORY_ITEMS } from '../unlocks.js';
+import { allSkills } from '../game-modules/skills/all-skills.js';
 import { fireAxeSkill } from '../game-modules/skills/fireAxe.js';
 import { tarzanSkill } from '../game-modules/skills/tarzan.js';
 import { savePlayerStats } from './settings.js';
@@ -139,17 +140,49 @@ export function populateArmoryItems() {
     });
 }
 
+let notificationQueue = [];
+let isNotificationVisible = false;
+
 /**
  * Displays a notification when a new armory skill is unlocked.
- * @param {string} skillName - The name of the unlocked skill.
+ * @param {string} skillKey - The key of the unlocked skill.
  */
-export function displayArmoryUnlockNotification(skillName) {
+export function displayArmoryUnlockNotification(skillKey) {
+    notificationQueue.push(skillKey);
+    if (!isNotificationVisible) {
+        processNotificationQueue();
+    }
+}
+
+/**
+ * Processes the notification queue and displays the next notification.
+ */
+function processNotificationQueue() {
+    if (notificationQueue.length === 0) {
+        isNotificationVisible = false;
+        return;
+    }
+
+    isNotificationVisible = true;
+    const skillKey = notificationQueue.shift();
     const notificationElement = document.getElementById('unlock-notification');
+
     if (notificationElement) {
-        notificationElement.textContent = `🛡️ New Armory Skill Unlocked: ${skillName}!`;
+        const skill = ARMORY_ITEMS[skillKey];
+        let iconHTML = '';
+        if (skill.imageUnlocked) {
+            iconHTML = `<img src="${skill.imageUnlocked}" alt="${skill.name}" class="inline-block w-6 h-6 mr-2 align-middle notification-skill-icon">`;
+        } else {
+            const skillEmoji = skill.emoji || allSkills[skillKey]?.config?.emoji || '🛡️'; // Fallback to generic shield
+            iconHTML = `<span class="inline-block mr-2 align-middle text-xl notification-skill-icon">${skillEmoji}</span>`;
+        }
+        notificationElement.innerHTML = `${iconHTML} New Armory Skill Unlocked: ${skill.name}!`;
         notificationElement.classList.remove('hidden');
+
         setTimeout(() => {
             notificationElement.classList.add('hidden');
+            // Wait a moment before showing the next notification
+            setTimeout(processNotificationQueue, 500);
         }, 5000); // Hide after 5 seconds
     }
 }
@@ -172,7 +205,7 @@ export function checkForArmoryUnlocks(stats) {
     for (const key in ARMORY_ITEMS) {
         const skill = ARMORY_ITEMS[key];
         if (checkSkillUnlockStatus(skill.unlockCondition, stats) && !stats.notifiedArmoryUnlocks.includes(key)) {
-            displayArmoryUnlockNotification(skill.name);
+            displayArmoryUnlockNotification(key);
             playAnimationSound('power-up'); // Play sound on unlock
             setScreenFlash(0.8, 200, performance.now(), 'gold'); // Gold flash for new skill
             stats.notifiedArmoryUnlocks.push(key);
