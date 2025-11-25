@@ -71,8 +71,9 @@ export const jetPackSkill = {
         if (state.jumpState.isJetPack) {
             state.jumpState.jetPackDuration -= deltaTime;
             if (state.jumpState.jetPackDuration <= 0) {
+                console.log("[DEBUG] Deactivating Jet Pack.");
                 state.jumpState.isJetPack = false;
-                setJumping(false);
+                resetJumpState();
             }
         }
     },
