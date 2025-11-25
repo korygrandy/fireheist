@@ -1,27 +1,44 @@
 import { STICK_FIGURE_FIXED_X, GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
+import { setSkillCooldown } from '../state-manager.js';
 
 let droneImage = null; // To hold the loaded SVG image
 const FADE_IN_DURATION = 200; // Milliseconds for the drone to fade in
-const COOLDOWN = 4000; // 4 seconds in milliseconds
 
 export const reaperDroneSkill = {
+    config: {
+        name: 'reaperDrone',
+        cooldownMs: 4000, // 4 seconds in milliseconds
+    },
     activate(state) {
-        const droneState = state.reaperDroneState;
         const now = performance.now();
 
-        if (droneState.isActive || now < droneState.cooldownEndTime) {
-            console.log(`Reaper Drone activation failed. Active: ${droneState.isActive}, Cooldown remaining: ${Math.max(0, droneState.cooldownEndTime - now).toFixed(0)}ms`);
+        // 1. CHECK GLOBAL COOLDOWN
+        if (state.skillCooldowns[this.config.name] && now < state.skillCooldowns[this.config.name]) {
+            console.log(`Reaper Drone is on cooldown. Remaining: ${Math.max(0, state.skillCooldowns[this.config.name] - now).toFixed(0)}ms`);
             return;
         }
+
+        if (!state.gameRunning || state.isPaused) return;
         
         console.log("Reaper Drone Activated (UI Only)");
-        droneState.isActive = true;
-        droneState.spawnTime = now; // Record activation time
-        droneState.cooldownEndTime = now + COOLDOWN;
+        state.reaperDroneState.isActive = true;
+        state.reaperDroneState.spawnTime = now; // Record activation time
+
+        // 2. SET GLOBAL COOLDOWN
+        setSkillCooldown(this.config.name, now + this.config.cooldownMs);
     },
 
     update(state, deltaTime) {
         const droneState = state.reaperDroneState;
+        const now = performance.now();
+
+        // If the skill is on cooldown (meaning it's active in terms of cooldown logic)
+        // but its visual/effect duration has passed, deactivate it.
+        if (droneState.isActive && state.skillCooldowns[this.config.name] && now > state.skillCooldowns[this.config.name]) {
+            droneState.isActive = false;
+            console.log("Reaper Drone Deactivated (Cooldown Expired)");
+        }
+
         if (!droneState.isActive) return;
         // No logic yet
     },

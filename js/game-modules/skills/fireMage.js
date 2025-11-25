@@ -1,30 +1,31 @@
 // js/game-modules/skills/fireMage.js
 import { FIRE_MAGE_DURATION_MS, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
-import { consumeEnergy, setFireMageActive, setFireMageEndTime, setFireMageOnCooldown } from '../state-manager.js';
-
-const COOLDOWN = 10000; // Cooldown of 10 seconds
+import { consumeEnergy, setFireMageActive, setFireMageEndTime, setSkillCooldown } from '../state-manager.js';
 
 export const fireMageSkill = {
     config: {
         name: 'fireMage',
         energyCost: 60,
+        cooldownMs: 10000, // Cooldown of 10 seconds
     },
     activate: function(state) {
-        if (!state.gameRunning || state.isPaused || state.isFireMageActive || state.isFireMageOnCooldown) return;
-
         const now = Date.now();
-        if (now - state.fireMageLastActivationTime < COOLDOWN) {
-            console.log("-> startFireMage: Fire Mage is on cooldown.");
+        // 1. CHECK COOLDOWN
+        if (state.skillCooldowns[this.config.name] && now < state.skillCooldowns[this.config.name]) {
+            console.log("-> fireMageSkill.activate: Fire Mage is on cooldown.");
             return;
         }
 
+        if (!state.gameRunning || state.isPaused || state.isFireMageActive) return;
+
         if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+
+        // 2. SET COOLDOWN
+        setSkillCooldown(this.config.name, now + this.config.cooldownMs);
 
         setFireMageActive(true);
         setFireMageEndTime(now + FIRE_MAGE_DURATION_MS);
-        state.fireMageLastActivationTime = now; // Start cooldown from now
-        setFireMageOnCooldown(true); // Cooldown starts immediately
 
         playAnimationSound('fireball'); // Placeholder sound for activation
         console.log("-> startFireMage: Fire Mage mode initiated.");
@@ -34,14 +35,6 @@ export const fireMageSkill = {
         if (gameState.isFireMageActive && Date.now() > gameState.fireMageEndTime) {
             setFireMageActive(false);
             console.log("-> Fire Mage mode ended.");
-        }
-
-        if (gameState.isFireMageOnCooldown) {
-            const now = Date.now();
-            if (now - gameState.fireMageLastActivationTime > COOLDOWN) {
-                setFireMageOnCooldown(false);
-                console.log("-> Fire Mage: Cooldown finished. Ready.");
-            }
         }
     },
 
@@ -59,8 +52,6 @@ export const fireMageSkill = {
     },
 
     reset: function(state) {
-        state.fireMageLastActivationTime = 0;
-        setFireMageOnCooldown(false);
         setFireMageActive(false);
     }
 };

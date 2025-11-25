@@ -1,6 +1,6 @@
 // js/game-modules/skills/fireAxe.js
 
-import { consumeEnergy, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementTotalInGameIncinerations, incrementConsecutiveIncinerations } from '../state-manager.js';
+import { consumeEnergy, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementTotalInGameIncinerations, incrementConsecutiveIncinerations, setSkillCooldown } from '../state-manager.js';
 import { EASTER_EGG_EMOJI, OBSTACLE_WIDTH, STICK_FIGURE_FIXED_X } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { createShatterEffect } from '../drawing/effects.js';
@@ -9,12 +9,23 @@ export const fireAxeSkill = {
     config: {
         name: 'fireAxe',
         energyCost: 30,
-        throwDistance: 250, // For level 2
+        throwDistance: 250,
+        cooldownMs: 500, // Matching the implied animation duration for now
     },
 
     activate: function(state) {
-        if (!state.gameRunning || state.isPaused || state.fireAxeState.isActive) return;
-        if (!consumeEnergy(state, this.config.name)) return;
+        const now = Date.now();
+        // 1. CHECK GLOBAL COOLDOWN
+        if (state.skillCooldowns[this.config.name] && now < state.skillCooldowns[this.config.name]) {
+            console.log(`Fire Axe is on cooldown. Remaining: ${Math.max(0, state.skillCooldowns[this.config.name] - now).toFixed(0)}ms`);
+            return;
+        }
+
+        if (!state.gameRunning || state.isPaused) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+
+        // 2. SET GLOBAL COOLDOWN
+        setSkillCooldown(this.config.name, now + this.config.cooldownMs);
 
         state.fireAxeState.isActive = true;
         state.fireAxeState.swingProgress = 0;
@@ -33,6 +44,16 @@ export const fireAxeSkill = {
     },
 
     update: function(state, deltaTime) {
+        const now = Date.now();
+
+        // If the skill is on cooldown (meaning it's active in terms of cooldown logic)
+        // but its visual/effect duration has passed, deactivate it.
+        if (state.fireAxeState.isActive && state.skillCooldowns[this.config.name] && now > state.skillCooldowns[this.config.name]) {
+            state.fireAxeState.isActive = false;
+            state.fireAxeState.isThrown = false; // Also reset thrown state
+            console.log("Fire Axe Deactivated (Cooldown Expired)");
+        }
+
         if (!state.fireAxeState.isActive || state.fireAxeState.hasHit) return; // Stop updating if inactive or already hit
 
         const skillLevel = state.playerStats.skillLevels.fireAxe || 1;

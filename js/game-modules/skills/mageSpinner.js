@@ -1,32 +1,33 @@
 // js/game-modules/skills/mageSpinner.js
 import { MAGE_SPINNER_DURATION_MS, MAGE_SPINNER_FIREBALL_INTERVAL_MS, MAGE_SPINNER_FIREBALL_COUNT, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
-import { consumeEnergy, setMageSpinnerActive, setMageSpinnerEndTime, setMageSpinnerOnCooldown, setMageSpinnerFireballTimer, incrementMageSpinnerFireballsSpawned, setPlayerEnergy } from '../state-manager.js';
+import { consumeEnergy, setMageSpinnerActive, setMageSpinnerEndTime, setMageSpinnerFireballTimer, incrementMageSpinnerFireballsSpawned, setPlayerEnergy, setSkillCooldown } from '../state-manager.js';
 import { castMageSpinnerFireball } from '../actions.js';
-
-const COOLDOWN = 15000; // 15 seconds cooldown
 
 export const mageSpinnerSkill = {
     config: {
         name: 'mageSpinner',
         energyCost: 80,
+        cooldownMs: 15000, // 15 seconds cooldown
     },
     activate: function(state) {
-        if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive || state.isMageSpinnerOnCooldown) return;
-
         const now = Date.now();
-        if (now - state.mageSpinnerLastActivationTime < COOLDOWN) {
-            console.log("-> startMageSpinner: Mage Spinner is on cooldown.");
+        // 1. CHECK COOLDOWN
+        if (state.skillCooldowns[this.config.name] && now < state.skillCooldowns[this.config.name]) {
+            console.log("-> mageSpinnerSkill.activate: Mage Spinner is on cooldown.");
             return;
         }
 
+        if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive) return;
+
         if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+
+        // 2. SET COOLDOWN
+        setSkillCooldown(this.config.name, now + this.config.cooldownMs);
 
         state.isMageSpinnerActive = true;
         state.mageSpinnerEndTime = now + MAGE_SPINNER_DURATION_MS;
-        state.mageSpinnerLastActivationTime = now; // Start cooldown from now
-        setMageSpinnerOnCooldown(true); // Cooldown starts immediately
-        setMageSpinnerFireballTimer(MAGE_SPINNER_FIREBALL_INTERVAL_MS); // Initialize timer for first fireball
+        state.mageSpinnerFireballTimer = MAGE_SPINNER_FIREBALL_INTERVAL_MS; // Initialize timer for first fireball
         incrementMageSpinnerFireballsSpawned(0); // Reset fireball counter
 
         playAnimationSound('firestorm'); // Placeholder sound for activation
@@ -39,7 +40,7 @@ export const mageSpinnerSkill = {
             if (remainingTime <= 0) {
                 setPlayerEnergy(0); 
             } else {
-                const energyToDrain = MAGE_SPINNER_ENERGY_COST; 
+                const energyToDrain = this.config.energyCost; 
                 const drainRate = energyToDrain / MAGE_SPINNER_DURATION_MS; 
                 setPlayerEnergy(Math.max(0, gameState.playerEnergy - (drainRate * deltaTime)));
             }
@@ -62,14 +63,6 @@ export const mageSpinnerSkill = {
                 }
             }
         }
-
-        if (gameState.isMageSpinnerOnCooldown) {
-            const now = Date.now();
-            if (now - gameState.mageSpinnerLastActivationTime > COOLDOWN) {
-                setMageSpinnerOnCooldown(false);
-                console.log("-> Mage Spinner: Cooldown finished. Ready.");
-            }
-        }
     },
     draw: function(ctx, gameState, playerX, playerY) {
         if (gameState.isMageSpinnerActive) {
@@ -81,8 +74,6 @@ export const mageSpinnerSkill = {
     },
 
     reset: function(state) {
-        state.mageSpinnerLastActivationTime = 0;
-        setMageSpinnerOnCooldown(false);
         setMageSpinnerActive(false);
         setMageSpinnerFireballTimer(0);
         incrementMageSpinnerFireballsSpawned(0);

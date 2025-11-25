@@ -59,20 +59,14 @@ const state = {
     fireSpinnerLastActivationTime: 0,
     isFireMageActive: false, // Is Fire Mage mode currently active?
     fireMageEndTime: 0, // When the Fire Mage mode will end
-    isFireMageOnCooldown: false, // Is Fire Mage on cooldown?
-    fireMageLastActivationTime: 0, // When Fire Mage was last activated
     isMageSpinnerActive: false, // Is Mage Spinner mode currently active?
     mageSpinnerEndTime: 0, // When the Mage Spinner mode will end
-    isMageSpinnerOnCooldown: false, // Is Mage Spinner on cooldown?
-    mageSpinnerLastActivationTime: 0, // When Mage Spinner was last activated
     mageSpinnerFireballTimer: 0, // Timer for spawning fireballs
     mageSpinnerFireballsSpawned: 0, // Counter for fireballs spawned
 
     // Fiery Houdini State
     isFieryHoudiniActive: false,
     fieryHoudiniEndTime: 0,
-    isFieryHoudiniOnCooldown: false,
-    fieryHoudiniLastActivationTime: 0,
 
     // New Special Move States
     playerIsInvisible: false, // For Blink Strike
@@ -83,7 +77,6 @@ const state = {
 
     // Fire Axe State
     fireAxeState: {
-        isActive: false,
         swingProgress: 0,
         isThrown: false,
         x: 0,
@@ -103,14 +96,12 @@ const state = {
         anchorY: 0,
         swingDirection: 1,
         playerReleaseTime: 0,
-        cooldownEndTime: 0,
         hasSwungForward: false,
         swingStartTime: 0,
     },
 
     reaperDroneState: {
         isActive: false,
-        cooldownEndTime: 0
     },
 
     // Six Shooter Pistol State
@@ -185,7 +176,6 @@ const state = {
     },
     isFirestormActive: false,
     isFireShieldActive: false,
-    isShotgunBlastActive: false,
     fireShieldEndTime: 0,
     firestormEndTime: 0,
     firestormParticles: [],

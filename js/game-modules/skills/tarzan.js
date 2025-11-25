@@ -1,6 +1,6 @@
 // js/game-modules/skills/tarzan.js
 
-import { consumeEnergy, initiateJump, setInvincible, setInvincibilityEndTime } from '../state-manager.js';
+import { consumeEnergy, initiateJump, setInvincible, setInvincibilityEndTime, setSkillCooldown } from '../state-manager.js';
 import { playAnimationSound } from '../../audio.js';
 import { canvas } from '../../dom-elements.js';
 import { drawStickFigure } from '../drawing/player.js';
@@ -10,17 +10,22 @@ export const tarzanSkill = {
     config: {
         name: 'tarzanSwing',
         energyCost: 50,
+        cooldownMs: 3000,
     },
 
     activate: function(state) {
         const now = performance.now();
-        if (now < state.tarzanState.cooldownEndTime) {
+        // 1. CHECK COOLDOWN
+        if (state.skillCooldowns[this.config.name] && now < state.skillCooldowns[this.config.name]) {
             console.log("-> Tarzan Skill: On cooldown.");
             return;
         }
 
         if (!state.gameRunning || state.isPaused || state.tarzanState.isActive) return;
         if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+
+        // 2. SET COOLDOWN
+        setSkillCooldown(this.config.name, now + this.config.cooldownMs);
 
         console.log("-> Tarzan Skill: Activated!");
         const tarzanState = state.tarzanState;
@@ -77,7 +82,6 @@ export const tarzanSkill = {
                 tarzanState.isAttached = false;
                 tarzanState.isSwinging = false;
                 state.jumpState.isJumping = false; // Land the player
-                tarzanState.cooldownEndTime = performance.now() + 3000;
                 setInvincible(false); // End invincibility
 
                 state.gameSpeedMultiplier *= 1.5;
