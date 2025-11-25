@@ -266,7 +266,7 @@ export function startGame() {
     if (gameState.isDailyChallengeActive && gameState.selectedTheme && THEME_MUSIC_MAP[gameState.selectedTheme]) {
         // 1. Daily Challenge music has top priority, overriding everything else.
         musicUrl = THEME_MUSIC_MAP[gameState.selectedTheme];
-    } else if (gameState.selectedPersona && gameState.selectedPersona !== 'custom' && personas[gameState.selectedPersona]) {
+    } else if (gameState.selectedPersona && gameState.selectedPersona !== 'custom' && personas[gameState.selectedPersona] && personas[gameState.selectedPersona].music) {
         // 2. Persona-specific music (when not in a daily challenge)
         musicUrl = personas[gameState.selectedPersona].music;
     } else if (isDefaultEmoji && gameState.selectedTheme && THEME_MUSIC_MAP[gameState.selectedTheme]) {
