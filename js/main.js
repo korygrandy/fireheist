@@ -319,6 +319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 function debugSetIncinerationCount(count) {
 
                     setObstaclesIncinerated(count);
+                    gameState.playerStats.totalObstaclesIncinerated = count;
                     checkForNewUnlocks(gameState.playerStats); // Check for unlocks first
                     savePlayerStats(); // Then save the updated stats
                     populatePersonaSelector(); // Re-populate in case this unlocks a persona

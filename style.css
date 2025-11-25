@@ -785,6 +785,10 @@ video {
   margin-left: 1rem;
 }
 
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .mr-3 {
   margin-right: 0.75rem;
 }
@@ -932,6 +936,10 @@ video {
   height: 1.25rem;
 }
 
+.h-6 {
+  height: 1.5rem;
+}
+
 .h-96 {
   height: 24rem;
 }
@@ -958,6 +966,10 @@ video {
 
 .w-4 {
   width: 1rem;
+}
+
+.w-6 {
+  width: 1.5rem;
 }
 
 .w-full {
@@ -3048,6 +3060,12 @@ video {
   text-shadow: 0 0 10px yellow, 0 0 20px yellow, 0 0 30px yellow;
   opacity: 0;
   transition: opacity 0.5s;
+}
+
+.notification-skill-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
 }
 
 .hover\:bg-gray-500:hover {

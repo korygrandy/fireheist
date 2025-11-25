@@ -69,7 +69,7 @@ export function populateArmoryItems() {
         const upgradePath = SKILL_UPGRADE_PATHS[skillKey];
 
         const skillCard = document.createElement('div');
-        const tierClass = skill.tier ? `tier-${skill.tier.toLowerCase()}` : 'tier-common';
+        const tierClass = skill.tier ? `tier-${skill.tier.toLowerCase()}` : 'tier-Grunt';
         skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center ${isUnlocked ? 'bg-white unlocked' : 'bg-gray-200 opacity-50 cursor-not-allowed'} ${tierClass}`;
 
         let tierLabel = '';

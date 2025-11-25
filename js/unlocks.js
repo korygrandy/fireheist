@@ -32,7 +32,7 @@ export const ARMORY_ITEMS = {
         name: 'Fire Spinner',
         description: 'A fiery spinning jump that incinerates obstacles.',
         emoji: '🔥',
-        tier: 'Adept',
+        tier: 'Enlisted',
         unlockCondition: {
             type: 'consecutiveGroundPounds',
             count: 3,
@@ -93,7 +93,7 @@ export const ARMORY_ITEMS = {
         name: 'Blink Strike',
         description: 'Instantly teleport through the next obstacle, shattering it on arrival. A high-precision tool for the agile.',
         emoji: '💨',
-        tier: 'Adept',
+        tier: 'Enlisted',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'blinkStrike'
@@ -104,7 +104,7 @@ export const ARMORY_ITEMS = {
         name: 'Jetstream Dash',
         description: 'Propel forward in a sustained, invincible dash. Perfect for navigating dense obstacle fields when a jump won\'t cut it.',
         emoji: '🌊',
-        tier: 'Adept',
+        tier: 'Enlisted',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'jetstreamDash'
@@ -115,7 +115,7 @@ export const ARMORY_ITEMS = {
         name: 'Echo Slam',
         description: 'Slam the ground with such force that it sends a secondary, weaker shockwave forward, clearing staggered obstacles.',
         emoji: '💥',
-        tier: 'Adept',
+        tier: 'Enlisted',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'echoSlam'
@@ -139,7 +139,7 @@ export const ARMORY_ITEMS = {
         description: 'Unleash a cone of fire particles, destroying nearby obstacles.',
         imageLocked: 'images/shotgun-locked.png',
         imageUnlocked: 'images/shotgun-unlocked.png',
-        tier: 'Adept',
+        tier: 'Enlisted',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'shotgunBlast'
@@ -151,7 +151,7 @@ export const ARMORY_ITEMS = {
         description: 'Hurl a fiery projectile that smashes and ignites obstacles on impact.',
         imageLocked: 'images/molatov-cocktail-locked.png',
         imageUnlocked: 'images/molatov-cocktail-unlocked.png',
-        tier: 'Adept',
+        tier: 'Enlisted',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'molotovCocktail'
@@ -175,7 +175,7 @@ export const ARMORY_ITEMS = {
         name: 'Fire Axe',
         description: 'A flaming axe that chops down obstacles. Upgrades allow it to be thrown for a short distance.',
         emoji: '🪓',
-        tier: 'Common',
+        tier: 'Grunt',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'fireAxe'
@@ -186,7 +186,7 @@ export const ARMORY_ITEMS = {
         name: 'Tarzan Swing',
         description: 'Swing from a rope to clear obstacles and gain momentum.',
         emoji: '🐒',
-        tier: 'Adept',
+        tier: 'Enlisted',
         unlockCondition: {
             type: 'placeholder',
             skillKey: 'tarzanSwing'

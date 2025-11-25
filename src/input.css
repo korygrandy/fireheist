@@ -14,3 +14,9 @@
     opacity: 0;
     transition: opacity 0.5s;
 }
+
+.notification-skill-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
