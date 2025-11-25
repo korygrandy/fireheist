@@ -113,6 +113,7 @@ export const ENERGY_SETTINGS = {
         default: 10,
         firestorm: 0, // No initial cost, drains over time
         fireMage: 25,
+        fireballCast: 10,
         fireSpinner: 0, // No initial cost, drains over time
         jetstreamDash: 0, // Drains over time
         fireballRoll: 0, // Drains over time

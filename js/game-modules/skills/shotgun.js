@@ -12,7 +12,7 @@ export const shotgunSkill = {
 
     activate: function(state) {
         if (!state.gameRunning || state.isPaused || state.isShotgunBlastActive) return;
-        if (!consumeEnergy(state, this.config.name)) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         playAnimationSound('shotgun-blast');
         state.isShotgunBlastActive = true;

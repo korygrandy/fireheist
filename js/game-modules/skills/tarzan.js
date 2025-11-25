@@ -20,7 +20,7 @@ export const tarzanSkill = {
         }
 
         if (!state.gameRunning || state.isPaused || state.tarzanState.isActive) return;
-        if (!consumeEnergy(state, this.config.name)) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
 
         console.log("-> Tarzan Skill: Activated!");
         const tarzanState = state.tarzanState;

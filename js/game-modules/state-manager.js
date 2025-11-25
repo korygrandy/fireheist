@@ -10,7 +10,7 @@ export const GRASS_ANIMATION_INTERVAL_MS = 100;
  * The single source of truth for all state reads.
  * Components should import this to get the current state.
  */
-export const gameState = state;
+export let gameState = state;
 
 /**
  * Consumes energy for a skill, if available.
@@ -1103,7 +1103,6 @@ export function resetJumpState() {
         isShockwave: false, shockwaveDuration: 0,
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
-        isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
         isFieryHoudini: false, fieryHoudiniDuration: 0,
         isBlinkStrike: false, blinkStrikeDuration: 0,
