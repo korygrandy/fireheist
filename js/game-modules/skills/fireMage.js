@@ -6,7 +6,7 @@ import { consumeEnergy, setFireMageActive, setFireMageEndTime, setSkillCooldown 
 export const fireMageSkill = {
     config: {
         name: 'fireMage',
-        energyCost: 60,
+        energyCost: 40,
         cooldownMs: 10000, // Cooldown of 10 seconds
     },
     activate: function(state) {
@@ -19,7 +19,11 @@ export const fireMageSkill = {
 
         if (!state.gameRunning || state.isPaused || state.isFireMageActive) return;
 
-        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) {
+            console.log(`[DEBUG] Fire Mage blocked: Not enough energy. Required: ${this.config.energyCost}, Available: ${state.playerEnergy}`);
+            playAnimationSound('quack');
+            return;
+        }
 
         // 2. SET COOLDOWN
         setSkillCooldown(this.config.name, now + this.config.cooldownMs);
