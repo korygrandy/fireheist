@@ -1,21 +1,25 @@
 import { canvas, ctx } from '../../dom-elements.js';
 import { STICK_FIGURE_TOTAL_HEIGHT, COLLISION_DURATION_MS, ACCELERATOR_DURATION_MS } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
-import { gameState } from '../state-manager.js';
+import { gameState, getSkillConfig } from '../state-manager.js';
 import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle } from './effects.js';
 
 export function drawStickFigure(x, y, jumpState, angleRad) {
     if (gameState.playerIsInvisible) {
         ctx.restore(); // Ensure any previous transforms are restored
         return; // Don't draw the player if invisible
-    }``
+    }
 
     // Determine if Big Head Mode is active
     const isBigHeadMode = gameState.playerStats.activeArmorySkill === 'bigHeadMode';
     const headFontSize = isBigHeadMode ? '56px Arial' : '28px Arial';
 
     if (gameState.isColliding) {
-        console.log(`[DEBUG] Drawing player in collision state.\n          isColliding: ${gameState.isColliding},\n          collisionDuration: ${gameState.collisionDuration},\n          globalAlpha: ${ctx.globalAlpha},\n          x: ${x}, y: ${y}`);
+        console.log(`[DEBUG] Drawing player in collision state.
+          isColliding: ${gameState.isColliding},
+          collisionDuration: ${gameState.collisionDuration},
+          globalAlpha: ${ctx.globalAlpha},
+          x: ${x}, y: ${y}`);
     }
 
     // Determine the base color based on the theme
@@ -414,19 +418,63 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
     ctx.moveTo(0, headY + 10); ctx.lineTo(armMovementX2, armMovementY2);
     ctx.stroke();
 
-        ctx.restore();
+    ctx.restore();
 
-    
+    ctx.restore();
+}
 
-        ctx.restore();
+export function drawCooldownMeter(ctx, state) {
+    const activeSkillKey = state.playerStats.activeArmorySkill;
+    const now = Date.now();
 
+    if (!activeSkillKey || !state.skillCooldowns[activeSkillKey] || now > state.skillCooldowns[activeSkillKey]) {
+        // No active skill with cooldown, or cooldown expired
+        return;
     }
 
-    export function drawFireShield(x, y) {
+    const cooldownEndTime = state.skillCooldowns[activeSkillKey];
+    const activeSkillConfig = getSkillConfig(activeSkillKey);
+    let totalCooldownDuration = activeSkillConfig && activeSkillConfig.cooldownMs ? activeSkillConfig.cooldownMs : 1000; // Fallback to 1000ms
 
-        const shieldRadius = 40 + 5 * Math.sin(gameState.frameCount * 0.2); // Pulsating radius
+    const timeRemaining = cooldownEndTime - now;
+    const cooldownProgress = 1 - (timeRemaining / totalCooldownDuration); // 0 to 1
 
-        const shieldOpacity = 0.5 + 0.2 * Math.sin(gameState.frameCount * 0.2); // Pulsating opacity
+    const playerX = state.stickFigureFixedX;
+    const playerY = state.stickFigureY || (400 - 10 - STICK_FIGURE_TOTAL_HEIGHT); // Use stickFigureY or default ground position
+    const meterRadius = 30;
+    const meterYOffset = -STICK_FIGURE_TOTAL_HEIGHT - 20; // Above the player's head
+
+    ctx.save();
+    ctx.translate(playerX, playerY + meterYOffset);
+
+    // Background of the cooldown meter (faded out)
+    ctx.beginPath();
+    ctx.arc(0, 0, meterRadius, 0, Math.PI, true); // Full semi-circle
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.fill();
+
+    // Cooldown arc
+    ctx.beginPath();
+    // Start angle is at the left (Math.PI) and sweep towards the right (0) as cooldown depletes
+    const startAngle = Math.PI;
+    const endAngle = Math.PI - (Math.PI * cooldownProgress); // Depletes clockwise
+    ctx.arc(0, 0, meterRadius, startAngle, endAngle, true);
+
+    // Color transition from red to white
+    const red = 255;
+    const green = Math.round(255 * cooldownProgress);
+    const blue = Math.round(255 * cooldownProgress);
+    ctx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+    ctx.fill();
+
+    ctx.restore();
+}
+
+export function drawFireShield(x, y) {
+
+    const shieldRadius = 40 + 5 * Math.sin(gameState.frameCount * 0.2); // Pulsating radius
+
+    const shieldOpacity = 0.5 + 0.2 * Math.sin(gameState.frameCount * 0.2); // Pulsating opacity
 
     
 
@@ -439,5 +487,3 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         ctx.fill();
 
     }
-
-    
