@@ -189,6 +189,7 @@ export function resetGameState() {
     setFireMageEndTime(0);
     setFireMageOnCooldown(false);
     resetStreaks();
+    gameState.skillCooldowns = {};
 
     gameState.activeCustomEvents = Object.values(gameState.customEvents).flat().map(event => ({
         ...event, wasTriggered: false, isActive: false, wasSpawned: false
