@@ -3037,6 +3037,19 @@ video {
   forced-color-adjust: none;
 }
 
+#turbo-boost-animation {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 10px yellow, 0 0 20px yellow, 0 0 30px yellow;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
 .hover\:bg-gray-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(107 114 128 / var(--tw-bg-opacity, 1));
