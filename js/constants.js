@@ -82,6 +82,9 @@ export const BLINK_STRIKE_DURATION_MS = 300;
 export const JETSTREAM_DASH_DURATION_MS = 5000;
 export const ECHO_SLAM_DURATION_MS = 600;
 export const FIREBALL_ROLL_DURATION_MS = 8000;
+export const HOVER_PACK_INITIAL_BOOST_DURATION = 500;
+export const JETPACK_HOVER_HEIGHT = -50;
+export const MIN_ENERGY_FOR_JETPACK_SUSTAIN = 10;
 
 export const JUMP_DURATIONS = {
     hurdle: 500,
