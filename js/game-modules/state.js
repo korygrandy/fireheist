@@ -211,7 +211,7 @@ const state = {
         ash: [],
         steamVents: [],
         heatShimmer: { active: false, waveY: 0 },
-        cityscape: { buildings: [] },
+        cityscape: { buildings: [], opacity: 0 },
         headlightFadeState: {
             opacity: 0.6 + Math.random() * 0.4,
             fadeDirection: Math.random() > 0.5 ? 1 : -1,

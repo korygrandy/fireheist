@@ -6,33 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/alien.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/ambience-erruptions.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/armory-tab.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/armory-tab.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/ballerina.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/city-night-theme.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/dog.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/engulfed-crackling.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/engulfed-crackling.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/funk.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/hof-tab.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/hof-tab.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/keypress.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/keypress.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/lion.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/molatov-cocktail-hurl.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/molatov-cocktail-hurl.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/molotov-cocktail-hurl.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/molotov-cocktail-hurl.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/ninja.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/rocket.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/shotgun-blast.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/shotgun-blast.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/shotgun-reload.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/shotgun-reload.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/six-shooter-firing.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/six-shooter-firing.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/upgrade-skill.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/upgrade-skill.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/vault-unlock.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/vault-unlock.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/vault-upgrade.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/vault-upgrade.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fx/zombie.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/personas.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/personas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/changelog.json" beforeDir="false" afterPath="$PROJECT_DIR$/changelog.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/environmental-effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/environmental-effects.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/state.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/state.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/version.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +28,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -84,7 +66,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/city-theme-building-fade",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -112,6 +94,15 @@
       <workItem from="1763410316063" duration="15809000" />
       <workItem from="1763491212101" duration="23537000" />
     </task>
+    <task id="LOCAL-00001" summary="Added skill-achieved.mp3 ; plays  skill is achieved">
+      <option name="closed" value="true" />
+      <created>1764096935433</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1764096935433</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -119,6 +110,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="version commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="version commit" />
+    <MESSAGE value="Added skill-achieved.mp3 ; plays  skill is achieved" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added skill-achieved.mp3 ; plays  skill is achieved" />
   </component>
 </project>

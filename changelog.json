@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.5.40",
+        "date": "2025-11-25",
+        "changes": [
+            "feat(visuals): Implemented a fade-in effect for the city skyline.",
+            "feat(visuals): Increased the window flicker frequency by 20% for a more dynamic cityscape."
+        ]
+    },
+    {
         "version": "1.5.39",
         "date": "2025-11-22",
         "changes": [
@@ -64,15 +72,7 @@
         "version": "1.5.31",
         "date": "2025-11-22",
         "changes": [
-            "fix(state-management): Corrected an initialization bug where the in-game incineration counter would fail to update on the first run after clearing the browser cache. The `loadPlayerStats` function now correctly merges saved data with default state to ensure all properties are properly initialized."
-        ]
-    },
-    {
-        "version": "1.5.30",
-        "date": "2025-11-22",
-        "changes": [
-            "fix(leaderboard): Corrected the leaderboard saving logic to save the session-specific incineration count (`consecutiveIncinerations`) instead of the all-time count (`obstaclesIncinerated`).",
-            "fix(incineration-counter): Corrected the in-game UI to display the session-specific incineration count (`consecutiveIncinerations`) instead of the all-time count (`obstaclesIncinerated`)."
+            "fix(state-management): Corrected an initialization bug where the in-game incineration counter would fail to update on the a first run after clearing the browser cache. The `loadPlayerStats` function now correctly merges saved data with default state to ensure all properties are properly initialized."
         ]
     }
 ]

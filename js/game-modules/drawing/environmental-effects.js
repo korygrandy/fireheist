@@ -310,7 +310,7 @@ function drawRoadwayThemeEffects() {
 const BUILDING_COUNT = 15;
 const WINDOW_SIZE = 8;
 const WINDOW_SPACING = 4;
-const WINDOW_FLICKER_CHANCE = 0.01; // Increased chance per frame to toggle a window
+const WINDOW_FLICKER_CHANCE = 0.012; // Increased chance per frame to toggle a window
 
 function startCityscape() {
     if (state.environmentalEffects.cityscape.buildings.length > 0) return;
@@ -357,12 +357,17 @@ function startCityscape() {
 }
 
 function updateCityscape() {
-    const buildings = state.environmentalEffects.cityscape.buildings;
-    if (buildings.length === 0) return;
+    const cityscape = state.environmentalEffects.cityscape;
+    if (cityscape.buildings.length === 0) return;
+
+    // Fade in the cityscape
+    if (cityscape.opacity < 1) {
+        cityscape.opacity = Math.min(1, cityscape.opacity + 0.005);
+    }
 
     // Randomly toggle a window's state
     if (Math.random() < WINDOW_FLICKER_CHANCE) {
-        const randomBuilding = buildings[Math.floor(Math.random() * buildings.length)];
+        const randomBuilding = cityscape.buildings[Math.floor(Math.random() * cityscape.buildings.length)];
         if (randomBuilding.windows.length > 0) {
             const randomWindow = randomBuilding.windows[Math.floor(Math.random() * randomBuilding.windows.length)];
             randomWindow.on = !randomWindow.on;
@@ -371,7 +376,7 @@ function updateCityscape() {
     }
 
     // Update window opacity for smooth transitions
-    for (const building of buildings) {
+    for (const building of cityscape.buildings) {
         for (const window of building.windows) {
             if (window.opacity < window.targetOpacity) {
                 window.opacity = Math.min(window.opacity + window.fadeSpeed, window.targetOpacity);
@@ -383,12 +388,15 @@ function updateCityscape() {
 }
 
 export function drawCityscape() {
-    const buildings = state.environmentalEffects.cityscape.buildings;
-    if (buildings.length === 0) return;
+    const cityscape = state.environmentalEffects.cityscape;
+    if (cityscape.buildings.length === 0) return;
+
+    ctx.save();
+    ctx.globalAlpha = cityscape.opacity;
 
     const parallaxOffset = state.backgroundOffset * CITYSCAPE_PARALLAX_FACTOR;
 
-    for (const building of buildings) {
+    for (const building of cityscape.buildings) {
         // The building's original x is its position in the whole cityscape "reel".
         // We subtract the parallaxOffset to find its current position on the canvas.
         const drawX = building.x - parallaxOffset;
@@ -412,6 +420,7 @@ export function drawCityscape() {
             }
         }
     }
+    ctx.restore();
 }
 
 export function drawThemeAnchor() {
