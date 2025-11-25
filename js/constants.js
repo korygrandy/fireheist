@@ -164,27 +164,27 @@ export const THEME_ANCHOR_PARALLAX_FACTOR = 0.1;
 export const STICK_FIGURE_WIDTH = 20;
 
 // MUSIC CONSTANTS & MAPPING
-export const DEFAULT_MUSIC_URL = "fx/funk.mp3";
+export const DEFAULT_MUSIC_URL = "fx/funk-theme-music.mp3";
 export const EMOJI_MUSIC_MAP = {
-    '🧟': 'fx/zombie.mp3',
-    '🥷': 'fx/ninja.mp3',
-    '🦁': 'fx/lion.mp3',
-    '💃': 'fx/ballerina.mp3',
-    '🐶': 'fx/dog.mp3',
-    '🚀': 'fx/rocket.mp3',
-    '👽': 'fx/alien.mp3',
+    '🧟': 'fx/zombie-theme-music.mp3',
+    '🥷': 'fx/ninja-theme-music.mp3',
+    '🦁': 'fx/lion-theme-music.mp3',
+    '💃': 'fx/ballerina-theme-music.mp3',
+    '🐶': 'fx/dog-theme-music.mp3',
+    '🚀': 'fx/rocket-theme-music.mp3',
+    '👽': 'fx/alien-theme-music.mp3',
 };
 
 export const THEME_MUSIC_MAP = {
-    'default': 'fx/funk.mp3',
+    'default': 'fx/funk-theme-music.mp3',
     'dark': 'fx/ufo-hover.mp3',
     'light': 'fx/power-up.mp3',
     'forest': 'fx/quack.mp3',
-    'desert': 'fx/lion.mp3',
-    'ocean': 'fx/dog.mp3',
-    'space': 'fx/alien.mp3',
-    'city': 'fx/city-night-theme.mp3',
-    'volcano': 'fx/rocket.mp3',
+    'desert': 'fx/lion-theme-music.mp3',
+    'ocean': 'fx/dog-theme-music.mp3',
+    'space': 'fx/alien-theme-music.mp3',
+    'city': 'fx/city-night-theme-music.mp3',
+    'volcano': 'fx/rocket-theme-music.mp3',
     'snow': 'fx/snow-theme-music.mp3',
 };
 
@@ -194,7 +194,7 @@ export const THEME_AMBIENT_SOUND_MAP = {
     'roadway': 'fx/ambience-crickets.mp3', // New sound: city ambience
     'snow': 'fx/ambience-mountain-wind.mp3', // Re-use wind sound
     'desert': 'fx/ambience-desert-wind.mp3',
-    'volcano': 'fx/ambience-erruptions.mp3', // Placeholder, ideally lava bubbling/rumbling
+    'volcano': 'fx/ambience-eruptions.mp3', // Placeholder, ideally lava bubbling/rumbling
     'outerspace': 'fx/ufo-hover.mp3', // Placeholder, ideally space hum
     'night': 'fx/ambience-crickets.mp3', // Placeholder, ideally crickets/night owl
 };

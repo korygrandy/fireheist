@@ -10,7 +10,7 @@ export const personas = {
         skillLevel: 'Pro',
         obstacleFrequencyPercent: 10,
         theme: 'desert',
-        music: 'fx/ninja.mp3',
+        music: 'fx/ninja-theme-music.mp3',
         milestones: [
             "01/01/2024: 1000", "08/15/2024: 15000", "03/01/2025: 40000", "11/20/2025: 85000",
             "07/05/2026: 150000", "01/10/2027: 220000", "09/15/2027: 300000", "05/25/2028: 410000",

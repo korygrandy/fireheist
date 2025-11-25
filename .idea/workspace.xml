@@ -6,7 +6,33 @@
   <component name="ChangeListManager">
     <list default="true" id="7de52f5c-7a57-4b74-82ec-ddd80483540b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/game-modules/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/alien.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/ambience-erruptions.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/armory-tab.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/armory-tab.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/ballerina.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/city-night-theme.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/dog.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/engulfed-crackling.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/engulfed-crackling.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/funk.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/hof-tab.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/hof-tab.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/keypress.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/keypress.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/lion.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/molatov-cocktail-hurl.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/molatov-cocktail-hurl.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/molotov-cocktail-hurl.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/molotov-cocktail-hurl.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/ninja.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/rocket.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/shotgun-blast.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/shotgun-blast.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/shotgun-reload.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/shotgun-reload.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/six-shooter-firing.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/six-shooter-firing.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/upgrade-skill.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/upgrade-skill.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/vault-unlock.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/vault-unlock.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/vault-upgrade.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/fx/vault-upgrade.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fx/zombie.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/drawing/overlays.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/game-modules/game-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/game-modules/game-controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/personas.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/personas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,20 +79,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/skill-cooldown&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

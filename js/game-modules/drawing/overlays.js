@@ -397,7 +397,7 @@ export function drawDailyChallengeCompletedOverlay() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
-    ctx.font = 'bold 24px Impact, sans-serif';
+    ctx.font = '22px Impact, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
