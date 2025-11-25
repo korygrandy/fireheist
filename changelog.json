@@ -1,5 +1,26 @@
 [
     {
+        "version": "1.5.41",
+        "date": "2025-11-25",
+        "changes": [
+            "feat(skill-balance): Rebalanced various skill unlock conditions: ",
+            "Reduced \"Big Head Mode\" unlock from 100,000 days to 100 days.",
+            "Increased \"Six Shooter Pistol\" unlock from 50 Fire Mage incinerations to 100.",
+            "Assigned unlock conditions for previously free/placeholder skills:",
+            "\"Fire Mage\": Incinerate 100 obstacles.",
+            "\"Jet Pack\": Achieve 50 flawless hurdles.",
+            "\"Blink Strike\": Achieve 25 consecutive flawless hurdles.",
+            "\"Jetstream Dash\": Destroy 50 obstacles with Fireball Roll.",
+            "\"Echo Slam\": Destroy 75 obstacles with Ground Pound.",
+            "\"Fireball Roll\": Incinerate 100 obstacles.",
+            "\"Shotgun Blast\": Incinerate 150 total obstacles.",
+            "\"Molotov Cocktail\": Incinerate 200 total obstacles.",
+            "\"Fire Axe\": Survive 25 days.",
+            "\"Tarzan Swing\": Incinerate 500 total obstacles.",
+            "fix(achievements): Implemented checks in `state-manager.js` to prevent player statistics and achievements from being updated when using a 'Custom Persona' outside of 'Daily Challenge' mode."
+        ]
+    },
+    {
         "version": "1.5.40",
         "date": "2025-11-25",
         "changes": [
@@ -66,13 +87,6 @@
         "date": "2025-11-22",
         "changes": [
             "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."
-        ]
-    },
-    {
-        "version": "1.5.31",
-        "date": "2025-11-22",
-        "changes": [
-            "fix(state-management): Corrected an initialization bug where the in-game incineration counter would fail to update on the a first run after clearing the browser cache. The `loadPlayerStats` function now correctly merges saved data with default state to ensure all properties are properly initialized."
         ]
     }
 ]

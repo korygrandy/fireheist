@@ -408,8 +408,10 @@ export function removeFireball(index) {
  * Increments the obstacles incinerated count.
  */
 export function incrementObstaclesIncinerated() {
-    state.playerStats.obstaclesIncinerated++;
-    savePlayerStats();
+    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+        state.playerStats.obstaclesIncinerated++;
+        savePlayerStats();
+    }
 }
 
 /**
@@ -424,28 +426,36 @@ export function setObstaclesIncinerated(count) {
  * Increments the consecutive incinerations count.
  */
 export function incrementConsecutiveIncinerations() {
-    state.playerStats.consecutiveIncinerations++;
+    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+        state.playerStats.consecutiveIncinerations++;
+    }
 }
 
 /**
  * Increments the total in-game incinerations count.
  */
 export function incrementTotalInGameIncinerations() {
-    state.playerStats.totalInGameIncinerations++;
+    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+        state.playerStats.totalInGameIncinerations++;
+    }
 }
 
 /**
  * Increments the consecutive ground pounds count.
  */
 export function incrementConsecutiveGroundPounds() {
-    state.playerStats.consecutiveGroundPounds++;
+    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+        state.playerStats.consecutiveGroundPounds++;
+    }
 }
 
 /**
  * Increments the total ground pound collisions count.
  */
 export function incrementTotalGroundPoundCollisions() {
-    state.playerStats.totalGroundPoundCollisions++;
+    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+        state.playerStats.totalGroundPoundCollisions++;
+    }
 }
 
 /**

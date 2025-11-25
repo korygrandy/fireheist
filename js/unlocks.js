@@ -16,6 +16,18 @@ export const personaUnlocks = {
 };
 
 export const ARMORY_ITEMS = {
+    jetPack: {
+        name: 'Jet Pack',
+        description: 'Boost over obstacles with a powerful jet pack.',
+        emoji: '🚀',
+        tier: 'A',
+        unlockCondition: {
+            type: 'flawlessHurdles',
+            count: 50,
+            skillKey: 'jetPack'
+        },
+        unlockText: 'Achieve 50 flawless hurdles'
+    },
     firestorm: {
         name: 'Firestorm',
         description: 'Unleash a continuous barrage of fire, incinerating all obstacles.',
@@ -95,10 +107,11 @@ export const ARMORY_ITEMS = {
         emoji: '💨',
         tier: 'Enlisted',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'consecutiveFlawlessHurdles',
+            count: 25,
             skillKey: 'blinkStrike'
         },
-        unlockText: 'Unlock condition not yet determined.'
+        unlockText: 'Achieve 25 consecutive flawless hurdles'
     },
     jetstreamDash: {
         name: 'Jetstream Dash',
@@ -106,10 +119,11 @@ export const ARMORY_ITEMS = {
         emoji: '🌊',
         tier: 'Enlisted',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'fireballRollKills',
+            count: 50,
             skillKey: 'jetstreamDash'
         },
-        unlockText: 'Unlock condition not yet determined.'
+        unlockText: 'Destroy 50 obstacles with Fireball Roll'
     },
     echoSlam: {
         name: 'Echo Slam',
@@ -117,10 +131,11 @@ export const ARMORY_ITEMS = {
         emoji: '💥',
         tier: 'Enlisted',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'groundPoundKills',
+            count: 75,
             skillKey: 'echoSlam'
         },
-        unlockText: 'Unlock condition not yet determined.'
+        unlockText: 'Destroy 75 obstacles with Ground Pound'
     },
     fireballRoll: {
         name: 'Fireball Roll',
@@ -129,10 +144,11 @@ export const ARMORY_ITEMS = {
         imageUnlocked: 'images/fireball-roll-unlocked.png',
         tier: 'Master',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'incinerateCount',
+            count: 100,
             skillKey: 'fireballRoll'
         },
-        unlockText: 'Unlock condition not yet determined.'
+        unlockText: 'Incinerate 100 obstacles'
     },
     shotgunBlast: {
         name: 'Shotgun Blast',
@@ -141,10 +157,11 @@ export const ARMORY_ITEMS = {
         imageUnlocked: 'images/shotgun-unlocked.png',
         tier: 'Enlisted',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'totalIncinerateCount',
+            count: 150,
             skillKey: 'shotgunBlast'
         },
-        unlockText: 'Unlock condition to be determined.'
+        unlockText: 'Incinerate 150 total obstacles'
     },
     molotovCocktail: {
         name: 'Molotov Cocktail',
@@ -153,10 +170,11 @@ export const ARMORY_ITEMS = {
         imageUnlocked: 'images/molatov-cocktail-unlocked.png',
         tier: 'Enlisted',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'totalIncinerateCount',
+            count: 200,
             skillKey: 'molotovCocktail'
         },
-        unlockText: 'Unlock condition to be determined.'
+        unlockText: 'Incinerate 200 total obstacles'
     },
     sixShooterPistol: {
         name: 'Six Shooter Pistol',
@@ -166,10 +184,10 @@ export const ARMORY_ITEMS = {
         tier: 'Epic',
         unlockCondition: {
             type: 'fireMageIncinerateCount',
-            count: 50,
+            count: 100,
             skillKey: 'sixShooterPistol'
         },
-        unlockText: 'Incinerate 50 obstacles using Fire Mage'
+        unlockText: 'Incinerate 100 obstacles using Fire Mage'
     },
     fireAxe: {
         name: 'Fire Axe',
@@ -177,10 +195,11 @@ export const ARMORY_ITEMS = {
         emoji: '🪓',
         tier: 'Grunt',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'daysSurvived',
+            count: 25,
             skillKey: 'fireAxe'
         },
-        unlockText: 'Unlock condition to be determined.'
+        unlockText: 'Survive 25 days'
     },
     tarzanSwing: {
         name: 'Tarzan Swing',
@@ -188,10 +207,11 @@ export const ARMORY_ITEMS = {
         emoji: '🐒',
         tier: 'Enlisted',
         unlockCondition: {
-            type: 'placeholder',
+            type: 'totalIncinerateCount',
+            count: 500,
             skillKey: 'tarzanSwing'
         },
-        unlockText: 'Unlock condition to be determined.'
+        unlockText: 'Incinerate 500 total obstacles'
     },
     bigHeadMode: {
         name: 'Big Head Mode',
@@ -200,10 +220,10 @@ export const ARMORY_ITEMS = {
         tier: 'Legendary',
         unlockCondition: {
             type: 'daysSurvived',
-            count: 100000,
+            count: 100,
             skillKey: 'bigHeadMode'
         },
-        unlockText: 'Survive a total of 100,000 days'
+        unlockText: 'Survive a total of 100 days'
     },
     reaperDrone: {
         name: 'Reaper Drone',

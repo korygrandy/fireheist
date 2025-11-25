@@ -188,6 +188,21 @@ export function resetGameState() {
     setFireMageActive(false);
     setFireMageEndTime(0);
     setFireMageOnCooldown(false);
+
+    switch (gameState.currentSkillLevel) {
+        case 'Pro':
+            gameState.fireballsRemaining = 3;
+            break;
+        case 'Novice':
+            gameState.fireballsRemaining = 7;
+            break;
+        case 'Rookie':
+            gameState.fireballsRemaining = 10;
+            break;
+        default:
+            gameState.fireballsRemaining = 10;
+    }
+    
     resetStreaks();
     gameState.skillCooldowns = {};
 

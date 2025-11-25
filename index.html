@@ -44,6 +44,18 @@
                     <button id="debugAddCashBtn" class="control-btn">Copy Cash Command</button>
                 </div>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-red-300">
+                <div class="space-y-2">
+                    <label for="debugSkillSelector" class="font-bold">Select Skill:</label>
+                    <select id="debugSkillSelector" class="w-full p-1 border rounded"></select>
+                    <button id="debugUnlockSkillBtn" class="control-btn">Unlock Skill</button>
+                </div>
+                <div class="space-y-2">
+                    <label for="debugCashInput" class="font-bold">Set Cash:</label>
+                    <input type="number" id="debugCashInput" class="w-full p-1 border rounded" placeholder="Enter cash amount">
+                    <button id="debugSetCashBtn" class="control-btn">Set Cash</button>
+                </div>
+            </div>
         </div>
         <div id="unlock-notification" class="hidden fixed top-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50"></div>
         <header class="text-center">

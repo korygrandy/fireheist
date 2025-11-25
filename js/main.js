@@ -45,7 +45,10 @@ import {
 import {
     debugUnlockAllAchievements,
     debugEndGame,
-    debugCycleDailyTheme
+    debugCycleDailyTheme,
+    debugUnlockSkill,
+    debugSetCash,
+    ARMORY_ITEMS
 } from './ui-modules/debug.js';
 import {
     savePlayerStats,
@@ -315,6 +318,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const setIncinerateCountBtn = document.getElementById('debugSetIncinerateCountBtn');
                 const incinerateCountInput = document.getElementById('debugIncinerateCountInput');
                 const addCashBtn = document.getElementById('debugAddCashBtn');
+                const skillSelector = document.getElementById('debugSkillSelector');
+                const unlockSkillBtn = document.getElementById('debugUnlockSkillBtn');
+                const cashInput = document.getElementById('debugCashInput');
+                const setCashBtn = document.getElementById('debugSetCashBtn');
+
+                // Populate skill selector
+                if (skillSelector) {
+                    for (const skillKey in ARMORY_ITEMS) {
+                        const option = document.createElement('option');
+                        option.value = skillKey;
+                        option.textContent = ARMORY_ITEMS[skillKey].name;
+                        skillSelector.appendChild(option);
+                    }
+                }
 
                 function debugSetIncinerationCount(count) {
 
@@ -326,6 +343,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                     populateArmoryItems(); // Also refresh the armory view
                     alert(`Obstacle incineration count set to ${count}.`);
 
+                }
+
+                if (unlockSkillBtn && skillSelector) {
+                    unlockSkillBtn.addEventListener('click', () => {
+                        const selectedSkill = skillSelector.value;
+                        debugUnlockSkill(selectedSkill);
+                    });
+                }
+
+                if (setCashBtn && cashInput) {
+                    setCashBtn.addEventListener('click', () => {
+                        const amount = parseInt(cashInput.value, 10);
+                        if (!isNaN(amount) && amount >= 0) {
+                            debugSetCash(amount);
+                        } else {
+                            alert('Please enter a valid number.');
+                        }
+                    });
                 }
 
 

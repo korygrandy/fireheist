@@ -58,6 +58,7 @@ const state = {
     isFireSpinnerOnCooldown: false,
     fireSpinnerLastActivationTime: 0,
     isFireMageActive: false, // Is Fire Mage mode currently active?
+    fireballsRemaining: 0,
     fireMageEndTime: 0, // When the Fire Mage mode will end
     isMageSpinnerActive: false, // Is Mage Spinner mode currently active?
     mageSpinnerEndTime: 0, // When the Mage Spinner mode will end

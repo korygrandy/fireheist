@@ -9,6 +9,41 @@ import { savePlayerStats } from './settings.js';
 
 let currentThemeIndex = 0;
 
+export { ARMORY_ITEMS };
+
+export function debugUnlockSkill(skillKey) {
+    if (!skillKey) return;
+
+    let playerStats = gameState.playerStats || {};
+    if (!playerStats.unlockedArmoryItems) {
+        playerStats.unlockedArmoryItems = [];
+    }
+
+    if (!playerStats.unlockedArmoryItems.includes(skillKey)) {
+        playerStats.unlockedArmoryItems.push(skillKey);
+    }
+
+    setPlayerStats(playerStats);
+    savePlayerStats();
+
+    populateArmoryItems();
+
+    alert(`'${skillKey}' has been unlocked!`);
+}
+
+export function debugSetCash(amount) {
+    let playerStats = gameState.playerStats || {};
+    playerStats.totalAccumulatedCash = amount;
+
+    setPlayerStats(playerStats);
+    savePlayerStats();
+
+    populateArmoryItems(); // Refresh armory to reflect new cash amount
+
+    alert(`Player cash set to $${amount.toLocaleString()}.`);
+}
+
+
 export function debugUnlockAllAchievements() {
     console.log("-> DEBUG: Unlocking all achievements...");
 

@@ -18,7 +18,6 @@ import { tarzanSkill } from './skills/tarzan.js';
 import { reaperDroneSkill } from './skills/reaperDrone.js';
 import { echoSlamSkill } from './skills/echoSlam.js';
 import { fireStomperSkill } from './skills/fireStomper.js';
-import { specialMoveSkill } from './skills/specialMove.js';
 import { blinkStrikeSkill } from './skills/blinkStrike.js';
 import { jetstreamDashSkill } from './skills/jetstreamDash.js';
 import { fireballSkill } from './skills/fireball.js';
@@ -69,7 +68,16 @@ export function handleSpecialMove(gameState) {
 
 export function castFireball(state) {
     if (!state.gameRunning || state.isPaused || !state.isFireMageActive) return;
+
+    if (state.fireballsRemaining <= 0) {
+        playAnimationSound('quack');
+        console.log("-> castFireball: No fireballs remaining.");
+        return;
+    }
+
     if (!consumeEnergy(state, 'fireballCast', fireballSkill.config.energyCost)) return;
+
+    state.fireballsRemaining--;
 
     // Correctly calculate player's current Y position based on the ground angle
     const currentSegment = state.raceSegments[Math.min(state.currentSegmentIndex, state.raceSegments.length - 1)];

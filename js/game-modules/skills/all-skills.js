@@ -31,7 +31,6 @@ import { phaseDashSkill } from './phaseDash.js';
 import { scissorKickSkill } from './scissorKick.js';
 import { shockwaveSkill } from './shockwave.js';
 import { sixShooterPistolSkill } from './sixShooterPistol.js';
-import { specialMoveSkill } from './specialMove.js';
 
 export const allSkills = {
     fieryHoudini: fieryHoudiniSkill,
@@ -67,5 +66,4 @@ export const allSkills = {
     scissorKick: scissorKickSkill,
     shockwave: shockwaveSkill,
     sixShooterPistol: sixShooterPistolSkill,
-    specialMove: specialMoveSkill,
 };
