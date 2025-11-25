@@ -5,6 +5,7 @@ import { gameState, getSkillConfig } from '../state-manager.js';
 import { createSwooshParticle, createDiveParticle, createCorkscrewParticle, createHoverParticle, createScrambleDust, createMoonwalkSparkle, createFlipTrailParticle } from './effects.js';
 
 export function drawStickFigure(x, y, jumpState, angleRad) {
+    console.log(`[DEBUG] drawStickFigure: isHover: ${jumpState.isHover}, isJumping: ${jumpState.isJumping}, isFrontflip: ${jumpState.isFrontflip}, isJetPack: ${jumpState.isJetPack}, isHoverPackActive: ${jumpState.isHoverPackActive}`);
     if (gameState.playerIsInvisible) {
         ctx.restore(); // Ensure any previous transforms are restored
         return; // Don't draw the player if invisible
@@ -360,7 +361,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         armMovementX2 = -10; armMovementY2 = headY + 15;
     } else if (jumpState.isJetPack) {
         const t = (800 - jumpState.jetPackDuration) / 800;
-        animationRotation = t * Math.PI * 1.5; // Rotate into a downward arc
+        animationRotation = 0; // No rotation for straight up and down jettison
 
         // Engulf in flames
         ctx.shadowColor = 'red';

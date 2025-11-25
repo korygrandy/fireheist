@@ -1,4 +1,4 @@
-import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { consumeEnergy, initiateJump, setSkillCooldown, setJumping } from '../state-manager.js';
 import { JUMP_DURATIONS } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { createJetPackEffect } from '../drawing/effects.js';
@@ -6,11 +6,28 @@ import { createJetPackEffect } from '../drawing/effects.js';
 export const jetPackSkill = {
     config: {
         name: 'jetPack',
-        energyCost: 50,
+        energyCost: 40,
+        cooldownMs: 5000, // 5 seconds cooldown
     },
     activate(state) {
-        if (!state.gameRunning || state.jumpState.isJumping || state.isPaused) return;
-        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+        const now = Date.now();
+        if (state.skillCooldowns[this.config.name] && now < state.skillCooldowns[this.config.name]) {
+            console.log(`[DEBUG] Jet Pack blocked: On cooldown. Remaining: ${Math.max(0, state.skillCooldowns[this.config.name] - now).toFixed(0)}ms`);
+            return;
+        }
+
+        if (!state.gameRunning || state.isPaused) {
+            console.log(`[DEBUG] Jet Pack blocked: Game not running or paused. Game Running: ${state.gameRunning}, Paused: ${state.isPaused}`);
+            return;
+        }
+
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) {
+            console.log(`[DEBUG] Jet Pack blocked: Not enough energy. Required: ${this.config.energyCost}, Available: ${state.playerEnergy}`);
+            playAnimationSound('quack');
+            return;
+        }
+
+        setSkillCooldown(this.config.name, now + this.config.cooldownMs);
 
         const skillLevel = state.playerStats.skillLevels.jetPack || 1;
 
@@ -55,6 +72,7 @@ export const jetPackSkill = {
             state.jumpState.jetPackDuration -= deltaTime;
             if (state.jumpState.jetPackDuration <= 0) {
                 state.jumpState.isJetPack = false;
+                setJumping(false);
             }
         }
     },
