@@ -3,6 +3,7 @@ import { ENERGY_SETTINGS } from '../constants.js';
 import { SKILL_UPGRADE_PATHS } from './skill-upgrades.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { playAnimationSound } from '../audio.js';
+import { allSkills } from './skills/all-skills.js';
 
 export const GRASS_ANIMATION_INTERVAL_MS = 100;
 
@@ -11,6 +12,10 @@ export const GRASS_ANIMATION_INTERVAL_MS = 100;
  * Components should import this to get the current state.
  */
 export let gameState = state;
+
+export function getSkillConfig(skillName) {
+    return allSkills[skillName] ? allSkills[skillName].config : null;
+}
 
 /**
  * Consumes energy for a skill, if available.
