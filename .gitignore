@@ -30,3 +30,5 @@ e2e.tests/utils/TestUtils.ts
 .idea/workspace.xml
 /e2e.tests/
 /.github/
+/SKILL_REWARD_DIFFICULTY_ALIGNMENT.md
+/SKILL_DIFFICULTY_ANALYSIS.md
