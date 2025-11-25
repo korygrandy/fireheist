@@ -1117,7 +1117,8 @@ export function resetJumpState() {
         isBlinkStrike: false, blinkStrikeDuration: 0,
         isJetstreamDashing: false, jetstreamDashDuration: 0,
         isEchoSlam: false, echoSlamDuration: 0, echoSlamSecondaryTriggered: false,
-        isFireballRolling: false, fireballRollDuration: 0
+        isFireballRolling: false, fireballRollDuration: 0,
+        isJetPack: false, jetPackDuration: 0
     };
 }
 

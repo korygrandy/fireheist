@@ -2,11 +2,14 @@ import { STICK_FIGURE_FIXED_X, GROUND_Y, FIERY_HOUDINI_DURATION_MS, FIERY_HOUDIN
 import { playAnimationSound } from '../../audio.js';
 import { createFieryHoudiniPoof } from '../drawing/effects.js';
 import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObstacle, setCurrentObstacle, incrementObstaclesIncinerated, incrementTotalInGameIncinerations, incrementConsecutiveIncinerations, setFieryHoudini, setFieryHoudiniDuration, setFieryHoudiniPhase, setPlayerIsInvisible, setInvincible, setInvincibilityEndTime, setSkillCooldown } from '../state-manager.js';
+import { fieryHoudiniUpgradeEffects } from '../skill-upgrades.js';
+
+export const fieryHoudiniSkill = {
     config: {
         name: 'fieryHoudini',
         energyCost: 60,
         durationMs: 800,
-        cooldownMs: COOLDOWN,
+        cooldownMs: 12000,
         range: 300,
     },
 
@@ -34,8 +37,6 @@ import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObst
         setFieryHoudiniDuration(FIERY_HOUDINI_DURATION_MS);
         setFieryHoudiniPhase('disappearing');
         state.fieryHoudiniEndTime = now + FIERY_HOUDINI_DURATION_MS;
-        state.fieryHoudiniLastActivationTime = now;
-        setFieryHoudiniOnCooldown(true);
 
         if (skillLevel >= 4) {
             setInvincible(true);
@@ -82,10 +83,5 @@ import { consumeEnergy, getSkillModifiedValue, initiateJump, addIncineratingObst
 
     draw: function(ctx, gameState) {
         // Drawing logic will be moved here
-    },
-
-    reset: function(state) {
-        state.fieryHoudiniLastActivationTime = 0;
-        setFieryHoudini(false);
     }
 };

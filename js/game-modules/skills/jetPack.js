@@ -1,4 +1,4 @@
-import { consumeEnergy, initiateJump, setSkillCooldown, setJumping } from '../state-manager.js';
+import { consumeEnergy, initiateJump, setSkillCooldown, setJumping, resetJumpState } from '../state-manager.js';
 import { JUMP_DURATIONS } from '../../constants.js';
 import { playAnimationSound } from '../../audio.js';
 import { createJetPackEffect } from '../drawing/effects.js';
