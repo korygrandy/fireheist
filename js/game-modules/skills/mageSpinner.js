@@ -14,13 +14,18 @@ export const mageSpinnerSkill = {
         const now = Date.now();
         // 1. CHECK COOLDOWN
         if (state.skillCooldowns[this.config.name] && now < state.skillCooldowns[this.config.name]) {
-            console.log("-> mageSpinnerSkill.activate: Mage Spinner is on cooldown.");
+            console.log(`[DEBUG] Mage Spinner blocked: On cooldown. Remaining: ${Math.max(0, state.skillCooldowns[this.config.name] - now).toFixed(0)}ms`);
+            playAnimationSound('quack');
             return;
         }
 
         if (!state.gameRunning || state.isPaused || state.isMageSpinnerActive) return;
 
-        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+        if (!consumeEnergy(state, this.config.name, this.config.energyCost)) {
+            console.log(`[DEBUG] Mage Spinner blocked: Not enough energy. Required: ${this.config.energyCost}, Available: ${state.playerEnergy}`);
+            playAnimationSound('quack');
+            return;
+        }
 
         // 2. SET COOLDOWN
         setSkillCooldown(this.config.name, now + this.config.cooldownMs);

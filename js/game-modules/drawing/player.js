@@ -425,64 +425,66 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
 }
 
 export function drawHourglassCooldown(ctx, state) {
-    const activeSkillKey = state.playerStats.activeArmorySkill;
     const now = Date.now();
+    
+    Object.keys(state.skillCooldowns).forEach((skillKey, index) => {
+        const cooldownEndTime = state.skillCooldowns[skillKey];
 
-    if (!activeSkillKey || !state.skillCooldowns[activeSkillKey] || now > state.skillCooldowns[activeSkillKey]) {
-        return;
-    }
+        if (now < cooldownEndTime) {
+            const activeSkillConfig = getSkillConfig(skillKey);
+            if (!activeSkillConfig || !activeSkillConfig.cooldownMs) return;
 
-    const cooldownEndTime = state.skillCooldowns[activeSkillKey];
-    const activeSkillConfig = getSkillConfig(activeSkillKey);
-    let totalCooldownDuration = activeSkillConfig && activeSkillConfig.cooldownMs ? activeSkillConfig.cooldownMs : 1000;
+            const totalCooldownDuration = activeSkillConfig.cooldownMs;
+            const timeRemaining = cooldownEndTime - now;
+            const cooldownProgress = 1 - (timeRemaining / totalCooldownDuration);
 
-    const timeRemaining = cooldownEndTime - now;
-    const cooldownProgress = 1 - (timeRemaining / totalCooldownDuration);
+            const playerX = state.stickFigureFixedX;
+            const playerY = state.stickFigureY || (400 - 10 - STICK_FIGURE_TOTAL_HEIGHT);
+            const hourglassWidth = 10;
+            const hourglassHeight = 15;
+            // Offset each hourglass vertically to prevent overlap
+            const yOffset = -STICK_FIGURE_TOTAL_HEIGHT - 60 - (index * (hourglassHeight + 10));
 
-    const playerX = state.stickFigureFixedX;
-    const playerY = state.stickFigureY || (400 - 10 - STICK_FIGURE_TOTAL_HEIGHT);
-    const hourglassWidth = 10; // Halved
-    const hourglassHeight = 15; // Halved
-    const yOffset = -STICK_FIGURE_TOTAL_HEIGHT - 60;
+            ctx.save();
+            ctx.translate(playerX, playerY + yOffset);
 
-    ctx.save();
-    ctx.translate(playerX, playerY + yOffset);
+            // Draw hourglass frame
+            ctx.beginPath();
+            ctx.moveTo(-hourglassWidth / 2, -hourglassHeight / 2);
+            ctx.lineTo(hourglassWidth / 2, -hourglassHeight / 2);
+            ctx.lineTo(-hourglassWidth / 2, hourglassHeight / 2);
+            ctx.lineTo(hourglassWidth / 2, hourglassHeight / 2);
+            ctx.closePath();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 1;
+            ctx.stroke();
 
-    // Draw hourglass frame
-    ctx.beginPath();
-    ctx.moveTo(-hourglassWidth / 2, -hourglassHeight / 2);
-    ctx.lineTo(hourglassWidth / 2, -hourglassHeight / 2);
-    ctx.lineTo(-hourglassWidth / 2, hourglassHeight / 2);
-    ctx.lineTo(hourglassWidth / 2, hourglassHeight / 2);
-    ctx.closePath();
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 1; // Thinner for smaller size
-    ctx.stroke();
+            // Draw sand
+            ctx.fillStyle = 'sandybrown';
 
-    // Draw sand
-    ctx.fillStyle = 'sandybrown';
+            // Top sand (disappearing)
+            const topSandHeight = (hourglassHeight / 2) * (1 - cooldownProgress);
+            const topSandWidth = (hourglassWidth / 2) * (1 - cooldownProgress);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-topSandWidth, -topSandHeight);
+            ctx.lineTo(topSandWidth, -topSandHeight);
+            ctx.closePath();
+            ctx.fill();
 
-    // Top sand (disappearing)
-    const topSandHeight = (hourglassHeight / 2) * (1 - cooldownProgress);
-    const topSandWidth = (hourglassWidth / 2) * (1 - cooldownProgress);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(-topSandWidth, -topSandHeight);
-    ctx.lineTo(topSandWidth, -topSandHeight);
-    ctx.closePath();
-    ctx.fill();
+            // Bottom sand (appearing)
+            const bottomSandHeight = (hourglassHeight / 2) * cooldownProgress;
+            const bottomSandWidth = (hourglassWidth / 2) * cooldownProgress;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-bottomSandWidth, bottomSandHeight);
+            ctx.lineTo(bottomSandWidth, bottomSandHeight);
+            ctx.closePath();
+            ctx.fill();
 
-    // Bottom sand (appearing)
-    const bottomSandHeight = (hourglassHeight / 2) * cooldownProgress;
-    const bottomSandWidth = (hourglassWidth / 2) * cooldownProgress;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(-bottomSandWidth, bottomSandHeight);
-    ctx.lineTo(bottomSandWidth, bottomSandHeight);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.restore();
+            ctx.restore();
+        }
+    });
 }
 
 export function drawFireShield(x, y) {
