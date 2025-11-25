@@ -1,3 +1,4 @@
+import { playAnimationSound } from '../audio.js';
 import { personaUnlocks } from '../unlocks.js';
 import { personas } from '../personas.js';
 import { gameState } from '../game-modules/state-manager.js';
@@ -11,6 +12,7 @@ export function displayUnlockNotification(personaName) {
     if (notificationElement) {
         notificationElement.textContent = `🎉 New Persona Unlocked: ${personaName}!`;
         notificationElement.classList.remove('hidden');
+        playAnimationSound('skill-achieved');
         setTimeout(() => {
             notificationElement.classList.add('hidden');
         }, 5000); // Hide after 5 seconds

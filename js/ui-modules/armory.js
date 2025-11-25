@@ -178,6 +178,7 @@ function processNotificationQueue() {
         }
         notificationElement.innerHTML = `${iconHTML} New Armory Skill Unlocked: ${skill.name}!`;
         notificationElement.classList.remove('hidden');
+        playAnimationSound('skill-achieved');
 
         setTimeout(() => {
             notificationElement.classList.add('hidden');
@@ -206,7 +207,6 @@ export function checkForArmoryUnlocks(stats) {
         const skill = ARMORY_ITEMS[key];
         if (checkSkillUnlockStatus(skill.unlockCondition, stats) && !stats.notifiedArmoryUnlocks.includes(key)) {
             displayArmoryUnlockNotification(key);
-            playAnimationSound('power-up'); // Play sound on unlock
             setScreenFlash(0.8, 200, performance.now(), 'gold'); // Gold flash for new skill
             stats.notifiedArmoryUnlocks.push(key);
             stats.unlockedArmoryItems.push(key); // Add to unlocked items

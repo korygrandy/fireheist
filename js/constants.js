@@ -223,6 +223,7 @@ export const ANIMATION_SOUND_MAP = {
     echoSlam: 'fx/bomb.mp3',
     fireballRoll: 'fx/fireball.mp3',
     'skill-unlock': 'fx/skill-unlock.mp3',
+    'skill-achieved': 'fx/skill-unlock.mp3',
     'armory-tab': 'fx/armory-tab.mp3',
     'final-skill-unlock': 'fx/final-skill-level-unlock.mp3',
     'select-sound': 'fx/vault-unlock.mp3',

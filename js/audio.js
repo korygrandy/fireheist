@@ -151,7 +151,7 @@ export function preloadGameStartSound() {
 const CRITICAL_UI_SOUNDS = [
     'beep', 'armory-tab', 'hof-tab', 'keypress', 'submit-chime',
     'skill-unlock', 'final-skill-unlock', 'select-sound', 'unselect-sound',
-    'upgrade-skill', 'vault-upgrade', 'start-daily-challenge', 'ignited-flame'
+    'upgrade-skill', 'vault-upgrade', 'start-daily-challenge', 'ignited-flame', 'skill-achieved'
 ];
 
 export function preloadCriticalUISounds() {
