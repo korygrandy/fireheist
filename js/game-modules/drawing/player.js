@@ -11,9 +11,11 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
         return; // Don't draw the player if invisible
     }
 
+    const scaleY = jumpState.isJumping ? (1 - Math.sin(jumpState.progress * Math.PI) * 0.2) : 1;
+
     // Determine if Big Head Mode is active
-    const isBigHeadMode = gameState.playerStats.activeArmorySkill === 'bigHeadMode';
-    const headFontSize = isBigHeadMode ? '56px Arial' : '28px Arial';
+    const isBigHeadActive = gameState.playerStats.isBigHeadModeEnabled;
+    const headFontSize = isBigHeadActive ? '56px Arial' : '28px Arial';
 
     if (gameState.isColliding) {
         console.log(`[DEBUG] Drawing player in collision state.
@@ -35,7 +37,7 @@ export function drawStickFigure(x, y, jumpState, angleRad) {
 
     let headY = -STICK_FIGURE_TOTAL_HEIGHT;
     let bodyY = 0;
-    const headRenderY = isBigHeadMode ? headY - 20 : headY; // Use a separate variable for rendering
+    const headRenderY = isBigHeadActive ? headY - 20 : headY; // Use a separate variable for rendering
 
     const isFading = gameState.collisionDuration > 0;
     const fadeProgress = isFading ? gameState.collisionDuration / COLLISION_DURATION_MS : 0;

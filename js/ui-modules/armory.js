@@ -45,6 +45,38 @@ export function handleArmorySkillDeselection() {
     console.log(`-> Armory: Active skill unselected.`);
 }
 
+function getDifficultyScore(skill) {
+    if (!skill.unlockCondition) {
+        return 0; // Skills with no condition are considered the easiest
+    }
+
+    const { type, count } = skill.unlockCondition;
+    let score = 0;
+
+    // Base scores for different unlock types
+    const typeScores = {
+        daysSurvived: 1,
+        consecutiveGroundPounds: 5,
+        incinerateCount: 10,
+        totalIncinerateCount: 15,
+        flawlessHurdles: 20,
+        consecutiveFlawlessHurdles: 25,
+        fireMageIncinerateCount: 30,
+        groundPoundKills: 35,
+        fireballRollKills: 40,
+        fieryGroundPoundCount: 45,
+    };
+
+    score = typeScores[type] || 100; // Default to a high score for unknown types
+
+    // Factor in the count to differentiate within the same type
+    if (count) {
+        score += count / 10; // Adjust the divisor to fine-tune the sorting
+    }
+
+    return score;
+}
+
 /**
  * Populates the armory items container with skill cards.
  * This function is responsible for rendering each skill, its unlock status,
@@ -62,7 +94,13 @@ export function populateArmoryItems() {
         totalCashDisplay.textContent = `$${cash.toLocaleString()}`;
     }
 
-    for (const skillKey in ARMORY_ITEMS) {
+    const sortedSkillKeys = Object.keys(ARMORY_ITEMS).sort((a, b) => {
+        const scoreA = getDifficultyScore(ARMORY_ITEMS[a]);
+        const scoreB = getDifficultyScore(ARMORY_ITEMS[b]);
+        return scoreA - scoreB;
+    });
+
+    for (const skillKey of sortedSkillKeys) {
         const skill = ARMORY_ITEMS[skillKey];
         const isUnlocked = checkSkillUnlockStatus(skill.unlockCondition, gameState.playerStats);
         const currentLevel = gameState.playerStats.skillLevels[skillKey] || 1; // Default to level 1 if not set
@@ -106,38 +144,121 @@ export function populateArmoryItems() {
             iconHTML = `<span class="text-4xl armory-item-icon ${isUnlocked ? 'unlocked' : ''}">${skill.emoji || '❓'}</span>`;
         }
 
-        skillCard.innerHTML = `
-            ${tierLabel}
-            ${iconHTML}
-            <h4 class="font-semibold text-gray-800 mt-2">${skill.name} (Level ${currentLevel})</h4>
-            <p class="text-sm text-gray-600">${skill.description}</p>
-            ${lockedMessage}
-            <div class="mt-3">
-                ${isUnlocked && gameState.playerStats.activeArmorySkill !== skillKey ? 
-                    `<button class="control-btn primary-btn text-sm py-1 px-2" data-action="select" data-skill-key="${skillKey}">Select</button>` : ''}
-                ${isUnlocked && gameState.playerStats.activeArmorySkill === skillKey ? 
-                    `<button class="control-btn secondary-btn text-sm py-1 px-2" data-action="unselect">Unselect</button>` : ''}
-                ${upgradeButton}
-            </div>
-        `;
-        armoryItemsContainer.appendChild(skillCard);
-    }
+                let actionButton = '';
 
-    // Add event listeners for dynamically created buttons
-    armoryItemsContainer.querySelectorAll('button[data-action="select"]').forEach(button => {
-        button.addEventListener('click', (event) => {
-            handleArmorySkillSelection(event.target.dataset.skillKey);
-        });
-    });
-    armoryItemsContainer.querySelectorAll('button[data-action="unselect"]').forEach(button => {
-        button.addEventListener('click', handleArmorySkillDeselection);
-    });
-    armoryItemsContainer.querySelectorAll('button[data-action="open-upgrade-modal"]').forEach(button => {
-        button.addEventListener('click', (event) => {
-            playAnimationSound('upgrade-skill');
-            openSkillUpgradeModal(event.target.dataset.skillKey);
-        });
-    });
+                if (isUnlocked) {
+
+                    if (skillKey === 'bigHeadMode') {
+
+                        const isEnabled = gameState.playerStats.isBigHeadModeEnabled;
+
+                        actionButton = `
+
+                            <label class="flex items-center justify-center cursor-pointer mt-3">
+
+                                <span class="mr-2 font-semibold">${isEnabled ? 'Enabled' : 'Disabled'}</span>
+
+                                <div class="relative">
+
+                                    <input type="checkbox" class="sr-only" data-action="toggle-big-head" ${isEnabled ? 'checked' : ''}>
+
+                                    <div class="block bg-gray-600 w-14 h-8 rounded-full"></div>
+
+                                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+
+                                </div>
+
+                            </label>
+
+                        `;
+
+                    } else if (gameState.playerStats.activeArmorySkill === skillKey) {
+
+                        actionButton = `<button class="control-btn secondary-btn text-sm py-1 px-2" data-action="unselect">Unselect</button>`;
+
+                    } else {
+
+                        actionButton = `<button class="control-btn primary-btn text-sm py-1 px-2" data-action="select" data-skill-key="${skillKey}">Select</button>`;
+
+                    }
+
+                }
+
+        
+
+                skillCard.innerHTML = `
+
+                    ${tierLabel}
+
+                    ${iconHTML}
+
+                    <h4 class="font-semibold text-gray-800 mt-2">${skill.name} (Level ${currentLevel})</h4>
+
+                    <p class="text-sm text-gray-600">${skill.description}</p>
+
+                    ${lockedMessage}
+
+                    <div class="mt-3">
+
+                        ${actionButton}
+
+                        ${upgradeButton}
+
+                    </div>
+
+                `;
+
+                armoryItemsContainer.appendChild(skillCard);
+
+            }
+
+        
+
+            // Add event listeners for dynamically created buttons
+
+            armoryItemsContainer.querySelectorAll('button[data-action="select"]').forEach(button => {
+
+                button.addEventListener('click', (event) => {
+
+                    handleArmorySkillSelection(event.target.dataset.skillKey);
+
+                });
+
+            });
+
+            armoryItemsContainer.querySelectorAll('button[data-action="unselect"]').forEach(button => {
+
+                button.addEventListener('click', handleArmorySkillDeselection);
+
+            });
+
+            armoryItemsContainer.querySelectorAll('input[data-action="toggle-big-head"]').forEach(toggle => {
+
+                toggle.addEventListener('change', (event) => {
+
+                    gameState.playerStats.isBigHeadModeEnabled = event.target.checked;
+
+                    savePlayerStats();
+
+                    populateArmoryItems(); // Re-render to update the toggle's appearance
+
+                    playAnimationSound('beep');
+
+                });
+
+            });
+
+            armoryItemsContainer.querySelectorAll('button[data-action="open-upgrade-modal"]').forEach(button => {
+
+                button.addEventListener('click', (event) => {
+
+                    playAnimationSound('upgrade-skill');
+
+                    openSkillUpgradeModal(event.target.dataset.skillKey);
+
+                });
+
+            });
 }
 
 let notificationQueue = [];

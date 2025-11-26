@@ -243,7 +243,8 @@ const state = {
         totalGroundPoundCollisions: 0,
         consecutiveIncinerations: 0,
         totalInGameIncinerations: 0,
-        hasSeenNewArmoryIndicator: false // New: To track if the user has seen the new armory indicator
+        hasSeenNewArmoryIndicator: false, // New: To track if the user has seen the new armory indicator
+        isBigHeadModeEnabled: false
     },
 
     // Mini-Game: Blow That Dough
