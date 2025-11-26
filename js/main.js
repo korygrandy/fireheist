@@ -222,7 +222,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const preloaderOverlay = document.getElementById('preloader-overlay');
     const preloaderStartButton = document.getElementById('preloader-start-button');
+    console.log('preloaderOverlay:', preloaderOverlay);
     const loadingMessage = preloaderOverlay.querySelector('div');
+    console.log('loadingMessage:', loadingMessage);
     const preloaderMessage = document.getElementById('preloader-message');
 
     // Show preloader immediately
@@ -567,12 +569,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     Tone.Destination.volume.value = 3; // Increase master volume by 3dB
 
 
-    // Show "NEW" indicator on Armory tab if not seen yet
-
-    if (!gameState.playerStats.hasSeenNewArmoryIndicator) {
-
+    // Show "NEW" indicator on Armory tab if a new skill has been unlocked and not yet seen
+    if (gameState.hasNewSkillBeenUnlocked && !gameState.playerStats.hasSeenNewArmoryIndicator) {
         armoryNewIndicator.classList.remove('hidden');
-
     }
 
 

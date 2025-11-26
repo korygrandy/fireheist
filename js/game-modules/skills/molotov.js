@@ -22,7 +22,16 @@ export const molotovSkill = {
 
     activate: function(state) {
         if (!state.gameRunning || state.isPaused || state.jumpState.isJumping) return;
+
+        if (state.molotovCocktailsRemaining <= 0) {
+            playAnimationSound('quack');
+            console.log("-> Molotov: No molotov cocktails remaining.");
+            return;
+        }
+
         if (!consumeEnergy(state, this.config.name, this.config.energyCost)) return;
+
+        state.molotovCocktailsRemaining--;
 
         playAnimationSound('molotov-cocktail-hurl');
 

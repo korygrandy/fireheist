@@ -1,5 +1,33 @@
 [
     {
+        "version": "1.5.42",
+        "date": "2025-11-25",
+        "changes": [
+            "feat(ui): Implemented active skill indicator on canvas: ",
+            "Displays selected armory skill icon and ammunition count (if applicable) in the top-left corner of the game canvas.",
+            "Ammunition displayed as 'x [count]' for skills like Six Shooter Pistol and Molotov Cocktail.",
+            "feat(skill-rebalance): Rebalanced Fire Mage skill: ",
+            "Fire Mage is now the default special skill (no unlock condition).",
+            "Fireball count is limited per game based on difficulty (Rookie: 10, Novice: 7, Pro: 3).",
+            "fix(skills): Ensured Molotov Cocktail decrements `molotovCocktailsRemaining` upon activation.",
+            "fix(skill-tiers): Re-labeled skill tiers for better progression clarity: ",
+            "'Enlisted' for easiest 4 skills.",
+            "'Master' for next 5 skills.",
+            "'Legendary' for remaining 8 skills.",
+            "'Epic' exclusively for Big Head Mode.",
+            "feat(ui): Enhanced Big Head Mode toggle: ",
+            "Big Head Mode is now an independent toggle in the Armory UI, allowing it to persist with other active skills.",
+            "Visual state of toggle now correctly reflects enabled/disabled status with appropriate styling.",
+            "'Enabled' label is bold and green when active, normal when disabled.",
+            "feat(invincibility): Added visual indicator for invincibility-granting skills: ",
+            "Shield emoji (🛡️) appended to skill names in Armory for 'Jetstream Dash', 'Fireball Roll', 'Fiery Houdini', and 'Tarzan Swing'.",
+            "Info panel updated to indicate invincibility for default 'Moonwalk' and 'Hover' skills.",
+            "fix(bug): Removed duplicate import for `ARMORY_ITEMS` in `js/game-modules/drawing/overlays.js`.",
+            "fix(bug): Corrected typo 'isBigHeadMode' to 'isBigHeadActive' in `js/game-modules/drawing/player.js`.",
+            "fix(bug): Resolved `specialMove.js` 404 error by removing its import from `js/game-modules/actions.js` and `js/game-modules/skills/all-skills.js`."
+        ]
+    },
+    {
         "version": "1.5.41",
         "date": "2025-11-25",
         "changes": [
@@ -77,13 +105,6 @@
     },
     {
         "version": "1.5.33",
-        "date": "2025-11-22",
-        "changes": [
-            "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."
-        ]
-    },
-    {
-        "version": "1.5.32",
         "date": "2025-11-22",
         "changes": [
             "fix(initialization): Corrected a critical initialization bug that caused the Armory's cash display to crash the application on first load. Player stats are now loaded before the UI is initialized, ensuring all data is available for rendering."

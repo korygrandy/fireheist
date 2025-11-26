@@ -2,6 +2,8 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { FADE_DURATION, STICK_FIGURE_FIXED_X, STICK_FIGURE_TOTAL_HEIGHT, GROUND_Y } from '../../constants.js';
 import { gameState } from '../state-manager.js';
 import { drawLeaderboardInitials } from './leaderboard-initials.js';
+import { skillIconCache } from '../assets.js';
+import { ARMORY_ITEMS } from '../../unlocks.js';
 
 export function drawPausedOverlay() {
     ctx.save();
@@ -413,6 +415,72 @@ export function drawDailyChallengeCompletedOverlay() {
     lines.forEach((line, index) => {
         ctx.fillText(line, canvas.width / 2, startY + index * lineHeight);
     });
+
+    ctx.restore();
+}
+
+
+
+export function drawActiveSkillIndicator() {
+    const activeSkillKey = gameState.playerStats.activeArmorySkill;
+
+    if (!activeSkillKey) return;
+
+    console.log(`[DEBUG] drawActiveSkillIndicator: Drawing skill '${activeSkillKey}'`);
+
+    const skill = ARMORY_ITEMS[activeSkillKey];
+    if (!skill) return;
+
+    const indicatorX = 20;
+    const indicatorY = 60; // Moved down to avoid overlap, 10px below Total Haul
+    const iconSize = 32;
+    const textOffset = 10;
+
+    ctx.save();
+
+    // Add glow effect for the icon
+    ctx.shadowColor = 'orange';
+    ctx.shadowBlur = 10; // Adjust blur radius as needed
+
+    // Draw skill icon
+    if (skill.imageUnlocked) {
+        const img = skillIconCache[activeSkillKey];
+        if (img) {
+            ctx.drawImage(img, indicatorX, indicatorY, iconSize, iconSize);
+            console.log(`[DEBUG] drawActiveSkillIndicator: Image found in cache for '${activeSkillKey}'`);
+        } else {
+            console.log(`[DEBUG] drawActiveSkillIndicator: Image NOT found in cache for '${activeSkillKey}'`);
+        }
+    } else {
+        // For skills with emojis, draw the emoji
+        console.log(`[DEBUG] drawActiveSkillIndicator: Drawing emoji for '${activeSkillKey}'`);
+        ctx.font = `${iconSize}px Arial`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(skill.emoji || '❓', indicatorX, indicatorY);
+    }
+
+    // Reset shadow for text to avoid glowing text
+    ctx.shadowBlur = 0;
+
+    // Draw ammunition count if applicable
+    let ammoCount = null;
+    if (activeSkillKey === 'sixShooterPistol') {
+        ammoCount = gameState.sixShooterAmmo;
+    } else if (activeSkillKey === 'molotovCocktail') {
+        ammoCount = gameState.molotovCocktailsRemaining;
+    }
+
+    if (ammoCount !== null) {
+        ctx.font = 'bold 20px Arial';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = 'orange'; // Orange glow for ammo count
+        ctx.shadowBlur = 5; // Adjust blur radius as needed
+        ctx.fillText(`x ${ammoCount}`, indicatorX + iconSize + textOffset, indicatorY + iconSize / 2);
+        ctx.shadowBlur = 0; // Reset shadow blur after drawing ammo count
+    }
 
     ctx.restore();
 }

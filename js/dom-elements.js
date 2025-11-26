@@ -32,6 +32,7 @@ export const personaSelector = document.getElementById('personaSelector');
 export const customPersonaControls = document.getElementById('custom-persona-controls');
 export const personaDetailsContainer = document.getElementById('personaDetailsContainer');
 export const armoryItemsContainer = document.getElementById('armoryItemsContainer');
+export const armoryLegendContainer = document.getElementById('armory-legend-container');
 export const fullscreenToggleButton = document.getElementById('fullscreenToggleButton');
 export const header = document.querySelector('header');
 export const controlPanel = document.querySelector('.lg\\:col-span-1');

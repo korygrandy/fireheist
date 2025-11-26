@@ -160,6 +160,7 @@ export function resetGameState() {
     resetManualJumpOverride();
     resetTarzanState();
     setSixShooterAmmo(SIX_SHOOTER_AMMO_CAPACITY);
+    gameState.molotovCocktailsRemaining = 3;
 
     setFirestormActive(false);
     setFirestormEndTime(0);

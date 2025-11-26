@@ -87,6 +87,14 @@ export function debugEndGame(didWin) {
     alert(`Immediately stopping game. Result: ${didWin ? 'WIN' : 'LOSS'}`);
 }
 
+export function debugResetNewIndicator() {
+    let playerStats = gameState.playerStats || {};
+    playerStats.hasSeenNewArmoryIndicator = false;
+    setPlayerStats(playerStats);
+    savePlayerStats();
+    alert("'NEW' indicator has been reset. It will now show on the next unlock.");
+}
+
 export function debugCycleDailyTheme() {
     const themeKeys = Object.keys(themes);
     const themeKey = themeKeys[currentThemeIndex];

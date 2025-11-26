@@ -46,11 +46,11 @@ export const ARMORY_ITEMS = {
         "emoji": "🔥",
         "tier": "Enlisted",
         "unlockCondition": {
-            "type": "consecutiveGroundPounds",
-            "count": 3,
+            "type": "flawlessHurdles",
+            "count": 20,
             "skillKey": "fireSpinner"
         },
-        "unlockText": "Destroy 3 obstacles in a row with Ground Pound"
+        "unlockText": "Achieve 20 flawless hurdles"
     },
     "fieryGroundPound": {
         "name": "Fiery Ground Pound",
@@ -59,7 +59,7 @@ export const ARMORY_ITEMS = {
         "tier": "Enlisted",
         "unlockCondition": {
             "type": "consecutiveGroundPounds",
-            "count": 2,
+            "count": 10,
             "skillKey": "fieryGroundPound"
         },
         "unlockText": "Destroy 10 obstacles in a row with Ground Pound"
@@ -82,6 +82,7 @@ export const ARMORY_ITEMS = {
         "imageLocked": "images/fiery-houdini-locked.png",
         "imageUnlocked": "images/fiery-houdini-unlocked.png",
         "tier": "Master",
+        "grantsInvincibility": true,
         "unlockCondition": {
             "type": "incinerateCount",
             "count": 50,
@@ -118,6 +119,7 @@ export const ARMORY_ITEMS = {
         "description": "Propel forward in a sustained, invincible dash. Perfect for navigating dense obstacle fields when a jump won't cut it.",
         "emoji": "🌊",
         "tier": "Legendary",
+        "grantsInvincibility": true,
         "unlockCondition": {
             "type": "fireballRollKills",
             "count": 50,
@@ -143,6 +145,7 @@ export const ARMORY_ITEMS = {
         "imageLocked": "images/fireball-roll-locked.png",
         "imageUnlocked": "images/fireball-roll-unlocked.png",
         "tier": "Master",
+        "grantsInvincibility": true,
         "unlockCondition": {
             "type": "incinerateCount",
             "count": 100,
@@ -206,6 +209,7 @@ export const ARMORY_ITEMS = {
         "description": "Swing from a rope to clear obstacles and gain momentum.",
         "emoji": "🐒",
         "tier": "Legendary",
+        "grantsInvincibility": true,
         "unlockCondition": {
             "type": "totalIncinerateCount",
             "count": 500,
@@ -244,6 +248,11 @@ export function getSkillUnlockProgress(condition, stats) {
     if (!condition || !stats) return { current: 0, target: 0 };
 
     switch (condition.type) {
+        case 'flawlessHurdles':
+            return {
+                current: stats.flawlessHurdles || 0,
+                target: condition.count
+            };
         case 'incinerateCount':
             return {
                 current: stats.obstaclesIncinerated || 0,

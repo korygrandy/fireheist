@@ -1176,6 +1176,11 @@ export function setActiveArmorySkill(skillKey) {
 
 export function setHasSeenNewArmoryIndicator(hasSeen) {
     state.playerStats.hasSeenNewArmoryIndicator = hasSeen;
+    savePlayerStats();
+}
+
+export function setHasNewSkillBeenUnlocked(hasUnlocked) {
+    state.hasNewSkillBeenUnlocked = hasUnlocked;
 }
 
 export function setFinancialMilestones(milestones) {

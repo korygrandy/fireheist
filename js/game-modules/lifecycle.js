@@ -247,7 +247,8 @@ export function animate(timestamp) {
                     currentY: collectionY,
                     opacity: 1.0,
                     progress: 0,
-                    isDone: false
+                    isDone: false,
+                    soundPlayed: false
                 });
                 playChaChing();
                 // --- END FIX ---
@@ -826,6 +827,12 @@ export function animate(timestamp) {
                 fadingIn: true,
                 fadeStartTime: timestamp
             });
+        }
+
+        // Increment flawless hurdles count
+        if (gameState.selectedPersona !== 'custom') {
+            gameState.playerStats.flawlessHurdles = (gameState.playerStats.flawlessHurdles || 0) + 1;
+            savePlayerStats();
         }
 
         setAccelerating(false);

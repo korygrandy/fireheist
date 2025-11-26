@@ -32,10 +32,12 @@ export function switchTab(tabId) {
     if (tabId === 'armory') {
         populateArmoryItems();
         playAnimationSound('armory-tab'); // Play sound when armory tab is clicked
-        // Hide the "NEW" indicator if it hasn't been seen yet
-        if (!gameState.playerStats.hasSeenNewArmoryIndicator) {
+
+        // Hide the "NEW" indicator and update player stats
+        if (gameState.hasNewSkillBeenUnlocked && !gameState.playerStats.hasSeenNewArmoryIndicator) {
             armoryNewIndicator.classList.add('hidden');
             setHasSeenNewArmoryIndicator(true);
+            setHasNewSkillBeenUnlocked(false); 
             savePlayerStats(); // Save the change to local storage
         }
     } else if (tabId === 'hallOfFame') {

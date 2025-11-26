@@ -13,7 +13,7 @@
 
     <!-- Preloader Overlay -->
     <div id="preloader-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex flex-col items-center justify-center z-50">
-        <div class="text-white text-4xl font-bold mb-8">Loading Audio...</div>
+        <div class="text-white text-4xl font-bold mb-8">🔊 Loading Audio...</div>
         <div id="preloader-message" class="hidden text-white text-2xl font-semibold mb-4">Audio Preloading Completed!</div>
         <button id="preloader-start-button" class="hidden control-btn text-5xl font-extrabold px-12 py-6 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-300">START GAME</button>
     </div>
@@ -29,6 +29,7 @@
 
                     <button id="debugLoseBtn" class="control-btn text-xs mt-2 bg-red-200">Debug Lose</button>
                     <button id="debugCycleThemeBtn" class="control-btn text-xs mt-2 bg-blue-200">Cycle Daily Theme</button>
+                    <button id="debugResetNewIndicatorBtn" class="control-btn text-xs mt-2 bg-yellow-200">Reset 'NEW' Indicator</button>
                     <button id="debugMuteThemeMusicBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute Theme Music</button>
                     <button id="debugUnmuteThemeMusicBtn" class="control-btn text-xs mt-2 bg-gray-200">Unmute Theme Music</button>
                     <button id="debugMuteAmbientBtn" class="control-btn text-xs mt-2 bg-gray-200">Mute Ambient</button>
@@ -85,10 +86,10 @@
                                 <li><strong>Meteor Strike:</strong> 'T' key</li>
                                 <li><strong>Scissor Kick:</strong> 'S' key</li>
                                 <li><strong>Fire Dash:</strong> 'V' key</li>
-                                <li><strong>Hover:</strong> 'H' key</li>
+                                <li><strong>Hover:</strong> 'H' key (grants invincibility)</li>
                                 <li><strong>Ground Pound:</strong> 'G' key</li>
                                 <li><strong>Cartoon Scramble:</strong> 'Z' key</li>
-                                <li><strong>Moonwalk:</strong> 'M' key</li>
+                                <li><strong>Moonwalk:</strong> 'M' key (grants invincibility)</li>
                                 <li><strong>Shockwave:</strong> 'N' key</li>
                                 <li><strong>Fire Spinner:</strong> 'R' key</li>
                                 <li><strong>Firestorm:</strong> 'Y' key</li>
@@ -108,9 +109,9 @@
                                 <li><strong>Ground Pound:</strong> Swipe Down</li>
                                 <li><strong>Dive:</strong> 2-Finger Tap</li>
                                 <li><strong>Houdini:</strong> 3-Finger Tap</li>
-                                <li><strong>Moonwalk:</strong> Swipe Left</li>
+                                <li><strong>Moonwalk:</strong> Swipe Left (grants invincibility)</li>
                                 <li><strong>Special Move:</strong> Double Tap</li>
-                                <li><strong>Hover:</strong> Long Press</li>
+                                <li><strong>Hover:</strong> Long Press (grants invincibility)</li>
                                 <li><strong>Cartoon Scramble:</strong> 4-Finger Tap</li>
                                 <li><strong>Shockwave:</strong> 5-Finger Tap</li>
                             </ul>
@@ -296,10 +297,11 @@
                     <div class="text-center mb-4">
                         <h3 class="text-xl font-semibold text-gray-700">Total Cash: <span id="totalCashDisplay" class="text-green-600">$0</span></h3>
                     </div>
-                    <div class="text-center">
+                    <div class="text-center mb-4">
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Unlocked Skills</h3>
-                        <p class="text-xs text-gray-500 mb-4">Select your active skills.</p>
+                        <p class="text-sm text-gray-500 mb-4">Select your active skills.</p>
                     </div>
+                    <div id="armory-legend-container" class="text-center text-sm text-gray-500 mb-4"></div>
                     <div id="armoryItemsContainer" class="grid grid-cols-2 gap-4">
                         <!-- Armory items will be dynamically inserted here by JavaScript -->
                     </div>
@@ -398,6 +400,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/main.js?v=1.5.08"></script>
+    <script type="module" src="js/main.js?v=1.5.42"></script>
 </body>
 </html>

@@ -107,6 +107,7 @@ const state = {
 
     // Six Shooter Pistol State
     sixShooterAmmo: SIX_SHOOTER_AMMO_CAPACITY,
+    molotovCocktailsRemaining: 0,
     isSixShooterReloading: false,
     currentThemeAnchorImage: null,
     themeAnchor: {
@@ -236,6 +237,7 @@ const state = {
         skillLevels: {}, // e.g., { 'firestorm': 1, 'shotgun': 2 }
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
         obstaclesIncinerated: 0,
+        flawlessHurdles: 0,
         notifiedArmoryUnlocks: [], // To track shown notifications
         unlockedArmoryItems: [], // New: To store keys of unlocked armory items
         activeArmorySkill: null, // New: To store the key of the currently active armory skill
@@ -246,6 +248,7 @@ const state = {
         hasSeenNewArmoryIndicator: false, // New: To track if the user has seen the new armory indicator
         isBigHeadModeEnabled: false
     },
+    hasNewSkillBeenUnlocked: false,
 
     // Mini-Game: Blow That Dough
     isMiniGameActive: false,

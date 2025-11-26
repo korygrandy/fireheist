@@ -1,10 +1,10 @@
-import { armoryItemsContainer, skillUpgradeModal, skillModalTitle, skillModalContent, closeSkillModalBtn, totalCashDisplay } from '../dom-elements.js';
+import { armoryItemsContainer, skillUpgradeModal, skillModalTitle, skillModalContent, closeSkillModalBtn, totalCashDisplay, armoryLegendContainer } from '../dom-elements.js';
 import { getSkillUnlockProgress, checkSkillUnlockStatus, ARMORY_ITEMS } from '../unlocks.js';
 import { allSkills } from '../game-modules/skills/all-skills.js';
 import { fireAxeSkill } from '../game-modules/skills/fireAxe.js';
 import { tarzanSkill } from '../game-modules/skills/tarzan.js';
 import { savePlayerStats } from './settings.js';
-import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash, setScreenFlash } from '../game-modules/state-manager.js';
+import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash, setScreenFlash, setHasNewSkillBeenUnlocked } from '../game-modules/state-manager.js';
 import { SKILL_UPGRADE_PATHS } from '../game-modules/skill-upgrades.js';
 import { playAnimationSound } from '../audio.js';
 
@@ -89,6 +89,10 @@ export function populateArmoryItems() {
     }
     armoryItemsContainer.innerHTML = ''; // Clear existing items
 
+    if (armoryLegendContainer) {
+        armoryLegendContainer.innerHTML = '🛡️ = Temporary Invincibility';
+    }
+
     if (totalCashDisplay) {
         const cash = gameState.playerStats?.totalAccumulatedCash || 0;
         totalCashDisplay.textContent = `$${cash.toLocaleString()}`;
@@ -112,7 +116,7 @@ export function populateArmoryItems() {
 
         let tierLabel = '';
         if (skill.tier) {
-            tierLabel = `<p class="text-xs font-bold tier-label tier-label-${skill.tier.toLowerCase()}">${skill.tier} Tier</p>`;
+            tierLabel = `<div class="tier-tab tier-label-${skill.tier.toLowerCase()}">${skill.tier}</div>`;
         }
 
         let lockedMessage = '';
@@ -139,9 +143,9 @@ export function populateArmoryItems() {
         let iconHTML;
         if (skill.imageLocked && skill.imageUnlocked) {
             const imageSrc = isUnlocked ? skill.imageUnlocked : skill.imageLocked;
-            iconHTML = `<img src="${imageSrc}" alt="${skill.name}" class="w-12 h-12 mx-auto armory-item-icon ${isUnlocked ? 'unlocked' : ''}">`;
+            iconHTML = `<img src="${imageSrc}" alt="${skill.name}" class="w-12 h-12 mx-auto armory-item-icon ${isUnlocked ? 'unlocked glow-effect' : ''}">`;
         } else {
-            iconHTML = `<span class="text-4xl armory-item-icon ${isUnlocked ? 'unlocked' : ''}">${skill.emoji || '❓'}</span>`;
+            iconHTML = `<span class="text-4xl armory-item-icon ${isUnlocked ? 'unlocked glow-effect' : ''}">${skill.emoji || '❓'}</span>`;
         }
 
                 let actionButton = '';
@@ -152,29 +156,29 @@ export function populateArmoryItems() {
 
                         const isEnabled = gameState.playerStats.isBigHeadModeEnabled;
 
-                        actionButton = `
+                                        actionButton = `
 
-                            <label class="flex items-center justify-center cursor-pointer mt-3">
+                                            <label class="flex items-center justify-center cursor-pointer mt-3">
 
-                                <span class="mr-2 font-semibold">${isEnabled ? 'Enabled' : 'Disabled'}</span>
+                                                <span class="mr-2 text-sm ${isEnabled ? 'font-bold text-green-600' : 'font-normal'}">${isEnabled ? 'Enabled' : 'Disabled'}</span>
 
-                                <div class="relative">
+                                                <div class="relative">
 
-                                    <input type="checkbox" class="sr-only" data-action="toggle-big-head" ${isEnabled ? 'checked' : ''}>
+                                                    <input type="checkbox" class="sr-only" data-action="toggle-big-head" ${isEnabled ? 'checked' : ''}>
 
-                                    <div class="block bg-gray-600 w-14 h-8 rounded-full"></div>
+                                                    <div class="block bg-gray-600 w-10 h-6 rounded-full"></div>
 
-                                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                                                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
 
-                                </div>
+                                                </div>
 
-                            </label>
+                                            </label>
 
-                        `;
+                                        `;
 
                     } else if (gameState.playerStats.activeArmorySkill === skillKey) {
 
-                        actionButton = `<button class="control-btn secondary-btn text-sm py-1 px-2" data-action="unselect">Unselect</button>`;
+                        actionButton = `<button class="control-btn secondary-btn text-sm py-1 px-2 font-bold text-red-600" data-action="unselect">Unselect</button>`;
 
                     } else {
 
@@ -192,7 +196,7 @@ export function populateArmoryItems() {
 
                     ${iconHTML}
 
-                    <h4 class="font-semibold text-gray-800 mt-2">${skill.name} (Level ${currentLevel})</h4>
+                    <h4 class="font-semibold text-gray-800 mt-2">${skill.name} ${skill.grantsInvincibility ? '🛡️' : ''} (Level ${currentLevel})</h4>
 
                     <p class="text-sm text-gray-600">${skill.description}</p>
 
@@ -332,6 +336,7 @@ export function checkForArmoryUnlocks(stats) {
             stats.notifiedArmoryUnlocks.push(key);
             stats.unlockedArmoryItems.push(key); // Add to unlocked items
             stats.skillLevels[key] = 1; // Initialize skill to level 1 upon unlock
+            setHasNewSkillBeenUnlocked(true);
             populateArmoryItems(); // Refresh the armory to show the unlocked item
             savePlayerStats();
             console.info(`-> ARMORY UNLOCK: '${skill.name}' unlocked! Condition met: ${skill.unlockText || skill.description}`);
