@@ -68,14 +68,16 @@ function createChallengeHTML(config, results = null) {
 
     const flipperClass = results ? 'flipper flipped' : 'flipper';
     const finalHTML = `
-        <div class="daily-challenge-container">
-            <div class="flip-container">
-                <div class="${flipperClass}">
-                    <div class="front">
-                        ${frontContent}
-                    </div>
-                    <div class="back">
-                        ${results ? backContent : ''}
+        <div class="relative">
+            <div class="daily-challenge-container">
+                <div class="flip-container">
+                    <div class="${flipperClass}">
+                        <div class="front">
+                            ${frontContent}
+                        </div>
+                        <div class="back">
+                            ${results ? backContent : ''}
+                        </div>
                     </div>
                 </div>
             </div>

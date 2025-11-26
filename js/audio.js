@@ -18,47 +18,38 @@ export const uiBus = new Tone.Channel(-10).toDestination();
 export const musicBus = new Tone.Channel(-18).toDestination();
 export const ambientBus = new Tone.Channel(0).toDestination();
 
-export function loadMuteSetting() {
-    if (disableSaveSettings.checked) {
-        isMuted = false; // Default to unmuted when settings are disabled
-    } else {
-        const savedMuteSetting = localStorage.getItem(MUTE_STORAGE_KEY);
-        isMuted = savedMuteSetting === 'true'; // Default to unmuted if no setting is found
-    }
-
-    // Apply the loaded setting
+function applyMuteState() {
     if (isMuted) {
-        if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
-        chaChingSynth.mute = true;
-        collisionSounds.forEach(sound => sound.mute = true);
-        debuffSynth.mute = true;
-        quackSound.mute = true;
-        powerUpSound.mute = true;
-        winnerSound.mute = true;
-        loserSound.mute = true;
-        gameStartSound.mute = true;
-        pauseGameSound.mute = true;
-        if (ambientMusic) { ambientMusic.mute = true; }
-        for (const key in animationPlayers) {
-            animationPlayers[key].mute = true;
-        }
+        musicBus.volume.value = -Infinity;
+        ambientBus.volume.value = -Infinity;
+        playerActionsBus.volume.value = -Infinity;
+        uiBus.volume.value = -Infinity;
         if (soundToggleButton) soundToggleButton.textContent = "🔊 Unmute";
     } else {
-        chaChingSynth.mute = false;
-        collisionSounds.forEach(sound => sound.mute = false);
-        debuffSynth.mute = false;
-        quackSound.mute = false;
-        powerUpSound.mute = false;
-        winnerSound.mute = false;
-        loserSound.mute = false;
-        gameStartSound.mute = false;
-        pauseGameSound.mute = false;
-        for (const key in animationPlayers) {
-            animationPlayers[key].mute = false;
+        musicBus.volume.value = -18;
+        ambientBus.volume.value = 0;
+        playerActionsBus.volume.value = -10;
+        uiBus.volume.value = -10;
+
+        // Ensure looping sounds resume if they were stopped by muting
+        if (backgroundMusic && backgroundMusic.loaded && backgroundMusic.state !== 'started') {
+            backgroundMusic.start();
         }
-        if (backgroundMusic) { backgroundMusic.volume.value = -18; }
+        if (ambientMusic && ambientMusic.loaded && ambientMusic.state !== 'started') {
+            ambientMusic.start();
+        }
         if (soundToggleButton) soundToggleButton.textContent = "🔇 Mute";
     }
+}
+
+export function loadMuteSetting() {
+    if (disableSaveSettings.checked) {
+        isMuted = false;
+    } else {
+        const savedMuteSetting = localStorage.getItem(MUTE_STORAGE_KEY);
+        isMuted = savedMuteSetting === 'true';
+    }
+    applyMuteState();
     console.log(`-> loadMuteSetting: Mute setting loaded. isMuted: ${isMuted}`);
 }
 
@@ -247,7 +238,6 @@ export function preloadCriticalAudio() {
 
 
 export function playAnimationSound(animationName) {
-    if (isMuted) { return; }
     const player = animationPlayers[animationName];
     if (player && player.state === 'stopped') {
         player.start();
@@ -255,21 +245,18 @@ export function playAnimationSound(animationName) {
 }
 
 export function playGameStartSound() {
-    if (isMuted) { return; }
     if (gameStartSound.state === 'stopped') {
         gameStartSound.start();
     }
 }
 
 export function playPauseGameSound() {
-    if (isMuted) { return; }
     if (pauseGameSound.state === 'stopped') {
         pauseGameSound.start();
     }
 }
 
 export function playWinnerSound() {
-    if (isMuted) { return; }
     if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
     if (winnerSound.state === 'stopped') {
         winnerSound.start();
@@ -277,7 +264,6 @@ export function playWinnerSound() {
 }
 
 export function playLoserSound() {
-    if (isMuted) { return; }
     if (backgroundMusic) { backgroundMusic.volume.value = -Infinity; }
     if (loserSound.state === 'stopped') {
         loserSound.start();
@@ -353,13 +339,11 @@ export function playAmbientSound(themeName) {
 }
 
 export function playChaChing() {
-    if (isMuted) { return; }
     chaChingSynth.triggerAttackRelease(4000, "16n", Tone.now());
     chaChingSynth.triggerAttackRelease(5000, "16n", Tone.now() + 0.05);
 }
 
 export function playCollisionSound() {
-    if (isMuted) { return; }
     const sound = collisionSounds[Math.floor(Math.random() * collisionSounds.length)];
     if (sound instanceof Tone.NoiseSynth) {
         sound.triggerAttackRelease("8n");
@@ -369,25 +353,22 @@ export function playCollisionSound() {
 }
 
 export function playDebuffSound() {
-    if (isMuted) { return; }
     debuffSynth.triggerAttackRelease("C2", "8n", Tone.now());
 }
 
 export function playQuackSound() {
-    if (isMuted) { return; }
     if (quackSound.state === 'stopped') {
         quackSound.start();
     }
 }
 
 export function playPowerUpSound() {
-    if (isMuted) { return; }
     if (powerUpSound.state === 'stopped') {
         powerUpSound.start();
     }
 }
 
-export function toggleSound(soundToggleButton) {
+export function toggleSound() {
     if (Tone.context.state !== 'running') { Tone.start(); }
     isMuted = !isMuted;
 
@@ -395,27 +376,7 @@ export function toggleSound(soundToggleButton) {
         localStorage.setItem(MUTE_STORAGE_KEY, isMuted);
     }
 
-    if (isMuted) {
-        musicBus.volume.value = -Infinity;
-        ambientBus.volume.value = -Infinity;
-        playerActionsBus.volume.value = -Infinity;
-        uiBus.volume.value = -Infinity;
-        soundToggleButton.textContent = "🔊 Unmute";
-    } else {
-        musicBus.volume.value = -18;
-        ambientBus.volume.value = 0;
-        playerActionsBus.volume.value = -10;
-        uiBus.volume.value = -10;
-
-        // Ensure looping sounds resume if they were stopped by muting
-        if (backgroundMusic && backgroundMusic.loaded && backgroundMusic.state !== 'started') {
-            backgroundMusic.start();
-        }
-        if (ambientMusic && ambientMusic.loaded && ambientMusic.state !== 'started') {
-            ambientMusic.start();
-        }
-        soundToggleButton.textContent = "🔇 Mute";
-    }
+    applyMuteState();
     console.log(`-> toggleSound: Mute toggled via busses. isMuted: ${isMuted}`);
 }
     

@@ -6,6 +6,7 @@ import { displayDailyChallenge } from './daily-challenge-ui.js';
 import { stopGame } from '../game-modules/game-controller.js';
 import { personaUnlocks, ARMORY_ITEMS } from '../unlocks.js';
 import { savePlayerStats } from './settings.js';
+import { checkForNewUnlocks } from './unlocks.js';
 
 let currentThemeIndex = 0;
 
@@ -71,6 +72,9 @@ export function debugUnlockAllAchievements() {
     // Refresh the UI
     populatePersonaSelector();
     populateArmoryItems();
+
+    // Trigger notifications
+    checkForNewUnlocks(playerStats);
 
     alert('All personas and armory items have been unlocked!');
     console.log("-> DEBUG: All achievements unlocked.", gameState.playerStats);

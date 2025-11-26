@@ -112,11 +112,21 @@ export function populateArmoryItems() {
 
         const skillCard = document.createElement('div');
         const tierClass = skill.tier ? `tier-${skill.tier.toLowerCase()}` : 'tier-Grunt';
-        skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center ${isUnlocked ? 'bg-white unlocked' : 'bg-gray-200 opacity-50 cursor-not-allowed'} ${tierClass}`;
+        skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center bg-white ${isUnlocked ? 'unlocked' : 'bg-gray-200 opacity-50 cursor-not-allowed'} ${tierClass}`;
 
-        let tierLabel = '';
+        let tierLabelHtml = ''; // Changed variable name to avoid conflict with `tierLabel` in the template
         if (skill.tier) {
-            tierLabel = `<div class="tier-tab tier-label-${skill.tier.toLowerCase()}">${skill.tier}</div>`;
+            const tierColors = {
+                legendary: '#f59e0b', // Orange
+                master: '#ffd700',      // Gold
+                epic: '#8b5cf6',      // Purple
+                rare: '#3b82f6',      // Blue
+                common: '#6b7280',     // Gray
+                enlisted: '#4a5568',    // Darker Gray
+                grunt: '#22c55e'       // Green
+            };
+            const backgroundColor = tierColors[skill.tier.toLowerCase()] || '#718096';
+            tierLabelHtml = `<div class="tier-tab" style="background-color: ${backgroundColor};">${skill.tier}</div>`;
         }
 
         let lockedMessage = '';
@@ -155,26 +165,11 @@ export function populateArmoryItems() {
                     if (skillKey === 'bigHeadMode') {
 
                         const isEnabled = gameState.playerStats.isBigHeadModeEnabled;
-
-                                        actionButton = `
-
-                                            <label class="flex items-center justify-center cursor-pointer mt-3">
-
-                                                <span class="mr-2 text-sm ${isEnabled ? 'font-bold text-green-600' : 'font-normal'}">${isEnabled ? 'Enabled' : 'Disabled'}</span>
-
-                                                <div class="relative">
-
-                                                    <input type="checkbox" class="sr-only" data-action="toggle-big-head" ${isEnabled ? 'checked' : ''}>
-
-                                                    <div class="block bg-gray-600 w-10 h-6 rounded-full"></div>
-
-                                                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
-
-                                                </div>
-
-                                            </label>
-
-                                        `;
+                        actionButton = `
+                            <button class="control-btn secondary-btn text-sm py-1 px-2 ${isEnabled ? 'font-bold text-green-600' : ''}" data-action="toggle-big-head-button">
+                                ${isEnabled ? 'Enabled' : 'Disabled'}
+                            </button>
+                        `;
 
                     } else if (gameState.playerStats.activeArmorySkill === skillKey) {
 
@@ -192,9 +187,8 @@ export function populateArmoryItems() {
 
                 skillCard.innerHTML = `
 
-                    ${tierLabel}
-
                     ${iconHTML}
+                    ${tierLabelHtml}
 
                     <h4 class="font-semibold text-gray-800 mt-2">${skill.name} ${skill.grantsInvincibility ? '🛡️' : ''} (Level ${currentLevel})</h4>
 
@@ -236,20 +230,13 @@ export function populateArmoryItems() {
 
             });
 
-            armoryItemsContainer.querySelectorAll('input[data-action="toggle-big-head"]').forEach(toggle => {
-
-                toggle.addEventListener('change', (event) => {
-
-                    gameState.playerStats.isBigHeadModeEnabled = event.target.checked;
-
+            armoryItemsContainer.querySelectorAll('button[data-action="toggle-big-head-button"]').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    gameState.playerStats.isBigHeadModeEnabled = !gameState.playerStats.isBigHeadModeEnabled;
                     savePlayerStats();
-
-                    populateArmoryItems(); // Re-render to update the toggle's appearance
-
+                    populateArmoryItems(); // Re-render to update the button text
                     playAnimationSound('beep');
-
                 });
-
             });
 
             armoryItemsContainer.querySelectorAll('button[data-action="open-upgrade-modal"]').forEach(button => {

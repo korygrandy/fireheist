@@ -443,17 +443,18 @@ export function drawActiveSkillIndicator() {
     ctx.shadowBlur = 10; // Adjust blur radius as needed
 
     // Draw skill icon
-    if (skill.imageUnlocked) {
+    if (skill.imageUnlocked && skill.imageUnlocked.endsWith('.svg')) {
         const img = skillIconCache[activeSkillKey];
         if (img) {
             ctx.drawImage(img, indicatorX, indicatorY, iconSize, iconSize);
-            console.log(`[DEBUG] drawActiveSkillIndicator: Image found in cache for '${activeSkillKey}'`);
-        } else {
-            console.log(`[DEBUG] drawActiveSkillIndicator: Image NOT found in cache for '${activeSkillKey}'`);
+        }
+    } else if (skill.imageUnlocked) {
+        const img = skillIconCache[activeSkillKey];
+        if (img) {
+            ctx.drawImage(img, indicatorX, indicatorY, iconSize, iconSize);
         }
     } else {
         // For skills with emojis, draw the emoji
-        console.log(`[DEBUG] drawActiveSkillIndicator: Drawing emoji for '${activeSkillKey}'`);
         ctx.font = `${iconSize}px Arial`;
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';

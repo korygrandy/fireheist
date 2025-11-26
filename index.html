@@ -22,7 +22,7 @@
         <div id="debug-panel" class="hidden bg-red-100 border-2 border-red-500 p-4 rounded-lg shadow-lg space-y-4">
             <h2 class="text-xl font-bold text-red-700 text-center">--- DEBUG MODE ---</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div>Tha
                     <button id="debugUnlockAllBtn" class="control-btn text-xs">Unlock all Achievements</button>
                     <button id="debugShowDailyResultsBtn" class="control-btn text-xs mt-2">Show Daily Results UI</button>
                     <button id="debugWinBtn" class="control-btn text-xs mt-2 bg-green-200">Debug Win</button>
@@ -150,26 +150,26 @@
                     <button class="tab-button tab-button-inactive" data-tab="armory">⚔️ Armory <span id="armory-new-indicator" class="hidden ml-1 px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">NEW</span></button>
                 </div>
 
-                <div id="playerTab" class="tab-content space-y-4">
-                    <div id="daily-challenge-placeholder" class="mb-4">
+                <div id="playerTab" class="tab-content">
+                    <div id="daily-challenge-placeholder" class="mb-4 mt-4">
                         <!-- Daily Challenge UI will be injected here -->
                     </div>
-                    <div>
+                    <div class="mt-4">
                         <label for="personaSelector" class="block text-sm font-medium text-gray-700">Choose your Persona</label>
                         <select id="personaSelector" class="mt-1 blocthek w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                             <!-- JavaScript will populate options -->
                         </select>
                     </div>
 
-                    <div id="personaDetailsContainer" class="hidden bg-gray-50 p-3 rounded-lg text-sm space-y-1">
+                    <div id="personaDetailsContainer" class="hidden bg-gray-50 p-3 rounded-lg text-sm space-y-1 mt-4">
                         <!-- JavaScript will populate persona details -->
                     </div>
 
-                    <div id="custom-persona-controls" class="space-y-4">
+                    <div id="custom-persona-controls" class="space-y-4 mt-4">
                         <div>
                             <label for="emojiInput" class="block text-sm font-medium text-gray-700">Select your Runner, or paste your own Emoji</label>
                             <input type="text" id="emojiInput" value="🦹‍♂️" maxlength="2"
-                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:focus:border-blue-500">
                             <div id="suggestedEmojis" class="mt-2 flex space-x-2 justify-center">
                             </div>
                         </div>

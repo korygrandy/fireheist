@@ -272,7 +272,6 @@ export function animate(timestamp) {
             setGameRunning(false);
             updateHighScore(gameState);
             savePlayerStats();
-            checkForNewUnlocks(gameState.playerStats);
 
             // Disable the start button and re-enable it after 3 seconds
             const startButton = document.getElementById('startButton');

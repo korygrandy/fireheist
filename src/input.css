@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .armory-item {
+    position: relative;
+    overflow: hidden;
+    border-width: 1px;
+    background-color: #fff;
+  }
+  .tier-tab {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    border-top-right-radius: 0.5rem;
+    z-index: 10;
+    border-bottom-left-radius: 0.75rem; /* Custom rounded corner */
+  }
+  .tier-label-legendary {
+    background-color: #f59e0b;
+  }
+  .tier-label-epic {
+    background-color: #8b5cf6;
+  }
+  .tier-label-rare {
+    background-color: #3b82f6;
+  }
+  .tier-label-common {
+    background-color: #6b7280;
+  }
+  .tier-label-grunt {
+    background-color: #22c55e;
+  }
+  .glow-effect {
+    filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.8));
+  }
+}
+
 #turbo-boost-animation {
     position: absolute;
     bottom: 20px;

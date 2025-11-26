@@ -61,6 +61,7 @@ export const reaperDroneSkill = {
 
         if (droneImage && droneImage.complete) {
             const currentSegment = state.raceSegments[state.currentSegmentIndex];
+            if (!currentSegment) return; // Prevent error when game is over
             const playerGroundY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(currentSegment.angleRad);
             const playerHeadY = playerGroundY - STICK_FIGURE_TOTAL_HEIGHT;
             
