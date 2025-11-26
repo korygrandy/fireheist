@@ -16,6 +16,94 @@ export const personaUnlocks = {
 };
 
 export const ARMORY_ITEMS = {
+    "jump": {
+        "name": "Jump",
+        "description": "A basic vertical jump to clear obstacles and navigate the environment.",
+        "emoji": "⬆️",
+        "tier": "Basic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "jump"
+        },
+        "unlockText": "Core skill - always available"
+    },
+    "backflip": {
+        "name": "Backflip",
+        "description": "Execute a backward flip to evade obstacles with style.",
+        "emoji": "🔙",
+        "tier": "Basic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "backflip"
+        },
+        "unlockText": "Core skill - always available"
+    },
+    "frontflip": {
+        "name": "Frontflip",
+        "description": "Execute a forward flip to clear obstacles with precision.",
+        "emoji": "🔜",
+        "tier": "Basic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "frontflip"
+        },
+        "unlockText": "Core skill - always available"
+    },
+    "corkscrewSpin": {
+        "name": "Corkscrew Spin",
+        "description": "Spin in a corkscrew motion to navigate through tight gaps.",
+        "emoji": "🌀",
+        "tier": "Basic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "corkscrewSpin"
+        },
+        "unlockText": "Core skill - always available"
+    },
+    "fireball": {
+        "name": "Fireball",
+        "description": "Hurl a fireball forward to incinerate obstacles in your path.",
+        "emoji": "🔥",
+        "tier": "Basic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "fireball"
+        },
+        "unlockText": "Core skill - always available"
+    },
+    "groundPound": {
+        "name": "Ground Pound",
+        "description": "Slam the ground with force to destroy nearby obstacles.",
+        "emoji": "💥",
+        "tier": "Basic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "groundPound"
+        },
+        "unlockText": "Core skill - always available"
+    },
+    "hurdle": {
+        "name": "Hurdle",
+        "description": "Jump over obstacles with precision and control.",
+        "emoji": "🏃",
+        "tier": "Basic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "hurdle"
+        },
+        "unlockText": "Core skill - always available"
+    },
+    "cartoonScramble": {
+        "name": "Cartoon Scramble",
+        "description": "Transform into a cartoon-style version of yourself with distorted physics and exaggerated movement.",
+        "emoji": "🎨",
+        "tier": "Cosmetic",
+        "unlockCondition": {
+            "type": "always",
+            "skillKey": "cartoonScramble"
+        },
+        "unlockText": "Cosmetic enhancement - always available"
+    },
     "jetPack": {
         "name": "Jet Pack",
         "description": "Boost over obstacles with a powerful jet pack.",
@@ -44,13 +132,13 @@ export const ARMORY_ITEMS = {
         "name": "Fire Spinner",
         "description": "A fiery spinning jump that incinerates obstacles.",
         "emoji": "🔥",
-        "tier": "Enlisted",
+        "tier": "Master",
         "unlockCondition": {
-            "type": "flawlessHurdles",
-            "count": 20,
+            "type": "incinerateCount",
+            "count": 75,
             "skillKey": "fireSpinner"
         },
-        "unlockText": "Achieve 20 flawless hurdles"
+        "unlockText": "Incinerate 75 obstacles"
     },
     "fieryGroundPound": {
         "name": "Fiery Ground Pound",
@@ -134,10 +222,10 @@ export const ARMORY_ITEMS = {
         "tier": "Legendary",
         "unlockCondition": {
             "type": "groundPoundKills",
-            "count": 75,
+            "count": 100,
             "skillKey": "echoSlam"
         },
-        "unlockText": "Destroy 75 obstacles with Ground Pound"
+        "unlockText": "Destroy 100 obstacles with Ground Pound"
     },
     "fireballRoll": {
         "name": "Fireball Roll",
@@ -182,15 +270,16 @@ export const ARMORY_ITEMS = {
     "sixShooterPistol": {
         "name": "Six Shooter Pistol",
         "description": "A rapid-fire pistol with 6 shots per clip, incinerating obstacles on impact with fiery bullets.",
+        "emoji": "🔫",
         "imageLocked": "images/six-shooter-locked.png",
         "imageUnlocked": "images/six-shooter-unlocked.png",
         "tier": "Legendary",
         "unlockCondition": {
-            "type": "fireMageIncinerateCount",
-            "count": 100,
+            "type": "incinerateCount",
+            "count": 150,
             "skillKey": "sixShooterPistol"
         },
-        "unlockText": "Incinerate 100 obstacles using Fire Mage"
+        "unlockText": "Incinerate 150 obstacles"
     },
     "fireAxe": {
         "name": "Fire Axe",
@@ -208,20 +297,20 @@ export const ARMORY_ITEMS = {
         "name": "Tarzan Swing",
         "description": "Swing from a rope to clear obstacles and gain momentum.",
         "emoji": "🐒",
-        "tier": "Legendary",
+        "tier": "Enlisted",
         "grantsInvincibility": true,
         "unlockCondition": {
-            "type": "totalIncinerateCount",
-            "count": 500,
+            "type": "daysSurvived",
+            "count": 50,
             "skillKey": "tarzanSwing"
         },
-        "unlockText": "Incinerate 500 total obstacles"
+        "unlockText": "Survive 50 days"
     },
     "bigHeadMode": {
         "name": "Big Head Mode",
         "description": "Your head is now 2x bigger. A purely cosmetic change for bragging rights.",
         "emoji": "🤯",
-        "tier": "Epic",
+        "tier": "Cosmetic",
         "unlockCondition": {
             "type": "daysSurvived",
             "count": 100,
@@ -237,10 +326,95 @@ export const ARMORY_ITEMS = {
         "tier": "Legendary",
         "unlockCondition": {
             "type": "totalIncinerateCount",
-            "count": 10000,
+            "count": 1000,
             "skillKey": "reaperDrone"
         },
-        "unlockText": "Incinerate 10,000 total obstacles"
+        "unlockText": "Incinerate 1,000 total obstacles"
+    },
+    "fireMage": {
+        "name": "Fire Mage",
+        "description": "Transform into a Fire Mage, gaining enhanced pyromantic abilities.",
+        "emoji": "🧙",
+        "tier": "Master",
+        "unlockCondition": {
+            "type": "incinerateCount",
+            "count": 50,
+            "skillKey": "fireMage"
+        },
+        "unlockText": "Incinerate 50 obstacles"
+    },
+    "phaseDash": {
+        "name": "Phase Dash",
+        "description": "Dash forward while phasing through obstacles invincibly.",
+        "emoji": "⚡",
+        "tier": "Master",
+        "grantsInvincibility": true,
+        "unlockCondition": {
+            "type": "incinerateCount",
+            "count": 30,
+            "skillKey": "phaseDash"
+        },
+        "unlockText": "Incinerate 30 obstacles"
+    },
+    "houdini": {
+        "name": "Houdini",
+        "description": "Teleport away from danger in a flash.",
+        "emoji": "🎩",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "incinerateCount",
+            "count": 25,
+            "skillKey": "houdini"
+        },
+        "unlockText": "Incinerate 25 obstacles"
+    },
+    "hover": {
+        "name": "Hover",
+        "description": "Hover above obstacles to evade danger.",
+        "emoji": "⬆️",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "incinerateCount",
+            "count": 15,
+            "skillKey": "hover"
+        },
+        "unlockText": "Incinerate 15 obstacles"
+    },
+    "hoverPack": {
+        "name": "Hover Pack",
+        "description": "A jetpowered pack for sustained flight.",
+        "emoji": "🔋",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "daysSurvived",
+            "count": 20,
+            "skillKey": "hoverPack"
+        },
+        "unlockText": "Survive 20 days"
+    },
+    "shockwave": {
+        "name": "Shockwave",
+        "description": "Generate a powerful shockwave that repels obstacles.",
+        "emoji": "〰️",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "consecutiveGroundPounds",
+            "count": 5,
+            "skillKey": "shockwave"
+        },
+        "unlockText": "Land 5 consecutive Ground Pounds"
+    },
+    "scissorKick": {
+        "name": "Scissor Kick",
+        "description": "Execute a scissor kick to slice through obstacles.",
+        "emoji": "✂️",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "groundPoundKills",
+            "count": 10,
+            "skillKey": "scissorKick"
+        },
+        "unlockText": "Destroy 10 obstacles with Ground Pound"
     }
 };
 
@@ -248,6 +422,11 @@ export function getSkillUnlockProgress(condition, stats) {
     if (!condition || !stats) return { current: 0, target: 0 };
 
     switch (condition.type) {
+        case 'always':
+            return {
+                current: 1,
+                target: 1
+            };
         case 'flawlessHurdles':
             return {
                 current: stats.flawlessHurdles || 0,
@@ -279,6 +458,26 @@ export function getSkillUnlockProgress(condition, stats) {
                 current: stats.fireMageIncinerations || 0,
                 target: condition.count
             };
+        case 'daysSurvived':
+            return {
+                current: stats.daysSurvived || 0,
+                target: condition.count
+            };
+        case 'groundPoundKills':
+            return {
+                current: stats.groundPoundKills || 0,
+                target: condition.count
+            };
+        case 'fireballRollKills':
+            return {
+                current: stats.fireballRollKills || 0,
+                target: condition.count
+            };
+        case 'fieryGroundPoundCount':
+            return {
+                current: stats.fieryGroundPoundCount || 0,
+                target: condition.count
+            };
         // Add other progress tracking here
         default:
             return { current: 0, target: 0 };
@@ -296,6 +495,8 @@ export function checkSkillUnlockStatus(condition, stats) {
     if (!condition || condition.type === 'placeholder') return false; // Placeholder conditions are always locked for now
 
     switch (condition.type) {
+        case 'always':
+            return true;  // Always unlocked (core/cosmetic skills)
         case 'incinerateCount':
             return stats.obstaclesIncinerated >= condition.count;
         case 'totalIncinerateCount':
@@ -306,6 +507,14 @@ export function checkSkillUnlockStatus(condition, stats) {
             return stats.consecutiveGroundPounds >= condition.count;
         case 'fireMageIncinerateCount':
             return stats.fireMageIncinerations >= condition.count;
+        case 'daysSurvived':
+            return stats.daysSurvived >= condition.count;
+        case 'groundPoundKills':
+            return stats.groundPoundKills >= condition.count;
+        case 'fireballRollKills':
+            return stats.fireballRollKills >= condition.count;
+        case 'fieryGroundPoundCount':
+            return stats.fieryGroundPoundCount >= condition.count;
         // Add other unlock conditions here
         default:
             return false;

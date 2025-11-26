@@ -246,7 +246,11 @@ const state = {
         consecutiveIncinerations: 0,
         totalInGameIncinerations: 0,
         hasSeenNewArmoryIndicator: false, // New: To track if the user has seen the new armory indicator
-        isBigHeadModeEnabled: false
+        isBigHeadModeEnabled: false,
+        daysSurvived: 0, // New: Total days survived across all games (cumulative)
+        groundPoundKills: 0, // New: Total obstacles destroyed by Ground Pound across all games
+        fireballRollKills: 0, // New: Total obstacles destroyed by Fireball Roll across all games
+        fieryGroundPoundCount: 0 // New: Total times Fiery Ground Pound used across all games
     },
     hasNewSkillBeenUnlocked: false,
 

@@ -6,6 +6,8 @@
  * and having an associated cost.
  */
 
+import { getUpgradeCostMultiplier } from './economicMultipliers.js';
+
 export const SKILL_UPGRADE_PATHS = {
     fireSpinner: {
         name: 'Fire Spinner',
@@ -126,3 +128,49 @@ export const firestormUpgradeEffects = [
     { level: 4, type: 'special', value: 'widerArea' }, // Wider area of effect
     { level: 5, type: 'special', value: 'fireShield' } // Periodically spawns a protective fire shield
 ];
+
+// ============================================================================
+// ECONOMIC MULTIPLIER INTEGRATION
+// ============================================================================
+
+/**
+ * Get upgrade path with multiplier-adjusted costs
+ * 
+ * Applies difficulty-based cost multiplier to all upgrade levels.
+ * Legacy costs are preserved in the returned object for reference.
+ * 
+ * @param {string} skillKey - Skill identifier (e.g., 'fireSpinner')
+ * @returns {object} Upgrade path with adjusted costs, or null if not found
+ */
+export function getSkillUpgradePath(skillKey) {
+    const basePath = SKILL_UPGRADE_PATHS[skillKey];
+    if (!basePath) return null;
+    
+    const multiplier = getUpgradeCostMultiplier(skillKey);
+    
+    return {
+        ...basePath,
+        multiplier: parseFloat(multiplier.toFixed(2)),
+        levels: basePath.levels.map((level, index) => ({
+            ...level,
+            baseCost: level.cost,
+            cost: Math.round(level.cost * multiplier),
+            multiplier: parseFloat(multiplier.toFixed(2))
+        }))
+    };
+}
+
+/**
+ * Get the actual cost for a specific upgrade level
+ * 
+ * @param {string} skillKey - Skill identifier
+ * @param {number} level - Level index (0-based, where 0 is initial unlock)
+ * @returns {number} Adjusted cost, or 0 if invalid
+ */
+export function getUpgradeLevelCost(skillKey, level) {
+    const upgradePath = getSkillUpgradePath(skillKey);
+    if (!upgradePath || !upgradePath.levels[level]) {
+        return 0;
+    }
+    return upgradePath.levels[level].cost;
+}

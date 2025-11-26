@@ -68,8 +68,10 @@ import {
 import {
     handleArmorySkillSelection,
     handleArmorySkillDeselection,
-    populateArmoryItems
+    populateArmoryItems,
+    initializeArmory
 } from './ui-modules/armory.js';
+import { initializeEconomicMultipliers } from './game-modules/economicMultipliers.js';
 import {
     startDailyChallengeGame,
     getDailyChallengeResults
@@ -192,6 +194,8 @@ async function initializeApp() {
     loadSettings();
     loadPlayerStats();
     await initializeUIData();
+    initializeArmory(); // Validate and initialize tier system
+    initializeEconomicMultipliers(); // Initialize economic multiplier system
     loadThemeAnchorImage(gameState.selectedTheme);
     console.log("-> Application state initialized.");
 }

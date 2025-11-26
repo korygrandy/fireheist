@@ -7,10 +7,35 @@ import { savePlayerStats } from './settings.js';
 import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash, setScreenFlash, setHasNewSkillBeenUnlocked } from '../game-modules/state-manager.js';
 import { SKILL_UPGRADE_PATHS } from '../game-modules/skill-upgrades.js';
 import { playAnimationSound } from '../audio.js';
+import { getDifficultyScore, getTierColors, generateTierBadgeHtml, validateTierSystem, getDiagnostics } from './tierScoring.js';
 
 // =================================================================
 // ARMORY UI MANAGEMENT
 // =================================================================
+
+/**
+ * Initializes the Armory system with tier validation.
+ * Call this once on app startup to ensure tier system is properly configured.
+ */
+export function initializeArmory() {
+    // Validate tier system on initialization
+    const validation = validateTierSystem(ARMORY_ITEMS);
+    
+    if (validation.errors.length > 0) {
+        console.error('⚠️ Armory Initialization: Tier System Validation Errors:', validation.errors);
+    } else {
+        console.info('✅ Armory: Tier system initialized successfully', {
+            totalSkills: validation.totalSkills,
+            tierDistribution: validation.tierDistribution
+        });
+    }
+    
+    // Log diagnostics in development (can be toggled)
+    if (window.ARMORY_DEBUG) {
+        const diagnostics = getDiagnostics(ARMORY_ITEMS);
+        console.table(diagnostics.skillClassifications);
+    }
+}
 
 /**
  * Updates the total cash display in the Armory tab.
@@ -45,37 +70,9 @@ export function handleArmorySkillDeselection() {
     console.log(`-> Armory: Active skill unselected.`);
 }
 
-function getDifficultyScore(skill) {
-    if (!skill.unlockCondition) {
-        return 0; // Skills with no condition are considered the easiest
-    }
+// Note: getDifficultyScore is now imported from tierScoring.js
+// This provides a centralized, reusable scoring algorithm
 
-    const { type, count } = skill.unlockCondition;
-    let score = 0;
-
-    // Base scores for different unlock types
-    const typeScores = {
-        daysSurvived: 1,
-        consecutiveGroundPounds: 5,
-        incinerateCount: 10,
-        totalIncinerateCount: 15,
-        flawlessHurdles: 20,
-        consecutiveFlawlessHurdles: 25,
-        fireMageIncinerateCount: 30,
-        groundPoundKills: 35,
-        fireballRollKills: 40,
-        fieryGroundPoundCount: 45,
-    };
-
-    score = typeScores[type] || 100; // Default to a high score for unknown types
-
-    // Factor in the count to differentiate within the same type
-    if (count) {
-        score += count / 10; // Adjust the divisor to fine-tune the sorting
-    }
-
-    return score;
-}
 
 /**
  * Populates the armory items container with skill cards.
@@ -99,8 +96,8 @@ export function populateArmoryItems() {
     }
 
     const sortedSkillKeys = Object.keys(ARMORY_ITEMS).sort((a, b) => {
-        const scoreA = getDifficultyScore(ARMORY_ITEMS[a]);
-        const scoreB = getDifficultyScore(ARMORY_ITEMS[b]);
+        const scoreA = getDifficultyScore(ARMORY_ITEMS[a], a);
+        const scoreB = getDifficultyScore(ARMORY_ITEMS[b], b);
         return scoreA - scoreB;
     });
 
@@ -111,23 +108,11 @@ export function populateArmoryItems() {
         const upgradePath = SKILL_UPGRADE_PATHS[skillKey];
 
         const skillCard = document.createElement('div');
-        const tierClass = skill.tier ? `tier-${skill.tier.toLowerCase()}` : 'tier-Grunt';
+        const tierClass = skill.tier ? `tier-${skill.tier.toLowerCase()}` : 'tier-basic';
         skillCard.className = `armory-item p-4 rounded-lg shadow-md text-center bg-white ${isUnlocked ? 'unlocked' : 'bg-gray-200 opacity-50 cursor-not-allowed'} ${tierClass}`;
 
-        let tierLabelHtml = ''; // Changed variable name to avoid conflict with `tierLabel` in the template
-        if (skill.tier) {
-            const tierColors = {
-                legendary: '#f59e0b', // Orange
-                master: '#ffd700',      // Gold
-                epic: '#8b5cf6',      // Purple
-                rare: '#3b82f6',      // Blue
-                common: '#6b7280',     // Gray
-                enlisted: '#4a5568',    // Darker Gray
-                grunt: '#22c55e'       // Green
-            };
-            const backgroundColor = tierColors[skill.tier.toLowerCase()] || '#718096';
-            tierLabelHtml = `<div class="tier-tab" style="background-color: ${backgroundColor};">${skill.tier}</div>`;
-        }
+        // Generate tier label using modular tier system
+        const tierLabelHtml = generateTierBadgeHtml(skill, skillKey);
 
         let lockedMessage = '';
         if (!isUnlocked) {

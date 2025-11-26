@@ -30,6 +30,30 @@ export function loadAndDrawSvg(ctx, url, x, y, width, height) {
     });
 }
 
+export function loadAndDrawImage(ctx, url, x, y, width, height) {
+    if (skillIconCache[url]) {
+        if (skillIconCache[url] instanceof HTMLImageElement) {
+            ctx.drawImage(skillIconCache[url], x, y, width, height);
+        }
+        return;
+    }
+
+    skillIconCache[url] = new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            skillIconCache[url] = img;
+            ctx.drawImage(img, x, y, width, height);
+            resolve();
+        };
+        img.onerror = () => {
+            delete skillIconCache[url];
+            reject(`Failed to load image: ${url}`);
+        };
+        img.src = url;
+    });
+}
+
+
 
 export function preloadSkillIcons() {
     const promises = [];
@@ -39,7 +63,7 @@ export function preloadSkillIcons() {
             const promise = new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = () => {
-                    skillIconCache[skillKey] = img;
+                    skillIconCache[skill.imageUnlocked] = img;
                     console.log(`-> Loaded skill icon for '${skillKey}'`);
                     resolve();
                 };

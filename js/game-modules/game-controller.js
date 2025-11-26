@@ -159,6 +159,13 @@ export function resetGameState() {
     resetJumpState();
     resetManualJumpOverride();
     resetTarzanState();
+    
+    // Reset Reaper Drone state
+    gameState.reaperDroneState = {
+        isActive: false,
+        spawnTime: 0
+    };
+    
     setSixShooterAmmo(SIX_SHOOTER_AMMO_CAPACITY);
     gameState.molotovCocktailsRemaining = 3;
 

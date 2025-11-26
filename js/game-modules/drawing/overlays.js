@@ -2,7 +2,7 @@ import { canvas, ctx } from '../../dom-elements.js';
 import { FADE_DURATION, STICK_FIGURE_FIXED_X, STICK_FIGURE_TOTAL_HEIGHT, GROUND_Y } from '../../constants.js';
 import { gameState } from '../state-manager.js';
 import { drawLeaderboardInitials } from './leaderboard-initials.js';
-import { skillIconCache, loadAndDrawSvg } from '../assets.js';
+import { skillIconCache, loadAndDrawSvg, loadAndDrawImage } from '../assets.js';
 import { ARMORY_ITEMS } from '../../unlocks.js';
 
 export function drawPausedOverlay() {
@@ -446,10 +446,7 @@ export function drawActiveSkillIndicator() {
     if (skill.imageUnlocked && skill.imageUnlocked.endsWith('.svg')) {
         loadAndDrawSvg(ctx, skill.imageUnlocked, indicatorX, indicatorY, iconSize, iconSize);
     } else if (skill.imageUnlocked) {
-        const img = skillIconCache[activeSkillKey];
-        if (img) {
-            ctx.drawImage(img, indicatorX, indicatorY, iconSize, iconSize);
-        }
+        loadAndDrawImage(ctx, skill.imageUnlocked, indicatorX, indicatorY, iconSize, iconSize);
     } else {
         // For skills with emojis, draw the emoji
         ctx.font = `${iconSize}px Arial`;
