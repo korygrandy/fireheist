@@ -3,6 +3,33 @@ import { themes } from '../theme.js';
 import { ARMORY_ITEMS } from '../unlocks.js';
 
 export const skillIconCache = {};
+const svgCache = {};
+
+export function loadAndDrawSvg(ctx, url, x, y, width, height) {
+    if (svgCache[url]) {
+        if (svgCache[url] instanceof HTMLImageElement) {
+            ctx.drawImage(svgCache[url], x, y, width, height);
+        }
+        // If it's a promise, it's still loading
+        return;
+    }
+
+    // Mark as loading by storing the promise
+    svgCache[url] = new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            svgCache[url] = img; // Replace promise with image
+            ctx.drawImage(img, x, y, width, height);
+            resolve();
+        };
+        img.onerror = () => {
+            delete svgCache[url]; // Remove promise on error
+            reject(`Failed to load SVG: ${url}`);
+        };
+        img.src = url;
+    });
+}
+
 
 export function preloadSkillIcons() {
     const promises = [];
