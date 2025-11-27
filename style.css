@@ -612,6 +612,76 @@ video {
   }
 }
 
+/* Button Components */
+
+.control-btn {
+  cursor: pointer;
+  border-radius: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+.primary-btn {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.primary-btn:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 128 61 / var(--tw-bg-opacity, 1));
+}
+
+/* Tab Button Components */
+
+.tab-button {
+  cursor: pointer;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+.tab-button-active {
+  border-bottom-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity, 1));
+}
+
+.tab-button-inactive {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+}
+
+.tab-button-inactive:hover {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+}
+
+.disabled-tab {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Armory Components */
+
 .armory-item {
   position: relative;
   overflow: hidden;
@@ -967,6 +1037,10 @@ video {
 
 .h-96 {
   height: 24rem;
+}
+
+.h-auto {
+  height: auto;
 }
 
 .h-full {
@@ -3101,6 +3175,31 @@ video {
   display: inline-block;
   vertical-align: middle;
   margin-right: 10px;
+}
+
+/* Game Canvas Container - Prevents bleeding and ensures proper containment */
+
+#canvas-container {
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+/* Fullscreen mode styles */
+
+:fullscreen #canvas-container,
+:-webkit-full-screen #canvas-container,
+:-moz-full-screen #canvas-container {
+  overflow: visible !important;
 }
 
 .hover\:bg-gray-500:hover {

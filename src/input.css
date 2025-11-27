@@ -3,6 +3,33 @@
 @tailwind utilities;
 
 @layer components {
+  /* Button Components */
+  .control-btn {
+    @apply px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer transition-colors duration-200;
+  }
+  
+  .primary-btn {
+    @apply bg-green-600 text-white hover:bg-green-700;
+  }
+  
+  /* Tab Button Components */
+  .tab-button {
+    @apply px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200;
+  }
+  
+  .tab-button-active {
+    @apply text-blue-600 border-b-2 border-blue-600;
+  }
+  
+  .tab-button-inactive {
+    @apply text-gray-500 hover:text-gray-700;
+  }
+  
+  .disabled-tab {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Armory Components */
   .armory-item {
     position: relative;
     overflow: hidden;
@@ -58,4 +85,40 @@
     display: inline-block;
     vertical-align: middle;
     margin-right: 10px;
+}
+
+/* Game Canvas Container - Prevents bleeding and ensures proper containment */
+#canvas-container {
+    overflow: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Fullscreen mode styles */
+:fullscreen,
+:-webkit-full-screen,
+:-moz-full-screen {
+    background-color: #111 !important;
+}
+
+:fullscreen #gameCanvas,
+:-webkit-full-screen #gameCanvas,
+:-moz-full-screen #gameCanvas {
+    position: fixed !important;
+    z-index: 9999 !important;
+    background-color: #111 !important;
+}
+
+:fullscreen #canvas-container,
+:-webkit-full-screen #canvas-container,
+:-moz-full-screen #canvas-container {
+    overflow: visible !important;
 }

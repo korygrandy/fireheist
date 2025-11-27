@@ -3,6 +3,7 @@ import { populateArmoryItems } from './armory.js';
 import { gameState, setHasSeenNewArmoryIndicator } from '../game-modules/state-manager.js';
 import { savePlayerStats } from './settings.js';
 import { playAnimationSound } from '../audio.js';
+import { draw } from '../game-modules/drawing.js';
 
 export function switchTab(tabId) {
     const tabs = document.querySelectorAll('.tab-content');
@@ -57,6 +58,125 @@ export function toggleFullScreen() {
         document.exitFullscreen();
     }
 }
+
+// Responsive fullscreen canvas logic
+function resizeCanvasForFullscreen() {
+    const canvas = document.getElementById('gameCanvas');
+    const canvasContainer = document.getElementById('canvas-container');
+    const actionButtons = document.getElementById('actionButtons');
+    if (!canvas) return;
+
+    // Only apply fullscreen scaling when in fullscreen mode
+    if (document.fullscreenElement) {
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        
+        // Reserve space for action buttons at the bottom
+        const buttonBarHeight = 60; // Height for action buttons
+        const gapBetween = 5; // Gap between canvas and buttons
+        const availableHeight = windowHeight - buttonBarHeight - gapBetween;
+        
+        // Aspect ratio bounds: 16:9 to 4:3
+        const minAspect = 4 / 3;
+        const maxAspect = 16 / 9;
+        let targetWidth, targetHeight;
+        const windowAspect = windowWidth / availableHeight;
+
+        // Clamp aspect ratio between 16:9 and 4:3
+        if (windowAspect > maxAspect) {
+            // Window is too wide, limit width
+            targetHeight = availableHeight;
+            targetWidth = targetHeight * maxAspect;
+        } else if (windowAspect < minAspect) {
+            // Window is too tall, limit height
+            targetWidth = windowWidth;
+            targetHeight = targetWidth / minAspect;
+        } else {
+            // Window aspect is within bounds, fill available space
+            targetWidth = windowWidth;
+            targetHeight = availableHeight;
+        }
+
+        // Calculate vertical centering for canvas + buttons as a unit
+        const totalContentHeight = targetHeight + gapBetween + buttonBarHeight;
+        const topOffset = Math.max(0, Math.floor((windowHeight - totalContentHeight) / 2));
+
+        // Apply fullscreen canvas sizing
+        canvas.width = Math.floor(targetWidth);
+        canvas.height = Math.floor(targetHeight);
+        canvas.style.width = targetWidth + 'px';
+        canvas.style.height = targetHeight + 'px';
+        canvas.style.position = 'fixed';
+        canvas.style.left = Math.floor((windowWidth - targetWidth) / 2) + 'px';
+        canvas.style.top = topOffset + 'px';
+        canvas.style.zIndex = '9999';
+        canvas.style.backgroundColor = '#111';
+        
+        // Position action buttons directly below canvas with 5px gap
+        if (actionButtons) {
+            const buttonTop = topOffset + targetHeight + gapBetween;
+            actionButtons.style.position = 'fixed';
+            actionButtons.style.top = buttonTop + 'px';
+            actionButtons.style.bottom = '';
+            actionButtons.style.left = Math.floor((windowWidth - targetWidth) / 2) + 'px';
+            actionButtons.style.width = targetWidth + 'px';
+            actionButtons.style.zIndex = '10000';
+            actionButtons.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+            actionButtons.style.padding = '8px 16px';
+            actionButtons.style.boxSizing = 'border-box';
+            actionButtons.style.borderRadius = '8px';
+        }
+        
+        // Allow canvas to escape container in fullscreen
+        if (canvasContainer) {
+            canvasContainer.style.overflow = 'visible';
+        }
+        
+        // Redraw the current game state/theme after resizing canvas
+        draw();
+    } else {
+        // Restore canvas to normal (non-fullscreen) state
+        canvas.width = 800;
+        canvas.height = 400;
+        canvas.style.width = '100%';
+        canvas.style.height = 'auto';
+        canvas.style.position = '';
+        canvas.style.left = '';
+        canvas.style.top = '';
+        canvas.style.zIndex = '';
+        canvas.style.backgroundColor = '';
+        
+        // Restore action buttons to normal state
+        if (actionButtons) {
+            actionButtons.style.position = '';
+            actionButtons.style.top = '';
+            actionButtons.style.bottom = '';
+            actionButtons.style.left = '';
+            actionButtons.style.right = '';
+            actionButtons.style.width = '';
+            actionButtons.style.zIndex = '';
+            actionButtons.style.backgroundColor = '';
+            actionButtons.style.padding = '';
+            actionButtons.style.boxSizing = '';
+            actionButtons.style.borderRadius = '';
+        }
+        
+        // Restore container overflow
+        if (canvasContainer) {
+            canvasContainer.style.overflow = 'hidden';
+        }
+        
+        // Redraw the current game state/theme after restoring canvas
+        draw();
+    }
+}
+
+document.addEventListener('fullscreenchange', resizeCanvasForFullscreen);
+window.addEventListener('resize', () => {
+    if (document.fullscreenElement) {
+        resizeCanvasForFullscreen();
+    }
+});
 
 export function exitFullScreenIfActive() {
     if (document.fullscreenElement) {

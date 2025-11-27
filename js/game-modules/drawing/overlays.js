@@ -4,6 +4,7 @@ import { gameState } from '../state-manager.js';
 import { drawLeaderboardInitials } from './leaderboard-initials.js';
 import { skillIconCache, loadAndDrawSvg, loadAndDrawImage } from '../assets.js';
 import { ARMORY_ITEMS } from '../../unlocks.js';
+import { getActiveSkillMultiplier, getMultiplierTierColors, formatMultiplier } from '../skillCashMultipliers.js';
 
 export function drawPausedOverlay() {
     ctx.save();
@@ -390,6 +391,45 @@ export function drawCooldownIndicator() {
 
         ctx.restore();
     }
+}
+
+export function drawCashMultiplierIndicator() {
+    // Only show if a skill is selected
+    if (!gameState.activeArmorySkill) return;
+
+    const multiplier = getActiveSkillMultiplier(gameState);
+    const colors = getMultiplierTierColors(gameState);
+    
+    // Position in bottom-right corner
+    const indicatorX = canvas.width - 120;
+    const indicatorY = canvas.height - 35;
+    const boxWidth = 110;
+    const boxHeight = 30;
+    const borderRadius = 5;
+
+    ctx.save();
+
+    // Draw background box with rounded corners
+    ctx.fillStyle = colors.backgroundColor;
+    ctx.beginPath();
+    ctx.roundRect(indicatorX - boxWidth / 2, indicatorY - boxHeight / 2, boxWidth, boxHeight, borderRadius);
+    ctx.fill();
+
+    // Draw border
+    ctx.strokeStyle = colors.textColor;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(indicatorX - boxWidth / 2, indicatorY - boxHeight / 2, boxWidth, boxHeight, borderRadius);
+    ctx.stroke();
+
+    // Draw multiplier text
+    ctx.fillStyle = colors.textColor;
+    ctx.font = 'bold 16px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${formatMultiplier(multiplier)} 💰`, indicatorX, indicatorY);
+
+    ctx.restore();
 }
 
 export function drawDailyChallengeCompletedOverlay() {

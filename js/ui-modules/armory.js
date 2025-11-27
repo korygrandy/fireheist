@@ -52,7 +52,7 @@ export function updateArmoryCashDisplay() {
  * @param {string} skillKey - The key of the skill to select.
  */
 export function handleArmorySkillSelection(skillKey) {
-    setActiveArmorySkill(skillKey);
+    setActiveSkill(skillKey);
     savePlayerStats();
     populateArmoryItems(); // Re-render to show active skill
     playAnimationSound('select-sound'); // Play select sound on selection
@@ -63,7 +63,7 @@ export function handleArmorySkillSelection(skillKey) {
  * Handles the deselection of the active armory skill.
  */
 export function handleArmorySkillDeselection() {
-    setActiveArmorySkill(null);
+    setActiveSkill(null);
     savePlayerStats();
     populateArmoryItems(); // Re-render to show no active skill
     playAnimationSound('unselect-sound'); // Play unselect sound

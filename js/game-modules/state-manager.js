@@ -1292,3 +1292,11 @@ export function resetTarzanState() {
         swingStartTime: 0,
     };
 }
+
+/**
+ * Set the currently active/equipped skill (for Phase 2C cash multipliers)
+ * @param {string} skillKey - The key of the skill being equipped
+ */
+export function setActiveSkill(skillKey) {
+    state.activeArmorySkill = skillKey;
+}

@@ -5,7 +5,7 @@ import { drawSlantedGround, drawHurdle, drawObstacle, drawAccelerator, drawProxi
 import { drawGroundPoundParticles, drawHoudiniParticles, drawMoonwalkParticles, drawHoverParticles, drawScrambleDust, drawDiveParticles, drawSwooshParticles, drawFlipTrail, drawCorkscrewTrail, drawFireTrail, drawShatteredObstacles, createFireExplosion, drawJetstreamParticles, drawAshParticles, drawFireShield, drawShotgunBlast, drawPhoenixSparks, createPhoenixSparks, drawImpactSparks, drawFireWallShatterEffect, createFireWallShatterEffect, drawEchoSlamParticles } from './effects.js';
 import { drawEnvironmentalEffects } from './environmental-effects.js';
 import { drawStickFigure, drawHourglassCooldown } from './player.js';
-import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay, drawBonusHaul, drawCooldownIndicator, drawActiveSkillIndicator } from './overlays.js';
+import { drawCustomEventStatus, drawMoneyCounter, drawGameCounters, drawEnergyBar, drawDaysCounter, drawTipsOverlay, drawPausedOverlay, drawCashBags, drawDailyChallengeCompletedOverlay, drawBonusHaul, drawCooldownIndicator, drawActiveSkillIndicator, drawCashMultiplierIndicator } from './overlays.js';
 import { fireSpinnerSkill } from '../skills/fireSpinner.js';
 import { firestormSkill } from '../skills/firestorm.js';
 import { fieryGroundPoundSkill } from '../skills/fieryGroundPound.js';
@@ -189,6 +189,7 @@ export function drawUIOverlaysAndEffects(gameState, isInitialLoad, collisionDura
     drawGameCounters();
     drawEnergyBar();
     drawCooldownIndicator();
+    drawCashMultiplierIndicator(); // Phase 2C: Draw cash multiplier HUD
     if (gameState.daysCounter) drawDaysCounter();
     drawImpactSparks();
 

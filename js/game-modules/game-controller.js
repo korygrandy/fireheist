@@ -326,7 +326,7 @@ export function startGame() {
         document.body.classList.add('game-active-fullscreen');
         header.classList.add('hidden');
         controlPanel.classList.add('hidden');
-        document.getElementById('actionButtons').classList.add('hidden');
+        // Keep actionButtons visible for player controls during fullscreen
         mainElement.classList.remove('grid', 'lg:grid-cols-3', 'gap-8');
         document.body.style.backgroundColor = '#000';
     }

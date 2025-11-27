@@ -42,6 +42,7 @@ import {
 } from '../audio.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
+import { applyCashMultiplier } from './skillCashMultipliers.js';
 import {
     setPaused,
     gameState,
@@ -232,11 +233,15 @@ export function animate(timestamp) {
             if (gameState.isVictory) {
                 setTimeout(() => playWinnerSound(), 10);
 
-                // --- FIX: Trigger cash bag for the final milestone ---
+                // --- FIX: Trigger cash bag for the final milestone with multiplier ---
                 const finalSegment = gameState.raceSegments[gameState.raceSegments.length - 1];
-                const finalMilestoneValue = finalSegment.milestoneValue;
-                setAccumulatedCash(finalMilestoneValue);
-                gameState.displayCash = finalMilestoneValue; // Instantly update display for the final amount
+                const baseReward = finalSegment.milestoneValue;
+                
+                // Apply skill-based cash multiplier (Phase 2C)
+                const { finalReward } = applyCashMultiplier(baseReward, gameState);
+                
+                setAccumulatedCash(finalReward);
+                gameState.displayCash = finalReward; // Instantly update display for the final amount
                 
                 const finalAngleRad = finalSegment.angleRad;
                 const collectionY = GROUND_Y - STICK_FIGURE_FIXED_X * Math.tan(finalAngleRad);
@@ -793,12 +798,17 @@ export function animate(timestamp) {
 
         if (gameState.currentSegmentIndex > 0) {
             setTimeout(() => {
+                const baseReward = completedSegment.milestoneValue;
+                
+                // Apply skill-based cash multiplier (Phase 2C)
+                const { finalReward } = applyCashMultiplier(baseReward, gameState);
+                
                 const startValue = gameState.displayCash;
-                const endValue = completedSegment.milestoneValue;
+                const endValue = finalReward;
                 animateValue(startValue, endValue, 500, (currentValue) => {
                     gameState.displayCash = currentValue;
                 });
-                setAccumulatedCash(completedSegment.milestoneValue);
+                setAccumulatedCash(finalReward);
             }, CASH_BAG_ANIMATION_DURATION);
             addCashBag({
                 x: STICK_FIGURE_FIXED_X,
