@@ -338,7 +338,18 @@ export function playAmbientSound(themeName) {
     }
 }
 
+let lastChaChingTime = 0;
+const CHA_CHING_COOLDOWN_MS = 100; // Minimum 100ms between cha-ching sounds
+
 export function playChaChing() {
+    const currentTime = performance.now();
+    
+    // Debounce: skip if called too rapidly
+    if (currentTime - lastChaChingTime < CHA_CHING_COOLDOWN_MS) {
+        return;
+    }
+    lastChaChingTime = currentTime;
+    
     const now = Tone.now() + 0.01; // Small offset to avoid timing conflicts
     chaChingSynth.triggerAttackRelease(4000, "16n", now);
     chaChingSynth.triggerAttackRelease(5000, "16n", now + 0.05);
@@ -347,14 +358,95 @@ export function playChaChing() {
 export function playCollisionSound() {
     const sound = collisionSounds[Math.floor(Math.random() * collisionSounds.length)];
     if (sound instanceof Tone.NoiseSynth) {
-        sound.triggerAttackRelease("8n");
+        sound.triggerAttackRelease("8n", Tone.now() + 0.01);
     } else if (sound instanceof Tone.Player && sound.state === 'stopped') {
         sound.start();
     }
 }
 
+let lastDebuffTime = 0;
+const DEBUFF_COOLDOWN_MS = 100;
+
 export function playDebuffSound() {
-    debuffSynth.triggerAttackRelease("C2", "8n", Tone.now());
+    const currentTime = performance.now();
+    if (currentTime - lastDebuffTime < DEBUFF_COOLDOWN_MS) {
+        return;
+    }
+    lastDebuffTime = currentTime;
+    
+    debuffSynth.triggerAttackRelease("C2", "8n", Tone.now() + 0.01);
+}
+
+// =================================================================
+// PHASE 2C: TIER-BASED CASH REWARD AUDIO
+// =================================================================
+// Plays distinct audio cues when earning cash with skill multipliers
+
+// Tier cash sound synth - brighter metallic sound for high-tier rewards
+export const tierCashSynth = new Tone.MetalSynth({
+    frequency: 300,
+    envelope: { attack: 0.001, decay: 0.15, release: 0.08 },
+    harmonicity: 6.5,
+    modulationIndex: 40,
+    resonance: 5000,
+    octaves: 2
+}).connect(uiBus);
+tierCashSynth.volume.value = -12;
+tierCashSynth.mute = isMuted;
+
+let lastTierCashTime = 0;
+const TIER_CASH_COOLDOWN_MS = 80; // Slightly faster than regular cha-ching
+
+/**
+ * Play tier-specific cash reward sound
+ * Higher tiers get more elaborate sounds
+ * 
+ * @param {string} tier - BASIC, COSMETIC, ENLISTED, MASTER, or LEGENDARY
+ */
+export function playTierCashSound(tier) {
+    const currentTime = performance.now();
+    
+    // Debounce: skip if called too rapidly
+    if (currentTime - lastTierCashTime < TIER_CASH_COOLDOWN_MS) {
+        return;
+    }
+    lastTierCashTime = currentTime;
+    
+    const now = Tone.now() + 0.01;
+    
+    switch (tier) {
+        case 'LEGENDARY':
+            // Triple ascending chime with sparkle - the jackpot sound!
+            tierCashSynth.triggerAttackRelease(5500, "32n", now);
+            tierCashSynth.triggerAttackRelease(6500, "32n", now + 0.04);
+            tierCashSynth.triggerAttackRelease(7500, "32n", now + 0.08);
+            tierCashSynth.triggerAttackRelease(8500, "64n", now + 0.12);
+            break;
+            
+        case 'MASTER':
+            // Double ascending chime - satisfying premium sound
+            tierCashSynth.triggerAttackRelease(5000, "32n", now);
+            tierCashSynth.triggerAttackRelease(6000, "32n", now + 0.05);
+            tierCashSynth.triggerAttackRelease(7000, "64n", now + 0.10);
+            break;
+            
+        case 'ENLISTED':
+            // Single bright chime with harmonic
+            tierCashSynth.triggerAttackRelease(4500, "16n", now);
+            tierCashSynth.triggerAttackRelease(5500, "32n", now + 0.03);
+            break;
+            
+        case 'COSMETIC':
+            // Simple pleasant ding
+            tierCashSynth.triggerAttackRelease(4000, "16n", now);
+            break;
+            
+        case 'BASIC':
+        default:
+            // Basic subtle click - minimal audio for 0.5x multiplier
+            tierCashSynth.triggerAttackRelease(3500, "32n", now);
+            break;
+    }
 }
 
 export function playQuackSound() {

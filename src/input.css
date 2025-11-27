@@ -18,7 +18,7 @@
   }
   
   .tab-button-active {
-    @apply text-blue-600 border-b-2 border-blue-600;
+    @apply text-orange-600 border-b-2 border-orange-600;
   }
   
   .tab-button-inactive {
@@ -161,11 +161,20 @@
     z-index: 10000 !important;
 }
 
+:fullscreen #gamepad-indicator,
+:-webkit-full-screen #gamepad-indicator,
+:-moz-full-screen #gamepad-indicator {
+    position: fixed !important;
+    z-index: 10001 !important;
+    bottom: 45px !important;
+    right: 10px !important;
+}
+
 /* Gamepad Focus Styling - highlights focused UI elements when using gamepad */
 .gamepad-focus {
-    outline: 3px solid #3b82f6 !important;
+    outline: 3px solid #facc15 !important;
     outline-offset: 2px !important;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.6) !important;
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.4), 0 0 12px rgba(250, 204, 21, 0.6) !important;
     transition: outline 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
@@ -179,13 +188,13 @@ button.gamepad-focus,
 
 /* Slider/range input focus */
 input[type="range"].gamepad-focus {
-    outline: 3px solid #3b82f6 !important;
+    outline: 3px solid #facc15 !important;
 }
 
 /* Select dropdown focus */
 select.gamepad-focus {
-    outline: 3px solid #3b82f6 !important;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.6) !important;
+    outline: 3px solid #facc15 !important;
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.4), 0 0 12px rgba(250, 204, 21, 0.6) !important;
 }
 
 /* Frontflip icon rotation - flip 180 degrees to face opposite direction */

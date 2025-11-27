@@ -57,20 +57,33 @@ export function getActiveSkillMultiplier(gameState) {
 
 /**
  * Apply cash multiplier to a reward amount
+ * Also tracks usage stats for the results screen (Phase 2C)
  * 
  * @param {number} baseReward - The base cash reward amount
  * @param {Object} gameState - The current game state
- * @returns {Object} Object containing {baseReward, multiplier, finalReward}
+ * @param {boolean} trackStats - Whether to track stats (default: true)
+ * @returns {Object} Object containing {baseReward, multiplier, finalReward, tier}
  */
-export function applyCashMultiplier(baseReward, gameState) {
+export function applyCashMultiplier(baseReward, gameState, trackStats = true) {
     const multiplier = getActiveSkillMultiplier(gameState);
+    const tier = getActiveSkillTier(gameState);
     const finalReward = Math.floor(baseReward * multiplier);
+    
+    // Phase 2C: Track skill usage stats
+    if (trackStats && gameState.skillUsageStats) {
+        const stats = gameState.skillUsageStats;
+        stats.cashByTier[tier] = (stats.cashByTier[tier] || 0) + finalReward;
+        stats.usageCount[tier] = (stats.usageCount[tier] || 0) + 1;
+        stats.totalMultipliedCash += finalReward;
+        stats.totalBaseCash += baseReward;
+    }
     
     return {
         baseReward,
         multiplier,
         finalReward,
-        multiplierBonus: finalReward - baseReward
+        multiplierBonus: finalReward - baseReward,
+        tier
     };
 }
 

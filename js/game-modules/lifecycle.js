@@ -38,11 +38,13 @@ import {
     playCollisionSound,
     playQuackSound,
     playPowerUpSound,
-    playChaChing
+    playChaChing,
+    playTierCashSound
 } from '../audio.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
-import { applyCashMultiplier, getMultiplierTierColors } from './skillCashMultipliers.js';
+import { applyCashMultiplier, getMultiplierTierColors, getActiveSkillTier } from './skillCashMultipliers.js';
+import { createCashRewardParticles } from './drawing/effects.js';
 import {
     setPaused,
     gameState,
@@ -240,7 +242,7 @@ export function animate(timestamp) {
                 const baseReward = finalSegment.milestoneValue;
                 
                 // Apply skill-based cash multiplier (Phase 2C)
-                const { finalReward, multiplier, multiplierBonus } = applyCashMultiplier(baseReward, gameState);
+                const { finalReward, multiplier, multiplierBonus, tier } = applyCashMultiplier(baseReward, gameState);
                 
                 setAccumulatedCash(finalReward);
                 gameState.displayCash = finalReward; // Instantly update display for the final amount
@@ -271,9 +273,13 @@ export function animate(timestamp) {
                         opacity: 1.0,
                         progress: 0
                     });
+                    
+                    // Phase 2C: Tier-colored particles and audio
+                    createCashRewardParticles(STICK_FIGURE_FIXED_X, collectionY, tier, finalReward);
+                    playTierCashSound(tier);
+                } else {
+                    playChaChing();
                 }
-                
-                playChaChing();
                 // --- END FIX ---
 
                 if (gameState.selectedPersona !== 'custom') {
@@ -843,7 +849,7 @@ export function animate(timestamp) {
                 const baseReward = completedSegment.milestoneValue;
                 
                 // Apply skill-based cash multiplier (Phase 2C)
-                const { finalReward, multiplier, multiplierBonus } = applyCashMultiplier(baseReward, gameState);
+                const { finalReward, multiplier, multiplierBonus, tier } = applyCashMultiplier(baseReward, gameState);
                 
                 const startValue = gameState.displayCash;
                 const endValue = finalReward;
@@ -865,6 +871,10 @@ export function animate(timestamp) {
                         opacity: 1.0,
                         progress: 0
                     });
+                    
+                    // Phase 2C: Tier-colored particles and audio
+                    createCashRewardParticles(STICK_FIGURE_FIXED_X, collectionY, tier, finalReward);
+                    playTierCashSound(tier);
                 }
             }, CASH_BAG_ANIMATION_DURATION);
             addCashBag({
@@ -876,7 +886,13 @@ export function animate(timestamp) {
                 progress: 0,
                 isDone: false
             });
-            playChaChing();
+            // Phase 2C: Play tier-based audio or regular cha-ching
+            const currentTier = getActiveSkillTier(gameState);
+            if (currentTier !== 'BASIC' && currentTier !== 'COSMETIC' && gameState.playerStats?.activeArmorySkill && gameState.selectedPersona !== 'custom') {
+                playTierCashSound(currentTier);
+            } else {
+                playChaChing();
+            }
         }
 
         gameState.daysAccumulatedAtSegmentStart += completedSegment.durationDays;

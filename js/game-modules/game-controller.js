@@ -25,6 +25,8 @@ import {
     setAccumulatedCash,
     clearActiveCashBags,
     clearFloatingBonusTexts,
+    clearCashRewardParticles,
+    resetSkillUsageStats,
     clearFireTrail,
     clearIncineratingObstacles,
     clearVanishingObstacles,
@@ -142,6 +144,8 @@ export function resetGameState() {
 
     clearActiveCashBags();
     clearFloatingBonusTexts();
+    clearCashRewardParticles();
+    resetSkillUsageStats();
     clearFireTrail();
     clearIncineratingObstacles();
     clearVanishingObstacles();

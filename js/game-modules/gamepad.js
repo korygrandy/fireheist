@@ -241,20 +241,49 @@ function updateGamepadState() {
         const dpadBtn_Left = currentGamepad.buttons[14].pressed;
         const dpadBtn_Right = currentGamepad.buttons[15].pressed;
         const aButton = currentGamepad.buttons[0].pressed;
+        
+        // Thumbstick navigation (axes 0=left stick X, 1=left stick Y, 2=right stick X, 3=right stick Y)
+        const leftStickX = currentGamepad.axes[0] || 0;
+        const leftStickY = currentGamepad.axes[1] || 0;
+        const rightStickX = currentGamepad.axes[2] || 0;
+        const rightStickY = currentGamepad.axes[3] || 0;
+        const stickThreshold = 0.5;
+        
+        // Combine thumbstick input with threshold detection
+        const stickLeft = leftStickX < -stickThreshold || rightStickX < -stickThreshold;
+        const stickRight = leftStickX > stickThreshold || rightStickX > stickThreshold;
+        const stickUp = leftStickY < -stickThreshold || rightStickY < -stickThreshold;
+        const stickDown = leftStickY > stickThreshold || rightStickY > stickThreshold;
 
+        // Handle SELECT element value changes with left/right
         if (focusedElement && focusedElement.tagName === 'SELECT') {
-            if (dpadBtn_Right && !buttonStates['DPAD_RIGHT']) {
+            if ((dpadBtn_Right || stickRight) && !buttonStates['DPAD_RIGHT'] && !buttonStates['STICK_RIGHT']) {
                 focusedElement.selectedIndex = Math.min(focusedElement.options.length - 1, focusedElement.selectedIndex + 1);
                 focusedElement.dispatchEvent(new Event('change'));
             }
-            if (dpadBtn_Left && !buttonStates['DPAD_LEFT']) {
+            if ((dpadBtn_Left || stickLeft) && !buttonStates['DPAD_LEFT'] && !buttonStates['STICK_LEFT']) {
                 focusedElement.selectedIndex = Math.max(0, focusedElement.selectedIndex - 1);
                 focusedElement.dispatchEvent(new Event('change'));
             }
+        } else {
+            // For non-SELECT elements, left/right also navigates between UI elements
+            if ((dpadBtn_Left || stickLeft) && !buttonStates['DPAD_LEFT'] && !buttonStates['STICK_LEFT']) {
+                setFocus((currentFocusIndex - 1 + focusableElements.length) % focusableElements.length);
+            }
+            if ((dpadBtn_Right || stickRight) && !buttonStates['DPAD_RIGHT'] && !buttonStates['STICK_RIGHT']) {
+                setFocus((currentFocusIndex + 1) % focusableElements.length);
+            }
         }
 
-        if (dpadBtn_Up && !buttonStates['DPAD_UP']) { setFocus((currentFocusIndex - 1 + focusableElements.length) % focusableElements.length); }
-        if (dpadBtn_Down && !buttonStates['DPAD_DOWN']) { setFocus((currentFocusIndex + 1) % focusableElements.length); }
+        // Up/Down always navigates between UI elements
+        if ((dpadBtn_Up || stickUp) && !buttonStates['DPAD_UP'] && !buttonStates['STICK_UP']) {
+            setFocus((currentFocusIndex - 1 + focusableElements.length) % focusableElements.length);
+        }
+        if ((dpadBtn_Down || stickDown) && !buttonStates['DPAD_DOWN'] && !buttonStates['STICK_DOWN']) {
+            setFocus((currentFocusIndex + 1) % focusableElements.length);
+        }
+        
+        // A button to activate/click
         if (aButton && !buttonStates['A_BUTTON_UI']) {
             if (focusedElement && focusedElement.tagName !== 'SELECT') {
                 focusedElement.click();
@@ -267,6 +296,10 @@ function updateGamepadState() {
             DPAD_DOWN: dpadBtn_Down,
             DPAD_LEFT: dpadBtn_Left,
             DPAD_RIGHT: dpadBtn_Right,
+            STICK_UP: stickUp,
+            STICK_DOWN: stickDown,
+            STICK_LEFT: stickLeft,
+            STICK_RIGHT: stickRight,
             A_BUTTON_UI: aButton,
         };
 

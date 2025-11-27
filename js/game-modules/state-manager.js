@@ -1070,6 +1070,18 @@ export function clearActiveCashBags() { state.activeCashBags = []; }
 export function clearFloatingBonusTexts() { state.floatingBonusTexts = []; }
 export function addFloatingBonusText(text) { state.floatingBonusTexts.push(text); }
 export function removeFloatingBonusText(index) { state.floatingBonusTexts.splice(index, 1); }
+export function clearCashRewardParticles() { state.cashRewardParticles = []; }
+
+// Phase 2C: Reset skill usage stats for new game
+export function resetSkillUsageStats() {
+    state.skillUsageStats = {
+        cashByTier: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0 },
+        usageCount: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0 },
+        totalMultipliedCash: 0,
+        totalBaseCash: 0
+    };
+}
+
 export function clearFireTrail() { state.fireTrail = []; }
 export function clearIncineratingObstacles() { state.incineratingObstacles = []; }
 export function clearVanishingObstacles() { state.vanishingObstacles = []; }
