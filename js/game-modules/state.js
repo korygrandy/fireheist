@@ -149,6 +149,7 @@ const state = {
     grassAnimationState: { blades: [], lastUpdateTime: 0 },
     clouds: [],
     activeCashBags: [],
+    floatingBonusTexts: [], // Phase 2C: Floating text for skill multiplier bonuses
     fireTrail: [],
     incineratingObstacles: [],
     houdiniParticles: [],
@@ -238,6 +239,7 @@ const state = {
         flawlessRuns: {}, // e.g., { 'Novice': true, 'Pro': false }
         obstaclesIncinerated: 0,
         flawlessHurdles: 0,
+        consecutiveFlawlessHurdles: 0, // Tracks consecutive flawless hurdles across games (resets on hit)
         notifiedArmoryUnlocks: [], // To track shown notifications
         unlockedArmoryItems: [], // New: To store keys of unlocked armory items
         activeArmorySkill: null, // New: To store the key of the currently active armory skill

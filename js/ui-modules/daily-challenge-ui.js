@@ -12,6 +12,10 @@ function createChallengeHTML(config, results = null) {
     const winStreak = results ? results.winStreak : getDailyChallengeWinStreak();
     const theme = themes[config.theme];
 
+    const buttonHtml = results 
+        ? `<div class="text-center py-2 px-4 bg-green-100 text-green-700 font-semibold rounded-lg">✅ Completed Today</div>`
+        : `<button id="startDailyChallengeBtn" class="control-btn primary-btn w-full">Start Daily Challenge</button>`;
+
     const frontContent = `
         <div class="text-center p-4 border-2 border-dashed border-gray-300 rounded-lg">
             <div class="flex justify-between items-center mb-2">
@@ -35,7 +39,7 @@ function createChallengeHTML(config, results = null) {
                     <p class="text-xs text-gray-500">Skill</p>
                 </div>
             </div>
-            <button id="startDailyChallengeBtn" class="control-btn primary-btn w-full" ${results ? 'disabled' : ''}>Start Daily Challenge</button>
+            ${buttonHtml}
         </div>
     `;
 

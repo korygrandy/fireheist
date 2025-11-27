@@ -395,16 +395,21 @@ export function drawCooldownIndicator() {
 
 export function drawCashMultiplierIndicator() {
     // Only show if a skill is selected
-    if (!gameState.activeArmorySkill) return;
+    const activeSkillKey = gameState.playerStats?.activeArmorySkill;
+    if (!activeSkillKey) return;
+
+    const skillData = ARMORY_ITEMS[activeSkillKey];
+    if (!skillData) return;
 
     const multiplier = getActiveSkillMultiplier(gameState);
     const colors = getMultiplierTierColors(gameState);
+    const skillName = skillData.name || activeSkillKey;
     
     // Position in bottom-right corner
-    const indicatorX = canvas.width - 120;
-    const indicatorY = canvas.height - 35;
-    const boxWidth = 110;
-    const boxHeight = 30;
+    const indicatorX = canvas.width - 90;
+    const indicatorY = canvas.height - 30;
+    const boxWidth = 160;
+    const boxHeight = 28;
     const borderRadius = 5;
 
     ctx.save();
@@ -422,12 +427,12 @@ export function drawCashMultiplierIndicator() {
     ctx.roundRect(indicatorX - boxWidth / 2, indicatorY - boxHeight / 2, boxWidth, boxHeight, borderRadius);
     ctx.stroke();
 
-    // Draw multiplier text
+    // Draw skill name and multiplier text
     ctx.fillStyle = colors.textColor;
-    ctx.font = 'bold 16px Arial';
+    ctx.font = 'bold 14px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`${formatMultiplier(multiplier)} 💰`, indicatorX, indicatorY);
+    ctx.fillText(`${skillName} × ${formatMultiplier(multiplier)}`, indicatorX, indicatorY);
 
     ctx.restore();
 }
@@ -538,6 +543,32 @@ export function drawCashBags() {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('💰', bag.currentX, bag.currentY);
+        ctx.restore();
+    });
+}
+
+/**
+ * Draw floating bonus text popups (Phase 2C)
+ * Shows "+$X bonus" when skill multiplier is applied
+ */
+export function drawFloatingBonusTexts() {
+    gameState.floatingBonusTexts.forEach(text => {
+        ctx.save();
+        ctx.globalAlpha = text.opacity;
+        
+        // Draw text with shadow for visibility
+        ctx.font = 'bold 18px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillText(text.label, text.x + 2, text.y + 2);
+        
+        // Main text with tier color
+        ctx.fillStyle = text.color;
+        ctx.fillText(text.label, text.x, text.y);
+        
         ctx.restore();
     });
 }

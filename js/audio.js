@@ -339,8 +339,9 @@ export function playAmbientSound(themeName) {
 }
 
 export function playChaChing() {
-    chaChingSynth.triggerAttackRelease(4000, "16n", Tone.now());
-    chaChingSynth.triggerAttackRelease(5000, "16n", Tone.now() + 0.05);
+    const now = Tone.now() + 0.01; // Small offset to avoid timing conflicts
+    chaChingSynth.triggerAttackRelease(4000, "16n", now);
+    chaChingSynth.triggerAttackRelease(5000, "16n", now + 0.05);
 }
 
 export function playCollisionSound() {

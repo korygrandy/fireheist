@@ -42,7 +42,7 @@ import {
 } from '../audio.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
-import { applyCashMultiplier } from './skillCashMultipliers.js';
+import { applyCashMultiplier, getMultiplierTierColors } from './skillCashMultipliers.js';
 import {
     setPaused,
     gameState,
@@ -88,6 +88,8 @@ import {
     setTurboBoostLastFrameTime,
     addCashBag,
     removeCashBag,
+    addFloatingBonusText,
+    removeFloatingBonusText,
     setDaysCounter,
     setAccumulatedCash,
     setHurdle,
@@ -161,7 +163,7 @@ import { spawnObstacle, spawnAccelerator, spawnProximityEvent } from './spawning
 import { applySpeedEffect } from './effects.js';
 import { updateHighScore } from './score.js';
 import { animateValue } from './animations.js';
-import { drawVictoryOverlay } from './drawing/overlays.js';
+import { drawVictoryOverlay, drawFloatingBonusTexts } from './drawing/overlays.js';
 import { stopGame } from './game-controller.js';
 import { checkShotgunCollision, checkMolotovCollision } from './collision.js';
 import { molotovSkill } from './skills/molotov.js';
@@ -238,7 +240,7 @@ export function animate(timestamp) {
                 const baseReward = finalSegment.milestoneValue;
                 
                 // Apply skill-based cash multiplier (Phase 2C)
-                const { finalReward } = applyCashMultiplier(baseReward, gameState);
+                const { finalReward, multiplier, multiplierBonus } = applyCashMultiplier(baseReward, gameState);
                 
                 setAccumulatedCash(finalReward);
                 gameState.displayCash = finalReward; // Instantly update display for the final amount
@@ -255,6 +257,22 @@ export function animate(timestamp) {
                     isDone: false,
                     soundPlayed: false
                 });
+                
+                // Phase 2C: Show floating bonus text for final milestone (not for Custom Persona)
+                if (multiplier !== 1.0 && gameState.playerStats?.activeArmorySkill && gameState.selectedPersona !== 'custom') {
+                    const tierColors = getMultiplierTierColors(gameState);
+                    const bonusSign = multiplierBonus >= 0 ? '+' : '';
+                    const bonusLabel = `${bonusSign}$${Math.abs(multiplierBonus).toLocaleString()} (${multiplier}x)`;
+                    addFloatingBonusText({
+                        x: STICK_FIGURE_FIXED_X + 60,
+                        y: collectionY - 30,
+                        label: bonusLabel,
+                        color: tierColors.backgroundColor,
+                        opacity: 1.0,
+                        progress: 0
+                    });
+                }
+                
                 playChaChing();
                 // --- END FIX ---
 
@@ -321,6 +339,7 @@ export function animate(timestamp) {
 
         drawing.draw();
         drawVictoryOverlay(timestamp - gameState.gameOverSequenceStartTime);
+        drawFloatingBonusTexts(); // Phase 2C: Draw on top of victory overlay
 
         if (timestamp - gameState.gameOverSequenceStartTime >= VICTORY_DISPLAY_TIME) {
                                             if (gameState.isDailyChallengeActive) {
@@ -637,6 +656,14 @@ export function animate(timestamp) {
                 playCollisionSound();
                 playQuackSound();
                 setPlayerEnergy(gameState.playerEnergy * 0.5); 
+                
+                // Reset consecutive flawless hurdles on collision (the hardest achievement!)
+                if (gameState.playerStats.consecutiveFlawlessHurdles > 0) {
+                    console.log(`-> STREAK BROKEN: Consecutive flawless hurdles reset from ${gameState.playerStats.consecutiveFlawlessHurdles} to 0`);
+                    gameState.playerStats.consecutiveFlawlessHurdles = 0;
+                    savePlayerStats();
+                }
+                
                 console.warn(`-> COLLISION: Hit obstacle! Total hits: ${gameState.hitsCounter}. Speed penalty applied.`);
                 setCurrentObstacle({ ...gameState.currentObstacle, hasBeenHit: true });
                 setAccelerating(false);
@@ -790,6 +817,21 @@ export function animate(timestamp) {
         }
     }
 
+    // Phase 2C: Update floating bonus texts animation
+    const FLOATING_TEXT_DURATION = 1500; // 1.5 seconds
+    for (let i = gameState.floatingBonusTexts.length - 1; i >= 0; i--) {
+        const text = gameState.floatingBonusTexts[i];
+        text.progress += deltaTime / FLOATING_TEXT_DURATION;
+        
+        if (text.progress < 1) {
+            // Float upward and fade out
+            text.y -= deltaTime * 0.03; // Move up slowly
+            text.opacity = 1 - text.progress;
+        } else {
+            removeFloatingBonusText(i);
+        }
+    }
+
     if (gameState.segmentProgress >= 1) {
         const completedSegment = gameState.raceSegments[gameState.currentSegmentIndex];
         console.log(`-> SEGMENT COMPLETE: Reached Milestone ${gameState.currentSegmentIndex}. Value: $${completedSegment.milestoneValue.toLocaleString()}`);
@@ -801,7 +843,7 @@ export function animate(timestamp) {
                 const baseReward = completedSegment.milestoneValue;
                 
                 // Apply skill-based cash multiplier (Phase 2C)
-                const { finalReward } = applyCashMultiplier(baseReward, gameState);
+                const { finalReward, multiplier, multiplierBonus } = applyCashMultiplier(baseReward, gameState);
                 
                 const startValue = gameState.displayCash;
                 const endValue = finalReward;
@@ -809,6 +851,21 @@ export function animate(timestamp) {
                     gameState.displayCash = currentValue;
                 });
                 setAccumulatedCash(finalReward);
+                
+                // Phase 2C: Show floating bonus text if multiplier is applied (not for Custom Persona)
+                if (multiplier !== 1.0 && gameState.playerStats?.activeArmorySkill && gameState.selectedPersona !== 'custom') {
+                    const tierColors = getMultiplierTierColors(gameState);
+                    const bonusSign = multiplierBonus >= 0 ? '+' : '';
+                    const bonusLabel = `${bonusSign}$${Math.abs(multiplierBonus).toLocaleString()} (${multiplier}x)`;
+                    addFloatingBonusText({
+                        x: STICK_FIGURE_FIXED_X + 60,
+                        y: collectionY - 30,
+                        label: bonusLabel,
+                        color: tierColors.backgroundColor,
+                        opacity: 1.0,
+                        progress: 0
+                    });
+                }
             }, CASH_BAG_ANIMATION_DURATION);
             addCashBag({
                 x: STICK_FIGURE_FIXED_X,
@@ -841,6 +898,9 @@ export function animate(timestamp) {
         // Increment flawless hurdles count
         if (gameState.selectedPersona !== 'custom') {
             gameState.playerStats.flawlessHurdles = (gameState.playerStats.flawlessHurdles || 0) + 1;
+            // Track consecutive flawless hurdles (persists across games, resets on collision)
+            gameState.playerStats.consecutiveFlawlessHurdles = (gameState.playerStats.consecutiveFlawlessHurdles || 0) + 1;
+            console.log(`-> FLAWLESS HURDLE: Consecutive count now ${gameState.playerStats.consecutiveFlawlessHurdles}`);
             savePlayerStats();
         }
 

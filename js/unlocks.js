@@ -133,7 +133,7 @@ export const ARMORY_ITEMS = {
         "name": "Fire Spinner",
         "description": "A fiery spinning jump that incinerates obstacles.",
         "emoji": "🔥",
-        "tier": "Master",
+        "tier": "Enlisted",
         "unlockCondition": {
             "type": "incinerateCount",
             "count": 75,
@@ -170,7 +170,7 @@ export const ARMORY_ITEMS = {
         "description": "Teleport with a burst of fire, incinerating nearby obstacles.",
         "imageLocked": "images/fiery-houdini-locked.png",
         "imageUnlocked": "images/fiery-houdini-unlocked.png",
-        "tier": "Master",
+        "tier": "Enlisted",
         "grantsInvincibility": true,
         "unlockCondition": {
             "type": "incinerateCount",
@@ -195,7 +195,7 @@ export const ARMORY_ITEMS = {
         "name": "Blink Strike",
         "description": "Instantly teleport through the next obstacle, shattering it on arrival. A high-precision tool for the agile.",
         "emoji": "💨",
-        "tier": "Legendary",
+        "tier": "Master",
         "unlockCondition": {
             "type": "consecutiveFlawlessHurdles",
             "count": 25,
@@ -247,7 +247,7 @@ export const ARMORY_ITEMS = {
         "description": "Unleash a cone of fire particles, destroying nearby obstacles.",
         "imageLocked": "images/shotgun-locked.png",
         "imageUnlocked": "images/shotgun-unlocked.png",
-        "tier": "Legendary",
+        "tier": "Master",
         "unlockCondition": {
             "type": "totalIncinerateCount",
             "count": 150,
@@ -260,7 +260,7 @@ export const ARMORY_ITEMS = {
         "description": "Hurl a fiery projectile that smashes and ignites obstacles on impact.",
         "imageLocked": "images/molatov-cocktail-locked.png",
         "imageUnlocked": "images/molatov-cocktail-unlocked.png",
-        "tier": "Legendary",
+        "tier": "Master",
         "unlockCondition": {
             "type": "totalIncinerateCount",
             "count": 200,
@@ -298,7 +298,7 @@ export const ARMORY_ITEMS = {
         "name": "Tarzan Swing",
         "description": "Swing from a rope to clear obstacles and gain momentum.",
         "emoji": "🐒",
-        "tier": "Enlisted",
+        "tier": "Legendary",
         "grantsInvincibility": true,
         "unlockCondition": {
             "type": "daysSurvived",
@@ -433,6 +433,11 @@ export function getSkillUnlockProgress(condition, stats) {
                 current: stats.flawlessHurdles || 0,
                 target: condition.count
             };
+        case 'consecutiveFlawlessHurdles':
+            return {
+                current: stats.consecutiveFlawlessHurdles || 0,
+                target: condition.count
+            };
         case 'incinerateCount':
             return {
                 current: stats.obstaclesIncinerated || 0,
@@ -506,6 +511,8 @@ export function checkSkillUnlockStatus(condition, stats) {
             return stats.flawlessRuns && stats.flawlessRuns[condition.difficulty];
         case 'consecutiveGroundPounds':
             return stats.consecutiveGroundPounds >= condition.count;
+        case 'consecutiveFlawlessHurdles':
+            return stats.consecutiveFlawlessHurdles >= condition.count;
         case 'fireMageIncinerateCount':
             return stats.fireMageIncinerations >= condition.count;
         case 'daysSurvived':

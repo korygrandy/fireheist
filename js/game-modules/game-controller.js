@@ -24,6 +24,7 @@ import {
     setGameRunning,
     setAccumulatedCash,
     clearActiveCashBags,
+    clearFloatingBonusTexts,
     clearFireTrail,
     clearIncineratingObstacles,
     clearVanishingObstacles,
@@ -140,6 +141,7 @@ export function resetGameState() {
     loadThemeAnchorImage(gameState.selectedTheme);
 
     clearActiveCashBags();
+    clearFloatingBonusTexts();
     clearFireTrail();
     clearIncineratingObstacles();
     clearVanishingObstacles();
@@ -416,10 +418,13 @@ export function stopGame(shouldReset = true) {
         drawing.draw();
     } else {
         // On successful run completion, add the main heist value and any mini-game bonus to the total
-        if (gameState.isVictory && (gameState.accumulatedCash > 0 || gameState.miniGameBonus > 0)) {
+        // Only count cash for Persona-based games, NOT Custom Persona (to prevent exploit via custom milestones)
+        if (gameState.isVictory && (gameState.accumulatedCash > 0 || gameState.miniGameBonus > 0) && gameState.selectedPersona !== 'custom') {
             const winnings = gameState.accumulatedCash + gameState.miniGameBonus;
             gameState.playerStats.totalAccumulatedCash += winnings;
             console.log(`-> STOP GAME: Added winnings of $${winnings.toLocaleString()} to total cash.`);
+        } else if (gameState.selectedPersona === 'custom') {
+            console.log(`-> STOP GAME: Custom Persona - winnings not added to Armory total (anti-exploit).`);
         }
         showResultsScreen(gameState.financialMilestones, gameState.raceSegments);
         updateControlPanelState(false, false);

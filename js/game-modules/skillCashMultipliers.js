@@ -36,11 +36,12 @@ export const TIER_CASH_MULTIPLIERS = {
  * @returns {number} Multiplier (0.5 to 2.5)
  */
 export function getActiveSkillMultiplier(gameState) {
-    if (!gameState.activeArmorySkill) {
+    const activeSkill = gameState.playerStats?.activeArmorySkill;
+    if (!activeSkill) {
         return 1.0; // No skill selected = no multiplier
     }
 
-    const skillKey = gameState.activeArmorySkill;
+    const skillKey = activeSkill;
     const skillData = ARMORY_ITEMS[skillKey];
     
     if (!skillData) {
@@ -81,11 +82,12 @@ export function applyCashMultiplier(baseReward, gameState) {
  * @returns {string} Tier name (BASIC, ENLISTED, MASTER, LEGENDARY, etc.)
  */
 export function getActiveSkillTier(gameState) {
-    if (!gameState.activeArmorySkill) {
+    const activeSkill = gameState.playerStats?.activeArmorySkill;
+    if (!activeSkill) {
         return 'BASIC'; // Default to basic if no skill
     }
 
-    const skillKey = gameState.activeArmorySkill;
+    const skillKey = activeSkill;
     const skillData = ARMORY_ITEMS[skillKey];
     
     if (!skillData) {
@@ -138,11 +140,12 @@ export function formatMultiplier(multiplier) {
  * @returns {string} Display text like "Master Skill: 1.5x Cash"
  */
 export function getMultiplierDisplayText(gameState) {
-    if (!gameState.activeArmorySkill) {
+    const activeSkill = gameState.playerStats?.activeArmorySkill;
+    if (!activeSkill) {
         return 'No Skill: 1.0x Cash';
     }
 
-    const skillKey = gameState.activeArmorySkill;
+    const skillKey = activeSkill;
     const skillData = ARMORY_ITEMS[skillKey];
     
     if (!skillData) {

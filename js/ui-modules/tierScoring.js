@@ -314,11 +314,12 @@ export function validateTierSystem(allSkills) {
     }
 
     // Expected distribution (for validation)
+    // Note: Total is 33 skills (Firestorm was added after initial plan)
     results.expected = {
         BASIC: 7,
         COSMETIC: 2,
         ENLISTED: 9,
-        MASTER: 8,
+        MASTER: 9,
         LEGENDARY: 6,
         ERROR: 0
     };

@@ -1067,6 +1067,9 @@ export function removeIncineratingObstacle(index) {
 }
 
 export function clearActiveCashBags() { state.activeCashBags = []; }
+export function clearFloatingBonusTexts() { state.floatingBonusTexts = []; }
+export function addFloatingBonusText(text) { state.floatingBonusTexts.push(text); }
+export function removeFloatingBonusText(index) { state.floatingBonusTexts.splice(index, 1); }
 export function clearFireTrail() { state.fireTrail = []; }
 export function clearIncineratingObstacles() { state.incineratingObstacles = []; }
 export function clearVanishingObstacles() { state.vanishingObstacles = []; }
@@ -1291,12 +1294,4 @@ export function resetTarzanState() {
         hasSwungForward: false,
         swingStartTime: 0,
     };
-}
-
-/**
- * Set the currently active/equipped skill (for Phase 2C cash multipliers)
- * @param {string} skillKey - The key of the skill being equipped
- */
-export function setActiveSkill(skillKey) {
-    state.activeArmorySkill = skillKey;
 }
