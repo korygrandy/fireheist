@@ -1,0 +1,586 @@
+{
+  "meta": {
+    "title": "🔥 FIRE HEIST: Official Strategy Guide 🔥",
+    "subtitle": "The Complete Unauthorized Guide to Financial Freedom!",
+    "edition": "Collector's Edition",
+    "publisher": "KG Enterprises Gaming Division",
+    "year": "1997",
+    "pages": "∞",
+    "coverQuote": "\"This guide will change your life!\" - Gaming Monthly"
+  },
+  "tableOfContents": [
+    { "id": "getting-started", "title": "Chapter 1: Getting Started", "page": "4" },
+    { "id": "basic-moves", "title": "Chapter 2: Basic Moves Mastery", "page": "12" },
+    { "id": "advanced-skills", "title": "Chapter 3: Advanced Skills Arsenal", "page": "28" },
+    { "id": "skill-tiers", "title": "Chapter 4: The Tier System Explained", "page": "44" },
+    { "id": "unlock-guide", "title": "Chapter 5: Complete Unlock Guide", "page": "56" },
+    { "id": "energy-management", "title": "Chapter 6: Energy Management Secrets", "page": "72" },
+    { "id": "daily-challenge", "title": "Chapter 7: Daily Challenge Domination", "page": "88" },
+    { "id": "personas", "title": "Chapter 8: Secret Personas Revealed", "page": "102" },
+    { "id": "pro-tips", "title": "Chapter 9: Pro Tips & Combos", "page": "118" },
+    { "id": "secrets", "title": "Chapter 10: Secrets & Easter Eggs", "page": "134" }
+  ],
+  "chapters": {
+    "getting-started": {
+      "title": "📖 Chapter 1: Getting Started",
+      "subtitle": "Your First Steps to Becoming a FIRE Legend!",
+      "icon": "🎮",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Welcome, future heist master! You've made the right choice picking up this guide. Within these pages lies the wisdom of countless gaming sessions, late nights, and epic victories. Let's begin your journey to financial independence!"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "🌟 PRO TIP!",
+          "text": "Before your first heist, take a moment to explore the Control Panel. Familiarize yourself with the Armory - that's where the REAL power lies!"
+        },
+        {
+          "type": "section",
+          "title": "The Goal",
+          "text": "Your mission is simple: survive as many days as possible while collecting cash and avoiding obstacles. But don't let the simplicity fool you - mastering FIRE Heist takes dedication, skill, and a whole lot of style! 💰"
+        },
+        {
+          "type": "section",
+          "title": "Choosing Your Difficulty",
+          "text": "🟢 **ROOKIE**: Perfect for beginners! You'll have more energy, more fireballs, and a forgiving collision system. No shame in starting here - even the pros did!\n\n🟡 **NOVICE**: The balanced experience. You'll need to manage your energy more carefully, but the rewards are greater.\n\n🔴 **PRO**: Only for the truly dedicated! Energy is scarce, obstacles are unforgiving, and every decision matters. Good luck - you'll need it!"
+        },
+        {
+          "type": "callout",
+          "style": "warning",
+          "title": "⚠️ HEADS UP!",
+          "text": "Your difficulty choice affects your skill level unlock requirements. Higher difficulties = more bragging rights!"
+        }
+      ]
+    },
+    "basic-moves": {
+      "title": "🏃 Chapter 2: Basic Moves Mastery",
+      "subtitle": "The Foundation of Every Great Heist",
+      "icon": "⭐",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Before you can run, you must learn to jump! These core moves are available from day one and form the foundation of your entire skill set. Master these, and you'll be unstoppable!"
+        },
+        {
+          "type": "skill",
+          "name": "Jump",
+          "emoji": "🏃‍♀️",
+          "keys": "Spacebar / A Button / Tap",
+          "energy": "FREE",
+          "description": "The bread and butter of every heister. Time your jumps perfectly to soar over obstacles. Sounds simple? It is! But perfection takes practice.",
+          "rating": "★★★★★ (Essential)"
+        },
+        {
+          "type": "skill",
+          "name": "Hurdle",
+          "emoji": "🏃",
+          "keys": "J Key / Y Button",
+          "energy": "FREE",
+          "description": "A quick hop perfect for low obstacles. Faster recovery than a full jump, letting you chain moves together like a true acrobat!",
+          "rating": "★★★★☆ (Highly Recommended)"
+        },
+        {
+          "type": "skill",
+          "name": "Ground Pound",
+          "emoji": "💥",
+          "keys": "G Key / X Button / Swipe Down",
+          "energy": "20",
+          "description": "SLAM! Bring the thunder down on those pesky obstacles! This devastating move shatters anything beneath you. Pro tip: It's also the key to unlocking some of the game's most powerful abilities...",
+          "rating": "★★★★★ (Must Learn)"
+        },
+        {
+          "type": "skill",
+          "name": "Fireball",
+          "emoji": "🔥",
+          "keys": "Right Trigger (Gamepad)",
+          "energy": "Limited Uses",
+          "description": "Your trusty fireball! Hurl blazing projectiles to incinerate obstacles from a distance. Limited by difficulty level, so make each one count!",
+          "rating": "★★★★☆ (Use Wisely)"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "🏆 SPEEDRUN SECRET!",
+          "text": "Chain a Jump into a Ground Pound for maximum obstacle destruction! The timing is tricky, but the payoff is HUGE!"
+        },
+        {
+          "type": "skill",
+          "name": "Backflip",
+          "emoji": "🤸🏻‍♂️",
+          "keys": "B Key / LB Button / Swipe Right",
+          "energy": "5",
+          "description": "Execute a stylish backward flip! Not just for show - the invincibility frames during the flip can save your bacon in tight situations.",
+          "rating": "★★★☆☆ (Style Points)"
+        },
+        {
+          "type": "skill",
+          "name": "Frontflip",
+          "emoji": "🤸🏾‍♂️",
+          "keys": "F Key / RB Button / Swipe Up",
+          "energy": "5",
+          "description": "Flip forward with grace! Similar to the backflip but with forward momentum. Great for aggressive playstyles!",
+          "rating": "★★★☆☆ (Style Points)"
+        },
+        {
+          "type": "skill",
+          "name": "Corkscrew Spin",
+          "emoji": "🌀",
+          "keys": "C Key / LT Button / Swipe Left",
+          "energy": "10",
+          "description": "SPIN TO WIN! This dizzying maneuver looks absolutely incredible and clears a nice vertical arc. Your friends will be jealous.",
+          "rating": "★★★★☆ (Fan Favorite)"
+        }
+      ]
+    },
+    "advanced-skills": {
+      "title": "⚔️ Chapter 3: Advanced Skills Arsenal",
+      "subtitle": "Weapons of Mass Obstacle Destruction",
+      "icon": "💪",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Welcome to the big leagues, heister! These advanced skills separate the casuals from the legends. Each one must be EARNED through dedication and skill. Ready to power up? 🚀"
+        },
+        {
+          "type": "callout",
+          "style": "secret",
+          "title": "🔐 UNLOCK REQUIRED",
+          "text": "Advanced skills must be unlocked through gameplay achievements. Check Chapter 5 for the complete unlock guide!"
+        },
+        {
+          "type": "section",
+          "title": "🟢 Enlisted Tier",
+          "text": "The first step up from basic skills. Powerful enough to change your game, accessible enough that any dedicated player can earn them."
+        },
+        {
+          "type": "skill",
+          "name": "Shockwave",
+          "emoji": "💫",
+          "energy": "25",
+          "description": "NEW! Generate a powerful shockwave that shatters obstacles AND pushes back anything in front of you! Perfect for when things get too crowded.",
+          "unlockHint": "Master the Ground Pound to unlock this devastating upgrade...",
+          "rating": "★★★★☆ (Tactical)"
+        },
+        {
+          "type": "skill",
+          "name": "Fire Spinner",
+          "emoji": "🔥",
+          "energy": "50%+ drain",
+          "description": "Transform into a blazing vortex of destruction! Incinerates everything you touch during the spin. High energy cost, but SO worth it!",
+          "unlockHint": "Incinerate enough obstacles to prove your worth...",
+          "rating": "★★★★★ (Devastating)"
+        },
+        {
+          "type": "skill",
+          "name": "Houdini",
+          "emoji": "🎩",
+          "energy": "30",
+          "description": "Now you see me... now you don't! Vanish in a puff of smoke and reappear safely. Pure escape artistry!",
+          "unlockHint": "Show your mastery of fire to earn this magical ability...",
+          "rating": "★★★★☆ (Escape Artist)"
+        },
+        {
+          "type": "section",
+          "title": "🔵 Master Tier",
+          "text": "Elite skills for elite players. These abilities can turn the tide of any heist, but unlocking them requires serious dedication!"
+        },
+        {
+          "type": "skill",
+          "name": "Firestorm",
+          "emoji": "🌪️",
+          "energy": "Continuous Drain",
+          "description": "ULTIMATE POWER! Rain fire from the sky, incinerating EVERYTHING on screen! The most powerful offensive ability in the game. Period.",
+          "unlockHint": "Prove you can handle fire by incinerating 100 obstacles...",
+          "rating": "★★★★★ (LEGENDARY)"
+        },
+        {
+          "type": "skill",
+          "name": "Jet Pack",
+          "emoji": "🚀",
+          "energy": "Continuous Drain",
+          "description": "Why jump when you can FLY? The Jet Pack grants unparalleled mobility. Soar above your problems - literally!",
+          "unlockHint": "Perfect your hurdles to earn your wings...",
+          "rating": "★★★★★ (Freedom)"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "💡 ENERGY TIP!",
+          "text": "Master tier skills drain energy continuously. Watch that bar! Running out mid-skill can leave you vulnerable!"
+        },
+        {
+          "type": "section",
+          "title": "🟣 Legendary Tier",
+          "text": "The rarest and most powerful skills in FIRE Heist. Only the most dedicated players will ever see these abilities in action!"
+        },
+        {
+          "type": "skill",
+          "name": "Fire Mage",
+          "emoji": "🧙",
+          "energy": "60",
+          "description": "Channel the power of a true pyromancer! Grants unlimited fireballs for a limited time. Absolute destruction mode!",
+          "unlockHint": "Become one with the flame through countless incinerations...",
+          "rating": "★★★★★ (MYTHIC)"
+        }
+      ]
+    },
+    "skill-tiers": {
+      "title": "📊 Chapter 4: The Tier System Explained",
+      "subtitle": "Understanding the Power Hierarchy",
+      "icon": "🏅",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Not all skills are created equal! FIRE Heist uses a sophisticated tier system that affects not just power, but also your CASH MULTIPLIER! Here's the breakdown:"
+        },
+        {
+          "type": "tier",
+          "name": "BASIC",
+          "color": "gray",
+          "multiplier": "1.0x",
+          "description": "Foundation skills. No cash bonus, but no unlock required either. Perfect for building your fundamentals!",
+          "examples": "Jump, Hurdle, Ground Pound, Fireball"
+        },
+        {
+          "type": "tier",
+          "name": "COSMETIC",
+          "color": "pink",
+          "multiplier": "1.0x",
+          "description": "Style over substance! These skills look cool but don't boost your earnings. Sometimes, looking good IS the reward!",
+          "examples": "Cartoon Scramble"
+        },
+        {
+          "type": "tier",
+          "name": "ENLISTED",
+          "color": "green",
+          "multiplier": "1.25x",
+          "description": "Your first power boost! These skills are easier to unlock and grant a 25% cash bonus when you defeat obstacles with them!",
+          "examples": "Shockwave, Fire Spinner, Houdini"
+        },
+        {
+          "type": "tier",
+          "name": "MASTER",
+          "color": "blue",
+          "multiplier": "1.50x",
+          "description": "Elite tier! 50% more cash for every obstacle destroyed. These skills require serious commitment to unlock.",
+          "examples": "Firestorm, Jet Pack, Blink Strike"
+        },
+        {
+          "type": "tier",
+          "name": "LEGENDARY",
+          "color": "purple",
+          "multiplier": "2.0x",
+          "description": "THE ULTIMATE! Double your cash earnings when using Legendary skills! These are the rarest abilities in the game.",
+          "examples": "Fire Mage, Mage Spinner"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "💰 CASH STACKING!",
+          "text": "The tier multiplier applies to ALL cash collected while the skill is active! Time your high-tier skills with cash bag spawns for MASSIVE earnings!"
+        }
+      ]
+    },
+    "unlock-guide": {
+      "title": "🔓 Chapter 5: Complete Unlock Guide",
+      "subtitle": "How to Earn Every Skill in the Game",
+      "icon": "🗝️",
+      "content": [
+        {
+          "type": "intro",
+          "text": "This is it - the chapter every heister wants! Below you'll find hints for unlocking every skill in FIRE Heist. We won't give you exact numbers (where's the fun in that?), but we WILL point you in the right direction! 🎯"
+        },
+        {
+          "type": "callout",
+          "style": "warning",
+          "title": "⚠️ NO SPOILERS!",
+          "text": "We've intentionally kept some details vague. Half the fun is discovery! If you want exact requirements, you'll have to find them yourself..."
+        },
+        {
+          "type": "unlock",
+          "skill": "Shockwave",
+          "tier": "Enlisted",
+          "hint": "💥 Master the Ground Pound! String together multiple successful pounds without missing to prove your worth.",
+          "difficulty": "★★☆☆☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Fire Spinner",
+          "tier": "Enlisted",
+          "hint": "🔥 Incinerate obstacles! The more you burn, the closer you get. Think quantity over quality here.",
+          "difficulty": "★★★☆☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Fiery Ground Pound",
+          "tier": "Enlisted",
+          "hint": "💥 Like Shockwave, but you need an even longer streak of consecutive Ground Pounds!",
+          "difficulty": "★★★☆☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Houdini",
+          "tier": "Enlisted",
+          "hint": "🎩 Show your dedication to the flame. Incinerate your way to magical powers!",
+          "difficulty": "★★☆☆☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Firestorm",
+          "tier": "Master",
+          "hint": "🌪️ A true master of fire incinerates MANY obstacles. Triple digits, heister!",
+          "difficulty": "★★★★☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Jet Pack",
+          "tier": "Master",
+          "hint": "🚀 Perfect your hurdle technique. Flawless hurdles, over and over, without getting hit!",
+          "difficulty": "★★★★☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Blink Strike",
+          "tier": "Master",
+          "hint": "⚡ Prove your precision with Houdini. Master the escape before you learn to attack!",
+          "difficulty": "★★★★☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Fire Mage",
+          "tier": "Legendary",
+          "hint": "🧙 Only the most dedicated fire wielders achieve this. MANY incinerations required!",
+          "difficulty": "★★★★★"
+        },
+        {
+          "type": "callout",
+          "style": "secret",
+          "title": "🌟 HIDDEN UNLOCKS!",
+          "text": "Some skills have secret unlock conditions! Experiment with different techniques and you might discover abilities not listed here..."
+        }
+      ]
+    },
+    "energy-management": {
+      "title": "⚡ Chapter 6: Energy Management Secrets",
+      "subtitle": "The True Currency of Power",
+      "icon": "🔋",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Energy is EVERYTHING in FIRE Heist! Every powerful move costs energy, and running out at the wrong moment can spell disaster. Master these secrets to become an energy efficiency expert! 💡"
+        },
+        {
+          "type": "section",
+          "title": "Energy Basics",
+          "text": "Your energy bar regenerates slowly over time. The rate depends on your difficulty:\n\n🟢 **Rookie**: Fast regeneration (200 max energy)\n🟡 **Novice**: Medium regeneration (100 max energy)\n🔴 **Pro**: Slow regeneration (50 max energy)"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "⚡ REGEN SECRET!",
+          "text": "Energy regenerates FASTER when you're not using abilities! Sometimes the best move is to play it safe and let your meter refill."
+        },
+        {
+          "type": "section",
+          "title": "Energy Cost Guide",
+          "text": "Here's a quick reference for skill costs:\n\n• **Free Skills**: Jump, Hurdle\n• **Low Cost (5-15)**: Backflip, Frontflip, Corkscrew\n• **Medium Cost (20-30)**: Ground Pound, Shockwave, Houdini\n• **High Cost (50+)**: Fire Spinner, Fire Mage\n• **Drain Skills**: Firestorm, Jet Pack (continuous drain!)"
+        },
+        {
+          "type": "callout",
+          "style": "warning",
+          "title": "⚠️ DRAIN WARNING!",
+          "text": "Skills with continuous drain will EMPTY your bar if you're not careful! Always check your energy before activating!"
+        },
+        {
+          "type": "section",
+          "title": "Advanced Energy Tactics",
+          "text": "🎯 **The 50% Rule**: Never let your energy drop below 50% unless you're going for a big play. You need reserves for emergencies!\n\n🎯 **Burst Windows**: Save high-cost abilities for when multiple obstacles cluster together. Maximum value!\n\n🎯 **Recovery Periods**: After using a drain skill, focus on basic moves while your energy recovers."
+        }
+      ]
+    },
+    "daily-challenge": {
+      "title": "📅 Chapter 7: Daily Challenge Domination",
+      "subtitle": "Compete for Glory Every Single Day!",
+      "icon": "🏆",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Every day brings a new challenge! The Daily Challenge is your chance to compete against yourself and prove your skills. Different themes, different rules, same goal: SURVIVE! 🌟"
+        },
+        {
+          "type": "section",
+          "title": "How It Works",
+          "text": "Each day at midnight, a new Daily Challenge appears with:\n\n🎨 **Unique Theme**: Different visual style and music\n🎯 **Set Difficulty**: The challenge decides your difficulty\n📊 **Leaderboard Entry**: Your score goes on the permanent record!"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "🏅 STREAK BONUS!",
+          "text": "Complete daily challenges consecutively to build a win streak! The longer your streak, the more impressive your Hall of Fame entry!"
+        },
+        {
+          "type": "section",
+          "title": "Theme Strategies",
+          "text": "Different themes have different vibes:\n\n🌲 **Grass**: Classic feel, balanced gameplay\n🏙️ **Roadway**: Urban jungle, watch the headlights!\n🏔️ **Mountain**: High altitude, thin air!\n🌋 **Volcano**: HOT! Fire themes everywhere!\n🌙 **Night**: Darkness falls, fireflies light the way\n❄️ **Snow**: Slippery conditions, watch your footing!"
+        },
+        {
+          "type": "callout",
+          "style": "secret",
+          "title": "🎵 THEME MUSIC!",
+          "text": "Each theme has its own soundtrack! Turn up the volume and feel the vibe of each environment!"
+        }
+      ]
+    },
+    "personas": {
+      "title": "🎭 Chapter 8: Secret Personas Revealed",
+      "subtitle": "Unlock Legendary Characters!",
+      "icon": "✨",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Beyond the basic runner lies a world of secret personas! Each one has unique abilities, music, and style. Collect them all to become a true FIRE Heist master! 🎭"
+        },
+        {
+          "type": "callout",
+          "style": "secret",
+          "title": "🔐 PERSONA REQUIREMENTS",
+          "text": "Personas are unlocked through specific achievements. We won't spoil them all, but here are some hints..."
+        },
+        {
+          "type": "persona",
+          "name": "Savvy Samu",
+          "emoji": "🥷",
+          "hint": "Achieve perfection on Novice difficulty. No hits allowed!",
+          "special": "Ninja speed and stealth!",
+          "difficulty": "★★★☆☆"
+        },
+        {
+          "type": "persona",
+          "name": "Fire Mage",
+          "emoji": "🧙",
+          "hint": "Prove your mastery of fire by incinerating many obstacles.",
+          "special": "Enhanced fire abilities!",
+          "difficulty": "★★★★☆"
+        },
+        {
+          "type": "section",
+          "title": "Custom Personas",
+          "text": "Don't like our personas? Create your own! Pick ANY emoji as your runner. Express yourself! 🎨\n\nSome emojis even have their own special music tracks... experiment to find them!"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "🎵 SECRET TRACKS!",
+          "text": "Certain emoji runners have EXCLUSIVE music! Try different emojis and listen for unique soundtracks!"
+        }
+      ]
+    },
+    "pro-tips": {
+      "title": "💡 Chapter 9: Pro Tips & Combos",
+      "subtitle": "Secrets the Developers Don't Want You to Know!",
+      "icon": "🧠",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Ready for the advanced class? These tips come straight from the top players. Study them, practice them, and dominate the leaderboards! 🏆"
+        },
+        {
+          "type": "tip",
+          "title": "The Ground Pound Chain",
+          "text": "String Ground Pounds together to unlock Shockwave AND Fiery Ground Pound! Focus on one strategy to maximize your unlock progress."
+        },
+        {
+          "type": "tip",
+          "title": "Energy Conservation",
+          "text": "Basic Jump is FREE! Use it for most obstacles and save energy for emergencies. The best players use abilities sparingly."
+        },
+        {
+          "type": "tip",
+          "title": "Tier Timing",
+          "text": "When a cash bag appears, activate your highest-tier ability! The multiplier applies to collected cash - not just destroyed obstacles!"
+        },
+        {
+          "type": "tip",
+          "title": "The Hurdle Master Path",
+          "text": "Flawless hurdles are the key to Jet Pack. Practice timing your hurdles PERFECTLY - no early jumps, no damage taken!"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "🎮 GAMEPAD ADVANTAGE!",
+          "text": "Gamepad controls offer more precise timing for some moves! Try both control methods to find what works for you."
+        },
+        {
+          "type": "tip",
+          "title": "Easter Egg Hunt",
+          "text": "Those mysterious eggs that appear rarely? Ground Pound them! Something special happens... 🥚"
+        },
+        {
+          "type": "tip",
+          "title": "Incineration Farming",
+          "text": "To maximize incinerations: Focus on skills that burn! Fireballs, Fire Spinner, and Firestorm all count toward your total."
+        },
+        {
+          "type": "callout",
+          "style": "secret",
+          "title": "🔥 COMBO MASTER!",
+          "text": "Some skills can chain together! Experiment with activating abilities mid-jump for interesting effects..."
+        }
+      ]
+    },
+    "secrets": {
+      "title": "🔮 Chapter 10: Secrets & Easter Eggs",
+      "subtitle": "The Hidden World of FIRE Heist",
+      "icon": "🥚",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Every great game has secrets, and FIRE Heist is no exception! We can't reveal everything (what fun would that be?), but here are some hints to get you started on your treasure hunt... 🗺️"
+        },
+        {
+          "type": "secret",
+          "name": "The Easter Egg",
+          "hint": "🥚 Sometimes eggs appear instead of obstacles. They're nearly invisible unless you know what to look for. Ground Pound to crack them open for a mini-game surprise!",
+          "discovered": "???"
+        },
+        {
+          "type": "secret",
+          "name": "Debug Mode",
+          "hint": "The developers left some tools behind... but only for those who know where to look. The console holds secrets for the code-savvy!",
+          "discovered": "???"
+        },
+        {
+          "type": "secret",
+          "name": "Hidden Music",
+          "hint": "🎵 Different emojis = Different tunes! Not all music is random. Try being a dragon, an alien, or something unexpected...",
+          "discovered": "???"
+        },
+        {
+          "type": "callout",
+          "style": "secret",
+          "title": "🤫 THE ULTIMATE SECRET",
+          "text": "There are special key combinations that unlock... something. But telling you would ruin the magic! Just know that CTRL, ALT, and various letters might do interesting things during gameplay..."
+        },
+        {
+          "type": "secret",
+          "name": "Hall of Fame Badges",
+          "hint": "Some scores on the leaderboard show mysterious badges... Maybe there's a way to mark your run as 'special'? 🎮💀",
+          "discovered": "???"
+        },
+        {
+          "type": "section",
+          "title": "The Developer's Message",
+          "text": "\"Thank you for playing FIRE Heist! This game was built with love, passion, and probably too much caffeine. Keep exploring, keep having fun, and remember: financial independence is just a heist away!\"\n\n— The KG Enterprises Team 🔥"
+        },
+        {
+          "type": "callout",
+          "style": "protip",
+          "title": "📚 THE END...?",
+          "text": "You've reached the end of the Strategy Guide, but your journey is just beginning! Now get out there and show the world what you've learned! May your heists be profitable and your reflexes be quick! 🏆"
+        }
+      ]
+    }
+  }
+}
