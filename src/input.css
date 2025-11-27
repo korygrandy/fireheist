@@ -92,14 +92,17 @@
     overflow: hidden;
     max-width: 100%;
     box-sizing: border-box;
+    position: relative;
+    /* Maintain 16:9 aspect ratio for the container */
+    aspect-ratio: 16 / 9;
 }
 
 #gameCanvas {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     max-width: 100%;
-    object-fit: contain;
+    object-fit: fill;
 }
 
 /* Fullscreen mode styles */
@@ -115,10 +118,46 @@
     position: fixed !important;
     z-index: 9999 !important;
     background-color: #111 !important;
+    aspect-ratio: auto !important;
 }
 
 :fullscreen #canvas-container,
 :-webkit-full-screen #canvas-container,
 :-moz-full-screen #canvas-container {
     overflow: visible !important;
+    aspect-ratio: auto !important;
+}
+
+:fullscreen #actionButtons,
+:-webkit-full-screen #actionButtons,
+:-moz-full-screen #actionButtons {
+    position: fixed !important;
+    z-index: 10000 !important;
+}
+
+/* Gamepad Focus Styling - highlights focused UI elements when using gamepad */
+.gamepad-focus {
+    outline: 3px solid #3b82f6 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.6) !important;
+    transition: outline 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+/* Additional highlight for buttons - keep original background, just add glow */
+button.gamepad-focus,
+.control-btn.gamepad-focus {
+    transform: scale(1.05);
+    /* Don't override background-color - keep original button color */
+    filter: brightness(1.1);
+}
+
+/* Slider/range input focus */
+input[type="range"].gamepad-focus {
+    outline: 3px solid #3b82f6 !important;
+}
+
+/* Select dropdown focus */
+select.gamepad-focus {
+    outline: 3px solid #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.6) !important;
 }

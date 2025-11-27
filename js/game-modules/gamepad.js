@@ -93,8 +93,54 @@ function updateGamepadIndicator() {
 
 function updateFocusableElements() {
     const selector = 'button, select, input[type="range"], input[type="radio"], input[type="checkbox"], #info-icon';
+    const fullscreenWrapper = document.getElementById('fullscreen-wrapper');
+    const isFullscreen = document.fullscreenElement !== null;
+    
     focusableElements = Array.from(document.querySelectorAll(selector)).filter(el => {
-        return el.offsetParent !== null && !el.disabled;
+        // Check if element is visible and not disabled
+        if (el.disabled) return false;
+        
+        // In fullscreen mode, only allow elements inside the fullscreen wrapper
+        if (isFullscreen && fullscreenWrapper) {
+            if (!fullscreenWrapper.contains(el)) {
+                return false;
+            }
+        }
+        
+        // Check if element or its parent is hidden
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        
+        // Check if any parent is hidden (handles .hidden class)
+        let parent = el.parentElement;
+        while (parent) {
+            const parentStyle = window.getComputedStyle(parent);
+            if (parentStyle.display === 'none' || parent.classList.contains('hidden')) {
+                return false;
+            }
+            parent = parent.parentElement;
+        }
+        
+        // Check offsetParent as fallback (null means element is not rendered)
+        // Exception: fixed/sticky positioned elements can have null offsetParent but still be visible
+        if (el.offsetParent === null && style.position !== 'fixed' && style.position !== 'sticky') {
+            return false;
+        }
+        
+        return true;
+    });
+    
+    // Sort elements by their visual position (top to bottom, left to right)
+    focusableElements.sort((a, b) => {
+        const rectA = a.getBoundingClientRect();
+        const rectB = b.getBoundingClientRect();
+        // Primary sort by vertical position (with some tolerance for same row)
+        const rowTolerance = 20;
+        if (Math.abs(rectA.top - rectB.top) > rowTolerance) {
+            return rectA.top - rectB.top;
+        }
+        // Secondary sort by horizontal position
+        return rectA.left - rectB.left;
     });
 }
 

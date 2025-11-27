@@ -4,8 +4,9 @@
 
 export const canvas = document.getElementById('gameCanvas');
 export const ctx = canvas.getContext('2d');
+// 16:9 aspect ratio (800 x 450)
 canvas.width = 800;
-canvas.height = 400;
+canvas.height = 450;
 export const startButton = document.getElementById('startButton');
 export const stopButton = document.getElementById('stopButton');
 export const loadButton = document.getElementById('loadButton');
