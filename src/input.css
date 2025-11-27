@@ -66,6 +66,32 @@
   .glow-effect {
     filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.8));
   }
+
+  /* Armory Buttons - Compact size for skill cards */
+  .armory-btn {
+    @apply px-2 py-0.5 rounded text-xs font-medium cursor-pointer transition-colors duration-150;
+    display: inline-block;
+  }
+  
+  .armory-btn-select {
+    @apply bg-green-500 text-white hover:bg-green-600;
+  }
+  
+  .armory-btn-unselect {
+    @apply bg-red-500 text-white hover:bg-red-600;
+  }
+  
+  .armory-btn-upgrade {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
+  }
+  
+  .armory-btn-secondary {
+    @apply bg-gray-400 text-white hover:bg-gray-500;
+  }
+  
+  .armory-btn-active {
+    @apply bg-green-500 font-bold;
+  }
 }
 
 #turbo-boost-animation {
@@ -160,4 +186,10 @@ input[type="range"].gamepad-focus {
 select.gamepad-focus {
     outline: 3px solid #3b82f6 !important;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* Frontflip icon rotation - flip 180 degrees to face opposite direction */
+.frontflip-icon-rotate {
+    display: inline-block;
+    transform: rotate(180deg);
 }

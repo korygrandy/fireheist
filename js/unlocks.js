@@ -19,18 +19,19 @@ export const ARMORY_ITEMS = {
     "jump": {
         "name": "Jump",
         "description": "A basic vertical jump to clear obstacles and navigate the environment.",
-        "emoji": "⬆️",
+        "emoji": "🏃‍♀️",
         "tier": "Basic",
         "unlockCondition": {
             "type": "always",
             "skillKey": "jump"
         },
-        "unlockText": "Core skill - always available"
+        "unlockText": "Core skill - always available",
+        "hiddenFromArmory": true
     },
     "backflip": {
         "name": "Backflip",
         "description": "Execute a backward flip to evade obstacles with style.",
-        "emoji": "🔙",
+        "emoji": "🤸🏻‍♂️",
         "tier": "Basic",
         "unlockCondition": {
             "type": "always",
@@ -41,7 +42,7 @@ export const ARMORY_ITEMS = {
     "frontflip": {
         "name": "Frontflip",
         "description": "Execute a forward flip to clear obstacles with precision.",
-        "emoji": "🔜",
+        "emoji": "🤸🏾‍♂️",
         "tier": "Basic",
         "unlockCondition": {
             "type": "always",
@@ -96,7 +97,7 @@ export const ARMORY_ITEMS = {
     "cartoonScramble": {
         "name": "Cartoon Scramble",
         "description": "Transform into a cartoon-style version of yourself with distorted physics and exaggerated movement.",
-        "emoji": "🎨",
+        "emoji": "𖡎",
         "tier": "Cosmetic",
         "unlockCondition": {
             "type": "always",

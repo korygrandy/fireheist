@@ -492,7 +492,17 @@ export function drawActiveSkillIndicator() {
         ctx.font = `${iconSize}px Arial`;
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
-        ctx.fillText(skill.emoji || '❓', indicatorX, indicatorY);
+        
+        // Rotate frontflip icon 180 degrees
+        if (activeSkillKey === 'frontflip') {
+            ctx.save();
+            ctx.translate(indicatorX + iconSize / 2, indicatorY + iconSize / 2);
+            ctx.rotate(Math.PI); // 180 degrees
+            ctx.fillText(skill.emoji || '❓', -iconSize / 2, -iconSize / 2);
+            ctx.restore();
+        } else {
+            ctx.fillText(skill.emoji || '❓', indicatorX, indicatorY);
+        }
     }
 
     // Reset shadow for text to avoid glowing text

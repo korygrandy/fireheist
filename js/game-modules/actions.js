@@ -21,8 +21,42 @@ import { fireStomperSkill } from './skills/fireStomper.js';
 import { blinkStrikeSkill } from './skills/blinkStrike.js';
 import { jetstreamDashSkill } from './skills/jetstreamDash.js';
 import { fireballSkill } from './skills/fireball.js';
+// Basic tier skills
+import { backflipSkill } from './skills/backflip.js';
+import { frontflipSkill } from './skills/frontflip.js';
+import { corkscrewSpinSkill } from './skills/corkscrewSpin.js';
+import { hurdleSkill } from './skills/hurdle.js';
+import { diveSkill } from './skills/dive.js';
+import { hoverSkill } from './skills/hover.js';
+import { groundPoundSkill } from './skills/groundPound.js';
+import { moonwalkSkill } from './skills/moonwalk.js';
+import { scissorKickSkill } from './skills/scissorKick.js';
+import { shockwaveSkill } from './skills/shockwave.js';
+import { phaseDashSkill } from './skills/phaseDash.js';
+import { houdiniSkill } from './skills/houdini.js';
+import { jetPackSkill } from './skills/jetPack.js';
+import { hoverPackSkill } from './skills/hoverPack.js';
+import { cartoonScrambleSkill } from './skills/cartoonScramble.js';
 
 const skillActionMap = {
+    // Basic tier skills
+    jump: (state) => initiateJump(state),
+    backflip: (state) => backflipSkill.activate(state),
+    frontflip: (state) => frontflipSkill.activate(state),
+    corkscrewSpin: (state) => corkscrewSpinSkill.activate(state),
+    hurdle: (state) => hurdleSkill.activate(state),
+    dive: (state) => diveSkill.activate(state),
+    hover: (state) => hoverSkill.activate(state),
+    groundPound: (state) => groundPoundSkill.activate(state),
+    moonwalk: (state) => moonwalkSkill.activate(state),
+    scissorKick: (state) => scissorKickSkill.activate(state),
+    shockwave: (state) => shockwaveSkill.activate(state),
+    phaseDash: (state) => phaseDashSkill.activate(state),
+    houdini: (state) => houdiniSkill.activate(state),
+    jetPack: (state) => jetPackSkill.activate(state),
+    hoverPack: (state) => hoverPackSkill.activate(state),
+    cartoonScramble: (state) => cartoonScrambleSkill.activate(state),
+    // Advanced tier skills
     firestorm: (state) => firestormSkill.activate(state),
     fireSpinner: (state) => fireSpinnerSkill.activate(state),
     fieryGroundPound: (state) => fieryGroundPoundSkill.activate(state),

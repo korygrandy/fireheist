@@ -52,7 +52,7 @@ export function updateArmoryCashDisplay() {
  * @param {string} skillKey - The key of the skill to select.
  */
 export function handleArmorySkillSelection(skillKey) {
-    setActiveSkill(skillKey);
+    setActiveArmorySkill(skillKey);
     savePlayerStats();
     populateArmoryItems(); // Re-render to show active skill
     playAnimationSound('select-sound'); // Play select sound on selection
@@ -63,7 +63,7 @@ export function handleArmorySkillSelection(skillKey) {
  * Handles the deselection of the active armory skill.
  */
 export function handleArmorySkillDeselection() {
-    setActiveSkill(null);
+    setActiveArmorySkill(null);
     savePlayerStats();
     populateArmoryItems(); // Re-render to show no active skill
     playAnimationSound('unselect-sound'); // Play unselect sound
@@ -95,11 +95,13 @@ export function populateArmoryItems() {
         totalCashDisplay.textContent = `$${cash.toLocaleString()}`;
     }
 
-    const sortedSkillKeys = Object.keys(ARMORY_ITEMS).sort((a, b) => {
-        const scoreA = getDifficultyScore(ARMORY_ITEMS[a], a);
-        const scoreB = getDifficultyScore(ARMORY_ITEMS[b], b);
-        return scoreA - scoreB;
-    });
+    const sortedSkillKeys = Object.keys(ARMORY_ITEMS)
+        .filter(key => !ARMORY_ITEMS[key].hiddenFromArmory) // Filter out hidden skills
+        .sort((a, b) => {
+            const scoreA = getDifficultyScore(ARMORY_ITEMS[a], a);
+            const scoreB = getDifficultyScore(ARMORY_ITEMS[b], b);
+            return scoreA - scoreB;
+        });
 
     for (const skillKey of sortedSkillKeys) {
         const skill = ARMORY_ITEMS[skillKey];
@@ -129,9 +131,9 @@ export function populateArmoryItems() {
             const nextLevel = currentLevel + 1;
             if (nextLevel <= upgradePath.maxLevel) {
                 const cost = upgradePath.levels[nextLevel - 1].cost;
-                upgradeButton = `<button class="control-btn primary-btn text-sm py-1 px-2 mt-2" data-action="open-upgrade-modal" data-skill-key="${skillKey}">Upgrade ($${cost.toLocaleString()})</button>`;
+                upgradeButton = `<button class="armory-btn armory-btn-upgrade mt-1" data-action="open-upgrade-modal" data-skill-key="${skillKey}">Upgrade ($${cost.toLocaleString()})</button>`;
             } else {
-                upgradeButton = `<p class="text-xs text-green-600 mt-2">MAX LEVEL</p>`;
+                upgradeButton = `<p class="text-xs text-green-600 mt-1">MAX LEVEL</p>`;
             }
         }
 
@@ -140,7 +142,9 @@ export function populateArmoryItems() {
             const imageSrc = isUnlocked ? skill.imageUnlocked : skill.imageLocked;
             iconHTML = `<img src="${imageSrc}" alt="${skill.name}" class="w-12 h-12 mx-auto armory-item-icon ${isUnlocked ? 'unlocked glow-effect' : ''}">`;
         } else {
-            iconHTML = `<span class="text-4xl armory-item-icon ${isUnlocked ? 'unlocked glow-effect' : ''}">${skill.emoji || '❓'}</span>`;
+            // Add rotation class for frontflip to flip the icon 180 degrees
+            const rotationClass = skillKey === 'frontflip' ? 'frontflip-icon-rotate' : '';
+            iconHTML = `<span class="text-4xl armory-item-icon ${rotationClass} ${isUnlocked ? 'unlocked glow-effect' : ''}">${skill.emoji || '❓'}</span>`;
         }
 
                 let actionButton = '';
@@ -151,18 +155,18 @@ export function populateArmoryItems() {
 
                         const isEnabled = gameState.playerStats.isBigHeadModeEnabled;
                         actionButton = `
-                            <button class="control-btn secondary-btn text-sm py-1 px-2 ${isEnabled ? 'font-bold text-green-600' : ''}" data-action="toggle-big-head-button">
+                            <button class="armory-btn armory-btn-secondary ${isEnabled ? 'armory-btn-active' : ''}" data-action="toggle-big-head-button">
                                 ${isEnabled ? 'Enabled' : 'Disabled'}
                             </button>
                         `;
 
                     } else if (gameState.playerStats.activeArmorySkill === skillKey) {
 
-                        actionButton = `<button class="control-btn secondary-btn text-sm py-1 px-2 font-bold text-red-600" data-action="unselect">Unselect</button>`;
+                        actionButton = `<button class="armory-btn armory-btn-unselect" data-action="unselect" data-skill-key="${skillKey}">Unselect</button>`;
 
                     } else {
 
-                        actionButton = `<button class="control-btn primary-btn text-sm py-1 px-2" data-action="select" data-skill-key="${skillKey}">Select</button>`;
+                        actionButton = `<button class="armory-btn armory-btn-select" data-action="select" data-skill-key="${skillKey}">Select</button>`;
 
                     }
 
@@ -202,9 +206,11 @@ export function populateArmoryItems() {
             armoryItemsContainer.querySelectorAll('button[data-action="select"]').forEach(button => {
 
                 button.addEventListener('click', (event) => {
-
-                    handleArmorySkillSelection(event.target.dataset.skillKey);
-
+                    const btn = event.currentTarget;
+                    const skillKey = btn.dataset.skillKey;
+                    if (skillKey) {
+                        handleArmorySkillSelection(skillKey);
+                    }
                 });
 
             });
@@ -302,6 +308,22 @@ export function checkForArmoryUnlocks(stats) {
 
     for (const key in ARMORY_ITEMS) {
         const skill = ARMORY_ITEMS[key];
+        
+        // Skip notification for always-available skills (Basic tier) and hidden skills
+        if (skill.unlockCondition?.type === 'always' || skill.hiddenFromArmory) {
+            // Still track them as notified to prevent future checks
+            if (!stats.notifiedArmoryUnlocks.includes(key)) {
+                stats.notifiedArmoryUnlocks.push(key);
+                if (!stats.unlockedArmoryItems.includes(key)) {
+                    stats.unlockedArmoryItems.push(key);
+                }
+                if (!stats.skillLevels[key]) {
+                    stats.skillLevels[key] = 1;
+                }
+            }
+            continue;
+        }
+        
         if (checkSkillUnlockStatus(skill.unlockCondition, stats) && !stats.notifiedArmoryUnlocks.includes(key)) {
             displayArmoryUnlockNotification(key);
             setScreenFlash(0.8, 200, performance.now(), 'gold'); // Gold flash for new skill
