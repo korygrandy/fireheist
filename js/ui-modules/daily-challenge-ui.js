@@ -2,7 +2,7 @@ import { getDailyChallengeConfig } from '../dailyChallengeService.js';
 import { getDailyChallengeWinStreak } from '../daily-challenge.js';
 import { themes } from '../theme.js';
 
-function createChallengeHTML(config, results = null) {
+function createChallengeHTML(config, results = null, animate = false) {
     const container = document.getElementById('daily-challenge-placeholder');
     if (!container) {
         console.error("-> createChallengeHTML: CRITICAL - Could not find the container element '#daily-challenge-placeholder'.");
@@ -17,7 +17,7 @@ function createChallengeHTML(config, results = null) {
         : `<button id="startDailyChallengeBtn" class="control-btn primary-btn w-full">Start Daily Challenge</button>`;
 
     const frontContent = `
-        <div class="text-center p-4 border-2 border-dashed border-gray-300 rounded-lg">
+        <div class="text-center p-4 border-2 border-dashed border-gray-300 rounded-lg bg-white">
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-xl font-bold text-gray-800">Daily Challenge</h3>
                 <div class="text-sm font-semibold text-orange-500">
@@ -70,10 +70,11 @@ function createChallengeHTML(config, results = null) {
         </div>
     `;
 
-    const flipperClass = results ? 'flipper flipped' : 'flipper';
+    // For animation, start unflipped; for static completed, start flipped
+    const flipperClass = (results && !animate) ? 'flipper flipped' : 'flipper';
     const finalHTML = `
-        <div class="relative">
-            <div class="daily-challenge-container">
+        <div class="relative overflow-hidden">
+            <div class="daily-challenge-container expanded">
                 <div class="flip-container">
                     <div class="${flipperClass}">
                         <div class="front">
@@ -84,15 +85,55 @@ function createChallengeHTML(config, results = null) {
                         </div>
                     </div>
                 </div>
+                <div class="flip-burst"></div>
             </div>
         </div>
     `;
 
     container.innerHTML = finalHTML;
 
+    // Trigger expand animation on page load
     const challengeContainer = container.querySelector('.daily-challenge-container');
     if (challengeContainer) {
+        // Force reflow for animation to trigger
+        void challengeContainer.offsetHeight;
         challengeContainer.classList.add('expanded');
+    }
+
+    // If animate flag is set, trigger the flip animation
+    if (animate && results) {
+        requestAnimationFrame(() => {
+            triggerFlipAnimation(container);
+        });
+    }
+}
+
+/**
+ * Trigger the flip animation with orange burst effect
+ */
+function triggerFlipAnimation(container) {
+    const flipper = container.querySelector('.flipper');
+    const burst = container.querySelector('.flip-burst');
+    
+    if (flipper) {
+        // Add the flipping class to trigger animation
+        flipper.classList.add('flipping');
+        
+        // Trigger orange burst at midpoint
+        setTimeout(() => {
+            if (burst) {
+                burst.classList.add('active');
+            }
+        }, 300);
+        
+        // After animation completes, set final state
+        setTimeout(() => {
+            flipper.classList.remove('flipping');
+            flipper.classList.add('flipped');
+            if (burst) {
+                burst.classList.remove('active');
+            }
+        }, 800);
     }
 }
 
@@ -101,9 +142,14 @@ export function displayDailyChallenge() {
     createChallengeHTML(config);
 }
 
-export function displayDailyChallengeCompletedScreen(results) {
+/**
+ * Display the completed screen with flip animation
+ * @param {Object} results - The challenge results
+ * @param {boolean} animate - Whether to animate the flip (true for just-completed, false for page reload)
+ */
+export function displayDailyChallengeCompletedScreen(results, animate = true) {
     const config = getDailyChallengeConfig();
-    createChallengeHTML(config, results);
+    createChallengeHTML(config, results, animate);
     startNextChallengeCountdown();
 }
 

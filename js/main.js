@@ -86,6 +86,9 @@ import {
 import {
     displayPersonaLeaderboard
 } from './persona-leaderboard.js';
+import {
+    initStrategyGuide
+} from './ui-modules/strategy-guide.js';
 
 import {
     draw
@@ -149,7 +152,8 @@ import {
 function initializeDailyChallengeUI() {
     const results = getDailyChallengeResults();
     if (results) {
-        displayDailyChallengeCompletedScreen(results);
+        // On page load, show completed state without animation
+        displayDailyChallengeCompletedScreen(results, false);
     } else {
         displayDailyChallenge();
     }
@@ -457,6 +461,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             playAnimationSound('beep'); // Play beep sound on info icon click
         });
     }
+
+    // Initialize the Strategy Guide
+    initStrategyGuide();
 
     if (emojiInput && speedSelector && obstacleEmojiInput && frequencyRange && skillLevelSelector) {
         setupSuggestedEmojis();
