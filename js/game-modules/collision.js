@@ -170,6 +170,23 @@ export function checkCollision(runnerY, angleRad) {
             return false; // No penalty
         }
 
+        // Shockwave: Shatter obstacle on impact (similar to Ground Pound but doesn't count toward GP streak)
+        if (gameState.jumpState.isShockwave && gameState.jumpState.progress > 0.5) {
+            const obstacleToShatter = gameState.currentObstacle;
+            createShatterEffect(obstacleToShatter.x, obstacleTopY, obstacleToShatter.emoji);
+            setCurrentObstacle(null);
+            playAnimationSound('shatter');
+            if (obstacleToShatter.emoji !== EASTER_EGG_EMOJI) {
+                incrementObstaclesIncinerated();
+                incrementTotalInGameIncinerations();
+                incrementConsecutiveIncinerations();
+            }
+            // Note: Shockwave does NOT increment Ground Pound streak - it's a separate skill
+            // The pushback effect is handled in shockwave.js update() function
+            console.log("-> SHOCKWAVE: Obstacle shattered!");
+            return false; // No penalty
+        }
+
         // Priority 3: If no destructive moves are active, check for a standard collision.
         const collisionTolerance = 5;
         if (!runnerIsJumpingClear && (runnerBottomY >= obstacleTopY - collisionTolerance)) {

@@ -5,12 +5,14 @@
  *
  * This module handles all logic related to detecting and processing input
  * from a connected gamepad, including both in-game actions and UI navigation.
+ * 
+ * IMPORTANT: Only Basic/Cosmetic tier skills are pre-mapped to gamepad buttons.
+ * Unlockable skills (Enlisted/Master/Legendary) must be selected via the Armory
+ * and activated with the B button (handleSpecialMove).
  */
 
 import { gameState, setPlayerEnergy } from './state-manager.js';
 import { startHurdle, startManualJump } from './actions.js';
-import { phaseDashSkill } from './skills/phaseDash.js';
-import { hoverSkill } from './skills/hover.js';
 import { togglePauseGame, handleExitOrReset } from './game-controller.js';
 import { toggleFullScreen } from '../ui-modules/ui-helpers.js';
 import { playAnimationSound } from '../audio.js';
@@ -18,25 +20,17 @@ import {
     castFireball, 
     handleSpecialMove
 } from './actions.js';
-import { blinkStrikeSkill } from './skills/blinkStrike.js';
-import { jetPackSkill } from './skills/jetPack.js';
-import { houdiniSkill } from './skills/houdini.js';
+// Core skills only (Basic/Cosmetic tier - always available)
 import { frontflipSkill } from './skills/frontflip.js';
 import { backflipSkill } from './skills/backflip.js';
-import { shockwaveSkill } from './skills/shockwave.js';
 import { cartoonScrambleSkill } from './skills/cartoonScramble.js';
+import { groundPoundSkill } from './skills/groundPound.js';
+import { corkscrewSpinSkill } from './skills/corkscrewSpin.js';
 import { 
     cycleInitialLetter, 
     changeInitialSlot, 
     confirmInitialSelection 
 } from './drawing/leaderboard-initials.js';
-import { fieryHoudiniSkill } from './skills/fieryHoudini.js';
-import { fireSpinnerSkill } from './skills/fireSpinner.js';
-import { firestormSkill } from './skills/firestorm.js';
-import { fieryGroundPoundSkill } from './skills/fieryGroundPound.js';
-import { fireMageSkill } from './skills/fireMage.js';
-import { mageSpinnerSkill } from './skills/mageSpinner.js';
-import { fireballRollSkill } from './skills/fireballRoll.js';
 
 let activeGamepad = null;
 let gamepadConnected = false;
@@ -314,23 +308,27 @@ function updateGamepadState() {
         const rightBumperPressed = currentGamepad.buttons[5].pressed;
         if (leftBumperPressed && rightBumperPressed && !buttonStates['CHEAT_COMBO']) {
             setPlayerEnergy(gameState.maxPlayerEnergy);
-            console.log("-> CHEAT: Max energy granted via gamepad!");
+            gameState.cheatsUsed = true; // Mark as cheater
+            console.log("-> CHEAT: Max energy granted via gamepad! (Run marked as cheated)");
         }
         buttonStates['CHEAT_COMBO'] = leftBumperPressed && rightBumperPressed;
 
+        // === GAMEPAD BUTTON MAPPING ===
+        // Only core skills (Basic/Cosmetic tier) are pre-mapped.
+        // Unlockable skills (Enlisted/Master/Legendary) are accessed via the Armory selection (B button).
         const buttonMap = {
-            0: { action: startManualJump, name: 'A_BUTTON_GAME' },
-            1: { action: handleSpecialMove, name: 'B_BUTTON_GAME' }, // Armory skill
-            2: { action: () => jetPackSkill.activate(gameState), name: 'X_BUTTON_GAME' }, // Dedicated skill
-            3: { action: () => firestormSkill.activate(gameState), name: 'Y_BUTTON_GAME' }, // Dedicated skill
-            4: { action: () => backflipSkill.activate(gameState), name: 'LB_BUTTON_GAME' },
-            5: { action: () => frontflipSkill.activate(gameState), name: 'RB_BUTTON_GAME' },
-            6: { action: () => houdiniSkill.activate(gameState), name: 'LT_BUTTON_GAME' },
-            7: { action: () => fieryGroundPoundSkill.activate(gameState), name: 'RT_BUTTON_GAME' },
-            // 8 is now handled globally
-            // 9 is now handled globally
-            10: { action: () => cartoonScrambleSkill.activate(gameState), name: 'LSTICK_CLICK_GAME' },
-            11: { action: () => shockwaveSkill.activate(gameState), name: 'RSTICK_CLICK_GAME' }
+            0: { action: startManualJump, name: 'A_BUTTON_GAME' },           // Jump (Basic)
+            1: { action: handleSpecialMove, name: 'B_BUTTON_GAME' },         // Armory-selected skill
+            2: { action: () => groundPoundSkill.activate(gameState), name: 'X_BUTTON_GAME' },  // Ground Pound (Basic)
+            3: { action: startHurdle, name: 'Y_BUTTON_GAME' },               // Hurdle (Basic)
+            4: { action: () => backflipSkill.activate(gameState), name: 'LB_BUTTON_GAME' },    // Backflip (Basic)
+            5: { action: () => frontflipSkill.activate(gameState), name: 'RB_BUTTON_GAME' },   // Frontflip (Basic)
+            6: { action: () => corkscrewSpinSkill.activate(gameState), name: 'LT_BUTTON_GAME' }, // Corkscrew Spin (Basic)
+            7: { action: () => castFireball(gameState), name: 'RT_BUTTON_GAME' }, // Fireball (Basic)
+            // 8 is now handled globally (Back/Select)
+            // 9 is now handled globally (Start)
+            10: { action: () => cartoonScrambleSkill.activate(gameState), name: 'LSTICK_CLICK_GAME' }, // Cartoon Scramble (Cosmetic)
+            11: { action: startManualJump, name: 'RSTICK_CLICK_GAME' }        // Jump alternate
         };
 
         let newButtonStates = {};

@@ -121,6 +121,7 @@ export function resetGameState() {
     gameState.showDailyChallengeCompletedOverlay = false;
     gameState.leaderboardInitials.isActive = false;
     gameState.leaderboardInitials.submitted = false;
+    gameState.cheatsUsed = false; // Reset cheat tracking for new game
     console.log("-> RESET GAME: Initiated.");
     setGameRunning(false);
     setPaused(false);

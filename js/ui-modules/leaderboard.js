@@ -59,16 +59,18 @@ export function displayLeaderboard() {
         return;
     }
 
-    container.innerHTML = leaderboard.map((score, index) => `
+    container.innerHTML = leaderboard.map((score, index) => {
+        const cheaterBadge = score.cheated ? '<span class="ml-2 text-xs bg-red-500 text-white px-1 rounded" title="Cheats were used during this run">🎮💀</span>' : '';
+        return `
         <div class="flex justify-between items-center p-3 rounded-lg ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
             <div class="flex items-center">
                 <span class="text-lg font-bold text-gray-700 mr-4">${index + 1}.</span>
-                <span class="text-xl font-mono font-bold text-orange-500">${score.initials}</span>
+                <span class="text-xl font-mono font-bold text-orange-500">${score.initials}</span>${cheaterBadge}
             </div>
             <div class="text-right">
                 <p class="font-semibold text-gray-800">${score.days.toLocaleString()} Days</p>
                 <p class="text-sm text-red-500">${score.hits} Hits</p>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }

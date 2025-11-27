@@ -98,22 +98,18 @@ import {
     resetGameState
 } from './game-modules/game-controller.js';
 import { startManualJump, startHurdle, castFireball, handleSpecialMove } from './game-modules/actions.js';
-import { blinkStrikeSkill } from './game-modules/skills/blinkStrike.js';
-import { jetstreamDashSkill } from './game-modules/skills/jetstreamDash.js';
-import { jetPackSkill } from './game-modules/skills/jetPack.js';
-import { houdiniSkill } from './game-modules/skills/houdini.js';
+// Core skills only (Basic/Cosmetic tier - always available)
 import { frontflipSkill } from './game-modules/skills/frontflip.js';
 import { backflipSkill } from './game-modules/skills/backflip.js';
-import { shockwaveSkill } from './game-modules/skills/shockwave.js';
-import {
-    moonwalkSkill
-} from './game-modules/skills/moonwalk.js';
 import {
     cartoonScrambleSkill
 } from './game-modules/skills/cartoonScramble.js';
 import {
     groundPoundSkill
 } from './game-modules/skills/groundPound.js';
+import {
+    corkscrewSpinSkill
+} from './game-modules/skills/corkscrewSpin.js';
 import {
     startThemeEffect
 } from './game-modules/drawing/environmental-effects.js';
@@ -143,36 +139,6 @@ import {
     initGamepad,
     reinitializeUINavigation
 } from './game-modules/gamepad.js';
-import {
-    fireSpinnerSkill
-} from './game-modules/skills/fireSpinner.js';
-import {
-    firestormSkill
-} from './game-modules/skills/firestorm.js';
-import {
-    mageSpinnerSkill
-} from './game-modules/skills/mageSpinner.js';
-import {
-    fireballRollSkill
-} from './game-modules/skills/fireballRoll.js';
-import {
-    diveSkill
-} from './game-modules/skills/dive.js';
-import {
-    corkscrewSpinSkill
-} from './game-modules/skills/corkscrewSpin.js';
-import {
-    scissorKickSkill
-} from './game-modules/skills/scissorKick.js';
-import {
-    phaseDashSkill
-} from './game-modules/skills/phaseDash.js';
-import {
-    hoverSkill
-} from './game-modules/skills/hover.js';
-import {
-    echoSlamSkill
-} from './game-modules/skills/echoSlam.js';
 import {
     closeResults as closeMiniGameResults
 } from './game-modules/mini-games/blowThatDough.js';
@@ -759,43 +725,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyD' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            diveSkill.activate(gameState);
-
-        }
+        // === CORE SKILLS (Basic tier - always available) ===
 
         if (e.code === 'KeyC' && gameState.gameRunning && !gameState.isPaused) {
 
             e.preventDefault();
 
             corkscrewSpinSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyS' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            scissorKickSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyV' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            phaseDashSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyH' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            hoverSkill.activate(gameState);
 
         }
 
@@ -815,22 +751,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyN' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            shockwaveSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyM' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            moonwalkSkill.activate(gameState);
-
-        }
-
         if (e.code === 'KeyZ' && gameState.gameRunning && !gameState.isPaused) {
 
             e.preventDefault();
@@ -847,88 +767,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         }
 
-        if (e.code === 'KeyI' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            houdiniSkill.activate(gameState);
-
-        }
-
-
-        if (e.code === 'KeyT' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            jetPackSkill.activate(gameState);
-
-        }
-
-
-        if (e.code === 'KeyR' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            fireSpinnerSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyY' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            firestormSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyU' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            if (gameState.isMageSpinnerActive) {
-
-                castFireball(gameState);
-
-            } else {
-
-                mageSpinnerSkill.activate(gameState);
-
-            }
-
-        }
-
-        if (e.code === 'KeyX' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            blinkStrikeSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyL' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            jetstreamDashSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyO' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            echoSlamSkill.activate(gameState);
-
-        }
-
-        if (e.code === 'KeyW' && gameState.gameRunning && !gameState.isPaused) {
-
-            e.preventDefault();
-
-            fireballRollSkill.activate(gameState);
-
-        }
-
 
         // Cheat code for max energy
 
@@ -940,7 +778,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 setPlayerEnergy(gameState.maxPlayerEnergy);
 
-                console.log("-> CHEAT: Max energy granted!");
+                gameState.cheatsUsed = true; // Mark as cheater
+
+                console.log("-> CHEAT: Max energy granted! (Run marked as cheated)");
 
             }
 
@@ -1018,35 +858,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         touchStartY = e.touches[0].clientY;
 
 
-        // Multi-finger taps
-
+        // Multi-finger taps - only free skills
+        // Note: 5-finger, 4-finger, 3-finger, 2-finger multi-touch mapped to core skills only
 
         if (e.touches.length === 5) {
 
-
-            shockwaveSkill.activate(gameState);
-
+            groundPoundSkill.activate(gameState); // Ground Pound (Basic)
 
             return;
-
 
         }
 
-
         if (e.touches.length === 4) {
 
-
-            cartoonScrambleSkill.activate(gameState);
-
+            cartoonScrambleSkill.activate(gameState); // Cartoon Scramble (Cosmetic)
 
             return;
-
 
         }
 
         if (e.touches.length === 3) {
 
-            houdiniSkill.activate(gameState);
+            corkscrewSpinSkill.activate(gameState); // Corkscrew Spin (Basic)
 
             return;
 
@@ -1054,18 +887,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (e.touches.length === 2) {
 
-            startDive(gameState);
+            handleSpecialMove(gameState); // Armory-selected skill
 
             return;
 
         }
 
 
-        // Long press timer
-
+        // Long press - use Armory skill (same as double-tap)
         longPressTimer = setTimeout(() => {
 
-            hoverSkill.activate(gameState);
+            handleSpecialMove(gameState);
 
         }, 500); // 500ms for long press
 
@@ -1110,6 +942,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // It's a swipe if moved more than 30px and for less than 500ms
+        // Only core skills (Basic tier) are mapped to swipes
 
         if (touchDuration < 500 && (Math.abs(deltaX) > 30 || Math.abs(deltaY) > 30)) {
 
@@ -1117,11 +950,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (deltaX > 0) {
 
-                    backflipSkill.activate(gameState); // Swipe Right
+                    backflipSkill.activate(gameState); // Swipe Right - Backflip (Basic)
 
                 } else {
 
-                    moonwalkSkill.activate(gameState); // Swipe Left
+                    corkscrewSpinSkill.activate(gameState); // Swipe Left - Corkscrew Spin (Basic)
 
                 }
 
@@ -1129,11 +962,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (deltaY > 0) {
 
-                    groundPoundSkill.activate(gameState); // Swipe Down
+                    groundPoundSkill.activate(gameState); // Swipe Down - Ground Pound (Basic)
 
                 } else {
 
-                    frontflipSkill.activate(gameState); // Swipe Up
+                    frontflipSkill.activate(gameState); // Swipe Up - Frontflip (Basic)
 
                 }
 

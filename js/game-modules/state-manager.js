@@ -1134,7 +1134,7 @@ export function resetJumpState() {
         isGroundPound: false, groundPoundDuration: 0, groundPoundEffectTriggered: false,
         isCartoonScramble: false, cartoonScrambleDuration: 0,
         isMoonwalking: false, moonwalkDuration: 0,
-        isShockwave: false, shockwaveDuration: 0,
+        isShockwave: false, shockwaveDuration: 0, shockwaveEffectTriggered: false,
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',

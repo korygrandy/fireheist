@@ -1099,6 +1099,64 @@ export function drawEchoSlamParticles() {
     }
 }
 
+// ====================================
+// SHOCKWAVE RING EFFECT
+// ====================================
+export function createShockwaveRing(x, y) {
+    // Create multiple concentric rings that expand outward
+    const ringCount = 3;
+    for (let i = 0; i < ringCount; i++) {
+        gameState.shockwaveRings.push({
+            x: x,
+            y: y,
+            radius: 10 + i * 15, // Staggered start radii
+            maxRadius: 300 + i * 50, // How far the ring expands
+            life: 1.0,
+            fadeSpeed: 0.015 + i * 0.005, // Outer rings fade faster
+            expandSpeed: 8 + i * 2, // Outer rings expand faster
+            color: i === 0 ? 'rgba(255, 200, 50, ' : i === 1 ? 'rgba(255, 150, 50, ' : 'rgba(255, 100, 50, ',
+            lineWidth: 4 - i // Inner ring is thickest
+        });
+    }
+    
+    // Add some particle debris for extra impact
+    const debrisCount = 20;
+    for (let i = 0; i < debrisCount; i++) {
+        const angle = (i / debrisCount) * Math.PI * 2;
+        const speed = 3 + Math.random() * 4;
+        gameState.groundPoundParticles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: -Math.abs(Math.sin(angle) * speed * 0.5), // Mostly horizontal with slight upward
+            size: Math.random() * 3 + 2,
+            life: 1,
+            gravity: 0.15,
+            color: `rgba(255, ${150 + Math.floor(Math.random() * 100)}, 50, 0.8)`
+        });
+    }
+}
 
-
-
+export function drawShockwaveRings() {
+    for (let i = gameState.shockwaveRings.length - 1; i >= 0; i--) {
+        const ring = gameState.shockwaveRings[i];
+        
+        // Expand the ring
+        ring.radius += ring.expandSpeed;
+        ring.life -= ring.fadeSpeed;
+        
+        if (ring.life <= 0 || ring.radius >= ring.maxRadius) {
+            gameState.shockwaveRings.splice(i, 1);
+        } else {
+            ctx.save();
+            ctx.globalAlpha = ring.life * 0.7;
+            ctx.strokeStyle = ring.color + ring.life + ')';
+            ctx.lineWidth = ring.lineWidth * ring.life; // Thin out as it fades
+            ctx.beginPath();
+            // Draw as a horizontal ellipse (compressed vertically for ground-level effect)
+            ctx.ellipse(ring.x, ring.y, ring.radius, ring.radius * 0.3, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+}

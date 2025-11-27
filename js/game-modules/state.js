@@ -9,6 +9,7 @@ const state = {
     hitsCounter: 0,
     activeCustomEvents: [],
     gameRunning: false,
+    cheatsUsed: false, // Tracks if any cheat was used during this game session
     isPaused: false,
     currentSegmentIndex: 0,
     segmentProgress: 0,
@@ -45,7 +46,7 @@ const state = {
         groundPoundEffectTriggered: false, // To ensure effect only triggers once per ground pound
         isCartoonScramble: false, cartoonScrambleDuration: 0,
         isMoonwalking: false, moonwalkDuration: 0,
-        isShockwave: false, shockwaveDuration: 0,
+        isShockwave: false, shockwaveDuration: 0, shockwaveEffectTriggered: false,
         isBackflip: false, backflipDuration: 0,
         isFrontflip: false, frontflipDuration: 0,
         isHoudini: false, houdiniDuration: 0, houdiniPhase: 'disappearing',
@@ -178,6 +179,7 @@ const state = {
     molotovCocktails: [],
     phoenixSparks: [],
     echoSlamParticles: [],
+    shockwaveRings: [], // Visual rings for Shockwave skill
     activeImpactSparks: [],
     fireWall: {
         letterParticles: [],

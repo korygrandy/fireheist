@@ -48,6 +48,12 @@ export function debugSetCash(amount) {
 export function debugUnlockAllAchievements() {
     console.log("-> DEBUG: Unlocking all achievements...");
 
+    // Mark current game as cheated if game is running
+    if (gameState.gameRunning) {
+        gameState.cheatsUsed = true;
+        console.log("-> CHEAT: Run marked as cheated due to unlock all achievements.");
+    }
+
     let playerStats = gameState.playerStats || {};
 
     // Satisfy all known unlock conditions
