@@ -1,6 +1,7 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 import { createDiveParticle } from '../drawing/effects.js';
+import { playDiveSound } from '../../audio.js';
 
 export const diveSkill = {
     config: {
@@ -15,6 +16,7 @@ export const diveSkill = {
         state.jumpState.isDive = true;
         state.jumpState.diveDuration = JUMP_DURATIONS.dive;
         initiateJump(state, JUMP_DURATIONS.dive);
+        playDiveSound();
         console.log("-> diveSkill: Dive initiated.");
     },
 

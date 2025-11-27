@@ -1,5 +1,6 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { playAnimationSound } from '../../audio.js';
 
 export const shockwaveSkill = {
     config: {
@@ -12,6 +13,7 @@ export const shockwaveSkill = {
         state.jumpState.isShockwave = true;
         state.jumpState.shockwaveDuration = JUMP_DURATIONS.shockwave;
         initiateJump(state, JUMP_DURATIONS.shockwave);
+        playAnimationSound('shockwave');
         console.log("-> startShockwave: Shockwave initiated.");
     },
 

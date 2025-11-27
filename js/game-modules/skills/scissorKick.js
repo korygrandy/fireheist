@@ -1,5 +1,6 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { playAnimationSound } from '../../audio.js';
 
 export const scissorKickSkill = {
     config: {
@@ -14,6 +15,7 @@ export const scissorKickSkill = {
         state.jumpState.isScissorKick = true;
         state.jumpState.scissorKickDuration = JUMP_DURATIONS.scissorKick;
         initiateJump(state, JUMP_DURATIONS.scissorKick);
+        playAnimationSound('scissorKick');
         console.log("-> scissorKickSkill: Scissor Kick initiated.");
     },
 

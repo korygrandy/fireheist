@@ -449,6 +449,141 @@ export function playTierCashSound(tier) {
     }
 }
 
+// =================================================================
+// PHASE 1: SYNTHESIZED SKILL SOUNDS
+// =================================================================
+// Adds audio feedback to skills that were missing sounds
+
+// Acrobatic synth - for flips, kicks, and athletic moves
+const acrobaticSynth = new Tone.Synth({
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.01, decay: 0.15, sustain: 0.05, release: 0.1 }
+}).connect(playerActionsBus);
+acrobaticSynth.volume.value = -14;
+
+// Whoosh synth - for fast movement skills (dive, phase dash)
+const whooshSynth = new Tone.NoiseSynth({
+    noise: { type: 'white' },
+    envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.1 }
+}).connect(playerActionsBus);
+whooshSynth.volume.value = -16;
+
+// Impact synth - for powerful skills (shockwave)
+const impactSynth = new Tone.MembraneSynth({
+    pitchDecay: 0.05,
+    octaves: 4,
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.001, decay: 0.3, sustain: 0, release: 0.1 }
+}).connect(playerActionsBus);
+impactSynth.volume.value = -10;
+
+// Hover synth - sustained hum for hover skill
+const hoverSynth = new Tone.Synth({
+    oscillator: { type: 'triangle' },
+    envelope: { attack: 0.1, decay: 0.1, sustain: 0.8, release: 0.3 }
+}).connect(playerActionsBus);
+hoverSynth.volume.value = -18;
+
+// Tech synth - for high-tech skills (reaper drone, phase dash)
+const techSynth = new Tone.FMSynth({
+    harmonicity: 3,
+    modulationIndex: 10,
+    oscillator: { type: 'sine' },
+    envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 },
+    modulation: { type: 'square' },
+    modulationEnvelope: { attack: 0.01, decay: 0.1, sustain: 0.5, release: 0.1 }
+}).connect(playerActionsBus);
+techSynth.volume.value = -14;
+
+/**
+ * Play backflip sound - quick upward pitch sweep
+ */
+export function playBackflipSound() {
+    if (isMuted) return;
+    const now = Tone.now();
+    acrobaticSynth.triggerAttackRelease('C5', '16n', now);
+    acrobaticSynth.triggerAttackRelease('E5', '32n', now + 0.05);
+}
+
+/**
+ * Play frontflip sound - quick downward pitch sweep  
+ */
+export function playFrontflipSound() {
+    if (isMuted) return;
+    const now = Tone.now();
+    acrobaticSynth.triggerAttackRelease('E5', '16n', now);
+    acrobaticSynth.triggerAttackRelease('C5', '32n', now + 0.05);
+}
+
+/**
+ * Play dive sound - descending whoosh
+ */
+export function playDiveSound() {
+    if (isMuted) return;
+    whooshSynth.triggerAttackRelease('8n');
+}
+
+/**
+ * Play hover sound - sustained hum
+ */
+export function playHoverSound() {
+    if (isMuted) return;
+    hoverSynth.triggerAttackRelease('A3', '4n');
+}
+
+/**
+ * Play shockwave sound - powerful bass impact
+ */
+export function playShockwaveSound() {
+    if (isMuted) return;
+    const now = Tone.now();
+    impactSynth.triggerAttackRelease('C1', '8n', now);
+    impactSynth.triggerAttackRelease('G1', '16n', now + 0.1);
+}
+
+/**
+ * Play scissor kick sound - sharp double hit
+ */
+export function playScissorKickSound() {
+    if (isMuted) return;
+    const now = Tone.now();
+    acrobaticSynth.triggerAttackRelease('G4', '32n', now);
+    acrobaticSynth.triggerAttackRelease('D5', '32n', now + 0.08);
+}
+
+/**
+ * Play phase dash sound - tech whoosh with frequency sweep
+ */
+export function playPhaseDashSound() {
+    if (isMuted) return;
+    const now = Tone.now();
+    techSynth.triggerAttackRelease('C4', '16n', now);
+    whooshSynth.triggerAttackRelease('16n', now);
+}
+
+/**
+ * Play reaper drone sound - tech activation beep
+ */
+export function playReaperDroneSound() {
+    if (isMuted) return;
+    const now = Tone.now();
+    techSynth.triggerAttackRelease('E5', '32n', now);
+    techSynth.triggerAttackRelease('G5', '32n', now + 0.05);
+    techSynth.triggerAttackRelease('B5', '16n', now + 0.1);
+}
+
+/**
+ * Play corkscrew spin sound - spiraling tone
+ */
+export function playCorkscrewSpinSound() {
+    if (isMuted) return;
+    const now = Tone.now();
+    acrobaticSynth.triggerAttackRelease('D4', '32n', now);
+    acrobaticSynth.triggerAttackRelease('F4', '32n', now + 0.04);
+    acrobaticSynth.triggerAttackRelease('A4', '32n', now + 0.08);
+    acrobaticSynth.triggerAttackRelease('D5', '32n', now + 0.12);
+}
+
 export function playQuackSound() {
     if (quackSound.state === 'stopped') {
         quackSound.start();

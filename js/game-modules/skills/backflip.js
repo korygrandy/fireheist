@@ -1,5 +1,6 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { playBackflipSound } from '../../audio.js';
 
 export const backflipSkill = {
     config: {
@@ -12,6 +13,7 @@ export const backflipSkill = {
         state.jumpState.isBackflip = true;
         state.jumpState.backflipDuration = 500;
         initiateJump(state, 500);
+        playBackflipSound();
         console.log("-> startBackflip: Backflip initiated.");
     },
 

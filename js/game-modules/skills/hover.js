@@ -1,5 +1,6 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { playAnimationSound } from '../../audio.js';
 
 export const hoverSkill = {
     config: {
@@ -14,6 +15,7 @@ export const hoverSkill = {
         state.jumpState.isHover = true;
         state.jumpState.hoverDuration = JUMP_DURATIONS.hover;
         initiateJump(state, JUMP_DURATIONS.hover);
+        playAnimationSound('hover');
         console.log("-> hoverSkill: Hover initiated.");
     },
 

@@ -1,5 +1,6 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { playPhaseDashSound } from '../../audio.js';
 
 export const phaseDashSkill = {
     config: {
@@ -14,6 +15,7 @@ export const phaseDashSkill = {
         state.jumpState.isPhaseDash = true;
         state.jumpState.phaseDashDuration = JUMP_DURATIONS.phaseDash;
         initiateJump(state, JUMP_DURATIONS.phaseDash);
+        playPhaseDashSound();
         console.log("-> phaseDashSkill: Phase Dash initiated.");
     },
 

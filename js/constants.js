@@ -243,6 +243,11 @@ export const ANIMATION_SOUND_MAP = {
         'six-shooter-reload': 'fx/six-shooter-reload.mp3',
         'tarzanSwing': 'fx/tarzan.mp3',
         'reaperDroneCooldown': 'fx/beep.mp3', // Placeholder sound for cooldown
+        'scissorKick': 'fx/scissor-kick.mp3',
+        'reaperDrone': 'fx/reaper-drone-activation.mp3',
+        'hover': 'fx/hover.mp3',
+        'shockwave': 'fx/shockwave.mp3',
+        'corkscrewSpin': 'fx/corkscrew.mp3',
         // Other animations will be added here
     };
     

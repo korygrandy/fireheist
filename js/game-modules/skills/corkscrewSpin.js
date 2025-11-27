@@ -1,6 +1,7 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
 import { createCorkscrewParticle } from '../drawing/effects.js';
+import { playAnimationSound } from '../../audio.js';
 
 export const corkscrewSpinSkill = {
     config: {
@@ -15,6 +16,7 @@ export const corkscrewSpinSkill = {
         state.jumpState.isCorkscrewSpin = true;
         state.jumpState.corkscrewSpinDuration = JUMP_DURATIONS.corkscrewSpin;
         initiateJump(state, JUMP_DURATIONS.corkscrewSpin);
+        playAnimationSound('corkscrewSpin');
         console.log("-> corkscrewSpinSkill: Corkscrew Spin initiated.");
     },
 

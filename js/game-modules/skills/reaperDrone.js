@@ -1,5 +1,6 @@
 import { STICK_FIGURE_FIXED_X, GROUND_Y, STICK_FIGURE_TOTAL_HEIGHT } from '../../constants.js';
 import { setSkillCooldown } from '../state-manager.js';
+import { playAnimationSound } from '../../audio.js';
 
 let droneImage = null; // To hold the loaded SVG image
 const FADE_IN_DURATION = 200; // Milliseconds for the drone to fade in
@@ -23,6 +24,7 @@ export const reaperDroneSkill = {
         console.log("Reaper Drone Activated (UI Only)");
         state.reaperDroneState.isActive = true;
         state.reaperDroneState.spawnTime = now; // Record activation time
+        playAnimationSound('reaperDrone');
 
         // 2. SET GLOBAL COOLDOWN
         setSkillCooldown(this.config.name, now + this.config.cooldownMs);

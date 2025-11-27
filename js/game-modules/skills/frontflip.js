@@ -1,5 +1,6 @@
 import { JUMP_DURATIONS } from '../../constants.js';
 import { consumeEnergy, initiateJump } from '../state-manager.js';
+import { playFrontflipSound } from '../../audio.js';
 
 export const frontflipSkill = {
     config: {
@@ -12,6 +13,7 @@ export const frontflipSkill = {
         state.jumpState.isFrontflip = true;
         state.jumpState.frontflipDuration = 500;
         initiateJump(state, 500);
+        playFrontflipSound();
         console.log("-> startFrontflip: Frontflip initiated.");
     },
 
