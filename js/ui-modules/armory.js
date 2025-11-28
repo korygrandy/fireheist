@@ -283,11 +283,10 @@ export function populateArmoryItems() {
         let iconHTML;
         if (skill.imageLocked && skill.imageUnlocked) {
             const imageSrc = isUnlocked ? skill.imageUnlocked : skill.imageLocked;
-            iconHTML = `<img src="${imageSrc}" alt="${skill.name}" class="w-12 h-12 mx-auto armory-item-icon ${isUnlocked ? 'unlocked glow-effect' : ''}">`;
+            iconHTML = `<img src="${imageSrc}" alt="${skill.name}" class="w-12 h-12 mx-auto armory-item-icon ${isUnlocked ? 'unlocked glow-effect' : ''}" data-skill="${skillKey}">`;
         } else {
-            // Add rotation class for frontflip to flip the icon 180 degrees
-            const rotationClass = skillKey === 'frontflip' ? 'frontflip-icon-rotate' : '';
-            iconHTML = `<span class="text-4xl armory-item-icon ${rotationClass} ${isUnlocked ? 'unlocked glow-effect' : ''}">${skill.emoji || '❓'}</span>`;
+            // Display skill emoji
+            iconHTML = `<span class="text-4xl armory-item-icon ${isUnlocked ? 'unlocked glow-effect' : ''}" data-skill="${skillKey}">${skill.emoji || '❓'}</span>`;
         }
 
                 let actionButton = '';
@@ -395,6 +394,18 @@ export function populateArmoryItems() {
 
                 });
 
+            });
+
+            // Hook up info-icon click handlers for economics tooltip toggle
+            armoryItemsContainer.querySelectorAll('.info-icon').forEach(icon => {
+                icon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const tooltip = icon.nextElementSibling;
+                    if (tooltip && tooltip.classList.contains('economics-tooltip')) {
+                        tooltip.classList.toggle('expanded');
+                        playAnimationSound('keypress');
+                    }
+                });
             });
 }
 

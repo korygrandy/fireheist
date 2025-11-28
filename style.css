@@ -740,6 +740,12 @@ video {
   line-height: 1.4;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1000;
+  display: none;
+}
+
+.economics-tooltip.expanded {
+  display: block;
+  margin-top: 8px;
 }
 
 .tooltip-row {
@@ -783,6 +789,14 @@ video {
 
 .armory-item-icon.unlocked {
   transform: scale(1.1);
+}
+
+.armory-item-icon[data-skill="frontflip"] {
+  transform: rotateX(180deg);
+}
+
+.armory-item-icon[data-skill="frontflip"].unlocked {
+  transform: scale(1.1) rotateX(180deg);
 }
 
 /* Armory Buttons - Compact size for skill cards */

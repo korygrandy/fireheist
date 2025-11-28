@@ -182,6 +182,7 @@ import { fireAxeSkill } from './skills/fireAxe.js';
 import { tarzanSkill } from './skills/tarzan.js';
 import { jetPackSkill } from './skills/jetPack.js';
 import { shockwaveSkill } from './skills/shockwave.js';
+import { reaperDroneSkill } from './skills/reaperDrone.js';
 import { init as initMiniGame, update as updateMiniGame, draw as drawMiniGame } from './mini-games/blowThatDough.js';
 import { init as initPredictionAddiction, update as updatePredictionAddiction, draw as drawPredictionAddiction } from './mini-games/predictionAddiction.js';
 
@@ -1062,6 +1063,7 @@ export function animate(timestamp) {
     tarzanSkill.update(gameState, deltaTime);
     jetPackSkill.update(gameState, deltaTime);
     shockwaveSkill.update(gameState, deltaTime);
+    reaperDroneSkill.update(gameState, deltaTime);
 
     if (gameState.jumpState.isBlinkStrike) {
         setBlinkStrikeDuration(gameState.jumpState.blinkStrikeDuration - deltaTime);

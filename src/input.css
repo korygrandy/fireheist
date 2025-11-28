@@ -318,10 +318,74 @@ select.gamepad-focus {
     box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.4), 0 0 12px rgba(250, 204, 21, 0.6) !important;
 }
 
-/* Frontflip icon rotation - flip 180 degrees to face opposite direction */
-.frontflip-icon-rotate {
-    display: inline-block;
-    transform: rotate(180deg);
+/* Armory Item Icons */
+.armory-item-icon {
+  display: inline-block;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.armory-item-icon.unlocked {
+  transform: scale(1.1);
+}
+
+/* Frontflip icon rotation - flip vertically (upside down) */
+.armory-item-icon[data-skill="frontflip"] {
+  transform: rotateX(180deg);
+}
+
+.armory-item-icon[data-skill="frontflip"].unlocked {
+  transform: scale(1.1) rotateX(180deg);
+}
+
+/* Economics Tooltip */
+.economics-tooltip {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;
+}
+
+.economics-tooltip.expanded {
+  display: block;
+  margin-top: 8px;
+}
+
+.tooltip-row {
+  padding: 4px 0;
+  color: #333;
+}
+
+.tooltip-row.tooltip-example {
+  border-top: 1px solid #eee;
+  margin-top: 4px;
+  padding-top: 8px;
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Economics Info Tooltip */
+.economics-info-tooltip {
+  display: inline-block;
+  cursor: help;
+  transition: opacity 0.2s;
+}
+
+.economics-info-tooltip:hover {
+  opacity: 0.7;
+}
+
+/* Info Icon */
+.info-icon {
+  display: inline-block;
+  font-size: 1rem;
+  margin-left: 4px;
+  cursor: pointer;
 }
 
 /* ============================================

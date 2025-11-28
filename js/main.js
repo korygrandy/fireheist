@@ -114,6 +114,9 @@ import {
     corkscrewSpinSkill
 } from './game-modules/skills/corkscrewSpin.js';
 import {
+    reaperDroneSkill
+} from './game-modules/skills/reaperDrone.js';
+import {
     startThemeEffect
 } from './game-modules/drawing/environmental-effects.js';
 import {

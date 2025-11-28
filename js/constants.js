@@ -81,6 +81,17 @@ export const FIERY_HOUDINI_RANGE = 300; // The range of the destructive poof in 
 export const BLINK_STRIKE_DURATION_MS = 300;
 export const JETSTREAM_DASH_DURATION_MS = 5000;
 export const ECHO_SLAM_DURATION_MS = 600;
+
+// Reaper Drone Constants
+export const REAPER_DRONE_COOLDOWN_MS = 4000;
+export const REAPER_DRONE_FADE_IN_DURATION_MS = 200;
+export const REAPER_DRONE_FIRE_DELAY_MS = 1000;  // Reduced to 1 second
+export const REAPER_DRONE_MISSILE_DURATION_MS = 300;
+export const REAPER_DRONE_FADE_OUT_DURATION_MS = 300;
+export const REAPER_DRONE_TARGET_SEARCH_TIMEOUT_MS = 1500;  // Reduced to 1.5 seconds
+export const REAPER_DRONE_MISSILE_RADIUS = 6;
+export const REAPER_DRONE_COLLISION_RADIUS = 20;
+export const REAPER_DRONE_SCANNING_PULSE_SPEED = 100;
 export const FIREBALL_ROLL_DURATION_MS = 8000;
 export const HOVER_PACK_INITIAL_BOOST_DURATION = 500;
 export const JETPACK_HOVER_HEIGHT = -50;
@@ -245,14 +256,13 @@ export const ANIMATION_SOUND_MAP = {
         'reaperDroneCooldown': 'fx/beep.mp3', // Placeholder sound for cooldown
         'scissorKick': 'fx/scissor-kick.mp3',
         'reaperDrone': 'fx/reaper-drone-activation.mp3',
+        'reaper-drone-collision': 'fx/reaper-drone-collision.mp3',
         'hover': 'fx/hover.mp3',
         'shockwave': 'fx/shockwave.mp3',
         'corkscrewSpin': 'fx/corkscrew.mp3',
         // Other animations will be added here
     };
-    
-    export const REAPER_DRONE_COOLDOWN_MS = 4000; // 4 seconds cooldown
-    
+
     export const defaultDataString = `12/15/2000: 0
 01/01/2001: 5000
 01/01/2011: 100000

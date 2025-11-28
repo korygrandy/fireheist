@@ -104,6 +104,29 @@ const state = {
 
     reaperDroneState: {
         isActive: false,
+        spawnTime: 0,
+        hasFired: false,
+        missileState: {
+            isActive: false,
+            x: 0,
+            y: 0,
+            startX: 0,
+            startY: 0,
+            targetObstacleX: 0,
+            targetObstacleY: 0,
+            velocity: 6,
+            progress: 0,
+            duration: 300,
+            startTime: 0,
+            trailParticles: [],
+            fadeStartTime: 0
+        },
+        fadingOut: false,
+        droneOpacity: 1.0,
+        targetSearchStartTime: 0,
+        targetSearchTimeoutMs: 500,
+        hasAttemptedFire: false,
+        failureReason: null
     },
 
     // Six Shooter Pistol State

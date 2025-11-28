@@ -323,13 +323,14 @@ export function validateTierSystem(allSkills) {
     }
 
     // Expected distribution (for validation)
-    // Note: Total is 33 skills (Firestorm was added after initial plan)
+    // Note: Total is 34 skills (Reaper Drone added to LEGENDARY_PLUS)
     results.expected = {
         BASIC: 7,
         COSMETIC: 2,
-        ENLISTED: 9,
-        MASTER: 9,
-        LEGENDARY: 6,
+        ENLISTED: 5,
+        MASTER: 13,
+        LEGENDARY: 5,
+        LEGENDARY_PLUS: 1,
         ERROR: 0
     };
 
