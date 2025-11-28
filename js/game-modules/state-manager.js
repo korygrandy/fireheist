@@ -408,7 +408,11 @@ export function removeFireball(index) {
  * Increments the obstacles incinerated count.
  */
 export function incrementObstaclesIncinerated() {
-    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+    // Only track custom game incineration for custom persona games (not daily challenges)
+    if (state.selectedPersona === 'custom' && !state.isDailyChallengeActive) {
+        state.customGameIncinerationCount++;
+    } else {
+        // For named personas and daily challenges, update persistent stats
         state.playerStats.obstaclesIncinerated++;
         savePlayerStats();
     }
@@ -426,7 +430,9 @@ export function setObstaclesIncinerated(count) {
  * Increments the consecutive incinerations count.
  */
 export function incrementConsecutiveIncinerations() {
-    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+    if (state.selectedPersona === 'custom' && !state.isDailyChallengeActive) {
+        // For custom games, don't update persistent stats
+    } else {
         state.playerStats.consecutiveIncinerations++;
     }
 }
@@ -435,7 +441,9 @@ export function incrementConsecutiveIncinerations() {
  * Increments the total in-game incinerations count.
  */
 export function incrementTotalInGameIncinerations() {
-    if (state.selectedPersona !== 'custom' || state.isDailyChallengeActive) {
+    if (state.selectedPersona === 'custom' && !state.isDailyChallengeActive) {
+        // For custom games, don't update persistent stats
+    } else {
         state.playerStats.totalInGameIncinerations++;
     }
 }

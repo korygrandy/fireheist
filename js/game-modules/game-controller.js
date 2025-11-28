@@ -131,6 +131,7 @@ export function resetGameState() {
     setBackgroundOffset(0);
     gameState.frameCount = 0; 
     setAccumulatedCash(0);
+    gameState.customGameIncinerationCount = 0; // Reset custom game incineration counter
 
     // Reset theme anchor state
     gameState.themeAnchor = {

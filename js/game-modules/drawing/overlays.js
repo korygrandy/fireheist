@@ -239,7 +239,11 @@ export function drawBonusHaul() {
 
 export function drawGameCounters() {
     const daysString = `Days Elapsed: ${Math.round(gameState.daysElapsedTotal).toLocaleString()}`;
-    const hitsString = `Hits: ${gameState.hitsCounter} | 🔥: ${gameState.playerStats.consecutiveIncinerations} (${gameState.currentSkillLevel} Skill)`;
+    // Use customGameIncinerationCount for custom persona games, consecutiveIncinerations for others
+    const incinerationCount = (gameState.selectedPersona === 'custom' && !gameState.isDailyChallengeActive) 
+        ? gameState.customGameIncinerationCount 
+        : gameState.playerStats.consecutiveIncinerations;
+    const hitsString = `Hits: ${gameState.hitsCounter} | 🔥: ${incinerationCount} (${gameState.currentSkillLevel} Skill)`;
 
     const PADDING = 10;
     const LINE_HEIGHT = 20;
@@ -287,7 +291,11 @@ export function drawGameCounters() {
     ctx.fillText(hitsValue, hitsValueX, BOX_Y + PADDING + LINE_HEIGHT);
 
     // Draw the rest of the string (fire emoji and skill level) in the original color
-    const incineratedAndSkillText = ` | 🔥: ${gameState.playerStats.totalInGameIncinerations} (${gameState.currentSkillLevel} Skill)`;
+    // Use the same incinerationCount for consistency (total for other games)
+    const totalIncinerationCount = (gameState.selectedPersona === 'custom' && !gameState.isDailyChallengeActive) 
+        ? gameState.customGameIncinerationCount 
+        : gameState.playerStats.totalInGameIncinerations;
+    const incineratedAndSkillText = ` | 🔥: ${totalIncinerationCount} (${gameState.currentSkillLevel} Skill)`;
     const incineratedAndSkillTextX = hitsValueX + ctx.measureText(hitsValue).width;
     ctx.fillStyle = gameState.hitsCounter > 0 ? '#dc3545' : '#28a745'; // Original color logic
     ctx.fillText(incineratedAndSkillText, incineratedAndSkillTextX, BOX_Y + PADDING + LINE_HEIGHT);

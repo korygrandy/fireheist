@@ -286,6 +286,8 @@ const state = {
         fireballRollKills: 0, // New: Total obstacles destroyed by Fireball Roll across all games
         fieryGroundPoundCount: 0 // New: Total times Fiery Ground Pound used across all games
     },
+    customGameIncinerationCount: 0, // Current game incineration counter (only for custom persona games, not saved to stats)
+    customGameIncinerationCount: 0, // New: Current game incineration counter (not saved to stats, resets each game)
     hasNewSkillBeenUnlocked: false,
 
     // Mini-Game: Blow That Dough
