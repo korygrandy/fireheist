@@ -707,98 +707,6 @@ video {
   filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.8));
 }
 
-/* Phase 4: Unlock Difficulty Badge */
-.unlock-difficulty-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  margin-top: 4px;
-}
-
-/* Phase 4: Value Rating Badge */
-.value-rating-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  margin-top: 4px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Phase 4: Economics Tooltip */
-.economics-tooltip {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  display: none;
-}
-
-.economics-tooltip.expanded {
-  display: block;
-  margin-top: 8px;
-}
-
-.tooltip-row {
-  padding: 4px 0;
-  color: #333;
-}
-
-.tooltip-row.tooltip-example {
-  border-top: 1px solid #eee;
-  margin-top: 4px;
-  padding-top: 8px;
-  font-size: 0.8rem;
-  color: #666;
-  font-style: italic;
-}
-
-/* Phase 4: Economics Info Tooltip */
-.economics-info-tooltip {
-  display: inline-block;
-  cursor: help;
-  transition: opacity 0.2s;
-}
-
-.economics-info-tooltip:hover {
-  opacity: 0.7;
-}
-
-/* Phase 4: Info Icon */
-.info-icon {
-  display: inline-block;
-  font-size: 1rem;
-  margin-left: 4px;
-  cursor: pointer;
-}
-
-/* Phase 4: Armory Item Icon */
-.armory-item-icon {
-  display: inline-block;
-  transition: transform 0.2s, filter 0.2s;
-}
-
-.armory-item-icon.unlocked {
-  transform: scale(1.1);
-}
-
-.armory-item-icon[data-skill="frontflip"] {
-  transform: rotateX(180deg);
-}
-
-.armory-item-icon[data-skill="frontflip"].unlocked {
-  transform: scale(1.1) rotateX(180deg);
-}
-
 /* Armory Buttons - Compact size for skill cards */
 
 .armory-btn {
@@ -1034,6 +942,10 @@ video {
 
 .mb-4 {
   margin-bottom: 1rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
 }
 
 .mb-8 {
@@ -2292,6 +2204,10 @@ video {
   border-bottom-width: 1px;
 }
 
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
 .border-e {
   border-inline-end-width: 1px;
 }
@@ -2359,6 +2275,11 @@ video {
 .border-red-500 {
   --tw-border-opacity: 1;
   border-color: rgb(239 68 68 / var(--tw-border-opacity, 1));
+}
+
+.border-b-gray-200 {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
 }
 
 .bg-amber-50 {
@@ -2700,6 +2621,10 @@ video {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
 }
 
 .pt-4 {
@@ -3387,14 +3312,11 @@ video {
   overflow: hidden;
   opacity: 0;
   transition: max-height 1.2s ease-out, opacity 1s ease-out;
-  will-change: max-height, opacity;
 }
 
 .daily-challenge-container.expanded {
-  max-height: 600px;
+  max-height: 500px;
   opacity: 1;
-  margin-bottom: 2rem;
-  overflow: visible;
 }
 
 /* Flip container */
@@ -3593,11 +3515,79 @@ select.gamepad-focus {
   box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.4), 0 0 12px rgba(250, 204, 21, 0.6) !important;
 }
 
-/* Frontflip icon rotation - flip 180 degrees to face opposite direction */
+/* Armory Item Icons */
 
-.frontflip-icon-rotate {
+.armory-item-icon {
   display: inline-block;
-  transform: rotate(180deg);
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.armory-item-icon.unlocked {
+  transform: scale(1.1);
+}
+
+/* Frontflip icon rotation - flip vertically (upside down) */
+
+.armory-item-icon[data-skill="frontflip"] {
+  transform: rotateX(180deg);
+}
+
+.armory-item-icon[data-skill="frontflip"].unlocked {
+  transform: scale(1.1) rotateX(180deg);
+}
+
+/* Economics Tooltip */
+
+.economics-tooltip {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;
+}
+
+.economics-tooltip.expanded {
+  display: block;
+  margin-top: 8px;
+}
+
+.tooltip-row {
+  padding: 4px 0;
+  color: #333;
+}
+
+.tooltip-row.tooltip-example {
+  border-top: 1px solid #eee;
+  margin-top: 4px;
+  padding-top: 8px;
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Economics Info Tooltip */
+
+.economics-info-tooltip {
+  display: inline-block;
+  cursor: help;
+  transition: opacity 0.2s;
+}
+
+.economics-info-tooltip:hover {
+  opacity: 0.7;
+}
+
+/* Info Icon */
+
+.info-icon {
+  display: inline-block;
+  font-size: 1rem;
+  margin-left: 4px;
+  cursor: pointer;
 }
 
 /* ============================================
@@ -4369,11 +4359,6 @@ select.gamepad-focus {
 }
 
 .focus\:border-blue-500:focus {
-  --tw-border-opacity: 1;
-  border-color: rgb(59 130 246 / var(--tw-border-opacity, 1));
-}
-
-.focus\:focus\:border-blue-500:focus:focus {
   --tw-border-opacity: 1;
   border-color: rgb(59 130 246 / var(--tw-border-opacity, 1));
 }
