@@ -707,6 +707,84 @@ video {
   filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.8));
 }
 
+/* Phase 4: Unlock Difficulty Badge */
+.unlock-difficulty-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  margin-top: 4px;
+}
+
+/* Phase 4: Value Rating Badge */
+.value-rating-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-top: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Phase 4: Economics Tooltip */
+.economics-tooltip {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.tooltip-row {
+  padding: 4px 0;
+  color: #333;
+}
+
+.tooltip-row.tooltip-example {
+  border-top: 1px solid #eee;
+  margin-top: 4px;
+  padding-top: 8px;
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Phase 4: Economics Info Tooltip */
+.economics-info-tooltip {
+  display: inline-block;
+  cursor: help;
+  transition: opacity 0.2s;
+}
+
+.economics-info-tooltip:hover {
+  opacity: 0.7;
+}
+
+/* Phase 4: Info Icon */
+.info-icon {
+  display: inline-block;
+  font-size: 1rem;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+/* Phase 4: Armory Item Icon */
+.armory-item-icon {
+  display: inline-block;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.armory-item-icon.unlocked {
+  transform: scale(1.1);
+}
+
 /* Armory Buttons - Compact size for skill cards */
 
 .armory-btn {
