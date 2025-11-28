@@ -94,6 +94,18 @@ export const ARMORY_ITEMS = {
         },
         "unlockText": "Core skill - always available"
     },
+    "dive": {
+        "name": "Dive",
+        "description": "Dive forward to evade obstacles and maintain momentum.",
+        "emoji": "🏊",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "daysSurvived",
+            "count": 25,
+            "skillKey": "dive"
+        },
+        "unlockText": "Survive 25 days"
+    },
     "cartoonScramble": {
         "name": "Cartoon Scramble",
         "description": "Transform into a cartoon-style version of yourself with distorted physics and exaggerated movement.",
@@ -286,13 +298,13 @@ export const ARMORY_ITEMS = {
         "name": "Fire Axe",
         "description": "A flaming axe that chops down obstacles. Upgrades allow it to be thrown for a short distance.",
         "emoji": "🪓",
-        "tier": "Enlisted",
+        "tier": "Master",
         "unlockCondition": {
             "type": "daysSurvived",
-            "count": 25,
+            "count": 150,
             "skillKey": "fireAxe"
         },
-        "unlockText": "Survive 25 days"
+        "unlockText": "Survive 150 days"
     },
     "tarzanSwing": {
         "name": "Tarzan Swing",
@@ -302,10 +314,10 @@ export const ARMORY_ITEMS = {
         "grantsInvincibility": true,
         "unlockCondition": {
             "type": "daysSurvived",
-            "count": 50,
+            "count": 300,
             "skillKey": "tarzanSwing"
         },
-        "unlockText": "Survive 50 days"
+        "unlockText": "Survive 300 days"
     },
     "bigHeadMode": {
         "name": "Big Head Mode",
@@ -314,10 +326,10 @@ export const ARMORY_ITEMS = {
         "tier": "Cosmetic",
         "unlockCondition": {
             "type": "daysSurvived",
-            "count": 100,
+            "count": 500,
             "skillKey": "bigHeadMode"
         },
-        "unlockText": "Survive a total of 100 days"
+        "unlockText": "Survive a total of 500 days"
     },
     "reaperDrone": {
         "name": "Reaper Drone",
@@ -405,6 +417,18 @@ export const ARMORY_ITEMS = {
             "skillKey": "shockwave"
         },
         "unlockText": "Land 5 consecutive Ground Pounds"
+    },
+    "moonwalk": {
+        "name": "Moonwalk",
+        "description": "Glide backward with style and grace. Higher skill levels grant energy restoration and invincibility.",
+        "emoji": "🚶‍♂️",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "daysSurvived",
+            "count": 50,
+            "skillKey": "moonwalk"
+        },
+        "unlockText": "Survive 50 days"
     },
     "scissorKick": {
         "name": "Scissor Kick",

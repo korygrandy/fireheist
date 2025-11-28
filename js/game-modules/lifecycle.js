@@ -301,6 +301,12 @@ export function animate(timestamp) {
             console.log(`-> GAME OVER: Incinerations: ${gameState.playerStats.obstaclesIncinerated}`);
             console.log(`-> GAME OVER: Starting sequence. Victory: ${gameState.isVictory}`);
             setGameRunning(false);
+            
+            // Update cumulative days survived (across all games)
+            const daysThisGame = Math.round(gameState.daysElapsedTotal);
+            gameState.playerStats.daysSurvived = (gameState.playerStats.daysSurvived || 0) + daysThisGame;
+            console.log(`-> GAME OVER: Days this game: ${daysThisGame}, Total days survived: ${gameState.playerStats.daysSurvived}`);
+            
             updateHighScore(gameState);
             savePlayerStats();
 
