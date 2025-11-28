@@ -3373,11 +3373,14 @@ video {
   overflow: hidden;
   opacity: 0;
   transition: max-height 1.2s ease-out, opacity 1s ease-out;
+  will-change: max-height, opacity;
 }
 
 .daily-challenge-container.expanded {
-  max-height: 500px;
+  max-height: 600px;
   opacity: 1;
+  margin-bottom: 2rem;
+  overflow: visible;
 }
 
 /* Flip container */
