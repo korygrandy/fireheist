@@ -7,7 +7,8 @@ import { savePlayerStats } from './settings.js';
 import { gameState, setActiveArmorySkill, setPlayerSkillLevel, setTotalAccumulatedCash, setScreenFlash, setHasNewSkillBeenUnlocked } from '../game-modules/state-manager.js';
 import { SKILL_UPGRADE_PATHS } from '../game-modules/skill-upgrades.js';
 import { playAnimationSound } from '../audio.js';
-import { getDifficultyScore, getTierColors, generateTierBadgeHtml, validateTierSystem, getDiagnostics } from './tierScoring.js';
+import { getDifficultyScore, getTierColors, generateTierBadgeHtml, validateTierSystem, getDiagnostics, assignSkillTier } from './tierScoring.js';
+import { TIER_CASH_MULTIPLIERS } from '../game-modules/skillCashMultipliers.js';
 
 // =================================================================
 // ARMORY UI MANAGEMENT
@@ -73,6 +74,148 @@ export function handleArmorySkillDeselection() {
 // Note: getDifficultyScore is now imported from tierScoring.js
 // This provides a centralized, reusable scoring algorithm
 
+// =================================================================
+// UNLOCK DIFFICULTY BADGE GENERATION (Phase 4)
+// =================================================================
+
+/**
+ * Generates a difficulty badge showing how hard a skill is to unlock.
+ * Examples: "🟢 Easy Unlock", "🟡 Medium Unlock", "🔴 Extreme Grind"
+ * 
+ * @param {Object} skill - The skill object from ARMORY_ITEMS
+ * @returns {string} - HTML string for difficulty badge
+ */
+function generateUnlockDifficultyBadge(skill) {
+    if (!skill.unlockCondition || skill.unlockCondition.type === 'always' || skill.unlockCondition.type === 'placeholder') {
+        return ''; // No badge for always-available skills
+    }
+
+    const count = skill.unlockCondition.count || 0;
+    let difficulty, emoji, color;
+
+    // Classify difficulty based on unlock count
+    if (count <= 10) {
+        difficulty = 'Easy Unlock';
+        emoji = '🟢';
+        color = '#10b981'; // Green
+    } else if (count <= 50) {
+        difficulty = 'Medium Unlock';
+        emoji = '🟡';
+        color = '#eab308'; // Yellow
+    } else if (count <= 150) {
+        difficulty = 'Hard Unlock';
+        emoji = '🟠';
+        color = '#f97316'; // Orange
+    } else if (count <= 400) {
+        difficulty = 'Extreme Grind';
+        emoji = '🔴';
+        color = '#ef4444'; // Red
+    } else {
+        difficulty = 'Legendary Grind';
+        emoji = '⚫';
+        color = '#1f2937'; // Dark Gray
+    }
+
+    const tooltipText = `${skill.unlockText || ''} (${count} total)`;
+    const badgeHtml = `
+        <div class="unlock-difficulty-badge" style="background-color: ${color};" title="${tooltipText}">
+            ${emoji} ${difficulty}
+        </div>
+    `;
+
+    return badgeHtml;
+}
+
+// =================================================================
+// VALUE RATING BADGE GENERATION (Phase 4)
+// =================================================================
+
+/**
+ * Generates a value rating badge showing how good the multiplier reward is relative to unlock difficulty.
+ * Examples: "⭐ Excellent Value", "⭐⭐ Great Value", "⭐⭐⭐ Legendary Value"
+ * 
+ * @param {Object} skill - The skill object from ARMORY_ITEMS
+ * @param {string} skillKey - The skill key
+ * @returns {string} - HTML string for value rating badge
+ */
+function generateValueRatingBadge(skill, skillKey) {
+    // Get tier and multiplier
+    const tier = assignSkillTier(skill, skillKey);
+    const multiplier = TIER_CASH_MULTIPLIERS[tier] || 1.0;
+    const unlockCount = skill.unlockCondition?.count || 0;
+
+    // Calculate value score: multiplier / sqrt(unlock difficulty)
+    // Higher = better value (high reward for low effort)
+    const difficultyFactor = Math.sqrt(Math.max(unlockCount, 1));
+    const valueScore = multiplier / (difficultyFactor / 10); // Normalize for readability
+
+    let rating, stars, color;
+
+    if (valueScore >= 3.0) {
+        rating = 'Legendary Value';
+        stars = '⭐⭐⭐';
+        color = '#dc2626'; // Dark Red (ultra-rare)
+    } else if (valueScore >= 2.0) {
+        rating = 'Excellent Value';
+        stars = '⭐⭐';
+        color = '#f59e0b'; // Orange (premium)
+    } else if (valueScore >= 1.2) {
+        rating = 'Good Value';
+        stars = '⭐';
+        color = '#10b981'; // Green (solid)
+    } else if (valueScore >= 0.8) {
+        rating = 'Fair Value';
+        stars = '◆';
+        color = '#6b7280'; // Gray (neutral)
+    } else {
+        rating = 'Niche Use';
+        stars = '◇';
+        color = '#9ca3af'; // Light Gray (specialist)
+    }
+
+    const tooltipText = `${multiplier}x cash multiplier for ${unlockCount} effort`;
+    const badgeHtml = `
+        <div class="value-rating-badge" style="color: ${color};" title="${tooltipText}">
+            ${stars} ${rating}
+        </div>
+    `;
+
+    return badgeHtml;
+}
+
+// =================================================================
+// ECONOMICS TOOLTIP GENERATION (Phase 4)
+// =================================================================
+
+/**
+ * Generates a tooltip explaining tier multiplier mechanics.
+ * Shows how much cash the skill earns per milestone crossed.
+ * 
+ * @param {Object} skill - The skill object from ARMORY_ITEMS
+ * @param {string} skillKey - The skill key
+ * @returns {string} - HTML string for tooltip
+ */
+function generateEconomicsTooltip(skill, skillKey) {
+    const tier = assignSkillTier(skill, skillKey);
+    const multiplier = TIER_CASH_MULTIPLIERS[tier] || 1.0;
+
+    const tooltipContent = `
+        <div class="economics-tooltip">
+            <div class="tooltip-row">
+                <strong>${skill.tier || 'Tier'}</strong>
+            </div>
+            <div class="tooltip-row">
+                Cash Multiplier: <strong>${multiplier}x</strong>
+            </div>
+            <div class="tooltip-row tooltip-example">
+                Example: 50 obstacles × $500 = $25,000 (base)<br/>
+                With ${multiplier}x multiplier = $${Math.floor(25000 * multiplier).toLocaleString()} earned
+            </div>
+        </div>
+    `;
+
+    return tooltipContent;
+}
 
 /**
  * Populates the armory items container with skill cards.
@@ -172,7 +315,10 @@ export function populateArmoryItems() {
 
                 }
 
-        
+                // Generate Phase 4 UI enhancements
+                const difficultyBadge = generateUnlockDifficultyBadge(skill);
+                const valueRatingBadge = generateValueRatingBadge(skill, skillKey);
+                const economicsTooltip = generateEconomicsTooltip(skill, skillKey);
 
                 skillCard.innerHTML = `
 
@@ -182,6 +328,15 @@ export function populateArmoryItems() {
                     <h4 class="font-semibold text-gray-800 mt-2">${skill.name} ${skill.grantsInvincibility ? '🛡️' : ''} (Level ${currentLevel})</h4>
 
                     <p class="text-sm text-gray-600">${skill.description}</p>
+
+                    ${isUnlocked ? `
+                        ${difficultyBadge}
+                        ${valueRatingBadge}
+                        <div class="economics-info-tooltip" title="Click for economics explanation">
+                            <span class="info-icon">ℹ️</span>
+                            ${economicsTooltip}
+                        </div>
+                    ` : ''}
 
                     ${lockedMessage}
 

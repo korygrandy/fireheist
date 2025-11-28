@@ -152,16 +152,7 @@
         {
           "type": "section",
           "title": "🟢 Enlisted Tier",
-          "text": "The first step up from basic skills. Powerful enough to change your game, accessible enough that any dedicated player can earn them."
-        },
-        {
-          "type": "skill",
-          "name": "Shockwave",
-          "emoji": "💫",
-          "energy": "25",
-          "description": "NEW! Generate a powerful shockwave that shatters obstacles AND pushes back anything in front of you! Perfect for when things get too crowded.",
-          "unlockHint": "Master the Ground Pound to unlock this devastating upgrade...",
-          "rating": "★★★★☆ (Tactical)"
+          "text": "The first step up from basic skills. Less common but still accessible with dedication."
         },
         {
           "type": "skill",
@@ -173,27 +164,54 @@
           "rating": "★★★★★ (Devastating)"
         },
         {
+          "type": "section",
+          "title": "🔵 Master Tier (NEWLY PROMOTED!)",
+          "text": "Elite skills for elite players. These abilities can turn the tide of any heist! Recently promoted skills now offer 1.5x cash multiplier instead of 1.1x!"
+        },
+        {
+          "type": "skill",
+          "name": "Shockwave",
+          "emoji": "💫",
+          "energy": "25",
+          "description": "Generate a powerful shockwave that shatters obstacles AND pushes back anything in front of you! NEWLY PROMOTED to Master tier - now 1.5x multiplier!",
+          "unlockHint": "Master the Ground Pound to unlock this devastating upgrade...",
+          "rating": "★★★★★ (Tactical + Rewarding!)"
+        },
+        {
           "type": "skill",
           "name": "Houdini",
           "emoji": "🎩",
           "energy": "30",
-          "description": "Now you see me... now you don't! Vanish in a puff of smoke and reappear safely. Pure escape artistry!",
+          "description": "Now you see me... now you don't! Vanish in a puff of smoke and reappear safely. Pure escape artistry! NEWLY PROMOTED - grants invincibility AND 1.5x multiplier!",
           "unlockHint": "Show your mastery of fire to earn this magical ability...",
-          "rating": "★★★★☆ (Escape Artist)"
+          "rating": "★★★★★ (Escape Artist Deluxe!)"
         },
         {
-          "type": "section",
-          "title": "🔵 Master Tier",
-          "text": "Elite skills for elite players. These abilities can turn the tide of any heist, but unlocking them requires serious dedication!"
+          "type": "skill",
+          "name": "Fiery Houdini",
+          "emoji": "🔥🎩",
+          "energy": "40",
+          "description": "Combine the power of fire with the magic of escape! NEWLY PROMOTED - grants invincibility, auto-incinerates, and 1.5x multiplier!",
+          "unlockHint": "Master both fire and escape to unlock this ultimate combination...",
+          "rating": "★★★★★ (Ultimate Escape!)"
+        },
+        {
+          "type": "skill",
+          "name": "Fiery Ground Pound",
+          "emoji": "🔥💥",
+          "energy": "25",
+          "description": "Ground Pound with FIRE! Destroys ALL on-screen obstacles! NEWLY PROMOTED to Master tier with 1.5x cash multiplier!",
+          "unlockHint": "Chain Ground Pounds together to unlock this explosive upgrade...",
+          "rating": "★★★★★ (AOE Master!)"
         },
         {
           "type": "skill",
           "name": "Firestorm",
           "emoji": "🌪️",
           "energy": "Continuous Drain",
-          "description": "ULTIMATE POWER! Rain fire from the sky, incinerating EVERYTHING on screen! The most powerful offensive ability in the game. Period.",
+          "description": "ULTIMATE POWER! Rain fire from the sky, incinerating EVERYTHING on screen! The most powerful offensive ability in the game. Cost reduced by 40%!",
           "unlockHint": "Prove you can handle fire by incinerating 100 obstacles...",
-          "rating": "★★★★★ (LEGENDARY)"
+          "rating": "★★★★★ (LEGENDARY POWER)"
         },
         {
           "type": "skill",
@@ -207,8 +225,8 @@
         {
           "type": "callout",
           "style": "protip",
-          "title": "💡 ENERGY TIP!",
-          "text": "Master tier skills drain energy continuously. Watch that bar! Running out mid-skill can leave you vulnerable!"
+          "title": "💰 MASTER TIER = 1.5x MULTIPLIER!",
+          "text": "Master tier skills (Shockwave, Houdini, Fiery Houdini, Fiery Ground Pound, Firestorm, Jet Pack) now grant 1.5x cash bonus! Combine with cash bag spawns for MASSIVE earnings!"
         },
         {
           "type": "section",
@@ -255,31 +273,39 @@
           "type": "tier",
           "name": "ENLISTED",
           "color": "green",
-          "multiplier": "1.25x",
-          "description": "Your first power boost! These skills are easier to unlock and grant a 25% cash bonus when you defeat obstacles with them!",
-          "examples": "Shockwave, Fire Spinner, Houdini"
+          "multiplier": "1.1x",
+          "description": "Your first power boost! These skills are easier to unlock and grant a 10% cash bonus when you defeat obstacles with them!",
+          "examples": "Fire Spinner, Fiery Ground Pound"
         },
         {
           "type": "tier",
           "name": "MASTER",
           "color": "blue",
-          "multiplier": "1.50x",
-          "description": "Elite tier! 50% more cash for every obstacle destroyed. These skills require serious commitment to unlock.",
-          "examples": "Firestorm, Jet Pack, Blink Strike"
+          "multiplier": "1.5x",
+          "description": "Elite tier! 50% more cash for every obstacle destroyed. These skills require serious commitment to unlock. Includes powerful skills like Shockwave, Houdini, Fiery Houdini, and Fiery Ground Pound!",
+          "examples": "Shockwave, Houdini, Fiery Houdini, Fiery Ground Pound, Firestorm, Jet Pack"
         },
         {
           "type": "tier",
           "name": "LEGENDARY",
           "color": "purple",
-          "multiplier": "2.0x",
-          "description": "THE ULTIMATE! Double your cash earnings when using Legendary skills! These are the rarest abilities in the game.",
-          "examples": "Fire Mage, Mage Spinner"
+          "multiplier": "2.5x",
+          "description": "Legendary tier! 150% more cash for every obstacle destroyed. These are rare abilities for dedicated players!",
+          "examples": "Fire Mage, Mage Spinner, Phase Dash"
+        },
+        {
+          "type": "tier",
+          "name": "LEGENDARY+",
+          "color": "red",
+          "multiplier": "3.0x",
+          "description": "THE ULTIMATE! Earn 3x cash with these ultra-grind skills! Only for the most dedicated players who've conquered extreme unlock challenges.",
+          "examples": "Reaper Drone (1000+ obstacles)"
         },
         {
           "type": "callout",
           "style": "protip",
-          "title": "💰 CASH STACKING!",
-          "text": "The tier multiplier applies to ALL cash collected while the skill is active! Time your high-tier skills with cash bag spawns for MASSIVE earnings!"
+          "title": "💰 TIER MULTIPLIER BENEFITS!",
+          "text": "Your active skill's tier determines your cash multiplier:\n• Master Tier = 1.5x cash bonus\n• Legendary = 2.5x cash bonus\n• Legendary+ = 3.0x cash bonus (Ultra-grind reward!)\n\nStack this with cash bags for MASSIVE earnings!"
         }
       ]
     },
@@ -301,8 +327,8 @@
         {
           "type": "unlock",
           "skill": "Shockwave",
-          "tier": "Enlisted",
-          "hint": "💥 Master the Ground Pound! String together multiple successful pounds without missing to prove your worth.",
+          "tier": "Master",
+          "hint": "💥 Master the Ground Pound! String together multiple successful pounds without missing to prove your worth. Now an upgraded MASTER tier skill!",
           "difficulty": "★★☆☆☆"
         },
         {
@@ -315,22 +341,29 @@
         {
           "type": "unlock",
           "skill": "Fiery Ground Pound",
-          "tier": "Enlisted",
-          "hint": "💥 Like Shockwave, but you need an even longer streak of consecutive Ground Pounds!",
+          "tier": "Master",
+          "hint": "💥 Like Shockwave, but you need an even longer streak of consecutive Ground Pounds! Now an upgraded MASTER tier skill!",
           "difficulty": "★★★☆☆"
         },
         {
           "type": "unlock",
           "skill": "Houdini",
-          "tier": "Enlisted",
-          "hint": "🎩 Show your dedication to the flame. Incinerate your way to magical powers!",
+          "tier": "Master",
+          "hint": "🎩 Show your dedication to the flame. Incinerate your way to magical powers! Now an upgraded MASTER tier skill with invincibility!",
           "difficulty": "★★☆☆☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Fiery Houdini",
+          "tier": "Master",
+          "hint": "🔥🎩 Combine fire and escape magic! Now an upgraded MASTER tier skill offering both incinerations AND invincibility!",
+          "difficulty": "★★★☆☆"
         },
         {
           "type": "unlock",
           "skill": "Firestorm",
           "tier": "Master",
-          "hint": "🌪️ A true master of fire incinerates MANY obstacles. Triple digits, heister!",
+          "hint": "🌪️ A true master of fire incinerates MANY obstacles. Triple digits, heister! Much more affordable now!",
           "difficulty": "★★★★☆"
         },
         {
@@ -346,6 +379,13 @@
           "tier": "Master",
           "hint": "⚡ Prove your precision with Houdini. Master the escape before you learn to attack!",
           "difficulty": "★★★★☆"
+        },
+        {
+          "type": "unlock",
+          "skill": "Reaper Drone",
+          "tier": "Legendary+",
+          "hint": "🚁 ULTRA-GRIND! Incinerate 1000+ obstacles to unlock the drone and earn the ultimate 3.0x multiplier! Worth the effort!",
+          "difficulty": "★★★★★"
         },
         {
           "type": "unlock",

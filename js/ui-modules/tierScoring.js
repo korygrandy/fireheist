@@ -61,6 +61,14 @@ export const TIER_DEFINITIONS = {
         textColor: '#ffffff',
         scoreRange: { min: 80, max: 1015 }
     },
+    LEGENDARY_PLUS: {
+        order: 6,
+        label: 'Legendary+',
+        description: 'Ultra-grind achievements (1000+ obstacles)',
+        backgroundColor: '#dc2626',  // Dark Red (ultra-premium)
+        textColor: '#ffffff',
+        scoreRange: { min: 1016, max: 2000 }
+    },
     ERROR: {
         order: 99,
         label: 'Error',
@@ -159,6 +167,7 @@ export function assignSkillTier(skill, skillKey) {
     if (skill.tier === 'Enlisted') return 'ENLISTED';
     if (skill.tier === 'Master') return 'MASTER';
     if (skill.tier === 'Legendary') return 'LEGENDARY';
+    if (skill.tier === 'LegendaryPlus') return 'LEGENDARY_PLUS';
 
     // Unknown tier
     return 'ERROR';

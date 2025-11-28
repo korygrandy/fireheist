@@ -21,12 +21,13 @@ import { getDifficultyScore, assignSkillTier } from '../ui-modules/tierScoring.j
  * Maps tier names to cash earning multipliers
  */
 export const TIER_CASH_MULTIPLIERS = {
-    'BASIC': 0.5,        // Basic skills earn 50% of base cash
-    'COSMETIC': 1.0,     // Cosmetic skills earn normal cash (no benefit)
-    'ENLISTED': 1.1,     // Enlisted skills earn 110% of base
-    'MASTER': 1.5,       // Master skills earn 150% of base
-    'LEGENDARY': 2.5,    // Legendary skills earn 250% of base
-    'ERROR': 1.0         // Fallback to normal if tier unknown
+    'BASIC': 0.5,           // Basic skills earn 50% of base cash
+    'COSMETIC': 1.0,        // Cosmetic skills earn normal cash (no benefit)
+    'ENLISTED': 1.1,        // Enlisted skills earn 110% of base
+    'MASTER': 1.5,          // Master skills earn 150% of base
+    'LEGENDARY': 2.5,       // Legendary skills earn 250% of base
+    'LegendaryPlus': 3.0,   // Legendary+ skills earn 300% of base (ultra-grind rewards)
+    'ERROR': 1.0            // Fallback to normal if tier unknown
 };
 
 /**

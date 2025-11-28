@@ -145,7 +145,7 @@ export const ARMORY_ITEMS = {
         "name": "Fiery Ground Pound",
         "description": "A powerful ground pound that creates a fiery explosion, incinerating all on-screen obstacles.",
         "emoji": "💥",
-        "tier": "Enlisted",
+        "tier": "Master",
         "unlockCondition": {
             "type": "consecutiveGroundPounds",
             "count": 10,
@@ -170,7 +170,7 @@ export const ARMORY_ITEMS = {
         "description": "Teleport with a burst of fire, incinerating nearby obstacles.",
         "imageLocked": "images/fiery-houdini-locked.png",
         "imageUnlocked": "images/fiery-houdini-unlocked.png",
-        "tier": "Enlisted",
+        "tier": "Master",
         "grantsInvincibility": true,
         "unlockCondition": {
             "type": "incinerateCount",
@@ -324,7 +324,7 @@ export const ARMORY_ITEMS = {
         "description": "A drone that fires a missile at the first obstacle in its path.",
         "imageLocked": "images/reaper-drone.svg",
         "imageUnlocked": "images/reaper-drone.svg",
-        "tier": "Legendary",
+        "tier": "LegendaryPlus",
         "unlockCondition": {
             "type": "totalIncinerateCount",
             "count": 1000,
@@ -361,7 +361,8 @@ export const ARMORY_ITEMS = {
         "name": "Houdini",
         "description": "Teleport away from danger in a flash.",
         "emoji": "🎩",
-        "tier": "Enlisted",
+        "tier": "Master",
+        "grantsInvincibility": true,
         "unlockCondition": {
             "type": "incinerateCount",
             "count": 25,
@@ -397,7 +398,7 @@ export const ARMORY_ITEMS = {
         "name": "Shockwave",
         "description": "Generate a powerful shockwave that repels obstacles.",
         "emoji": "〰️",
-        "tier": "Enlisted",
+        "tier": "Master",
         "unlockCondition": {
             "type": "consecutiveGroundPounds",
             "count": 5,

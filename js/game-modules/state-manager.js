@@ -1075,8 +1075,8 @@ export function clearCashRewardParticles() { state.cashRewardParticles = []; }
 // Phase 2C: Reset skill usage stats for new game
 export function resetSkillUsageStats() {
     state.skillUsageStats = {
-        cashByTier: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0 },
-        usageCount: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0 },
+        cashByTier: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0, LEGENDARY_PLUS: 0 },
+        usageCount: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0, LEGENDARY_PLUS: 0 },
         totalMultipliedCash: 0,
         totalBaseCash: 0
     };

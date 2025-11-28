@@ -14,10 +14,10 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 5,
         levels: [
             { cost: 0, description: "Default: A fiery vortex that drains energy over time." }, // Level 1 (initial unlock)
-            { cost: 540000, description: "Energy drain is reduced by 10%." }, // -> Level 2
-            { cost: 1350000, description: "Energy drain is reduced by 20%." }, // -> Level 3
-            { cost: 2700000, description: "Duration is increased by 1 second." }, // -> Level 4
-            { cost: 5400000, description: "Also incinerates nearby obstacles upon activation." } // -> Level 5
+            { cost: 378000, description: "Energy drain is reduced by 10%." }, // -> Level 2 (reduced 30%)
+            { cost: 945000, description: "Energy drain is reduced by 20%." }, // -> Level 3 (reduced 30%)
+            { cost: 1890000, description: "Duration is increased by 1 second." }, // -> Level 4 (reduced 30%)
+            { cost: 3780000, description: "Also incinerates nearby obstacles upon activation." } // -> Level 5 (reduced 30%)
         ]
     },
     fieryGroundPound: {
@@ -45,10 +45,10 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 5,
         levels: [
             { cost: 0, description: "Default: A powerful continuous fire attack that rapidly drains energy." }, // Level 1
-            { cost: 810000, description: "Energy drain is reduced by 15%." }, // -> Level 2
-            { cost: 2160000, description: "Duration is increased by 2 seconds." }, // -> Level 3
-            { cost: 4320000, description: "Wider area of effect." }, // -> Level 4
-            { cost: 8100000, description: "Periodically spawns a protective fire shield." } // -> Level 5
+            { cost: 486000, description: "Energy drain is reduced by 15%." }, // -> Level 2 (reduced 40%)
+            { cost: 1296000, description: "Duration is increased by 2 seconds." }, // -> Level 3 (reduced 40%)
+            { cost: 2592000, description: "Wider area of effect." }, // -> Level 4 (reduced 40%)
+            { cost: 4860000, description: "Periodically spawns a protective fire shield." } // -> Level 5 (reduced 40%)
         ]
     },
     fireStomper: {
@@ -65,9 +65,9 @@ export const SKILL_UPGRADE_PATHS = {
         maxLevel: 4,
         levels: [
             { cost: 0, description: "Default: Teleport forward, incinerating nearby obstacles." }, // Level 1
-            { cost: 972000, description: "Increased teleport distance." }, // -> Level 2
-            { cost: 2430000, description: "Reduced energy cost." }, // -> Level 3
-            { cost: 4860000, description: "Brief invincibility after reappearing." } // -> Level 4
+            { cost: 680400, description: "Increased teleport distance." }, // -> Level 2 (reduced 30%)
+            { cost: 1701000, description: "Reduced energy cost." }, // -> Level 3 (reduced 30%)
+            { cost: 3402000, description: "Brief invincibility after reappearing." } // -> Level 4 (reduced 30%)
         ]
     },
     jetPack: {

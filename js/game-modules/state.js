@@ -153,8 +153,8 @@ const state = {
     floatingBonusTexts: [], // Phase 2C: Floating text for skill multiplier bonuses
     cashRewardParticles: [], // Phase 2C: Tier-colored particles on cash rewards
     skillUsageStats: { // Phase 2C: Track skill usage per game for results
-        cashByTier: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0 },
-        usageCount: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0 },
+        cashByTier: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0, LEGENDARY_PLUS: 0 },
+        usageCount: { BASIC: 0, COSMETIC: 0, ENLISTED: 0, MASTER: 0, LEGENDARY: 0, LEGENDARY_PLUS: 0 },
         totalMultipliedCash: 0,
         totalBaseCash: 0
     },

@@ -4,6 +4,7 @@ import { gameState } from '../game-modules/state-manager.js';
 
 // Phase 2C: Tier display configuration
 const TIER_DISPLAY_CONFIG = {
+    LEGENDARY_PLUS: { emoji: '🔴', color: '#dc2626', multiplier: '3.0x', bgClass: 'bg-red-50' },
     LEGENDARY: { emoji: '🔥', color: '#ef4444', multiplier: '2.5x', bgClass: 'bg-orange-50' },
     MASTER: { emoji: '⭐', color: '#f59e0b', multiplier: '1.5x', bgClass: 'bg-yellow-50' },
     ENLISTED: { emoji: '💜', color: '#8b5cf6', multiplier: '1.1x', bgClass: 'bg-purple-50' },
@@ -70,7 +71,7 @@ function showSkillBonusSummary() {
     skillBonusTableBody.innerHTML = '';
     
     // Display tiers in order from highest to lowest
-    const tierOrder = ['LEGENDARY', 'MASTER', 'ENLISTED', 'COSMETIC', 'BASIC'];
+    const tierOrder = ['LEGENDARY_PLUS', 'LEGENDARY', 'MASTER', 'ENLISTED', 'COSMETIC', 'BASIC'];
     
     for (const tier of tierOrder) {
         const uses = stats.usageCount[tier] || 0;

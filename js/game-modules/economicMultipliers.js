@@ -212,7 +212,7 @@ export function initializeEconomicMultipliers() {
 export function debugShowAllMultipliers() {
     console.group('[economicMultipliers] All Skill Multipliers');
     
-    const tiers = ['BASIC', 'COSMETIC', 'ENLISTED', 'MASTER', 'LEGENDARY'];
+    const tiers = ['BASIC', 'COSMETIC', 'ENLISTED', 'MASTER', 'LEGENDARY', 'LEGENDARY_PLUS'];
     
     for (const tier of tiers) {
         const tieredSkills = [];
