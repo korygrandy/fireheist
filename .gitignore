@@ -33,3 +33,5 @@ e2e.tests/utils/TestUtils.ts
 /SKILL_REWARD_DIFFICULTY_ALIGNMENT.md
 /SKILL_DIFFICULTY_ANALYSIS.md
 *.md
+/test-results/
+/.vscode/
