@@ -38,7 +38,7 @@
                 </div>
                 <div class="space-y-2">
                     <div class="flex items-center space-x-2">
-                        <labecc for="debugIncinerateCountInput"></labecc><input type="number" id="debugIncinerateCountInput" class="w-24 p-1 border rounded" placeholder="Count">
+                        <label for="debugIncinerateCountInput"></label><input type="number" id="debugIncinerateCountInput" class="w-24 p-1 border rounded" placeholder="Count">
                         <button id="debugSetIncinerateCountBtn" class="control-btn">Set Incinerations</button>
                     </div>
                     <button id="debugAddCashBtn" class="control-btn">Copy Cash Command</button>
@@ -124,7 +124,7 @@
                     
                     <!-- Strategy Guide Link -->
                     <div class="strategy-guide-link-container mt-4 pt-4 border-t border-gray-300">
-                        <a href="#" id="strategyGuideToggle" class="strategy-guide-link">
+                        <a href="#" id="strategyGuideToggle" class="gamepad-navigable strategy-guide-link">
                             📖 Official Strategy Guide
                         </a>
                         <p class="text-xs text-gray-500 mt-1 italic">"The Complete Unauthorized Guide to Financial Freedom!"</p>
@@ -132,15 +132,15 @@
                 </div>
 
                 <div id="tab-buttons-container" class="flex flex-wrap items-center border-b border-gray-200 mb-4">
-                    <button class="tab-button tab-button-active" data-tab="player">👤 Player</button>
+                    <button class="gamepad-navigable tab-button tab-button-active" data-tab="player">👤 Player</button>
                     <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="gameplay">🎮 Gameplay</button>
+                    <button class="gamepad-navigable tab-button tab-button-inactive" data-tab="gameplay">🎮 Gameplay</button>
                     <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="data">💾 Data</button>
+                    <button class="gamepad-navigable tab-button tab-button-inactive" data-tab="data">💾 Data</button>
                     <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="hallOfFame">🏆 Hall of Fame</button>
+                    <button class="gamepad-navigable tab-button tab-button-inactive" data-tab="hallOfFame">🏆 Hall of Fame</button>
                     <span class="text-gray-300 mx-2">|</span>
-                    <button class="tab-button tab-button-inactive" data-tab="armory">⚔️ Armory <span id="armory-new-indicator" class="hidden ml-1 px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">NEW</span></button>
+                    <button class="gamepad-navigable tab-button tab-button-inactive" data-tab="armory">⚔️ Armory <span id="armory-new-indicator" class="hidden ml-1 px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">NEW</span></button>
                 </div>
 
                 <div id="playerTab" class="tab-content">
@@ -149,7 +149,7 @@
                     </div>
                     <div class="mt-4">
                         <label for="personaSelector" class="block text-sm font-medium text-gray-700">Choose your Persona</label>
-                        <select id="personaSelector" class="mt-1 blocthek w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        <select id="personaSelector" class="gamepad-navigable mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                             <!-- JavaScript will populate options -->
                         </select>
                     </div>
@@ -162,14 +162,14 @@
                         <div>
                             <label for="emojiInput" class="block text-sm font-medium text-gray-700">Select your Runner, or paste your own Emoji</label>
                             <input type="text" id="emojiInput" value="🦹‍♂️" maxlength="2"
-                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:focus:border-blue-500">
+                                   class="gamepad-navigable mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
                             <div id="suggestedEmojis" class="mt-2 flex space-x-2 justify-center">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Skill Level</label>
-                            <div id="skillLevelSelector" class="flex justify-between space-x-2">
+                            <div id="skillLevelSelector" class="flex justify-between space-x-2 gamepad-navigable">
                                 <label class="flex items-center space-x-1 p-2 bg-green-100 rounded-lg cursor-pointer flex-1 justify-center">
                                     <input type="radio" name="gameSkillLevel" value="Rookie" checked>
                                     <span class="text-sm text-green-700 font-semibold">Rookie</span>
@@ -199,31 +199,31 @@
                     <div>
                         <label for="obstacleEmojiInput" class="block text-sm font-medium text-gray-700">Obstacle Emoji (Default: 🐌)</label>
                         <input type="text" id="obstacleEmojiInput" value="🐌" maxlength="2"
-                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
+                               class="gamepad-navigable mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-3xl text-center focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label for="obstacleFrequency" class="block text-sm font-medium text-gray-700">Obstacle Frequency: <span id="frequencyValue">20%</span></label>
                         <input type="range" id="obstacleFrequency" min="0" max="100" value="20"
-                               class="mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
+                               class="gamepad-navigable mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
                     </div>
 
                     <div class="mt-4 bg-gray-50 p-3 rounded-lg">
                         <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" id="enablePowerUps" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                            <input type="checkbox" id="enablePowerUps" class="gamepad-navigable h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
                             <span class="text-sm font-medium text-gray-700">Enable Random 🔥 Power-ups</span>
                         </label>
                     </div>
 
                     <div class="mt-4 bg-gray-50 p-3 rounded-lg">
                         <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" id="enableAutoHurdle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <input type="checkbox" id="enableAutoHurdle" class="gamepad-navigable h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                             <span class="text-sm font-medium text-gray-700">Enable auto-hurdle</span>
                         </label>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Game Speed</label>
-                        <div id="speedSelector" class="flex justify-between space-x-2">
+                        <div id="speedSelector" class="flex justify-between space-x-2 gamepad-navigable">
                             <label class="flex items-center space-x-1 p-2 bg-gray-100 rounded-lg cursor-pointer">
                                 <input type="radio" name="gameSpeed" value="0.5" data-speed="Slow (0.5x)">
                                 <span class="text-sm">Slow (0.5x)</span>
@@ -243,20 +243,20 @@
                 <div id="dataTab" class="tab-content space-y-4 hidden">
                     <div class="mt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Milestone Data (MM/DD/YYYY: Value)</h3>
-                        <label for="dataInput"></label><textarea id="dataInput" rows="10" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
-                        <button id="loadButton" class="control-btn secondary-btn mt-2 w-full">Load Custom Data</button>
+                        <label for="dataInput"></label><textarea id="dataInput" rows="10" class="gamepad-navigable w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                        <button id="loadButton" class="gamepad-navigable control-btn secondary-btn mt-2 w-full">Load Custom Data</button>
                         <p id="dataMessage" class="mt-2 text-sm h-5"></p>
                     </div>
 
                     <div class="mt-6">
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Custom Event Data (MM/DD/YYYY: Emoji : TYPE)</h3>
-                        <label for="eventDataInput"></label><textarea id="eventDataInput" rows="5" class="w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
+                        <label for="eventDataInput"></label><textarea id="eventDataInput" rows="5" class="gamepad-navigable w-full border border-gray-300 rounded-md p-3 font-mono text-sm shadow-inner"></textarea>
                         <p class="text-xs text-gray-500 mt-1">TYPE must be: **ACCELERATOR** or **DECELERATOR**</p>
                     </div>
 
                     <div class="mt-6 bg-gray-50 p-3 rounded-lg">
                         <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" id="disableSaveSettings" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <input type="checkbox" id="disableSaveSettings" class="gamepad-navigable h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                             <span class="text-sm font-medium text-gray-700">Disable Saved Settings</span>
                         </label>
                         <p class="text-xs text-gray-500 mt-1">
@@ -309,10 +309,10 @@
 
                 <div id="actionButtons" class="bg-white p-4 rounded-xl shadow-lg">
                     <div class="flex flex-col sm:flex-row gap-3 justify-center w-full">
-                        <button id="startButton" class="control-btn primary-btn flex-1">▶️ Start the Heist!</button>
-                        <button id="stopButton" class="control-btn bg-red-500 text-white hover:bg-red-600 flex-1" disabled>🔄 Reset Game</button>
-                        <button id="soundToggleButton" class="control-btn bg-gray-400 text-white hover:bg-gray-500 flex-1">🔇 Mute</button>
-                        <button id="fullscreenToggleButton" class="control-btn bg-gray-700 text-white hover:bg-gray-800 flex-1">↗️ Fullscreen</button>
+                        <button id="startButton" class="gamepad-navigable control-btn primary-btn flex-1">▶️ Start the Heist!</button>
+                        <button id="stopButton" class="gamepad-navigable control-btn bg-red-500 text-white hover:bg-red-600 flex-1" disabled>🔄 Reset Game</button>
+                        <button id="soundToggleButton" class="gamepad-navigable control-btn bg-gray-400 text-white hover:bg-gray-500 flex-1">🔇 Mute</button>
+                        <button id="fullscreenToggleButton" class="gamepad-navigable control-btn bg-gray-700 text-white hover:bg-gray-800 flex-1">↗️ Fullscreen</button>
                     </div>
                 </div>
 
