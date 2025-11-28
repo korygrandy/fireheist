@@ -141,6 +141,13 @@ function generateUnlockDifficultyBadge(skill) {
 function generateValueRatingBadge(skill, skillKey) {
     // Get tier and multiplier
     const tier = assignSkillTier(skill, skillKey);
+    
+    // Special handling for BASIC and COSMETIC skills (always available)
+    if (tier === 'BASIC' || tier === 'COSMETIC') {
+        const label = tier === 'BASIC' ? 'Core Skill' : 'Cosmetic';
+        return `<div class="value-rating" style="color: #6b7280; font-size: 0.75rem;">◆ ${label}</div>`;
+    }
+    
     const multiplier = TIER_CASH_MULTIPLIERS[tier] || 1.0;
     const unlockCount = skill.unlockCondition?.count || 0;
 
