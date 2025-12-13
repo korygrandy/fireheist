@@ -34,7 +34,7 @@ export const personas = {
         skillLevel: 'Novice',
         obstacleFrequencyPercent: 25,
         theme: 'outerspace',
-        music: 'fx/rocket.mp3',
+        music: 'fx/rocket-theme-music.mp3',
         milestones: [
             "01/01/2024: 1000", "08/15/2024: 15000", "03/01/2025: 40000", "11/20/2025: 85000",
             "07/05/2026: 150000", "01/10/2027: 220000", "09/15/2027: 300000", "05/25/2028: 410000",
@@ -58,7 +58,7 @@ export const personas = {
         skillLevel: 'Rookie',
         obstacleFrequencyPercent: 40,
         theme: 'mountains',
-        music: 'fx/lion.mp3',
+        music: 'fx/lion-theme-music.mp3',
         milestones: [
             "01/01/2024: 1000", "08/15/2024: 15000", "03/01/2025: 40000", "11/20/2025: 85000",
             "07/05/2026: 150000", "01/10/2027: 220000", "09/15/2027: 300000", "05/25/2028: 410000",
@@ -82,7 +82,7 @@ export const personas = {
         skillLevel: 'Rookie',
         obstacleFrequencyPercent: 60,
         theme: 'roadway',
-        music: 'fx/ballerina.mp3',
+        music: 'fx/ballerina-theme-music.mp3',
         milestones: [
             "01/01/2024: 1000", "08/15/2024: 15000", "03/01/2025: 40000", "11/20/2025: 85000",
             "07/05/2026: 150000", "01/10/2027: 220000", "09/15/2027: 300000", "05/25/2028: 410000",
@@ -106,7 +106,7 @@ export const personas = {
         skillLevel: 'Rookie',
         obstacleFrequencyPercent: 80,
         theme: 'night',
-        music: 'fx/zombie.mp3',
+        music: 'fx/zombie-theme-music.mp3',
         milestones: [
             "01/01/2024: 1000", "08/15/2024: 15000", "03/01/2025: 40000", "11/20/2025: 85000",
             "07/05/2026: 150000", "01/10/2027: 220000", "09/15/2027: 300000", "05/25/2028: 410000",
@@ -120,6 +120,30 @@ export const personas = {
             "08/10/2027: ⛈️ : DECELERATOR", "12/01/2027: 🤝 : ACCELERATOR", "03/20/2028: 🔥 : DECELERATOR",
             "07/15/2028: 🏡 : ACCELERATOR", "11/05/2028: 🐌 : DECELERATOR", "02/20/2029: 💍 : ACCELERATOR",
             "06/10/2029: 💎 : ACCELERATOR", "09/15/2030:  F : DECELERATOR"
+        ]
+    },
+    jollyNick: {
+        name: 'Jolly Nick',
+        emoji: '🎅',
+        financialTrait: 'Generous Gift-Giver. Believes in spreading joy and wealth. High spending but heart of gold.',
+        financialDisciplineLevel: 'Low',
+        skillLevel: 'Novice',
+        obstacleFrequencyPercent: 35,
+        theme: 'christmas',
+        music: 'fx/christmas-jingle-theme.mp3',
+        milestones: [
+            "01/01/2024: 1000", "08/15/2024: 15000", "03/01/2025: 40000", "11/20/2025: 85000",
+            "07/05/2026: 150000", "01/10/2027: 220000", "09/15/2027: 300000", "05/25/2028: 410000",
+            "12/01/2028: 550000", "08/18/2029: 710000", "04/04/2030: 880000", "10/21/2030: 1000000"
+        ],
+        events: [
+            "12/24/2024: 🎄 : ACCELERATOR", "12/25/2024: 🎁 : ACCELERATOR", "12/26/2024: 🔔 : ACCELERATOR",
+            "01/01/2025: 🎆 : ACCELERATOR", "02/14/2025: 💝 : ACCELERATOR", "06/21/2025: ⛱️ : DECELERATOR",
+            "07/04/2025: 🎆 : ACCELERATOR", "10/31/2025: 👻 : ACCELERATOR", "11/27/2025: 🍂 : DECELERATOR",
+            "12/24/2025: 🎄 : ACCELERATOR", "03/17/2026: 🍀 : ACCELERATOR", "05/31/2026: ☀️ : DECELERATOR",
+            "07/04/2026: 🎆 : ACCELERATOR", "09/15/2026: 🍂 : DECELERATOR", "10/31/2026: 👻 : ACCELERATOR",
+            "12/25/2026: 🎁 : ACCELERATOR", "02/14/2027: 💝 : ACCELERATOR", "06/20/2027: ☀️ : DECELERATOR",
+            "11/24/2027: 🦃 : ACCELERATOR", "12/25/2027: 🎄 : ACCELERATOR", "01/01/2028: 🎆 : ACCELERATOR"
         ]
     }
 };

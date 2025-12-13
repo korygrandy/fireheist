@@ -4,6 +4,7 @@
 
 import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL, ANIMATION_SOUND_MAP, THEME_AMBIENT_SOUND_MAP } from './constants.js';
 import { soundToggleButton, disableSaveSettings } from "./dom-elements.js";
+import { gameState } from './game-modules/state-manager.js';
 
 const MUTE_STORAGE_KEY = 'fireHeistMuteSetting';
 
@@ -89,6 +90,14 @@ export const quackSound = new Tone.Player({
     onerror: (e) => console.error("-> AUDIO: Error loading quack sound:", e)
 }).connect(uiBus);
 quackSound.mute = isMuted;
+
+export const jingleBellsSound = new Tone.Player({
+    url: './fx/jingle-bells.mp3',
+    volume: -10,
+    onload: () => console.log("-> AUDIO: Jingle bells sound loaded."),
+    onerror: (e) => console.error("-> AUDIO: Error loading jingle bells sound:", e)
+}).connect(uiBus);
+jingleBellsSound.mute = isMuted;
 
 export const powerUpSound = new Tone.Player({
     url: './fx/power-up.mp3',
@@ -272,20 +281,38 @@ export function playLoserSound() {
 }
 
 export function initializeMusicPlayer(musicUrl = DEFAULT_MUSIC_URL) {
+    // Ensure Tone audio context is running
+    if (Tone.context.state !== 'running') {
+        Tone.start();
+    }
+    
     // If a music player instance already exists, stop and dispose of it first.
     if (backgroundMusic) {
         backgroundMusic.stop().dispose();
     }
 
-    // Stop the transport and cancel any scheduled events to prevent overlaps
-    Tone.Transport.stop();
+    // Note: Don't stop Tone.Transport as it affects ambient music playback
+    // Just clear scheduled events to prevent overlaps
     Tone.Transport.cancel();
 
     backgroundMusic = new Tone.Player({
         url: musicUrl,
         loop: true,
-        volume: isMuted ? -Infinity : -12
+        volume: isMuted ? -Infinity : -12,
+        onload: () => {
+            console.log(`-> AUDIO.SUCCESS: Background music loaded from '${musicUrl}'.`);
+            if (!isMuted && backgroundMusic && backgroundMusic.loaded && backgroundMusic.state !== 'started') {
+                backgroundMusic.start();
+                console.log(`-> initializeMusicPlayer: Started background music.`);
+            }
+        },
+        onerror: (e) => console.error(`-> AUDIO.ERROR: Error loading background music from '${musicUrl}':`, e)
     }).connect(musicBus);
+    
+    // Ensure transport is running for ambient sounds and background music
+    if (Tone.Transport.state !== 'started') {
+        Tone.Transport.start();
+    }
 }
 
 export function playAmbientSound(themeName) {
@@ -586,8 +613,13 @@ export function playCorkscrewSpinSound() {
 }
 
 export function playQuackSound() {
-    if (quackSound.state === 'stopped') {
-        quackSound.start();
+    // Check if using Jolly Nick persona with Festive Christmas theme
+    const isJollyNickChristmas = gameState && gameState.selectedPersona === 'jollyNick' && gameState.selectedTheme === 'christmas';
+    
+    const soundToPlay = isJollyNickChristmas ? jingleBellsSound : quackSound;
+    
+    if (soundToPlay.state === 'stopped') {
+        soundToPlay.start();
     }
 }
 

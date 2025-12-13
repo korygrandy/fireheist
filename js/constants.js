@@ -5,6 +5,16 @@
 export const MS_PER_DAY = 1000 * 60 * 60 * 24;
 export const CHART_Y_STEP_SIZE = 100000;
 
+// Christmas Theme Constants
+export const CHRISTMAS_SNOWFLAKE_COUNT = 50; // Menu screen snowflake count
+export const CHRISTMAS_SNOWFLAKE_COUNT_PERFORMANCE = 6; // During active gameplay (5-7 small flakes)
+export const CHRISTMAS_GIFT_SPAWN_RATE = 0.001; // Per frame
+export const CHRISTMAS_LIGHT_BLINK_SPEED = 750; // ms
+export const CHRISTMAS_SNOWFLAKE_EMOJIS = ['❄️', '❅']; // Reduced from 3 to 2 (simpler emoji = faster rendering)
+export const CHRISTMAS_GIFT_EMOJI = '🎁';
+export const CHRISTMAS_LIGHT_COLORS = ['#FF0000', '#00FF00', '#FFD700', '#FFFFFF', '#FF1493'];
+export const CHRISTMAS_COLLISION_SPARKLE_COLORS = ['#FFD700', '#FF0000', '#FFFFFF', '#00FF00'];
+
 // Visual Segment Duration Constants
 export const MIN_VISUAL_DURATION_MS = 2000;
 export const MAX_VISUAL_DURATION_MS = 10000;
@@ -165,7 +175,7 @@ export const DIFFICULTY_SETTINGS = {
     }
 };
 
-export const NUM_CLOUDS = 10;
+export const NUM_CLOUDS = 5; // Reduced from 10 for cleaner background
 export const CLOUD_SPEED_FACTOR = 0.1;
 export const CLOUD_PARALLAX_FACTOR = 0.3;
 export const CITYSCAPE_PARALLAX_FACTOR = 0.5;
@@ -208,6 +218,7 @@ export const THEME_AMBIENT_SOUND_MAP = {
     'volcano': 'fx/ambience-eruptions.mp3', // Placeholder, ideally lava bubbling/rumbling
     'outerspace': 'fx/ufo-hover.mp3', // Placeholder, ideally space hum
     'night': 'fx/ambience-crickets.mp3', // Placeholder, ideally crickets/night owl
+    'christmas': 'fx/ambience-christmas.mp3'
 };
 
 

@@ -1,5 +1,5 @@
 import { canvas, ctx } from '../../dom-elements.js';
-import { STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_SIZE, GROUND_Y, STICK_FIGURE_FIXED_X } from '../../constants.js';
+import { STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_SIZE, GROUND_Y, STICK_FIGURE_FIXED_X, CHRISTMAS_COLLISION_SPARKLE_COLORS } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import { gameState } from '../state-manager.js';
 
@@ -204,11 +204,48 @@ export function createImpactSpark(x, y) {
     gameState.activeImpactSparks.push(sparks);
 }
 
+export function createChristmasCollisionBurst(x, y) {
+    const colors = CHRISTMAS_COLLISION_SPARKLE_COLORS;
+    const emojis = ['✨', '⭐', '💫'];
+    const sparkCount = 12;
+    
+    for (let i = 0; i < sparkCount; i++) {
+        const angle = (i / sparkCount) * Math.PI * 2;
+        const velocity = 3 + Math.random() * 3;
+        const sparkCluster = [{
+            x,
+            y,
+            velocityX: Math.cos(angle) * velocity,
+            velocityY: Math.sin(angle) * velocity,
+            life: 80,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            emoji: emojis[Math.floor(Math.random() * emojis.length)],
+            rotation: Math.random() * Math.PI * 2
+        }];
+        gameState.activeImpactSparks.push(sparkCluster);
+    }
+}
+
 export function drawImpactSparks() {
     gameState.activeImpactSparks.forEach((sparkCluster, clusterIndex) => {
         sparkCluster.forEach((spark, sparkIndex) => {
-            ctx.fillStyle = `rgba(255, 223, 186, ${spark.life / 100})`;
-            ctx.fillRect(spark.x, spark.y, spark.size, spark.size);
+            if (spark.emoji) {
+                // Christmas emoji sparkles
+                ctx.globalAlpha = spark.life / 80;
+                ctx.save();
+                ctx.translate(spark.x, spark.y);
+                ctx.rotate(spark.rotation || 0);
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(spark.emoji, 0, 0);
+                ctx.restore();
+                ctx.globalAlpha = 1;
+            } else {
+                // Regular sparkles
+                ctx.fillStyle = `rgba(255, 223, 186, ${spark.life / 100})`;
+                ctx.fillRect(spark.x, spark.y, spark.size, spark.size);
+            }
 
             spark.x += spark.velocityX;
             spark.y += spark.velocityY;

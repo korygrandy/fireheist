@@ -84,6 +84,7 @@ import {
 } from './state-manager.js';
 import { initializeClouds, generateGrassBlades } from './drawing/world.js';
 import * as drawing from './drawing.js';
+import { startThemeEffect } from './drawing/environmental-effects.js';
 import { displayDailyChallenge, displayDailyChallengeCompletedScreen } from '../ui-modules/daily-challenge-ui.js';
 import { markDailyChallengeAsPlayed, updateDailyChallengeWinStreak } from '../daily-challenge.js';
 import { animate } from './lifecycle.js';
@@ -332,6 +333,9 @@ export function startGame() {
     // 5. Fallback to DEFAULT_MUSIC_URL is handled by the initial declaration
 
     initializeMusicPlayer(musicUrl);
+    
+    // Start theme-specific environmental effects (snowflakes, rain, etc.)
+    startThemeEffect();
 
     if (Tone.context.state !== 'running') {
         Tone.start();

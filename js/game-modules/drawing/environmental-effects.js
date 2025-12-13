@@ -1,6 +1,7 @@
 import state from '../state.js';
+import { gameState } from '../state-manager.js';
 import { canvas, ctx } from '../../dom-elements.js';
-import { CITYSCAPE_PARALLAX_FACTOR, THEME_ANCHOR_PARALLAX_FACTOR } from '../../constants.js';
+import { CITYSCAPE_PARALLAX_FACTOR, THEME_ANCHOR_PARALLAX_FACTOR, CHRISTMAS_SNOWFLAKE_COUNT, CHRISTMAS_SNOWFLAKE_COUNT_PERFORMANCE, CHRISTMAS_SNOWFLAKE_EMOJIS, CHRISTMAS_LIGHT_COLORS } from '../../constants.js';
 
 const RAIN_DENSITY = 100; // Number of raindrops
 const RAIN_DURATION = 5000; // 5 seconds
@@ -41,6 +42,11 @@ export function startThemeEffect() {
             startAshfall();
             startHeatShimmer();
             startEmberShower();
+            break;
+        case 'christmas':
+            startChristmasSnowfall();
+            startChristmasFallingGifts();
+            startChristmasLights();
             break;
         default:
             console.log(`-> DEBUG: No specific effect to trigger for theme '${state.selectedTheme}'.`);
@@ -1417,6 +1423,9 @@ case 'desert':
             if (Math.random() < 0.0005 && state.gameRunning) startHeatShimmer();
             if (Math.random() < 0.0015 && state.gameRunning) startEmberShower();
             break;
+        case 'christmas':
+            // Christmas effects continue from startThemeEffect
+            break;
     }
 }
 
@@ -1451,5 +1460,376 @@ export function drawEnvironmentalEffects() {
         case 'volcano':
             drawVolcanoThemeEffects();
             break;
+        case 'christmas':
+            drawChristmasThemeEffects();
+            break;
     }
+}
+
+// --- Christmas Theme Effects ---
+
+// Pre-calculated font sizes for snowflakes (optimization)
+const SNOWFLAKE_FONT_SIZES = {
+    large: 20,
+    medium: 16,
+    small: 12
+};
+
+const CHRISTMAS_GIFT_SPAWN_INTERVAL = 120; // Spawn every ~2 seconds at 60fps
+const CHRISTMAS_SNOWFLAKE_SPAWN_INTERVAL = 2; // Spawn 2-3 snowflakes per frame (120fps = 240+ per sec)
+let christmasGiftSpawnCounter = 0;
+let christmasSnowflakeSpawnCounter = 0;
+let lastChristmasMilestone = -1; // Track last milestone to detect changes
+let christmasEffectType = 'snowflakes'; // 'snowflakes' or 'gifts' - 50/50 random during gameplay
+let santaSleighImage = null; // Cached image for Santa sleigh
+let lastMilestoneEffectRoll = -1; // Track which milestone we last rolled for
+
+export function startChristmasSnowfall() {
+    if (state.environmentalEffects.snowflakes && state.environmentalEffects.snowflakes.length > 0) {
+        console.log("-> DEBUG: Snowflakes already started, skipping initialization");
+        return; // Already started
+    }
+    
+    console.log("-> DEBUG: Starting Christmas snowfall (will show based on milestone).");
+    state.environmentalEffects.snowflakes = [];
+    christmasSnowflakeSpawnCounter = 0;
+    
+    // Always initialize snowflakes - they will be shown/hidden based on milestone
+    const initialSnowflakeCount = state.gameRunning ? CHRISTMAS_SNOWFLAKE_COUNT_PERFORMANCE : CHRISTMAS_SNOWFLAKE_COUNT;
+    console.log(`-> DEBUG: Creating ${initialSnowflakeCount} snowflakes (gameRunning: ${state.gameRunning})`);
+    
+    for (let i = 0; i < initialSnowflakeCount; i++) {
+        const sizeRandom = Math.random();
+        let type, speed, fontSize;
+        
+        if (sizeRandom < 0.4) {
+            type = 'large';
+            speed = 1 + Math.random() * 1.2;
+            fontSize = SNOWFLAKE_FONT_SIZES.large;
+        } else if (sizeRandom < 0.7) {
+            type = 'medium';
+            speed = 1.8 + Math.random() * 1.5;
+            fontSize = SNOWFLAKE_FONT_SIZES.medium;
+        } else {
+            type = 'small';
+            speed = 2.5 + Math.random() * 2;
+            fontSize = SNOWFLAKE_FONT_SIZES.small;
+        }
+        
+        state.environmentalEffects.snowflakes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vy: speed,
+            vx: (Math.random() - 0.5) * 0.8,
+            fontSize: fontSize,
+            opacity: 0.65 + Math.random() * 0.35,
+            rotationSpeed: (Math.random() - 0.5) * 0.02,
+            type: type,
+            emoji: CHRISTMAS_SNOWFLAKE_EMOJIS[Math.floor(Math.random() * CHRISTMAS_SNOWFLAKE_EMOJIS.length)],
+            driftPhase: Math.random() * Math.PI * 2
+        });
+    }
+}
+
+// Shared phase for efficient sine wave calculation
+let christmasSnowPhase = 0;
+
+function updateChristmasSnowfall(deltaTime) {
+    if (!state.environmentalEffects.snowflakes) {
+        console.log(`-> updateChristmasSnowfall: snowflakes array is null/undefined`);
+        return;
+    }
+    
+    // Only update snowflakes if that's the active effect
+    if (christmasEffectType !== 'snowflakes') {
+        console.log(`-> updateChristmasSnowfall: skipping, effect type is ${christmasEffectType}, snowflakes count: ${state.environmentalEffects.snowflakes.length}`);
+        return;
+    }
+    
+    christmasSnowPhase += 0.008; // Shared phase for all snowflakes (faster calculation)
+    
+    // Update existing snowflakes (recycle particles to maintain continuous animation)
+    for (let i = state.environmentalEffects.snowflakes.length - 1; i >= 0; i--) {
+        const snowflake = state.environmentalEffects.snowflakes[i];
+        
+        // Vertical movement
+        snowflake.y += snowflake.vy;
+        
+        // Horizontal drift using shared phase (less calculation than individual phases)
+        snowflake.x += Math.sin(christmasSnowPhase + snowflake.driftPhase) * 0.2 + snowflake.vx;
+        
+        // Rotation (simplified)
+        snowflake.rotationSpeed += 0.015;
+        
+        // Recycle snowflakes when off-screen (reset to top instead of removing)
+        if (snowflake.y > canvas.height) {
+            snowflake.y = -20;  // Reset to just above screen
+            snowflake.x = Math.random() * canvas.width;  // New random horizontal position
+            snowflake.rotationSpeed = (Math.random() - 0.5) * 0.02;  // Reset rotation
+            continue;
+        }
+        
+        // Simple horizontal wrap
+        if (snowflake.x > canvas.width + 15) snowflake.x = -15;
+        if (snowflake.x < -15) snowflake.x = canvas.width + 15;
+    }
+}
+
+export function startChristmasFallingGifts() {
+    if (state.environmentalEffects.gifts) return; // Already started
+    
+    console.log("-> DEBUG: Starting Christmas falling gifts (will show based on milestone).");
+    state.environmentalEffects.gifts = [];
+    christmasGiftSpawnCounter = 0;
+}
+
+export function startChristmasLights() {
+    if (state.environmentalEffects.christmasLights) return; // Already started
+    console.log("-> DEBUG: Starting Christmas twinkling lights.");
+    state.environmentalEffects.christmasLights = {
+        lights: [],
+        blinkPhase: 0
+    };
+    
+    // Create lights along the top of the screen
+    for (let i = 0; i < 12; i++) {
+        state.environmentalEffects.christmasLights.lights.push({
+            x: (canvas.width / 12) * i + canvas.width / 24,
+            y: 30,
+            color: CHRISTMAS_LIGHT_COLORS[Math.floor(Math.random() * CHRISTMAS_LIGHT_COLORS.length)],
+            blinkOffset: Math.random() * Math.PI * 2,
+            opacity: 0.3
+        });
+    }
+}
+
+function updateChristmasGifts() {
+    if (!state.environmentalEffects.gifts) return;
+    
+    // Only spawn gifts if that's the active effect
+    if (christmasEffectType !== 'gifts') return;
+    
+    // Spawn new gifts occasionally
+    christmasGiftSpawnCounter++;
+    if (christmasGiftSpawnCounter >= CHRISTMAS_GIFT_SPAWN_INTERVAL && state.gameRunning) {
+        christmasGiftSpawnCounter = 0;
+        state.environmentalEffects.gifts.push({
+            x: Math.random() * canvas.width,
+            y: -30,
+            vy: 0.8 + Math.random() * 0.5, // Slower than snowflakes
+            vx: (Math.random() - 0.5) * 0.6,
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: (Math.random() - 0.5) * 0.08,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: Math.random() * 0.05 + 0.02,
+            color: CHRISTMAS_LIGHT_COLORS[Math.floor(Math.random() * CHRISTMAS_LIGHT_COLORS.length)],
+            opacity: 0.8
+        });
+    }
+    
+    // Update existing gifts
+    for (let i = state.environmentalEffects.gifts.length - 1; i >= 0; i--) {
+        const gift = state.environmentalEffects.gifts[i];
+        
+        gift.y += gift.vy;
+        gift.x += Math.sin(gift.wobble) * 0.15 + gift.vx;
+        gift.rotation += gift.rotationSpeed;
+        gift.wobble += gift.wobbleSpeed;
+        
+        // Remove when off-screen
+        if (gift.y > canvas.height + 50) {
+            state.environmentalEffects.gifts.splice(i, 1);
+        }
+    }
+}
+
+function updateChristmasLights() {
+    if (!state.environmentalEffects.christmasLights) return;
+    
+    state.environmentalEffects.christmasLights.blinkPhase += 0.05;
+    
+    for (const light of state.environmentalEffects.christmasLights.lights) {
+        // Blink animation using sine wave
+        const blinkValue = Math.sin(state.environmentalEffects.christmasLights.blinkPhase + light.blinkOffset);
+        light.opacity = 0.3 + blinkValue * 0.5; // Opacity ranges from 0.3 to 0.8
+    }
+}
+
+function drawChristmasThemeEffects() {
+    // Draw Santa sleigh parallax in background (before other effects)
+    if (gameState) {
+        // Use game progress as movement driver (daysElapsedTotal tracks game time)
+        const scrollProxy = (gameState.daysElapsedTotal || 0) * 50; // Scale up for visible movement
+        drawSantaSleighParallax(scrollProxy);
+    }
+    
+    updateChristmasSnowfall(0);
+    updateChristmasGifts();
+    updateChristmasLights();
+    
+    drawChristmasSnowflakes();
+    drawChristmasGifts();
+    drawChristmasLights();
+}
+
+function drawChristmasSnowflakes() {
+    // Check milestone to determine if snowflakes should be shown (50% random frequency)
+    const currentMilestone = gameState.currentSegmentIndex || 0;
+    if (currentMilestone !== lastChristmasMilestone) {
+        lastChristmasMilestone = currentMilestone;
+        // 50% random selection instead of alternating
+        const newEffectType = Math.random() < 0.5 ? 'snowflakes' : 'gifts';
+        
+        // If switching effects, clear the old one
+        if (newEffectType !== christmasEffectType) {
+            if (newEffectType === 'snowflakes') {
+                state.environmentalEffects.gifts = []; // Clear gifts when switching to snowflakes
+            } else {
+                state.environmentalEffects.snowflakes = []; // Clear snowflakes when switching to gifts
+            }
+        }
+        
+        christmasEffectType = newEffectType;
+        console.log(`-> Christmas Theme: Milestone ${currentMilestone}, showing ${christmasEffectType} (alternating), snowflake count: ${state.environmentalEffects.snowflakes.length}`);
+    }
+    
+    // Only draw if snowflakes are the active effect
+    if (christmasEffectType !== 'snowflakes') {
+        console.log(`-> Skipping snowflakes draw, effect type is: ${christmasEffectType}`);
+        return;
+    }
+    if (!state.environmentalEffects.snowflakes || state.environmentalEffects.snowflakes.length === 0) {
+        console.log(`-> Skipping snowflakes draw, snowflake array is empty or null`);
+        return;
+    }
+    
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `${SNOWFLAKE_FONT_SIZES.medium}px Arial`; // Set default font once
+    
+    // Batch snowflakes by type to reduce font changes
+    const snowflakesByType = { large: [], medium: [], small: [] };
+    for (const snowflake of state.environmentalEffects.snowflakes) {
+        snowflakesByType[snowflake.type].push(snowflake);
+    }
+    
+    // Draw by type (reduces font setting calls)
+    const fontSizes = { large: SNOWFLAKE_FONT_SIZES.large, medium: SNOWFLAKE_FONT_SIZES.medium, small: SNOWFLAKE_FONT_SIZES.small };
+    
+    for (const [type, snowflakes] of Object.entries(snowflakesByType)) {
+        ctx.font = `${fontSizes[type]}px Arial`;
+        for (const snowflake of snowflakes) {
+            ctx.globalAlpha = snowflake.opacity;
+            ctx.save();
+            ctx.translate(snowflake.x, snowflake.y);
+            ctx.rotate(snowflake.rotationSpeed);
+            ctx.fillText(snowflake.emoji, 0, 0);
+            ctx.restore();
+        }
+    }
+    
+    ctx.restore();
+}
+
+function drawChristmasGifts() {
+    // Only draw gifts if that's the active effect
+    if (christmasEffectType !== 'gifts') return;
+    if (!state.environmentalEffects.gifts || state.environmentalEffects.gifts.length === 0) return;
+    
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '28px Arial';
+    
+    for (const gift of state.environmentalEffects.gifts) {
+        ctx.globalAlpha = gift.opacity;
+        ctx.save();
+        ctx.translate(gift.x, gift.y);
+        ctx.rotate(gift.rotation);
+        ctx.fillText('🎁', 0, 0);
+        ctx.restore();
+    }
+    
+    ctx.restore();
+}
+
+function drawChristmasLights() {
+    if (!state.environmentalEffects.christmasLights) return;
+    
+    ctx.save();
+    
+    for (const light of state.environmentalEffects.christmasLights.lights) {
+        ctx.globalAlpha = light.opacity;
+        ctx.fillStyle = light.color;
+        ctx.beginPath();
+        ctx.arc(light.x, light.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Add shine effect
+        ctx.globalAlpha = light.opacity * 0.5;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(light.x - 2, light.y - 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    
+    ctx.restore();
+}
+
+// --- Santa Sleigh Parallax ---
+
+export function drawSantaSleighParallax(scrollX) {
+    // Load image if not already cached
+    if (!santaSleighImage) {
+        santaSleighImage = new Image();
+        santaSleighImage.src = 'images/santa-sleigh.png';
+    }
+    
+    // Only draw if image is loaded
+    if (!santaSleighImage.complete || santaSleighImage.naturalWidth === 0) {
+        return; // Image not ready yet
+    }
+    
+    // Santa flies from bottom-right to upper-left across the canvas
+    // Create diagonal parallax movement based on scroll distance
+    const parallaxSpeed = scrollX * 0.25; // 25% of scroll speed for parallax depth
+    
+    // Calculate position along diagonal path (bottom-right to upper-left)
+    const totalDistance = canvas.width + canvas.height + 400; // Diagonal distance
+    const diagonalProgress = (parallaxSpeed % totalDistance);
+    
+    // Convert linear progress to x,y coordinates (diagonal movement)
+    // Starts at bottom-right, moves to upper-left
+    let sleighX = canvas.width + 100 - (diagonalProgress * 0.8); // Move left (right to left)
+    let sleighY = canvas.height - 80 - (diagonalProgress * 0.5); // Move up (down to up)
+    
+    // Loop back when off-screen
+    if (sleighX < -300) {
+        sleighX = canvas.width + 100;
+    }
+    if (sleighY < -200) {
+        sleighY = canvas.height;
+    }
+    
+    ctx.save();
+    ctx.globalAlpha = 0.85; // Slightly transparent for parallax effect
+    
+    // Use actual image dimensions for proper scaling
+    const imageWidth = 200;
+    const imageHeight = 100;
+    
+    // Use 'darken' composite to treat dark areas as silhouette and transparent areas as invisible
+    ctx.globalCompositeOperation = 'darken';
+    
+    // Draw image centered at sleighX, sleighY
+    ctx.drawImage(
+        santaSleighImage,
+        sleighX - imageWidth / 2,    // x position (centered)
+        sleighY - imageHeight / 2,   // y position (centered)
+        imageWidth,
+        imageHeight
+    );
+    
+    ctx.restore();
 }

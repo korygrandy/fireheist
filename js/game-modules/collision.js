@@ -11,7 +11,8 @@ import {
 import { playAnimationSound } from '../audio.js';
 import { savePlayerStats } from '../ui-modules/settings.js';
 import { checkForNewUnlocks } from '../ui-modules/unlocks.js';
-import { createShatterEffect } from './drawing/effects.js';
+import { createShatterEffect, createChristmasCollisionBurst } from './drawing/effects.js';
+import { currentTheme } from '../theme.js';
 import { init as initMiniGame } from './mini-games/blowThatDough.js';
 import { init as initPredictionAddiction } from './mini-games/predictionAddiction.js';
 
@@ -195,6 +196,12 @@ export function checkCollision(runnerY, angleRad) {
                 resetGroundPoundStreak(); // Reset on standard collision
             }
             resetStreaks(); // Reset incineration streak
+            
+            // Create theme-specific collision effects
+            if (gameState.selectedTheme === 'christmas') {
+                createChristmasCollisionBurst(gameState.currentObstacle.x, obstacleTopY);
+            }
+            
             return true; // This is a standard, damaging hit.
         }
     }

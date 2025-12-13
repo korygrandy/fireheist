@@ -111,6 +111,19 @@ export const themes = {
         },
         obstacleEmojis: ['🦉', '🦇', '👻'],
         anchorImage: 'images/moon-anchor.png'
+    },
+    'christmas': {
+        name: '🎄 Festive Christmas',
+        sky: '#1a3a52',
+        ground: '#F0F8FF',
+        grassBlades: '#E8F5FF',
+        roadLines: null,
+        hurdle: {
+            fill: '#C41E3A',
+            stroke: '#FFD700'
+        },
+        obstacleEmojis: ['🎁', '❄️', '⛄', '🔔'],
+        anchorImage: 'images/christmas-anchor.png'
     }
 };
 
@@ -122,7 +135,8 @@ export const finalMilestoneAnchors = {
     'desert': 'phoenix',
     'volcano': 'phoenix',
     'outerspace': 'phoenix',
-    'night': 'phoenix'
+    'night': 'phoenix',
+    'christmas': 'image'
 };
 
 export let currentTheme = themes.grass; // Default theme

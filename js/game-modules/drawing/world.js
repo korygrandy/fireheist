@@ -62,7 +62,60 @@ export function initializeClouds() {
     }
 }
 
+function drawMoon() {
+    // Draw silver glowing moon for Christmas theme
+    const moonX = canvas.width * 0.75; // Position moon in upper right
+    const moonY = canvas.height * 0.2;
+    const moonRadius = 50;
+
+    // Draw moon glow/halo
+    const glowIntensity = 0.4 + Math.sin(performance.now() / 3000) * 0.2;
+    ctx.fillStyle = `rgba(255, 255, 255, ${glowIntensity * 0.5})`;
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonRadius + 15, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw main moon body (silver)
+    ctx.fillStyle = '#E8E8E8'; // Silver color
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw subtle craters on moon surface
+    ctx.fillStyle = '#D0D0D0'; // Slightly darker silver
+    const craters = [
+        { x: moonX - 15, y: moonY - 12, r: 8 },
+        { x: moonX + 10, y: moonY - 20, r: 6 },
+        { x: moonX + 12, y: moonY + 8, r: 7 },
+        { x: moonX - 20, y: moonY + 15, r: 5 }
+    ];
+    craters.forEach(crater => {
+        ctx.beginPath();
+        ctx.arc(crater.x, crater.y, crater.r, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // Add bright shine/reflection on moon
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.beginPath();
+    ctx.arc(moonX - 15, moonY - 15, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Add subtle ring around moon (ice crystals)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonRadius + 5, 0, Math.PI * 2);
+    ctx.stroke();
+}
+
 export function drawClouds() {
+    // Draw moon for Christmas theme instead of clouds
+    if (gameState.selectedTheme === 'christmas') {
+        drawMoon();
+        return;
+    }
+
     if (gameState.selectedTheme === 'outerspace' || gameState.selectedTheme === 'night' || gameState.selectedTheme === 'roadway') {
         return; // Do not draw clouds for these themes
     }
@@ -223,11 +276,15 @@ export function drawHurdle(hurdleData, isFinalHurdle) {
         ctx.moveTo(-17, -hurdleData.hurdleHeight + 20); ctx.lineTo(17, -hurdleData.hurdleHeight + 20);
         ctx.stroke();
 
-        // Dynamic label color for Outer Space theme
+        // Dynamic label color for different themes
         if (currentTheme.name === '🌑 Outer Space') {
             ctx.fillStyle = '#FFA500'; // Bright orange
             ctx.shadowColor = '#FFA500';
             ctx.shadowBlur = 10;
+        } else if (currentTheme.name === '🎄 Festive Christmas') {
+            ctx.fillStyle = '#FFD700'; // Bright gold
+            ctx.shadowColor = '#FFD700';
+            ctx.shadowBlur = 8;
         } else {
             ctx.fillStyle = 'black';
             ctx.shadowBlur = 0; // No shadow for other themes
@@ -245,6 +302,12 @@ export function drawHurdle(hurdleData, isFinalHurdle) {
 }
 
 function drawFireWall(hurdleData, drawX, groundY, angleRad) {
+    // For Christmas theme, use festive holiday archway instead
+    if (currentTheme.name === '🎄 Festive Christmas') {
+        drawChristmasHolidayArchway(hurdleData, drawX, groundY, angleRad);
+        return;
+    }
+
     ctx.save();
     ctx.translate(drawX, groundY);
     ctx.rotate(-angleRad);
@@ -290,11 +353,78 @@ function drawFireWall(hurdleData, drawX, groundY, angleRad) {
     
     // Draw the milestone labels above the wall
     ctx.shadowBlur = 0;
-    ctx.fillStyle = 'white';
+    // Use gold for Christmas theme, white for others
+    ctx.fillStyle = currentTheme.name === '🎄 Festive Christmas' ? '#FFD700' : 'white';
     ctx.font = 'bold 18px Arial';
     ctx.fillText(hurdleData.label, 0, -totalHeight - 40);
     ctx.font = '14px Arial';
     ctx.fillText(hurdleData.dateLabel, 0, -totalHeight - 20);
+
+    ctx.restore();
+}
+
+function drawChristmasHolidayArchway(hurdleData, drawX, groundY, angleRad) {
+    let finalDrawX = drawX;
+    let finalGroundY = groundY;
+    let finalAngleRad = angleRad;
+
+    // If the game is over and won, override the position to be fixed and centered.
+    if (gameState.isGameOverSequence && gameState.isVictory) {
+        finalDrawX = canvas.width / 2;
+        finalGroundY = GROUND_Y;
+        finalAngleRad = 0;
+    }
+
+    ctx.save();
+    ctx.translate(finalDrawX, finalGroundY);
+    ctx.rotate(-finalAngleRad);
+
+    const archwayHeight = hurdleData.hurdleHeight + 80;
+    const archwayWidth = 100;
+
+    // Draw Christmas bulbs (ornaments) - colorful circles
+    const bulbColors = ['#FF0000', '#00FF00', '#FFD700', '#FF1493', '#00FFFF', '#FFFFFF'];
+    const numBulbs = 20;
+
+    for (let i = 0; i < numBulbs; i++) {
+        const angle = (i / numBulbs) * Math.PI + Math.PI / 2; // Left semicircle (rotated 90 degrees)
+        const bulbX = -Math.sin(angle) * archwayHeight * 0.8;
+        const bulbY = Math.cos(angle) * (archwayWidth / 2 + 30);
+
+        const bulbColor = bulbColors[i % bulbColors.length];
+
+        // Draw bulb glow/halo
+        const glowIntensity = 0.3 + Math.sin(performance.now() / 200 + i) * 0.3;
+        ctx.fillStyle = `rgba(255, 255, 255, ${glowIntensity})`;
+        ctx.beginPath();
+        ctx.arc(bulbX, bulbY, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw bulb body
+        ctx.fillStyle = bulbColor;
+        ctx.beginPath();
+        ctx.arc(bulbX, bulbY, 7, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw bulb shine/reflection
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.beginPath();
+        ctx.arc(bulbX - 2, bulbY - 2, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw bulb cap (small rectangle at top)
+        ctx.fillStyle = '#FFD700';
+        ctx.fillRect(bulbX - 2, bulbY - 9, 4, 3);
+    }
+
+    // Draw the milestone labels (above the bulbs)
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#FFD700'; // Gold for text
+    ctx.font = 'bold 18px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(hurdleData.label, -archwayHeight * 0.8, -archwayHeight * 0.5);
+    ctx.font = '14px Arial';
+    ctx.fillText(hurdleData.dateLabel, -archwayHeight * 0.8, -archwayHeight * 0.3);
 
     ctx.restore();
 }
@@ -358,7 +488,8 @@ function drawPhoenixArchway(hurdleData, drawX, groundY, angleRad) {
 
     // Draw the milestone labels
     ctx.shadowBlur = 0;
-    ctx.fillStyle = 'white';
+    // Use gold for Christmas theme, white for others
+    ctx.fillStyle = currentTheme.name === '🎄 Festive Christmas' ? '#FFD700' : 'white';
     ctx.font = 'bold 18px Arial';
     ctx.textAlign = 'center';
     ctx.fillText(hurdleData.label, 0, -archwayHeight - 40);
@@ -366,6 +497,53 @@ function drawPhoenixArchway(hurdleData, drawX, groundY, angleRad) {
     ctx.fillText(hurdleData.dateLabel, 0, -archwayHeight - 20);
 
     ctx.restore();
+}
+
+function drawImageAnchor(hurdleData, drawX, groundY, angleRad) {
+    // For Christmas theme with image, fall back to the festive garland archway
+    if (currentTheme.name === '🎄 Festive Christmas') {
+        drawChristmasHolidayArchway(hurdleData, drawX, groundY, angleRad);
+        return;
+    }
+
+    let finalDrawX = drawX;
+    let finalGroundY = groundY;
+    let finalAngleRad = angleRad;
+
+    // If the game is over and won, override the position to be fixed and centered.
+    if (gameState.isGameOverSequence && gameState.isVictory) {
+        finalDrawX = canvas.width / 2;
+        finalGroundY = GROUND_Y;
+        finalAngleRad = 0;
+    }
+
+    const anchorImage = currentTheme.anchorImage;
+    if (!anchorImage) return;
+
+    // Load the image dynamically (cached in memory after first load)
+    const img = new Image();
+    img.src = `./${anchorImage}`;
+    
+    img.onload = function() {
+        ctx.save();
+        ctx.translate(finalDrawX, finalGroundY);
+        ctx.rotate(-finalAngleRad);
+        
+        // Draw the image centered at the origin
+        const imgWidth = 150;
+        const imgHeight = 200;
+        ctx.drawImage(img, -imgWidth / 2, -imgHeight, imgWidth, imgHeight);
+        
+        // Draw the milestone labels above the anchor
+        ctx.fillStyle = '#FFD700'; // Gold for text
+        ctx.font = 'bold 18px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(hurdleData.label, 0, -imgHeight - 40);
+        ctx.font = '14px Arial';
+        ctx.fillText(hurdleData.dateLabel, 0, -imgHeight - 20);
+        
+        ctx.restore();
+    };
 }
 
 function drawFinalMilestoneAnchor(hurdleData) {
@@ -381,11 +559,15 @@ function drawFinalMilestoneAnchor(hurdleData) {
         return; // Stop here for daily challenge
     }
     
-    // Default: Draw the Phoenix archway for other game modes
+    // Get anchor type from theme configuration
     const anchorType = finalMilestoneAnchors[gameState.selectedTheme] || 'phoenix';
     if (drawX < -100 || drawX > canvas.width + 100) return;
 
     switch (anchorType) {
+        case 'image':
+            // Draw image-based anchor (e.g., Christmas anchor)
+            drawImageAnchor(hurdleData, drawX, groundY, angleRad);
+            break;
         case 'phoenix':
             drawPhoenixArchway(hurdleData, drawX, groundY, angleRad);
             break;

@@ -331,6 +331,21 @@ export const ARMORY_ITEMS = {
         },
         "unlockText": "Survive a total of 500 days"
     },
+    "christmasTheme": {
+        "name": "Christmas Theme Pack",
+        "description": "Unlock the festive Christmas theme with Jolly Nick persona, Christmas emojis, holiday particle effects, and special audio.",
+        "emoji": "🎄",
+        "tier": "Legendary",
+        "unlockCondition": {
+            "type": "daysSurvived",
+            "count": 200,
+            "skillKey": "christmasTheme"
+        },
+        "unlockText": "Survive 200 consecutive days",
+        "themeKey": "christmas",
+        "personaKey": "jollyNick",
+        "hiddenFromArmory": true
+    },
     "reaperDrone": {
         "name": "Reaper Drone",
         "description": "A drone that fires a missile at the first obstacle in its path.",
