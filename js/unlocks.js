@@ -456,6 +456,18 @@ export const ARMORY_ITEMS = {
             "skillKey": "scissorKick"
         },
         "unlockText": "Destroy 10 obstacles with Ground Pound"
+    },
+    "giftBombToss": {
+        "name": "Gift Bomb Toss",
+        "description": "Throw wrapped gift boxes that bounce and explode on impact, destroying nearby obstacles.",
+        "emoji": "🎁",
+        "tier": "Enlisted",
+        "unlockCondition": {
+            "type": "personaActive",
+            "personaKey": "jollyNick",
+            "skillKey": "giftBombToss"
+        },
+        "unlockText": "Available with Jolly Nick persona"
     }
 };
 

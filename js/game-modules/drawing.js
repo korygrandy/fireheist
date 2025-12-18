@@ -11,6 +11,7 @@ import { molotovSkill } from './skills/molotov.js';
 import { shotgunSkill } from './skills/shotgun.js';
 import { fireAxeSkill } from './skills/fireAxe.js';
 import { tarzanSkill } from './skills/tarzan.js';
+import { giftBombTossSkill } from './skills/giftBombToss.js';
 export let isInitialLoad = true;
 export function setInitialLoad(value) {
     isInitialLoad = value;
@@ -55,4 +56,7 @@ export function draw(playerY) {
     for (const cocktail of gameState.molotovCocktails) {
         molotovSkill.draw(cocktail, ctx);
     }
+
+    // Draw gift bomb effects
+    giftBombTossSkill.draw(ctx, gameState);
 }

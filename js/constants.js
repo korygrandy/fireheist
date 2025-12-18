@@ -142,6 +142,7 @@ export const ENERGY_SETTINGS = {
         jetstreamDash: 0, // Drains over time
         fireballRoll: 0, // Drains over time
         fireAxe: 30,
+        giftBombToss: 25,
     }
 };
 
@@ -271,6 +272,8 @@ export const ANIMATION_SOUND_MAP = {
         'hover': 'fx/hover.mp3',
         'shockwave': 'fx/shockwave.mp3',
         'corkscrewSpin': 'fx/corkscrew.mp3',
+        'ho': 'fx/ho.mp3',
+        'present-bomb-collision': 'fx/present-bomb-collission.mp3',
         // Other animations will be added here
     };
 

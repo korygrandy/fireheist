@@ -1,10 +1,10 @@
 import { personaSelector, customPersonaControls, personaDetailsContainer, emojiInput, frequencyValueSpan, themeSelector, dataInput, eventDataInput } from '../dom-elements.js';
 import { personas } from '../personas.js';
 import { personaUnlocks } from '../unlocks.js';
-import { gameState, setSelectedPersona, setStickFigureEmoji, setCurrentSkillLevel, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setSelectedTheme } from '../game-modules/state-manager.js';
+import { gameState, setSelectedPersona, setStickFigureEmoji, setCurrentSkillLevel, setObstacleFrequencyPercent, setUserObstacleFrequencyPercent, setSelectedTheme, setActiveArmorySkill } from '../game-modules/state-manager.js';
 import { EMOJI_MUSIC_MAP, DEFAULT_MUSIC_URL, defaultDataString, defaultEventDataString } from '../constants.js';
 import { initializeMusicPlayer } from '../audio.js';
-import { saveSettings, loadSettings } from './settings.js';
+import { saveSettings, loadSettings, savePlayerStats } from './settings.js';
 import { setTheme } from '../theme.js';
 import { applySkillLevelSettings } from './input-handlers.js';
 import { loadCustomData } from './data.js';
@@ -93,6 +93,12 @@ export function applyPersona(personaKey) {
     // After applying persona settings, reload the data to update the game state
     loadCustomData();
     saveSettings();
+
+    // Set default special skill for Jolly Nick (Christmas theme) - AFTER all data is loaded
+    if (personaKey === 'jollyNick') {
+        setActiveArmorySkill('giftBombToss');
+        savePlayerStats(); // Persist the skill selection
+    }
 }
 
 export function handlePersonaChange(event) {

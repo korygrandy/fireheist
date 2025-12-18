@@ -303,3 +303,20 @@ export function checkSixShooterBulletCollision(bullet, obstacle) {
 
     return collision;
 }
+
+export function checkGiftBombCollision(bomb, obstacle) {
+    if (!obstacle || obstacle.hasBeenHit) return false;
+
+    const bombSize = 16;
+    const obstacleX = obstacle.x;
+    const groundAngle = gameState.raceSegments[gameState.currentSegmentIndex].angleRad;
+    const obstacleY = GROUND_Y - obstacleX * Math.tan(groundAngle) + OBSTACLE_EMOJI_Y_OFFSET - OBSTACLE_HEIGHT;
+
+    // AABB collision detection between gift bomb and obstacle
+    const collision = bomb.x - bombSize / 2 < obstacleX + OBSTACLE_WIDTH &&
+           bomb.x + bombSize / 2 > obstacleX &&
+           bomb.y - bombSize / 2 < obstacleY + OBSTACLE_HEIGHT &&
+           bomb.y + bombSize / 2 > obstacleY;
+
+    return collision;
+}

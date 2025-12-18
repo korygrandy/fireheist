@@ -37,6 +37,7 @@ import { houdiniSkill } from './skills/houdini.js';
 import { jetPackSkill } from './skills/jetPack.js';
 import { hoverPackSkill } from './skills/hoverPack.js';
 import { cartoonScrambleSkill } from './skills/cartoonScramble.js';
+import { giftBombTossSkill } from './skills/giftBombToss.js';
 
 const skillActionMap = {
     // Basic tier skills
@@ -73,6 +74,7 @@ const skillActionMap = {
     fireAxe: (state) => fireAxeSkill.activate(state),
     tarzanSwing: (state) => tarzanSkill.activate(state),
     reaperDrone: (state) => reaperDroneSkill.activate(state),
+    giftBombToss: (state) => giftBombTossSkill.activate(state),
 };
 
 export function handleSpecialMove(gameState) {
