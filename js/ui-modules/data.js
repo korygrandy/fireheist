@@ -5,7 +5,7 @@ import { loadSettings, loadPlayerStats, savePlayerStats, saveSettings } from './
 import { exitFullScreenIfActive } from './ui-helpers.js';
 import { displayLeaderboard } from "./leaderboard.js";
 import { populateThemeSelector } from './theme.js';
-import { populatePersonaSelector } from './persona.js';
+import { populatePersonaSelector, applyPersona } from './persona.js';
 import { handleAutoHurdleToggle } from './input-handlers.js';
 import { populateArmoryItems } from './armory.js';
 import { ARMORY_ITEMS } from '../unlocks.js';
@@ -83,6 +83,9 @@ export async function initializeUIData() {
     // First, populate the UI elements
     populateThemeSelector();
     populatePersonaSelector();
+
+    // Apply the saved/default persona on initial load
+    applyPersona(gameState.selectedPersona);
 
     const enableAutoHurdle = document.getElementById('enableAutoHurdle');
     if (enableAutoHurdle) {

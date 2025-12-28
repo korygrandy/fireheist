@@ -136,6 +136,7 @@ import {
     playGameStartSound,
     playAnimationSound,
     ambientBus,
+    musicBus,
     isMuted,
     preloadCriticalAudio,
     preloadSecondaryAudio,
@@ -642,44 +643,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     document.addEventListener('visibilitychange', () => {
-
-
         if (document.hidden) {
-
-
             if (gameState.gameRunning && !gameState.isPaused) {
-
-
                 togglePauseGame();
-
-
             }
 
-
-            // Mute ambient bus regardless of game state if tab is hidden
-
-
+            // Mute both ambient and music buses when tab/screen is hidden
             ambientBus.volume.value = -Infinity;
-
-
+            musicBus.volume.value = -Infinity;
         } else {
-
-
             // Only unmute if the game is not globally muted AND not paused
-
-
             if (!isMuted && !gameState.isPaused) {
-
-
                 ambientBus.volume.value = 0;
-
-
+                musicBus.volume.value = -18;
             }
-
-
         }
-
-
     });
 
 

@@ -94,9 +94,14 @@ export function applyPersona(personaKey) {
     loadCustomData();
     saveSettings();
 
-    // Set default special skill for Jolly Nick (Christmas theme) - AFTER all data is loaded
+    // Set persona-specific default special skill
     if (personaKey === 'jollyNick') {
+        // Jolly Nick uses the exploding present gift bomb
         setActiveArmorySkill('giftBombToss');
+        savePlayerStats(); // Persist the skill selection
+    } else {
+        // All other personas use Fire Mage as default special skill
+        setActiveArmorySkill('fireMage');
         savePlayerStats(); // Persist the skill selection
     }
 }
