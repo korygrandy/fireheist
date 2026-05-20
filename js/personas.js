@@ -145,5 +145,28 @@ export const personas = {
             "12/25/2026: 🎁 : ACCELERATOR", "02/14/2027: 💝 : ACCELERATOR", "06/20/2027: ☀️ : DECELERATOR",
             "11/24/2027: 🦃 : ACCELERATOR", "12/25/2027: 🎄 : ACCELERATOR", "01/01/2028: 🎆 : ACCELERATOR"
         ]
+    },
+    uncleSam: {
+        name: 'Uncle Sam',
+        emoji: '🇺🇸',
+        financialTrait: 'Patriotic Planner. Celebrates independence through steady milestones, community momentum, and fireworks-worthy discipline.',
+        financialDisciplineLevel: 'High',
+        skillLevel: 'Novice',
+        obstacleFrequencyPercent: 30,
+        theme: 'america250',
+        music: 'fx/america-250-theme.mp3',
+        milestones: [
+            "01/01/2024: 1776", "04/19/2024: 10000", "07/04/2024: 25000", "11/05/2024: 42000",
+            "01/20/2025: 64000", "05/26/2025: 88000", "07/04/2025: 125000", "11/11/2025: 150000",
+            "01/01/2026: 177600", "04/15/2026: 210000", "06/14/2026: 235000", "07/04/2026: 250000"
+        ],
+        events: [
+            "02/17/2024: 🏛️ : ACCELERATOR", "04/15/2024: 🧾 : DECELERATOR", "06/14/2024: 🇺🇸 : ACCELERATOR",
+            "07/04/2024: 🎆 : ACCELERATOR", "09/02/2024: 🚧 : DECELERATOR", "11/28/2024: 🦃 : ACCELERATOR",
+            "01/20/2025: 🏛️ : ACCELERATOR", "04/15/2025: 🧾 : DECELERATOR", "05/26/2025: ⭐ : ACCELERATOR",
+            "07/04/2025: 🎇 : ACCELERATOR", "08/16/2025: 🌡️ : DECELERATOR", "11/11/2025: 🥁 : ACCELERATOR",
+            "02/16/2026: 🗽 : ACCELERATOR", "04/15/2026: 🧾 : DECELERATOR", "06/14/2026: 🎺 : ACCELERATOR",
+            "07/04/2026: 🎆 : ACCELERATOR"
+        ]
     }
 };

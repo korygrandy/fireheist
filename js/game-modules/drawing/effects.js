@@ -1,5 +1,5 @@
 import { canvas, ctx } from '../../dom-elements.js';
-import { STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_SIZE, GROUND_Y, STICK_FIGURE_FIXED_X, CHRISTMAS_COLLISION_SPARKLE_COLORS } from '../../constants.js';
+import { STICK_FIGURE_TOTAL_HEIGHT, OBSTACLE_EMOJI_SIZE, GROUND_Y, STICK_FIGURE_FIXED_X, CHRISTMAS_COLLISION_SPARKLE_COLORS, AMERICA_250_COLLISION_SPARKLE_COLORS } from '../../constants.js';
 import { currentTheme } from '../../theme.js';
 import { gameState } from '../state-manager.js';
 
@@ -1195,5 +1195,27 @@ export function drawShockwaveRings() {
             ctx.stroke();
             ctx.restore();
         }
+    }
+}
+
+export function createAmerica250CollisionBurst(x, y) {
+    const colors = AMERICA_250_COLLISION_SPARKLE_COLORS;
+    const emojis = ['⭐', '✨', '🎆'];
+    const sparkCount = 16;
+
+    for (let i = 0; i < sparkCount; i++) {
+        const angle = (i / sparkCount) * Math.PI * 2;
+        const velocity = 3 + Math.random() * 4;
+        const sparkCluster = [{
+            x,
+            y,
+            velocityX: Math.cos(angle) * velocity,
+            velocityY: Math.sin(angle) * velocity,
+            life: 90,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            emoji: emojis[Math.floor(Math.random() * emojis.length)],
+            rotation: Math.random() * Math.PI * 2
+        }];
+        gameState.activeImpactSparks.push(sparkCluster);
     }
 }

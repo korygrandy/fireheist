@@ -89,6 +89,9 @@ import {
 import {
     initStrategyGuide
 } from './ui-modules/strategy-guide.js';
+import {
+    initQADashboard
+} from './ui-modules/qa-dashboard.js';
 
 import {
     draw
@@ -468,6 +471,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize the Strategy Guide
     initStrategyGuide();
+    initQADashboard();
 
     if (emojiInput && speedSelector && obstacleEmojiInput && frequencyRange && skillLevelSelector) {
         setupSuggestedEmojis();

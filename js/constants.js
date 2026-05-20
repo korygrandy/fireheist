@@ -15,6 +15,15 @@ export const CHRISTMAS_GIFT_EMOJI = '🎁';
 export const CHRISTMAS_LIGHT_COLORS = ['#FF0000', '#00FF00', '#FFD700', '#FFFFFF', '#FF1493'];
 export const CHRISTMAS_COLLISION_SPARKLE_COLORS = ['#FFD700', '#FF0000', '#FFFFFF', '#00FF00'];
 
+// 250th America Theme Constants
+export const AMERICA_250_FIREWORK_COUNT = 7;
+export const AMERICA_250_CONFETTI_COUNT = 48;
+export const AMERICA_250_FIREWORK_COLORS = ['#ff3b3f', '#ffffff', '#2f80ed', '#ffd166', '#9bf6ff'];
+export const AMERICA_250_CONFETTI_COLORS = ['#c1121f', '#ffffff', '#1d4ed8', '#ffd166'];
+export const AMERICA_250_COLLISION_SPARKLE_COLORS = ['#c1121f', '#ffffff', '#1d4ed8', '#ffd166'];
+export const AMERICA_250_OBSTACLE_EMOJIS = ['🎆', '🎇', '🥁', '🗽', '⭐', '🔔', '🎺'];
+export const AMERICA_250_ACCELERATOR_EMOJIS = ['🇺🇸', '⭐', '🚀', '🎆'];
+
 // Visual Segment Duration Constants
 export const MIN_VISUAL_DURATION_MS = 2000;
 export const MAX_VISUAL_DURATION_MS = 10000;
@@ -208,6 +217,7 @@ export const THEME_MUSIC_MAP = {
     'city': 'fx/city-night-theme-music.mp3',
     'volcano': 'fx/rocket-theme-music.mp3',
     'snow': 'fx/snow-theme-music.mp3',
+    'america250': 'fx/america-250-theme.mp3',
 };
 
 export const THEME_AMBIENT_SOUND_MAP = {
@@ -219,7 +229,8 @@ export const THEME_AMBIENT_SOUND_MAP = {
     'volcano': 'fx/ambience-eruptions.mp3', // Placeholder, ideally lava bubbling/rumbling
     'outerspace': 'fx/ufo-hover.mp3', // Placeholder, ideally space hum
     'night': 'fx/ambience-crickets.mp3', // Placeholder, ideally crickets/night owl
-    'christmas': 'fx/ambience-christmas.mp3'
+    'christmas': 'fx/ambience-christmas.mp3',
+    'america250': 'fx/america-250-ambience.mp3'
 };
 
 

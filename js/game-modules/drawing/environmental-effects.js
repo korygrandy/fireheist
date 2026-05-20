@@ -1,7 +1,7 @@
 import state from '../state.js';
 import { gameState } from '../state-manager.js';
 import { canvas, ctx } from '../../dom-elements.js';
-import { CITYSCAPE_PARALLAX_FACTOR, THEME_ANCHOR_PARALLAX_FACTOR, CHRISTMAS_SNOWFLAKE_COUNT, CHRISTMAS_SNOWFLAKE_COUNT_PERFORMANCE, CHRISTMAS_SNOWFLAKE_EMOJIS, CHRISTMAS_LIGHT_COLORS } from '../../constants.js';
+import { CITYSCAPE_PARALLAX_FACTOR, THEME_ANCHOR_PARALLAX_FACTOR, CHRISTMAS_SNOWFLAKE_COUNT, CHRISTMAS_SNOWFLAKE_COUNT_PERFORMANCE, CHRISTMAS_SNOWFLAKE_EMOJIS, CHRISTMAS_LIGHT_COLORS, AMERICA_250_FIREWORK_COUNT, AMERICA_250_CONFETTI_COUNT, AMERICA_250_FIREWORK_COLORS, AMERICA_250_CONFETTI_COLORS } from '../../constants.js';
 
 const RAIN_DENSITY = 100; // Number of raindrops
 const RAIN_DURATION = 5000; // 5 seconds
@@ -47,6 +47,9 @@ export function startThemeEffect() {
             startChristmasSnowfall();
             startChristmasFallingGifts();
             startChristmasLights();
+            break;
+        case 'america250':
+            startAmerica250Celebration();
             break;
         default:
             console.log(`-> DEBUG: No specific effect to trigger for theme '${state.selectedTheme}'.`);
@@ -1426,6 +1429,9 @@ case 'desert':
         case 'christmas':
             // Christmas effects continue from startThemeEffect
             break;
+        case 'america250':
+            updateAmerica250ThemeEffects(deltaTime);
+            break;
     }
 }
 
@@ -1463,7 +1469,152 @@ export function drawEnvironmentalEffects() {
         case 'christmas':
             drawChristmasThemeEffects();
             break;
+        case 'america250':
+            drawAmerica250ThemeEffects();
+            break;
     }
+}
+
+// --- 250th America Theme Effects ---
+
+export function startAmerica250Celebration() {
+    if (!state.environmentalEffects.america250Fireworks) state.environmentalEffects.america250Fireworks = [];
+    if (!state.environmentalEffects.america250Confetti) state.environmentalEffects.america250Confetti = [];
+
+    state.environmentalEffects.america250Fireworks.length = 0;
+    state.environmentalEffects.america250Confetti.length = 0;
+    state.environmentalEffects.america250BuntingPhase = 0;
+
+    for (let i = 0; i < AMERICA_250_FIREWORK_COUNT; i++) {
+        state.environmentalEffects.america250Fireworks.push(createAmerica250Firework(true));
+    }
+
+    for (let i = 0; i < AMERICA_250_CONFETTI_COUNT; i++) {
+        state.environmentalEffects.america250Confetti.push(createAmerica250Confetti(true));
+    }
+}
+
+function createAmerica250Firework(randomizeY = false) {
+    const centerX = 40 + Math.random() * (canvas.width - 80);
+    const centerY = 45 + Math.random() * (canvas.height * 0.35);
+    const particleCount = 10 + Math.floor(Math.random() * 8);
+    return {
+        centerX,
+        centerY: randomizeY ? centerY : -20,
+        radius: 4 + Math.random() * 18,
+        speed: 0.35 + Math.random() * 0.45,
+        life: 0.35 + Math.random() * 0.65,
+        color: AMERICA_250_FIREWORK_COLORS[Math.floor(Math.random() * AMERICA_250_FIREWORK_COLORS.length)],
+        particles: Array.from({ length: particleCount }, (_, index) => ({
+            angle: (index / particleCount) * Math.PI * 2,
+            distance: 8 + Math.random() * 26
+        }))
+    };
+}
+
+function createAmerica250Confetti(randomizeY = false) {
+    return {
+        x: Math.random() * canvas.width,
+        y: randomizeY ? Math.random() * canvas.height : -20,
+        vy: 0.5 + Math.random() * 1.2,
+        vx: (Math.random() - 0.5) * 0.8,
+        size: 3 + Math.random() * 4,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.12,
+        color: AMERICA_250_CONFETTI_COLORS[Math.floor(Math.random() * AMERICA_250_CONFETTI_COLORS.length)]
+    };
+}
+
+function updateAmerica250ThemeEffects(deltaTime) {
+    if (!state.environmentalEffects.america250Fireworks) return;
+    state.environmentalEffects.america250BuntingPhase += 0.015;
+
+    for (let i = 0; i < state.environmentalEffects.america250Fireworks.length; i++) {
+        const firework = state.environmentalEffects.america250Fireworks[i];
+        firework.radius += firework.speed;
+        firework.life -= 0.006;
+        if (firework.life <= 0 || firework.radius > 52) {
+            state.environmentalEffects.america250Fireworks[i] = createAmerica250Firework();
+        }
+    }
+
+    for (let i = 0; i < state.environmentalEffects.america250Confetti.length; i++) {
+        const confetti = state.environmentalEffects.america250Confetti[i];
+        confetti.x += confetti.vx + Math.sin(state.environmentalEffects.america250BuntingPhase + i) * 0.12;
+        confetti.y += confetti.vy;
+        confetti.rotation += confetti.rotationSpeed;
+        if (confetti.y > canvas.height + 20) {
+            state.environmentalEffects.america250Confetti[i] = createAmerica250Confetti();
+        }
+        if (confetti.x < -20) confetti.x = canvas.width + 20;
+        if (confetti.x > canvas.width + 20) confetti.x = -20;
+    }
+}
+
+function drawAmerica250ThemeEffects() {
+    updateAmerica250ThemeEffects(0);
+    drawAmerica250Bunting();
+    drawAmerica250Fireworks();
+    drawAmerica250Confetti();
+}
+
+function drawAmerica250Bunting() {
+    const phase = state.environmentalEffects.america250BuntingPhase || 0;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let x = 0; x <= canvas.width; x += 20) {
+        const y = 42 + Math.sin((x * 0.02) + phase) * 5;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    const colors = ['#c1121f', '#ffffff', '#1d4ed8'];
+    for (let x = 20; x < canvas.width; x += 36) {
+        const y = 42 + Math.sin((x * 0.02) + phase) * 5;
+        ctx.fillStyle = colors[Math.floor(x / 36) % colors.length];
+        ctx.beginPath();
+        ctx.moveTo(x - 8, y + 2);
+        ctx.lineTo(x + 8, y + 2);
+        ctx.lineTo(x, y + 18);
+        ctx.closePath();
+        ctx.fill();
+    }
+    ctx.restore();
+}
+
+function drawAmerica250Fireworks() {
+    const fireworks = state.environmentalEffects.america250Fireworks || [];
+    ctx.save();
+    for (const firework of fireworks) {
+        ctx.globalAlpha = Math.max(0, firework.life);
+        ctx.strokeStyle = firework.color;
+        ctx.lineWidth = 2;
+        for (const particle of firework.particles) {
+            const inner = firework.radius * 0.35;
+            const outer = firework.radius + particle.distance;
+            ctx.beginPath();
+            ctx.moveTo(firework.centerX + Math.cos(particle.angle) * inner, firework.centerY + Math.sin(particle.angle) * inner);
+            ctx.lineTo(firework.centerX + Math.cos(particle.angle) * outer, firework.centerY + Math.sin(particle.angle) * outer);
+            ctx.stroke();
+        }
+    }
+    ctx.restore();
+}
+
+function drawAmerica250Confetti() {
+    const confettiPieces = state.environmentalEffects.america250Confetti || [];
+    ctx.save();
+    for (const confetti of confettiPieces) {
+        ctx.translate(confetti.x, confetti.y);
+        ctx.rotate(confetti.rotation);
+        ctx.fillStyle = confetti.color;
+        ctx.fillRect(-confetti.size / 2, -confetti.size / 2, confetti.size, confetti.size * 1.8);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+    ctx.restore();
 }
 
 // --- Christmas Theme Effects ---

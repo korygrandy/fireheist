@@ -9,6 +9,11 @@ import { setTheme } from '../theme.js';
 import { applySkillLevelSettings } from './input-handlers.js';
 import { loadCustomData } from './data.js';
 
+const PERSONA_DEFAULT_SKILLS = {
+    jollyNick: 'giftBombToss',
+    uncleSam: 'fireMage'
+};
+
 export function applyPersona(personaKey) {
     setSelectedPersona(personaKey);
     const persona = personas[personaKey];
@@ -94,16 +99,9 @@ export function applyPersona(personaKey) {
     loadCustomData();
     saveSettings();
 
-    // Set persona-specific default special skill
-    if (personaKey === 'jollyNick') {
-        // Jolly Nick uses the exploding present gift bomb
-        setActiveArmorySkill('giftBombToss');
-        savePlayerStats(); // Persist the skill selection
-    } else {
-        // All other personas use Fire Mage as default special skill
-        setActiveArmorySkill('fireMage');
-        savePlayerStats(); // Persist the skill selection
-    }
+    const defaultSkill = PERSONA_DEFAULT_SKILLS[personaKey] || 'fireMage';
+    setActiveArmorySkill(defaultSkill);
+    savePlayerStats();
 }
 
 export function handlePersonaChange(event) {

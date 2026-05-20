@@ -246,6 +246,9 @@ const state = {
         ash: [],
         steamVents: [],
         heatShimmer: { active: false, waveY: 0 },
+        america250Fireworks: [],
+        america250Confetti: [],
+        america250BuntingPhase: 0,
         cityscape: { buildings: [], opacity: 0 },
         headlightFadeState: {
             opacity: 0.6 + Math.random() * 0.4,
