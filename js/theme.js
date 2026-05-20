@@ -124,6 +124,21 @@ export const themes = {
         },
         obstacleEmojis: ['🎁', '❄️', '⛄', '🔔'],
         anchorImage: 'images/christmas-anchor.png'
+    },
+    'america250': {
+        name: '🇺🇸 250th America',
+        sky: '#102a63',
+        ground: '#f8fafc',
+        grassBlades: '#c1121f',
+        roadLines: '#1d4ed8',
+        curb: '#c1121f',
+        hurdle: {
+            fill: '#ffffff',
+            stroke: '#c1121f'
+        },
+        obstacleEmojis: ['🎆', '🎇', '🥁', '🗽', '⭐', '🔔', '🎺'],
+        acceleratorEmojis: ['🇺🇸', '⭐', '🚀', '🎆'],
+        anchorImage: 'images/america-250-anchor.svg'
     }
 };
 
@@ -136,7 +151,8 @@ export const finalMilestoneAnchors = {
     'volcano': 'phoenix',
     'outerspace': 'phoenix',
     'night': 'phoenix',
-    'christmas': 'image'
+    'christmas': 'image',
+    'america250': 'america250'
 };
 
 export let currentTheme = themes.grass; // Default theme

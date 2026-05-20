@@ -1,0 +1,56 @@
+{
+  "name": "fireheist-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for FireHeist game using Playwright",
+  "main": "index.html",
+  "scripts": {
+    "test": "playwright test -c e2e.tests/playwright.config.ts",
+    "test:ui": "playwright test -c e2e.tests/playwright.config.ts --ui",
+    "test:debug": "playwright test -c e2e.tests/playwright.config.ts --debug",
+    "test:headed": "playwright test -c e2e.tests/playwright.config.ts --headed",
+    "test:smoke:local": "playwright test -c e2e.tests/playwright.config.ts",
+    "test:america250": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-america250-smoke.spec.ts",
+    "test:smoke": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-page-load.spec.ts",
+    "test:config": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-player-config.spec.ts",
+    "test:settings": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-gameplay-settings.spec.ts",
+    "test:controls": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-game-controls.spec.ts",
+    "test:data": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-data-persistence.spec.ts",
+    "test:audio": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-audio-controls.spec.ts",
+    "test:armory": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-armory.spec.ts",
+    "test:leaderboard": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-leaderboard.spec.ts",
+    "test:all": "playwright test -c e2e.tests/playwright.config.ts e2e.tests/tests/fireheist-*.spec.ts",
+    "test:chromium": "playwright test -c e2e.tests/playwright.config.ts --project=chromium",
+    "test:mobile": "playwright test -c e2e.tests/playwright.config.ts --project=mobile-chrome",
+    "test:parallel": "playwright test -c e2e.tests/playwright.config.ts --workers=4",
+    "test:serial": "playwright test -c e2e.tests/playwright.config.ts --workers=1",
+    "test:report": "playwright show-report test-results/playwright-report",
+    "report": "playwright show-report test-results/playwright-report",
+    "build:css": "tailwindcss -i ./src/input.css -o ./style.css",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./style.css --watch",
+    "serve": "http-server -c-1",
+    "start": "npm-run-all --parallel watch:css serve"
+  },
+  "keywords": [
+    "playwright",
+    "e2e",
+    "testing",
+    "fireheist",
+    "game"
+  ],
+  "author": "FireHeist Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "autoprefixer": "^10.4.16",
+    "http-server": "^14.1.1",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

@@ -116,7 +116,7 @@ export function drawClouds() {
         return;
     }
 
-    if (gameState.selectedTheme === 'outerspace' || gameState.selectedTheme === 'night' || gameState.selectedTheme === 'roadway') {
+    if (gameState.selectedTheme === 'outerspace' || gameState.selectedTheme === 'night' || gameState.selectedTheme === 'roadway' || gameState.selectedTheme === 'america250') {
         return; // Do not draw clouds for these themes
     }
     ctx.fillStyle = 'white';
@@ -571,7 +571,76 @@ function drawFinalMilestoneAnchor(hurdleData) {
         case 'phoenix':
             drawPhoenixArchway(hurdleData, drawX, groundY, angleRad);
             break;
+        case 'america250':
+            drawAmerica250FinishLine(hurdleData, drawX, groundY, angleRad);
+            break;
     }
+}
+
+function drawAmerica250FinishLine(hurdleData, drawX, groundY, angleRad) {
+    let finalDrawX = drawX;
+    let finalGroundY = groundY;
+    let finalAngleRad = angleRad;
+
+    if (gameState.isGameOverSequence && gameState.isVictory) {
+        finalDrawX = canvas.width / 2;
+        finalGroundY = GROUND_Y;
+        finalAngleRad = 0;
+    }
+
+    ctx.save();
+    ctx.translate(finalDrawX, finalGroundY);
+    ctx.rotate(-finalAngleRad);
+
+    const height = Math.max(130, hurdleData.hurdleHeight + 90);
+    const width = 132;
+    const colors = ['#c1121f', '#ffffff', '#1d4ed8'];
+
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = '#c1121f';
+    ctx.beginPath();
+    ctx.moveTo(-width / 2, 0);
+    ctx.lineTo(-width / 2, -height + 34);
+    ctx.quadraticCurveTo(0, -height - 28, width / 2, -height + 34);
+    ctx.lineTo(width / 2, 0);
+    ctx.stroke();
+
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+
+    for (let i = 0; i < 15; i++) {
+        const x = -width / 2 + (i / 14) * width;
+        const y = -height + 20 + Math.sin(i * 0.9 + performance.now() / 250) * 8;
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.beginPath();
+        ctx.moveTo(x - 5, y);
+        ctx.lineTo(x + 5, y);
+        ctx.lineTo(x, y + 13);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    ctx.shadowColor = '#ffd166';
+    ctx.shadowBlur = 16;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 52px Impact, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('250', 0, -height + 62);
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#ffd166';
+    ctx.font = 'bold 18px Arial';
+    ctx.fillText(hurdleData.label, 0, -height - 48);
+    ctx.font = '14px Arial';
+    ctx.fillText(hurdleData.dateLabel, 0, -height - 28);
+
+    ctx.font = '24px Arial';
+    ctx.fillText('🇺🇸', -width / 2 - 18, -height + 48);
+    ctx.fillText('🎆', width / 2 + 20, -height + 58);
+    ctx.fillText('⭐', 0, -height - 8);
+
+    ctx.restore();
 }
 
 export function drawObstacle(obstacle, angleRad) {

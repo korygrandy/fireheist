@@ -1,11 +1,27 @@
 import state from './state.js';
 import { OBSTACLE_SPAWN_X, ACCELERATOR_EMOJI, EASTER_EGG_EMOJI, EASTER_EGG_SPAWN_CHANCE_PERCENT } from '../constants.js';
+import { themes } from '../theme.js';
+
+function pickThemeEmoji(emojiList, fallback) {
+    if (!Array.isArray(emojiList) || emojiList.length === 0) return fallback;
+    return emojiList[Math.floor(Math.random() * emojiList.length)] || fallback;
+}
+
+function getThemeObstacleEmoji() {
+    const theme = themes[state.selectedTheme];
+    return pickThemeEmoji(theme?.obstacleEmojis, state.obstacleEmoji);
+}
+
+function getThemeAcceleratorEmoji() {
+    const theme = themes[state.selectedTheme];
+    return pickThemeEmoji(theme?.acceleratorEmojis, ACCELERATOR_EMOJI);
+}
 
 export function spawnObstacle() {
     const isEasterEgg = Math.random() * 100 < EASTER_EGG_SPAWN_CHANCE_PERCENT;
     const newObstacle = {
         x: OBSTACLE_SPAWN_X,
-        emoji: isEasterEgg ? EASTER_EGG_EMOJI : state.obstacleEmoji,
+        emoji: isEasterEgg ? EASTER_EGG_EMOJI : getThemeObstacleEmoji(),
         spawnTime: Date.now(),
         hasBeenHit: false,
         isEasterEgg: isEasterEgg,
@@ -49,7 +65,7 @@ export function spawnEasterEgg() {
 export function spawnAccelerator() {
     state.currentAccelerator = {
         x: OBSTACLE_SPAWN_X,
-        emoji: ACCELERATOR_EMOJI,
+        emoji: getThemeAcceleratorEmoji(),
         spawnTime: Date.now(),
         hasBeenCollected: false
     };

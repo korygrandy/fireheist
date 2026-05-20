@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260" role="img" aria-label="250th America celebration anchor">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0b1f4d"/>
+      <stop offset="1" stop-color="#163d7a"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="220" height="260" rx="18" fill="url(#sky)"/>
+  <path d="M22 214h176" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+  <path d="M36 214c16-70 132-70 148 0" fill="none" stroke="#c1121f" stroke-width="14" stroke-linecap="round"/>
+  <path d="M49 210c21-46 101-46 122 0" fill="none" stroke="#f8fafc" stroke-width="10" stroke-linecap="round"/>
+  <path d="M64 205c25-25 67-25 92 0" fill="none" stroke="#1d4ed8" stroke-width="8" stroke-linecap="round"/>
+  <text x="110" y="123" text-anchor="middle" font-family="Impact, Arial, sans-serif" font-size="64" fill="#f8fafc" stroke="#c1121f" stroke-width="2" filter="url(#glow)">250</text>
+  <text x="110" y="151" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ffd166">AMERICA</text>
+  <g fill="#ffd166" filter="url(#glow)">
+    <path d="M41 48l4 10 11 1-8 7 2 11-9-6-9 6 2-11-8-7 11-1z"/>
+    <path d="M174 35l4 10 11 1-8 7 2 11-9-6-9 6 2-11-8-7 11-1z"/>
+    <path d="M111 28l3 8 9 1-7 6 2 9-7-5-7 5 2-9-7-6 9-1z"/>
+  </g>
+  <g stroke-width="4" stroke-linecap="round" filter="url(#glow)">
+    <path d="M55 86l-18-22" stroke="#ef4444"/>
+    <path d="M55 86l-28-3" stroke="#f8fafc"/>
+    <path d="M55 86l-7-30" stroke="#60a5fa"/>
+    <path d="M166 83l22-18" stroke="#ef4444"/>
+    <path d="M166 83l29 2" stroke="#f8fafc"/>
+    <path d="M166 83l6-30" stroke="#60a5fa"/>
+  </g>
+</svg>

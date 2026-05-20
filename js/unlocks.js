@@ -346,6 +346,21 @@ export const ARMORY_ITEMS = {
         "personaKey": "jollyNick",
         "hiddenFromArmory": true
     },
+    "america250Theme": {
+        "name": "250th America Theme Pack",
+        "description": "Unlock the 250th America theme with Uncle Sam persona, patriotic obstacles, fireworks, accelerators, and celebration audio.",
+        "emoji": "🇺🇸",
+        "tier": "Legendary",
+        "unlockCondition": {
+            "type": "daysSurvived",
+            "count": 250,
+            "skillKey": "america250Theme"
+        },
+        "unlockText": "Survive 250 days",
+        "themeKey": "america250",
+        "personaKey": "uncleSam",
+        "hiddenFromArmory": true
+    },
     "reaperDrone": {
         "name": "Reaper Drone",
         "description": "A drone that fires a missile at the first obstacle in its path.",
